@@ -88,13 +88,13 @@ export default {
       return [
         {
           children: [],
-          name: '',
+          name: '1',
           icon: 'folder',
           title: '一级菜单'
         },
         {
           children: [],
-          name: '',
+          name: '2',
           icon: 'folder',
           title: '一级菜单'
         }
@@ -115,13 +115,12 @@ export default {
     fullscreenChange () {},
     handleClickUserDropdown () {}
   },
-  watch: {}
-  // mounted() {
-  //   this.init()
-  //   window.addEventListener('resize', this.scrollBarResize)
-  // },
-  // dispatch() {
-  //   window.removeEventListener('resize', this.scrollBarResize)
-  // }
+  watch: {},
+  mounted () {
+    // window.addEventListener('resize', this.scrollBarResize)
+  },
+  dispatch () {
+    // window.removeEventListener('resize', this.scrollBarResize)
+  }
 }
 </script>
