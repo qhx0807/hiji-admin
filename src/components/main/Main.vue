@@ -60,7 +60,7 @@
 </template>
 <script>
 import shrinkableMenu from '../main-components/shrinkable-menu/shrinkable-menu.vue'
-import fullScreen from '../main-components/fullscreen.vue'
+import fullScreen from '../main-components/fullscreen/fullscreen.vue'
 import lockScreen from '../main-components/lockscreen/lockscreen.vue'
 // import Cookies from 'js-cookie'
 import scrollBar from '../scroll-bar/vue-scroller-bars'
