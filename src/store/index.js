@@ -5,9 +5,19 @@ Vue.use(Vuex)
 
 const store = new Vuex.Store({
   state: {
-    login: true
+    login: true,
+    pageLoading: false
   },
-  mutations: {},
+  getters: {
+    isLoading (state) {
+      return state.pageLoading
+    }
+  },
+  mutations: {
+    pageLoading (state, n) {
+      state.pageLoading = !!n
+    }
+  },
   actions: {},
   modules: {}
 })

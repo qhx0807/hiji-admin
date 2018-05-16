@@ -6,8 +6,10 @@ import router from './router'
 import store from './store'
 import iView from 'iview'
 import './theme/index.less'
+import ZkTable from 'vue-table-with-tree-grid'
 
 Vue.use(iView)
+Vue.component(ZkTable.name, ZkTable)
 
 Vue.config.productionTip = false
 
