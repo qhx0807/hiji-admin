@@ -11,9 +11,9 @@
                     :theme="menuTheme"
                     :open-names="openedSubmenuArr"
                     :menu-list="menuList">
-                    <div slot="top" class="logo-con">
-                        <img v-show="!shrink"  src="../../images/logo.jpg" key="max-logo" />
-                        <img v-show="shrink" src="../../images/logo-min.jpg" key="min-logo" />
+                    <div slot="top" class="logo-con" style="padding-top:18px">
+                      <img v-show="!shrink"  src="../../images/logo.jpg" key="max-logo" />
+                      <img v-show="shrink" src="../../images/mini.png" key="min-logo" style="height:25px"/>
                     </div>
                 </shrinkable-menu>
             </scroll-bar>
@@ -53,7 +53,10 @@
         </div>
         <div class="single-page-con" :style="{left: shrink?'60px':'200px'}">
           <div class="single-page">
-            <router-view></router-view>
+            <Spin v-show="pageLoading" size="large" fix></Spin>
+            <transition name="fade">
+              <router-view></router-view>
+            </transition>
           </div>
         </div>
     </div>
@@ -77,26 +80,29 @@ export default {
   data () {
     return {
       shrink: false,
-      userName: 'admin',
+      userName: '',
       isFullScreen: false,
       openedSubmenuArr: [],
       avatorPath: ''
     }
   },
+  created () {
+    this.userName = sessionStorage.username || ''
+  },
   computed: {
     menuList () {
       return [
         {
-          children: [],
+          children: [
+            {
+              name: 'Department',
+              icon: 'folder',
+              title: '部门管理'
+            }
+          ],
           name: '1',
           icon: 'folder',
-          title: '一级菜单'
-        },
-        {
-          children: [],
-          name: '2',
-          icon: 'folder',
-          title: '一级菜单'
+          title: '系统设置'
         }
       ]
     },
@@ -105,6 +111,9 @@ export default {
     },
     mesCount () {
       return '0'
+    },
+    pageLoading () {
+      return this.$store.getters.isLoading
     }
   },
   methods: {
@@ -113,7 +122,18 @@ export default {
     },
     handleSubmenuChange () {},
     fullscreenChange () {},
-    handleClickUserDropdown () {}
+    handleClickUserDropdown (e) {
+      if (e === 'loginout') {
+        this.$Modal.confirm({
+          title: '提示',
+          content: '<p>确认退出当前登录账号？</p>',
+          onOk: () => {
+            sessionStorage.clear()
+            this.$router.replace({name: 'Login'})
+          }
+        })
+      }
+    }
   },
   watch: {},
   mounted () {

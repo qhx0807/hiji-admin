@@ -12,8 +12,8 @@
                 </p>
                 <div class="form-con">
                     <Form ref="loginForm" :model="form" :rules="rules">
-                        <FormItem prop="userName">
-                            <Input v-model="form.userName" placeholder="请输入用户名">
+                        <FormItem prop="username">
+                            <Input v-model="form.username" placeholder="请输入用户名">
                                 <span slot="prepend">
                                     <Icon :size="16" type="person"></Icon>
                                 </span>
@@ -27,7 +27,7 @@
                             </Input>
                         </FormItem>
                         <FormItem>
-                            <Button @click="handleSubmit" type="primary" long>登录</Button>
+                            <Button :loading="loading" @click="handleSubmit" type="primary" long>登录</Button>
                         </FormItem>
                     </Form>
                     <p class="login-tip">- 登录HI集信息管理平台 -</p>
@@ -38,16 +38,18 @@
 </template>
 
 <script>
-import Cookies from 'js-cookie'
+// import Cookies from 'js-cookie'
+import serverApi from '../../axios/index.js'
 export default {
   data () {
     return {
       form: {
-        userName: '',
-        password: ''
+        username: 'admin ',
+        password: '123456'
       },
+      loading: false,
       rules: {
-        userName: [
+        username: [
           { required: true, message: '账号不能为空', trigger: 'blur' }
         ],
         password: [{ required: true, message: '密码不能为空', trigger: 'blur' }]
@@ -58,15 +60,29 @@ export default {
     handleSubmit () {
       this.$refs.loginForm.validate(valid => {
         if (valid) {
-          Cookies.set('user', this.form.userName)
-          Cookies.set('password', this.form.password)
-          this.$store.commit(
-            'setAvator',
-            'https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=3448484253,3685836170&fm=27&gp=0.jpg'
+          this.loading = true
+          serverApi('/login', this.form,
+            response => {
+              console.log(response)
+              this.loading = false
+              if (response.data.code === 0) {
+                window.sessionStorage.token = response.data.data.token
+                window.sessionStorage.username = response.data.data.username
+                window.sessionStorage.userid = response.data.data.userid
+                this.$Message.info(response.data.msg)
+                this.$router.replace({
+                  name: 'Main'
+                })
+              } else {
+                this.$Message.info(response.data.msg)
+              }
+            },
+            error => {
+              this.loading = false
+              this.$Message.warning('连接失败！')
+              console.log(error)
+            }
           )
-          this.$router.push({
-            name: 'home'
-          })
         }
       })
     }
