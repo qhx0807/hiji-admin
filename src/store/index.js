@@ -6,7 +6,11 @@ Vue.use(Vuex)
 const store = new Vuex.Store({
   state: {
     login: true,
-    pageLoading: false
+    pageLoading: false,
+    breadcrumbArr: [
+      {name: 'Home', to: ''},
+      {name: 'Home', to: ''}
+    ]
   },
   getters: {
     isLoading (state) {
