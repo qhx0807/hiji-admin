@@ -5,11 +5,14 @@ import App from './App'
 import router from './router'
 import store from './store'
 import iView from 'iview'
-import './theme/index.less'
 import ZkTable from 'vue-table-with-tree-grid'
+import _ from 'lodash'
+
+import './theme/index.less'
 
 Vue.use(iView)
 Vue.component(ZkTable.name, ZkTable)
+Vue.prototype._ = _
 
 Vue.config.productionTip = false
 

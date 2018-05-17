@@ -5,19 +5,19 @@
 <template>
     <Menu ref="sideMenu" :active-name="$route.name" :open-names="openNames" :theme="menuTheme" width="auto" @on-select="changeMenu">
         <template v-for="item in menuList">
-            <MenuItem v-if="item.children.length<1" :name="item.name" :key="'menuitem' + item.name">
-                <Icon :type="item.icon || item.icon" :size="iconSize" :key="'menuicon' + item.name"></Icon>
-                <span class="layout-text" :key="'title' + item.name">{{ item.title }}</span>
+            <MenuItem v-if="item.child.length<1" :name="item.url" :key="'menuitem' + item.url">
+                <Icon :type="item.icon || item.icon" :size="iconSize" :key="'menuicon' + item.id"></Icon>
+                <span class="layout-text" :key="'title' + item.id">{{ item.name }}</span>
             </MenuItem>
-            <Submenu v-if="item.children.length >= 1" :name="item.name" :key="item.name">
+            <Submenu v-if="item.child.length >= 1" :name="item.url" :key="item.id">
                 <template slot="title">
                     <Icon :type="item.icon" :size="iconSize"></Icon>
-                    <span class="layout-text">{{ item.title }}</span>
+                    <span class="layout-text">{{ item.name }}</span>
                 </template>
-                <template v-for="child in item.children">
-                    <MenuItem :name="child.name" :key="'menuitem' + child.name">
-                        <Icon :type="child.icon" :size="iconSize" :key="'icon' + child.name"></Icon>
-                        <span class="layout-text" :key="'title' + child.name">{{ child.title }}</span>
+                <template v-for="child in item.child">
+                    <MenuItem :name="child.url" :key="'menuitem' + child.id">
+                        <Icon :type="child.icon" :size="iconSize" :key="'icon' + child.id"></Icon>
+                        <span class="layout-text" :key="'title' + child.id">{{ child.name }}</span>
                     </MenuItem>
                 </template>
             </Submenu>

@@ -1,19 +1,24 @@
 <template>
   <div class="wrap">
-    <div class="head">
-      <Button type="primary" @click="onClickAdd">新增</Button>
-    </div>
+    <Row>
+      <Col span="24">
+        <Input v-model="searchKey"  placeholder="Search..." style="width: 230px"></Input>
+        <Button type="default" class="ml10">搜索</Button>
+        <Button type="default" class="ml10" @click="exportTable">导出</Button>
+        <Button type="primary" class="ml10" @click="onClickAdd">新增</Button>
+      </Col>
+    </Row>
     <Row>
       <Col span="24">
         <div class="tableBox">
           <zk-table
-            :data="tableData"
-            show-index
+            :data="searchData"
             children-prop="child"
-            :tree-type="true"
             :selection-type="false"
-            :is-fold="isFold"
+            :show-row-hover="false"
             :expand-type="false"
+            :stripe="false"
+            :border="false"
             :columns="columns">
             <template slot="id" slot-scope="scope">
               <div>
@@ -21,28 +26,40 @@
                 <Button icon="trash-a" size="small" type="text" @click="remove(scope.row.id)">删除</Button>
               </div>
             </template>
+            <template slot="url" slot-scope="scope">
+              <code class="code">{{scope.row.url}}</code>
+            </template>
+            <template slot="parameter" slot-scope="scope">
+              <code class="code">{{scope.row.parameter}}</code>
+            </template>
+            <template slot="res" slot-scope="scope">
+              <code class="code">{{scope.row.res}}</code>
+            </template>
           </zk-table>
         </div>
       </Col>
     </Row>
 
     <!-- add -->
-    <Modal v-model="addModal" width="460">
+    <Modal v-model="addModal" width="600">
       <p slot="header" style="text-align:center">
-        <span>新增部门</span>
+        <span>新增</span>
       </p>
       <Form ref="form" :model="form" :rules="rules" :label-width="70">
-        <FormItem prop="departmentname" label="部门名称">
-          <Input v-model="form.departmentname" placeholder="请输入部门名称"></Input>
+        <FormItem prop="name" label="接口名称">
+          <Input v-model="form.name" placeholder="请输入接口名称"></Input>
         </FormItem>
-        <FormItem prop="departmentcode" label="部门编码">
-          <Input  v-model="form.departmentcode" placeholder="请输入部门编码"></Input>
+        <FormItem prop="url" label="API地址">
+          <Input  v-model="form.url" placeholder="请输入路由地址"></Input>
         </FormItem>
-        <!-- <FormItem prop="updid" label="父级部门">
-          <Input  v-model="form.updid" placeholder="请输入父级id"></Input>
-        </FormItem> -->
-        <FormItem prop="updid" label="父级部门">
-          <Cascader change-on-select @on-change="onSelectDep" :data="casData"></Cascader>
+        <FormItem prop="parameter" label="参数">
+          <Input type="textarea" v-model="form.parameter" ></Input>
+        </FormItem>
+        <FormItem prop="res" label="返回值">
+          <Input type="textarea" :autosize="{minRows: 2,maxRows: 5}" v-model="form.res" ></Input>
+        </FormItem>
+        <FormItem label="说明">
+          <Input  type="textarea" v-model="form.explain"></Input>
         </FormItem>
       </Form>
       <div slot="footer">
@@ -50,20 +67,27 @@
         <Button type="primary" :loading="modal_loading" @click="add">提交</Button>
       </div>
     </Modal>
+
     <!-- edit -->
-    <Modal v-model="editModal" width="460">
+    <Modal v-model="editModal" width="600">
       <p slot="header" style="text-align:center">
         <span>修改信息</span>
       </p>
-      <Form :model="editData" :rules="rules" :label-width="70">
-        <FormItem prop="departmentname" label="部门名称">
-          <Input v-model="editData.departmentname" placeholder="请输入部门名称"></Input>
+      <Form :model="editData"  :rules="rules" :label-width="70">
+        <FormItem prop="name" label="接口名称">
+          <Input v-model="editData.name" placeholder="请输入接口名称"></Input>
         </FormItem>
-        <FormItem prop="departmentcode" label="部门编码">
-          <Input  v-model="editData.departmentcode" placeholder="请输入部门编码"></Input>
+        <FormItem prop="url" label="API地址">
+          <Input  v-model="editData.url" placeholder="请输入路由地址"></Input>
         </FormItem>
-        <FormItem prop="updid" label="父级部门">
-          <Input  v-model="editData.updid" placeholder="请输入父级id"></Input>
+        <FormItem prop="parameter" label="参数">
+          <Input type="textarea" v-model="editData.parameter" ></Input>
+        </FormItem>
+        <FormItem prop="res" label="返回值">
+          <Input type="textarea" :autosize="{minRows: 2,maxRows: 5}" v-model="editData.res" ></Input>
+        </FormItem>
+        <FormItem label="说明">
+          <Input  type="textarea" v-model="editData.explain"></Input>
         </FormItem>
       </Form>
       <div slot="footer">
@@ -77,8 +101,10 @@
 
 <script>
 import serverApi from '../../axios'
+import {arrSearch} from '../../utlis/tools.js'
+import exportExcel from '../../utlis/table2excel.js'
 export default {
-  name: 'Department',
+  name: 'Api',
   data () {
     return {
       loading: false,
@@ -86,43 +112,58 @@ export default {
       editModal: false,
       modal_loading: false,
       isFold: true,
+      searchKey: '',
       form: {
-        departmentname: '',
-        departmentcode: '',
-        updid: '1'
+        name: '',
+        url: '',
+        explain: '',
+        parameter: '无',
+        res: '',
+        bak1: '',
+        bak2: '',
+        bak3: '',
       },
       rules: {
-        departmentname: [{ required: true, message: '名称不能为空', trigger: 'blur' }],
-        departmentcode: [{ required: true, message: '编码不能为空', trigger: 'blur' }],
-        updid: [{ required: true, message: '父级不能为空', trigger: 'blur' }]
+        name: [{ required: true, message: '名称不能为空', trigger: 'blur' }],
+        url: [{ required: true, message: '地址不能为空', trigger: 'blur' }]
       },
       tableData: [],
       columns: [
         {
-          label: '部门名称',
-          prop: 'departmentname'
+          label: '名称',
+          prop: 'name',
+          width: '120px'
         },
         {
-          label: '部门编码',
-          prop: 'departmentcode',
-          width: '200px'
+          label: '地址',
+          prop: 'url',
+          type: 'template',
+          template: 'url',
+          width: '120px'
         },
         {
-          label: 'ID编号',
-          prop: 'id',
-          width: '80px'
+          label: '参数',
+          prop: 'parameter',
+          type: 'template',
+          template: 'parameter',
         },
         {
-          label: '父级',
-          prop: 'updid',
-          width: '80px'
+          label: '返回值',
+          prop: 'res',
+          type: 'template',
+          template: 'res'
+        },
+        {
+          label: '说明',
+          prop: 'explain',
+          width: '180px'
         },
         {
           label: '操作',
           prop: 'id',
           type: 'template',
           template: 'id',
-          width: '200px'
+          width: '160px'
         }
       ],
       editData: {},
@@ -134,29 +175,19 @@ export default {
 
   },
   computed: {
+    searchData(){
+      var search =  this.searchKey
+      return arrSearch(this.tableData, search)
+    }
   },
   methods: {
     getTableData () {
       this.$store.commit('pageLoading', true)
-      serverApi('/depar/index', '',
+      serverApi('/api/index', '',
         response => {
           // console.log(response)
           if (response.data.code === 0){
             this.tableData = response.data.data
-            let cas = response.data.data
-
-            let getCas = function (arr) {
-              arr.forEach(item => {
-                item.label = item.departmentname,
-                item.value = item.id
-                item.children = item.child
-                if (item.child.length > 0) {
-                  getCas(item.child)
-                }
-              })
-            }
-            getCas(cas)
-            this.casData = cas
           }else{
             this.$Message.warning(response.data.msg)
           }
@@ -179,7 +210,7 @@ export default {
       delete this.editData._index
       delete this.editData._rowKey
       this.modal_loading = true
-      serverApi('/depar/edit', this.editData,
+      serverApi('/api/edit', this.editData,
         response => {
           this.modal_loading = false
           if (response.data.code === 0) {
@@ -199,12 +230,10 @@ export default {
         title: '提示',
         content: '<p>确认删除此条信息？</p>',
         onOk: () => {
-          serverApi('/depar/del', {id: id},
+          serverApi('/api/del', {id: id},
             response => {
               this.$Message.info(response.data.msg)
-              if (response.data.code === 0) {
-                this.getTableData()
-              }
+              this.getTableData()
             },
             error => {
               console.log(error)
@@ -218,9 +247,10 @@ export default {
       this.$refs.form.validate(valid => {
         if (valid) {
           this.modal_loading = true
-          serverApi('/depar/add', this.form,
+          serverApi('/api/add', this.form,
             response => {
               this.modal_loading = false
+              console.log(response)
               if (response.data.code === 0) {
                 this.addModal = false
                 this.getTableData()
@@ -235,10 +265,13 @@ export default {
         }
       })
     },
-    onSelectDep (e) {
-      if (e && e.length) {
-        this.form.updid = String(e[e.length-1])
+    exportTable () {
+      if (this.searchData.length > 0) {
+        exportExcel(this.searchData, 'Api表格导出')
+      } else {
+        this.$Message.info('无数据！！')
       }
+
     }
   }
 }
@@ -254,5 +287,17 @@ export default {
   }
   .tableBox{
     padding-top: 12px;
+  }
+  .ml10{
+    margin-left: 8px;
+  }
+  .code{
+    background-color: #F3F3F3;
+    padding: 2px 8px;
+    font-family: 'Consolas';
+    display: block;
+    font-size: 12px;
+    line-height: 16px;
+    border-radius: 2px;
   }
 </style>

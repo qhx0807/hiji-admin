@@ -28,6 +28,11 @@
                 <div class="header-middle-con">
                     <div class="main-breadcrumb">
                         <!-- <breadcrumb-nav :currentPath="currentPath"></breadcrumb-nav> -->
+                      <Breadcrumb>
+                        <BreadcrumbItem to="">Home</BreadcrumbItem>
+                        <BreadcrumbItem to="">系统设置</BreadcrumbItem>
+                        <BreadcrumbItem>菜单管理</BreadcrumbItem>
+                      </Breadcrumb>
                     </div>
                 </div>
                 <div class="header-avator-con">
@@ -54,9 +59,9 @@
         <div class="single-page-con" :style="{left: shrink?'60px':'200px'}">
           <div class="single-page">
             <Spin v-show="pageLoading" size="large" fix></Spin>
-            <transition name="fade">
+            <!-- <transition name="fade"> -->
               <router-view></router-view>
-            </transition>
+            <!-- </transition> -->
           </div>
         </div>
     </div>
@@ -65,9 +70,8 @@
 import shrinkableMenu from '../main-components/shrinkable-menu/shrinkable-menu.vue'
 import fullScreen from '../main-components/fullscreen/fullscreen.vue'
 import lockScreen from '../main-components/lockscreen/lockscreen.vue'
-// import Cookies from 'js-cookie'
 import scrollBar from '../scroll-bar/vue-scroller-bars'
-
+import serverApi from '../../axios'
 export default {
   components: {
     shrinkableMenu,
@@ -83,29 +87,11 @@ export default {
       userName: '',
       isFullScreen: false,
       openedSubmenuArr: [],
-      avatorPath: ''
+      avatorPath: '',
+      menuList: []
     }
   },
-  created () {
-    this.userName = sessionStorage.username || ''
-  },
   computed: {
-    menuList () {
-      return [
-        {
-          children: [
-            {
-              name: 'Department',
-              icon: 'folder',
-              title: '部门管理'
-            }
-          ],
-          name: '1',
-          icon: 'folder',
-          title: '系统设置'
-        }
-      ]
-    },
     menuTheme () {
       return 'dark'
     },
@@ -115,6 +101,10 @@ export default {
     pageLoading () {
       return this.$store.getters.isLoading
     }
+  },
+  created () {
+    this.userName = sessionStorage.username || ''
+    this.getMenuList()
   },
   methods: {
     toggleClick () {
@@ -133,6 +123,20 @@ export default {
           }
         })
       }
+    },
+    getMenuList () {
+      serverApi('/menu/index', '',
+        response => {
+          if (response.data.code === 0) {
+            this.menuList = response.data.data
+          } else {
+            this.$Message.warning(response.data.msg)
+          }
+        },
+        error => {
+          console.log(error)
+        }
+      )
     }
   },
   watch: {},

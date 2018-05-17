@@ -17,9 +17,13 @@
             :columns="columns">
             <template slot="id" slot-scope="scope">
               <div>
+                <!-- <Button icon="plus" size="small" type="text" @click="onClickEdit(scope.row)">添加</Button> -->
                 <Button icon="edit" size="small" type="text" @click="onClickEdit(scope.row)">修改</Button>
                 <Button icon="trash-a" size="small" type="text" @click="remove(scope.row.id)">删除</Button>
               </div>
+            </template>
+            <template slot="icon" slot-scope="scope">
+              <Icon :type="scope.row.icon" size="20" color="#5cadff"></Icon>
             </template>
           </zk-table>
         </div>
@@ -29,41 +33,49 @@
     <!-- add -->
     <Modal v-model="addModal" width="460">
       <p slot="header" style="text-align:center">
-        <span>新增部门</span>
+        <span>新增菜单</span>
       </p>
       <Form ref="form" :model="form" :rules="rules" :label-width="70">
-        <FormItem prop="departmentname" label="部门名称">
-          <Input v-model="form.departmentname" placeholder="请输入部门名称"></Input>
+        <FormItem prop="name" label="菜单名称">
+          <Input v-model="form.name" placeholder="请输入菜单名称"></Input>
         </FormItem>
-        <FormItem prop="departmentcode" label="部门编码">
-          <Input  v-model="form.departmentcode" placeholder="请输入部门编码"></Input>
+        <FormItem prop="url" label="路由地址">
+          <Input  v-model="form.url" placeholder="请输入路由地址"></Input>
         </FormItem>
-        <!-- <FormItem prop="updid" label="父级部门">
+        <!-- <FormItem prop="updid" label="上级菜单">
           <Input  v-model="form.updid" placeholder="请输入父级id"></Input>
         </FormItem> -->
-        <FormItem prop="updid" label="父级部门">
+        <FormItem label="菜单图标">
+          <Input  v-model="form.icon" placeholder="请输入icon"></Input>
+        </FormItem>
+        <FormItem prop="updid" label="上级菜单">
           <Cascader change-on-select @on-change="onSelectDep" :data="casData"></Cascader>
         </FormItem>
       </Form>
+
       <div slot="footer">
         <Button type="ghost"  @click="addModal = false">取消</Button>
         <Button type="primary" :loading="modal_loading" @click="add">提交</Button>
       </div>
     </Modal>
+
     <!-- edit -->
     <Modal v-model="editModal" width="460">
       <p slot="header" style="text-align:center">
         <span>修改信息</span>
       </p>
-      <Form :model="editData" :rules="rules" :label-width="70">
-        <FormItem prop="departmentname" label="部门名称">
-          <Input v-model="editData.departmentname" placeholder="请输入部门名称"></Input>
+      <Form :model="editData"  :rules="rules" :label-width="70">
+        <FormItem prop="name" label="菜单名称">
+          <Input v-model="editData.name" placeholder="请输入菜单名称"></Input>
         </FormItem>
-        <FormItem prop="departmentcode" label="部门编码">
-          <Input  v-model="editData.departmentcode" placeholder="请输入部门编码"></Input>
+        <FormItem prop="url" label="路由地址">
+          <Input  v-model="editData.url" placeholder="请输入路由地址"></Input>
         </FormItem>
-        <FormItem prop="updid" label="父级部门">
+        <FormItem prop="updid" label="父级菜单">
           <Input  v-model="editData.updid" placeholder="请输入父级id"></Input>
+        </FormItem>
+        <FormItem label="菜单图标">
+          <Input  v-model="editData.icon" placeholder="请输入icon"></Input>
         </FormItem>
       </Form>
       <div slot="footer">
@@ -78,7 +90,7 @@
 <script>
 import serverApi from '../../axios'
 export default {
-  name: 'Department',
+  name: 'Menu',
   data () {
     return {
       loading: false,
@@ -87,35 +99,40 @@ export default {
       modal_loading: false,
       isFold: true,
       form: {
-        departmentname: '',
-        departmentcode: '',
-        updid: '1'
+        name: '',
+        url: '',
+        updid: '1',
+        icon: ''
       },
       rules: {
-        departmentname: [{ required: true, message: '名称不能为空', trigger: 'blur' }],
-        departmentcode: [{ required: true, message: '编码不能为空', trigger: 'blur' }],
+        name: [{ required: true, message: '名称不能为空', trigger: 'blur' }],
+        // url: [{ required: true, message: '路由不能为空', trigger: 'blur' }],
         updid: [{ required: true, message: '父级不能为空', trigger: 'blur' }]
       },
       tableData: [],
       columns: [
         {
-          label: '部门名称',
-          prop: 'departmentname'
+          label: '菜单名称',
+          prop: 'name'
         },
         {
-          label: '部门编码',
-          prop: 'departmentcode',
-          width: '200px'
+          label: '路由',
+          prop: 'url',
+        },
+        {
+          label: 'ICON',
+          prop: 'icon',
+          width: '200px',
+          type: 'template',
+          template: 'icon'
         },
         {
           label: 'ID编号',
           prop: 'id',
-          width: '80px'
         },
         {
-          label: '父级',
-          prop: 'updid',
-          width: '80px'
+          label: '创建时间',
+          prop: 'createtime',
         },
         {
           label: '操作',
@@ -138,16 +155,15 @@ export default {
   methods: {
     getTableData () {
       this.$store.commit('pageLoading', true)
-      serverApi('/depar/index', '',
+      serverApi('/menu/index', '',
         response => {
           // console.log(response)
           if (response.data.code === 0){
+            let cas = this._.cloneDeep(response.data.data)
             this.tableData = response.data.data
-            let cas = response.data.data
-
             let getCas = function (arr) {
               arr.forEach(item => {
-                item.label = item.departmentname,
+                item.label = item.name,
                 item.value = item.id
                 item.children = item.child
                 if (item.child.length > 0) {
@@ -156,6 +172,10 @@ export default {
               })
             }
             getCas(cas)
+            cas.push({
+              label: '根目录菜单',
+              value: '1'
+            })
             this.casData = cas
           }else{
             this.$Message.warning(response.data.msg)
@@ -179,7 +199,7 @@ export default {
       delete this.editData._index
       delete this.editData._rowKey
       this.modal_loading = true
-      serverApi('/depar/edit', this.editData,
+      serverApi('/menu/edit', this.editData,
         response => {
           this.modal_loading = false
           if (response.data.code === 0) {
@@ -199,7 +219,7 @@ export default {
         title: '提示',
         content: '<p>确认删除此条信息？</p>',
         onOk: () => {
-          serverApi('/depar/del', {id: id},
+          serverApi('/menu/del', {id: id},
             response => {
               this.$Message.info(response.data.msg)
               if (response.data.code === 0) {
@@ -218,9 +238,10 @@ export default {
       this.$refs.form.validate(valid => {
         if (valid) {
           this.modal_loading = true
-          serverApi('/depar/add', this.form,
+          serverApi('/menu/add', this.form,
             response => {
               this.modal_loading = false
+              console.log(response)
               if (response.data.code === 0) {
                 this.addModal = false
                 this.getTableData()

@@ -61,19 +61,19 @@ export default {
     }
   },
   methods: {
-    handleChange (name) {
+    handleChange (url, name) {
       let willpush = true
       if (this.beforePush !== undefined) {
-        if (!this.beforePush(name)) {
+        if (!this.beforePush(url)) {
           willpush = false
         }
       }
       if (willpush) {
         this.$router.push({
-          name: name
+          name: url
         })
       }
-      this.$emit('on-change', name)
+      this.$emit('on-change', url)
     }
   }
 }
