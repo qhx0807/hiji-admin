@@ -3,13 +3,13 @@
 </style>
 
 <template>
-    <Menu ref="sideMenu" :active-name="$route.name" :open-names="openNames" :theme="menuTheme" width="auto" @on-select="changeMenu">
+    <Menu ref="sideMenu" :active-name="activeName" :open-names="openNames" :theme="menuTheme" width="auto" @on-select="changeMenu">
         <template v-for="item in menuList">
             <MenuItem v-if="item.child.length<1" :name="item.url" :key="'menuitem' + item.url">
                 <Icon :type="item.icon || item.icon" :size="iconSize" :key="'menuicon' + item.id"></Icon>
                 <span class="layout-text" :key="'title' + item.id">{{ item.name }}</span>
             </MenuItem>
-            <Submenu v-if="item.child.length >= 1" :name="item.url" :key="item.id">
+            <Submenu v-if="item.child.length >= 1" :name="item.id" :key="item.id">
                 <template slot="title">
                     <Icon :type="item.icon" :size="iconSize"></Icon>
                     <span class="layout-text">{{ item.name }}</span>
@@ -35,6 +35,9 @@ export default {
       type: String,
       default: 'dark'
     },
+    activeName: {
+      type: String
+    },
     openNames: {
       type: Array
     }
@@ -48,6 +51,7 @@ export default {
     this.$nextTick(() => {
       if (this.$refs.sideMenu) {
         this.$refs.sideMenu.updateOpened()
+        this.$refs.sideMenu.updateActiveName()
       }
     })
   }

@@ -4,11 +4,12 @@
 <template>
     <div class="main" :class="{'main-hide-text': shrink}">
         <div class="sidebar-menu-con" :style="{width: shrink?'60px':'200px', overflow: shrink ? 'visible' : 'auto'}">
-            <scroll-bar ref="scrollBar">
+            <scroll-bar ref="scrollBarRef">
                 <shrinkable-menu
                     :shrink="shrink"
                     @on-change="handleSubmenuChange"
                     :theme="menuTheme"
+                    :active-name="activeName"
                     :open-names="openedSubmenuArr"
                     :menu-list="menuList">
                     <div slot="top" class="logo-con" style="padding-top:18px">
@@ -29,9 +30,7 @@
                     <div class="main-breadcrumb">
                         <!-- <breadcrumb-nav :currentPath="currentPath"></breadcrumb-nav> -->
                       <Breadcrumb>
-                        <BreadcrumbItem to="">Home</BreadcrumbItem>
-                        <BreadcrumbItem to="">系统设置</BreadcrumbItem>
-                        <BreadcrumbItem>菜单管理</BreadcrumbItem>
+                        <BreadcrumbItem v-for="(item, index) in breadcrumbArr" :key="index" :to="item.to">{{item.name}}</BreadcrumbItem>
                       </Breadcrumb>
                     </div>
                 </div>
@@ -72,6 +71,7 @@ import fullScreen from '../main-components/fullscreen/fullscreen.vue'
 import lockScreen from '../main-components/lockscreen/lockscreen.vue'
 import scrollBar from '../scroll-bar/vue-scroller-bars'
 import serverApi from '../../axios'
+import {formatJsonTree} from '../../utlis/tools.js'
 export default {
   components: {
     shrinkableMenu,
@@ -88,7 +88,9 @@ export default {
       isFullScreen: false,
       openedSubmenuArr: [],
       avatorPath: '',
-      menuList: []
+      activeName: '',
+      menuList: [],
+      menuTable: []
     }
   },
   computed: {
@@ -100,17 +102,36 @@ export default {
     },
     pageLoading () {
       return this.$store.getters.isLoading
+    },
+    breadcrumbArr () {
+      return this.$store.getters.breadcrumList
     }
   },
   created () {
     this.userName = sessionStorage.username || ''
     this.getMenuList()
+    this.activeName = this.$route.name
   },
   methods: {
     toggleClick () {
       this.shrink = !this.shrink
     },
-    handleSubmenuChange () {},
+    scrollBarResize () {
+      this.$refs.scrollBarRef.resize()
+    },
+    handleSubmenuChange (e) {
+      let arr = []
+      let obj = this.menuTable.find((item) => {
+        return item.url === e
+      })
+      if (obj.upname) {
+        arr.push({name: obj.upname, to: ''})
+        arr.push({name: obj.name, to: obj.url})
+      } else {
+        arr.push({name: obj.name, to: obj.url})
+      }
+      this.$store.commit('updateBread', arr)
+    },
     fullscreenChange () {},
     handleClickUserDropdown (e) {
       if (e === 'loginout') {
@@ -127,8 +148,29 @@ export default {
     getMenuList () {
       serverApi('/menu/index', '',
         response => {
+          // console.log(response)
           if (response.data.code === 0) {
             this.menuList = response.data.data
+            this.menuTable = formatJsonTree(response.data.data, 'child')
+            let n = this.$route.name
+
+            let arr = []
+            let obj = this.menuTable.find((item) => {
+              return item.url === n
+            })
+            if (obj.upname) {
+              arr.push({name: obj.upname, to: ''})
+              arr.push({name: obj.name, to: obj.url})
+            } else {
+              arr.push({name: obj.name, to: obj.url})
+            }
+            let a = obj.updid
+            // this.openedSubmenuArr =
+            let b = []
+            b.push(a)
+            this.openedSubmenuArr = b
+            this.$store.commit('updateBread', arr)
+
           } else {
             this.$Message.warning(response.data.msg)
           }
@@ -139,12 +181,12 @@ export default {
       )
     }
   },
-  watch: {},
+  watch: { },
   mounted () {
-    // window.addEventListener('resize', this.scrollBarResize)
+    window.addEventListener('resize', this.scrollBarResize)
   },
   dispatch () {
-    // window.removeEventListener('resize', this.scrollBarResize)
+    window.removeEventListener('resize', this.scrollBarResize)
   }
 }
 </script>

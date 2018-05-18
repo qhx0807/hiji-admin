@@ -10,4 +10,17 @@ const arrSearch = (arr, search) => {
   }
 }
 
-export { arrSearch }
+let res = []
+const formatJsonTree = (arr, childrenName) => {
+  let name = childrenName || 'child'
+  arr.forEach(item => {
+    if (!item[name] || item[name].length === 0) {
+      res.push(item)
+    } else {
+      formatJsonTree(item[name], name)
+    }
+  })
+  return res
+}
+
+export { arrSearch, formatJsonTree }

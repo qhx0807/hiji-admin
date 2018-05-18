@@ -1,0 +1,89 @@
+<template>
+  <div class="box">
+    <Card>
+      <Row>
+        <Col span="24" style="padding-bottom:12px">
+          <Input v-model="searchKey" placeholder="搜索关键字..." style="width: 200px"></Input>
+          <DatePicker type="daterange" placeholder="日期范围" style="width: 220px"></DatePicker>
+          <Button type="primary" style="margin-left:8px" icon="ios-search" @click="onClickSearch">搜索</Button>
+        </Col>
+      </Row>
+      <Table :columns="columns1" :data="tableData"></Table>
+      <div style="float: right; padding-top:12px">
+        <Page :total="count" show-total :current="page" @on-change="changePage"></Page>
+      </div>
+      <div style="clear:both"></div>
+    </Card>
+    <BackTop></BackTop>
+  </div>
+</template>
+
+<script>
+import serverApi from '../../axios'
+export default {
+  name: 'Log',
+  data () {
+    return {
+      tableData: [],
+      searchKey: '',
+      count: 0,
+      page: 1,
+      columns1: [
+        {
+          title: '序号',
+          type: 'index',
+          width: 80
+        },
+        {
+          title: '操作用户',
+          key: 'threadid',
+          width: 200
+        },
+        {
+          title: '操作内容',
+          key: 'content'
+        },
+        {
+          title: '时间',
+          key: 'createtime',
+          width: 200
+        }
+    ],
+    }
+  },
+  created () {
+    this.getTableData()
+  },
+  methods: {
+    getTableData () {
+      this.$store.commit('pageLoading', true)
+      serverApi('/log/index', '',
+        response => {
+          // console.log(response)
+          if (response.data.code === 0){
+            this.tableData = response.data.data.result
+            this.count = response.data.data.counts
+          }else{
+            this.$Message.warning(response.data.msg)
+          }
+          this.$store.commit('pageLoading', false)
+        },
+        error => {
+          console.log(error)
+          this.$store.commit('pageLoading', false)
+        }
+      )
+    },
+    changePage (e) {
+      console.log(e)
+    },
+    onClickSearch () {
+
+    }
+  }
+}
+</script>
+
+<style lang="less" scoped>
+
+</style>

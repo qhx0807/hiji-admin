@@ -12,6 +12,7 @@
       <Col span="24">
         <div class="tableBox">
           <zk-table
+            style="width:100%"
             :data="searchData"
             children-prop="child"
             :selection-type="false"
@@ -284,9 +285,12 @@ export default {
   .wrap{
     padding: 8px;
     position: relative;
+    width: 100%;
+    overflow: hidden;
   }
   .tableBox{
     padding-top: 12px;
+    width: 100%;
   }
   .ml10{
     margin-left: 8px;
