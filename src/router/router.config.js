@@ -5,6 +5,8 @@ const Lock = r => require.ensure([], () => r(require('@/components/main-componen
 const Department = r => require.ensure([], () => r(require('@/components/settings/department.vue')))
 const Menu = r => require.ensure([], () => r(require('@/components/settings/menu.vue')))
 const Api = r => require.ensure([], () => r(require('@/components/settings/api.vue')))
+const Auction = r => require.ensure([], () => r(require('@/components/auction/auction.vue')))
+const Log = r => require.ensure([], () => r(require('@/components/settings/log.vue')))
 
 const routes = [
   {
@@ -35,6 +37,16 @@ const routes = [
         path: 'Api',
         name: 'Api',
         component: Api
+      },
+      {
+        path: 'Auction',
+        name: 'Auction',
+        component: Auction
+      },
+      {
+        path: 'Log',
+        name: 'Log',
+        component: Log
       }
     ]
   },
