@@ -7,19 +7,23 @@ const store = new Vuex.Store({
   state: {
     login: true,
     pageLoading: false,
-    breadcrumbArr: [
-      {name: 'Home', to: ''},
-      {name: 'Home', to: ''}
-    ]
+    breadcrumbArr: []
   },
   getters: {
     isLoading (state) {
       return state.pageLoading
+    },
+    breadcrumList (state) {
+      return state.breadcrumbArr
     }
   },
   mutations: {
     pageLoading (state, n) {
       state.pageLoading = !!n
+    },
+    updateBread (state, arr) {
+      let base = [{name: 'Home', to: '/Main'}]
+      state.breadcrumbArr = base.concat(arr)
     }
   },
   actions: {},
