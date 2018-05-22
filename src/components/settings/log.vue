@@ -61,7 +61,7 @@ export default {
     getTableData (page, size) {
       this.$store.commit('pageLoading', true)
       let d = {
-        limit: size,
+        pageSize: size,
         page: page
       }
       serverApi('/log/index', d,
@@ -102,7 +102,6 @@ export default {
       this.$store.commit('pageLoading', true)
       serverApi('/log/index', d,
         response => {
-          // console.log(response)
           if (response.data.code === 0){
             this.tableData = response.data.data.result
             this.count = response.data.data.counts

@@ -63,7 +63,7 @@ export default {
           this.loading = true
           serverApi('/login', this.form,
             response => {
-              console.log(response)
+              // console.log(response)
               this.loading = false
               if (response.data.code === 0) {
                 window.sessionStorage.token = response.data.data.token
@@ -71,7 +71,7 @@ export default {
                 window.sessionStorage.userid = response.data.data.userid
                 this.$Message.info(response.data.msg)
                 this.$router.replace({
-                  name: 'Main'
+                  name: 'Home'
                 })
               } else {
                 this.$Message.info(response.data.msg)

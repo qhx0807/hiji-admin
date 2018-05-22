@@ -13,7 +13,7 @@
                     :open-names="openedSubmenuArr"
                     :menu-list="menuList">
                     <div slot="top" class="logo-con" style="padding-top:18px">
-                      <img v-show="!shrink"  src="../../images/logo.jpg" key="max-logo" />
+                      <!-- <img v-show="!shrink"  src="../../images/logo.jpg" key="max-logo" /> -->
                       <img v-show="shrink" src="../../images/mini.png" key="min-logo" style="height:25px"/>
                     </div>
                 </shrinkable-menu>
@@ -49,7 +49,7 @@
                                     <DropdownItem name="loginout" divided>退出登录</DropdownItem>
                                 </DropdownMenu>
                             </Dropdown>
-                            <Avatar :src="avatorPath" style="background: #619fe7;margin-left: 10px;"></Avatar>
+                            <Avatar style="background: #619fe7;margin-left: 10px;text-align:center" icon="person"></Avatar>
                         </Row>
                     </div>
                 </div>
