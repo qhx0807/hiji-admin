@@ -9,6 +9,8 @@ const Auction = r => require.ensure([], () => r(require('@/components/auction/au
 const Log = r => require.ensure([], () => r(require('@/components/settings/log.vue')))
 const Home = r => require.ensure([], () => r(require('@/components/home/home.vue')))
 const Account = r => require.ensure([], () => r(require('@/components/settings/account.vue')))
+const Device = r => require.ensure([], () => r(require('@/components/settings/device.vue')))
+const Merchant = r => require.ensure([], () => r(require('@/components/settings/merchant.vue')))
 
 const routes = [
   {
@@ -58,6 +60,16 @@ const routes = [
         path: 'Account',
         name: 'Account',
         component: Account
+      },
+      {
+        path: 'Device',
+        name: 'Device',
+        component: Device
+      },
+      {
+        path: 'Merchant',
+        name: 'Merchant',
+        component: Merchant
       }
     ]
   },
