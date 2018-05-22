@@ -9,7 +9,7 @@
 </style>
 
 <template>
-<div class="wrap">
+<Card>
  <div class="head">
       <Button type="primary" @click="onClickAdd">新增</Button>
     </div>
@@ -89,7 +89,7 @@
         <Button type="primary" :loading="modal_loading" @click="save">提交</Button>
       </div>
     </Modal>
-</div>
+</Card>
 </template>
 
 <script>

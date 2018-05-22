@@ -1,30 +1,32 @@
 <template>
-  <div class="wrap">
-    <div class="head">
-      <Button type="primary" @click="onClickAdd">新增</Button>
-    </div>
-    <Row>
-      <Col span="24">
-        <div class="tableBox">
-          <zk-table
-            :data="tableData"
-            show-index
-            children-prop="child"
-            :tree-type="true"
-            :selection-type="false"
-            :is-fold="isFold"
-            :expand-type="false"
-            :columns="columns">
-            <template slot="id" slot-scope="scope">
-              <div>
-                <Button icon="edit" size="small" type="text" @click="onClickEdit(scope.row)">修改</Button>
-                <Button icon="trash-a" size="small" type="text" @click="remove(scope.row.id)">删除</Button>
-              </div>
-            </template>
-          </zk-table>
-        </div>
-      </Col>
-    </Row>
+  <div>
+    <Card>
+      <div class="head">
+        <Button type="primary" @click="onClickAdd">新增</Button>
+      </div>
+      <Row>
+        <Col span="24">
+          <div class="tableBox">
+            <zk-table
+              :data="tableData"
+              show-index
+              children-prop="child"
+              :tree-type="true"
+              :selection-type="false"
+              :is-fold="isFold"
+              :expand-type="false"
+              :columns="columns">
+              <template slot="id" slot-scope="scope">
+                <div>
+                  <Button icon="edit" size="small" type="text" @click="onClickEdit(scope.row)">修改</Button>
+                  <Button icon="trash-a" size="small" type="text" @click="remove(scope.row.id)">删除</Button>
+                </div>
+              </template>
+            </zk-table>
+          </div>
+        </Col>
+      </Row>
+    </Card>
 
     <!-- add -->
     <Modal v-model="addModal" width="460">

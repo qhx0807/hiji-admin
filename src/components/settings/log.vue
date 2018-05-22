@@ -8,7 +8,7 @@
           <Button type="primary" style="margin-left:8px" icon="ios-search" @click="onClickSearch">搜索</Button>
         </Col>
       </Row>
-      <Table :columns="columns1" :data="tableData"></Table>
+      <Table size="small" :columns="columns1" :data="tableData"></Table>
       <div style="float: right; padding-top:12px">
         <Page :total="count" show-total :current="page" @on-change="changePage" show-sizer @on-page-size-change="onChangeSize"></Page>
       </div>

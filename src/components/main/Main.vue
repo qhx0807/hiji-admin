@@ -55,7 +55,7 @@
                 </div>
             </div>
         </div>
-        <div class="single-page-con" :style="{left: shrink?'60px':'200px'}">
+        <div class="single-page-con" :style="{left: shrink ? '60px':'200px'}">
           <div class="single-page">
             <Spin v-show="pageLoading" size="large" fix></Spin>
             <!-- <transition name="fade"> -->
@@ -71,7 +71,7 @@ import fullScreen from '../main-components/fullscreen/fullscreen.vue'
 import lockScreen from '../main-components/lockscreen/lockscreen.vue'
 import scrollBar from '../scroll-bar/vue-scroller-bars'
 import serverApi from '../../axios'
-import {formatJsonTree} from '../../utlis/tools.js'
+import { formatJsonTree } from '../../utlis/tools.js'
 export default {
   components: {
     shrinkableMenu,

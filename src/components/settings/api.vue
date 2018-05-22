@@ -1,5 +1,5 @@
 <template>
-  <div class="wrap">
+  <Card>
     <Row>
       <Col span="24">
         <Input v-model="searchKey"  placeholder="Search..." style="width: 230px"></Input>
@@ -97,7 +97,7 @@
       </div>
     </Modal>
 
-  </div>
+  </Card>
 </template>
 
 <script>
