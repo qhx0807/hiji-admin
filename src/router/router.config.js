@@ -7,6 +7,8 @@ const Menu = r => require.ensure([], () => r(require('@/components/settings/menu
 const Api = r => require.ensure([], () => r(require('@/components/settings/api.vue')))
 const Auction = r => require.ensure([], () => r(require('@/components/auction/auction.vue')))
 const Log = r => require.ensure([], () => r(require('@/components/settings/log.vue')))
+const Home = r => require.ensure([], () => r(require('@/components/home/home.vue')))
+const Account = r => require.ensure([], () => r(require('@/components/settings/account.vue')))
 
 const routes = [
   {
@@ -20,9 +22,13 @@ const routes = [
   },
   {
     path: '/Main',
-    name: 'Main',
     component: Main,
     children: [
+      {
+        path: '',
+        component: Home,
+        name: 'Home'
+      },
       {
         path: 'Department',
         name: 'Department',
@@ -47,6 +53,11 @@ const routes = [
         path: 'Log',
         name: 'Log',
         component: Log
+      },
+      {
+        path: 'Account',
+        name: 'Account',
+        component: Account
       }
     ]
   },
