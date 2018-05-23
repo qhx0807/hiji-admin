@@ -134,10 +134,6 @@ export default {
           width: '150px'
         },
         {
-          label: '密码',
-          prop: 'pass'
-        },
-        {
           label: '联系电话',
           prop: 'tel'
         },
@@ -149,7 +145,6 @@ export default {
           label: '所在公司',
           prop: 'company'
         },
-
         {
           label: '操作',
           prop: 'id',
