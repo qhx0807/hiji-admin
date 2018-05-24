@@ -11,6 +11,7 @@ const Home = r => require.ensure([], () => r(require('@/components/home/home.vue
 const Account = r => require.ensure([], () => r(require('@/components/settings/account.vue')))
 const Device = r => require.ensure([], () => r(require('@/components/settings/device.vue')))
 const Merchant = r => require.ensure([], () => r(require('@/components/settings/merchant.vue')))
+const PayOrders = r => require.ensure([], () => r(require('@/components/settings/payorders.vue')))
 
 const routes = [
   {
@@ -70,6 +71,11 @@ const routes = [
         path: 'Merchant',
         name: 'Merchant',
         component: Merchant
+      },
+      {
+        path: 'PayOrders',
+        name: 'PayOrders',
+        component: PayOrders
       }
     ]
   },
