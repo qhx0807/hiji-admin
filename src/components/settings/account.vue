@@ -44,10 +44,12 @@
       </p>
       <Form :model="editData"  :rules="rules" :label-width="70">
         <FormItem prop="username" label="账户名称">
-          <Input v-model="editData.username" placeholder="请输入账户名称"></Input>
+          <Input disabled v-model="editData.username" placeholder="请输入账户名称"></Input>
         </FormItem>
-        <FormItem prop="password" label="账户密码">
-          <Input v-model="editData.password" placeholder="请输入账户密码"></Input>
+        <FormItem label="账户密码">
+          <Tooltip content="输入密码保存将会改变原密码！" placement="top-start">
+            <Input v-model="editPass" style="width:100%" placeholder="请输入账户密码"></Input>
+          </Tooltip>
         </FormItem>
         <FormItem label="当前部门">
           <Input readonly v-model="editData.departmentname" placeholder="请输入"></Input>
@@ -113,8 +115,8 @@ export default {
           title: '状态',
           key: 'isuse',
           render: (h, params) => {
-            let color = params.row.status == 1 ? 'green' : 'yellow'
-            let text = params.row.status == 1 ? '正常' : '未启用'
+            let color = params.row.isuse == 1 ? 'green' : 'yellow'
+            let text = params.row.isuse == 1 ? '正常' : '未启用'
             return h('Tag', {
               props: {
                 color: color,
@@ -174,7 +176,8 @@ export default {
         }
       ],
       tableData: [],
-      casData: []
+      casData: [],
+      editPass: ''
     }
   },
   created () {
@@ -191,7 +194,7 @@ export default {
       this.$store.commit('pageLoading', true)
       serverApi('/account/index', d,
         response => {
-          console.log(response)
+          // console.log(response)
           if (response.data.code === 0){
             this.tableData = response.data.data.result
             this.count = response.data.data.counts
@@ -210,7 +213,7 @@ export default {
       serverApi('/depar/index', '',
         response => {
           if (response.data.code === 0){
-            console.log(response)
+            // console.log(response)
             let cas = response.data.data
             let getCas = function (arr) {
               arr.forEach(item => {
@@ -244,6 +247,11 @@ export default {
     edit () {
       delete this.editData._index
       delete this.editData._rowKey
+      delete this.editData.lastip
+      delete this.editData.lasttime
+      delete this.editData.authority
+      delete this.editData.departmentname
+      this.editData.password = this.editPass
       this.modal_loading = true
       serverApi('/account/edit', this.editData,
         response => {
