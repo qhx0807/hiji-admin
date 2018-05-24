@@ -21,7 +21,7 @@
 <script>
 import serverApi from '../../axios'
 export default {
-  name: 'Log',
+  name: 'PayOrders',
   data () {
     return {
       tableData: [],
@@ -38,18 +38,35 @@ export default {
           width: 80
         },
         {
-          title: '操作用户',
-          key: 'threadid',
-          width: 120
+          title: '订单号',
+          key: 'orderno',
         },
         {
-          title: '操作内容',
-          key: 'content'
+          title: '支付金额',
+          key: 'total',
+          width: '120'
         },
         {
-          title: '时间',
+          title: 'openid',
+          key: 'openid'
+        },
+        {
+          title: '设备号',
+          key: 'equipmentno'
+        },
+        {
+          title: '创建时间',
           key: 'createtime',
           width: 200
+        },
+        {
+          title: '支付时间',
+          key: 'paytime',
+          width: 200
+        },
+        {
+          title: '支付状态',
+          key: 'ispay'
         }
     ],
     }
@@ -64,7 +81,7 @@ export default {
         pageSize: size,
         page: page
       }
-      serverApi('/log/index', d,
+      serverApi('/Depar/salenolist', d,
         response => {
           // console.log(response)
           if (response.data.code === 0){
@@ -100,7 +117,7 @@ export default {
         like: this.searchKey
       }
       this.$store.commit('pageLoading', true)
-      serverApi('/log/index', d,
+      serverApi('/Depar/salenolist', d,
         response => {
           if (response.data.code === 0){
             this.tableData = response.data.data.result

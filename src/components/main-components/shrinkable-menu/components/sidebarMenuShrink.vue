@@ -6,7 +6,7 @@
                     <Button style="width: 70px;margin-left: -5px;padding:10px 0;" type="text">
                         <Icon :size="20" :color="iconColor" :type="item.icon"></Icon>
                     </Button>
-                    <DropdownMenu style="width: 200px;" slot="list">
+                    <DropdownMenu style="width: 180px; height:auto!important" slot="list">
                         <template v-for="(child, i) in item.child">
                             <DropdownItem :name="child.url" :key="i"><Icon :type="child.icon"></Icon><span style="padding-left:10px;">{{ child.name }}</span></DropdownItem>
                         </template>
@@ -16,7 +16,7 @@
                     <Button @click="changeMenu(item.url)" style="width: 70px;margin-left: -5px;padding:10px 0;" type="text">
                         <Icon :size="20" :color="iconColor" :type="item.icon || item.icon"></Icon>
                     </Button>
-                    <DropdownMenu style="width: 200px;" slot="list">
+                    <DropdownMenu style="width: 180px;" slot="list">
                         <DropdownItem :name="item.url" :key="'d' + index"><Icon :type="item.icon || item.icon"></Icon><span style="padding-left:10px;">{{ item.name }}</span></DropdownItem>
                     </DropdownMenu>
                 </Dropdown>

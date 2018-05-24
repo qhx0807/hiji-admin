@@ -27,6 +27,9 @@
         <FormItem prop="password" label="账户密码">
           <Input  v-model="form.password" placeholder="请输入账户密码"></Input>
         </FormItem>
+        <FormItem prop="departmentcode" label="选择部门">
+          <Cascader change-on-select @on-change="onSelectDep" :data="casData"></Cascader>
+        </FormItem>
       </Form>
       <div slot="footer">
         <Button type="ghost"  @click="addModal = false">取消</Button>
@@ -44,7 +47,13 @@
           <Input v-model="editData.username" placeholder="请输入账户名称"></Input>
         </FormItem>
         <FormItem prop="password" label="账户密码">
-          <Input  v-model="editData.password" placeholder="请输入账户密码"></Input>
+          <Input v-model="editData.password" placeholder="请输入账户密码"></Input>
+        </FormItem>
+        <FormItem label="当前部门">
+          <Input readonly v-model="editData.departmentname" placeholder="请输入"></Input>
+        </FormItem>
+        <FormItem label="修改部门">
+          <Cascader change-on-select @on-change="onSelectDepEdit" :data="casData"></Cascader>
         </FormItem>
       </Form>
       <div slot="footer">
@@ -70,7 +79,8 @@ export default {
       pageSize: 10,
       form: {
         username: '',
-        password: ''
+        password: '',
+        departmentcode: ''
       },
       rules: {
         username: [{ required: true, message: '名称不能为空', trigger: 'blur' }],
@@ -88,11 +98,23 @@ export default {
           key: 'username',
         },
         {
+          title: '部门',
+          key: 'departmentname',
+        },
+        {
+          title: '部门编号',
+          key: 'departmentcode',
+        },
+        {
+          title: '权限',
+          key: 'authority',
+        },
+        {
           title: '状态',
-          key: 'status',
+          key: 'isuse',
           render: (h, params) => {
-            let color = params.row.status == 3 ? 'green' : 'yellow'
-            let text = params.row.status == 3 ? '正常' : '未启用'
+            let color = params.row.status == 1 ? 'green' : 'yellow'
+            let text = params.row.status == 1 ? '正常' : '未启用'
             return h('Tag', {
               props: {
                 color: color,
@@ -110,8 +132,13 @@ export default {
           key: 'lasttime',
         },
         {
+          title: '最后登录IP',
+          key: 'lastip',
+        },
+        {
           title: '操作',
           key: 'id',
+          width: 160,
           align: 'center',
           render: (h, params) => {
             return h('div', [
@@ -147,10 +174,12 @@ export default {
         }
       ],
       tableData: [],
+      casData: []
     }
   },
   created () {
     this.getTableData(1, 10, '')
+    this.getDepData()
   },
   methods: {
     getTableData (page, size, key) {
@@ -177,9 +206,35 @@ export default {
         }
       )
     },
+    getDepData () {
+      serverApi('/depar/index', '',
+        response => {
+          if (response.data.code === 0){
+            console.log(response)
+            let cas = response.data.data
+            let getCas = function (arr) {
+              arr.forEach(item => {
+                item.label = item.departmentname,
+                item.value = item.departmentcode
+                item.children = item.child
+                if (item.child.length > 0) {
+                  getCas(item.child)
+                }
+              })
+            }
+            getCas(cas)
+            this.casData = cas
+          }else{
+            this.$Message.warning(response.data.msg)
+          }
+        },
+        error => {
+          console.log(error)
+        }
+      )
+    },
     onClickAdd () {
-      this.form.username = ''
-      this.form.password = ''
+      this.$refs.form.resetFields()
       this.addModal = true
     },
     onClickEdit (row) {
@@ -261,6 +316,16 @@ export default {
     },
     onClickSearch () {
       this.getTableData(this.page, this.pageSize, this.searchKey)
+    },
+    onSelectDep (e) {
+      if (e && e.length) {
+        this.form.departmentcode = String(e[e.length-1])
+      }
+    },
+    onSelectDepEdit (e) {
+      if (e && e.length) {
+        this.editData.departmentcode = e[e.length-1]
+      }
     }
   }
 }
