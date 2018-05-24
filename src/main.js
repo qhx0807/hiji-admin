@@ -16,6 +16,17 @@ Vue.prototype._ = _
 
 Vue.config.productionTip = false
 
+router.beforeEach((to, from, next) => {
+  iView.LoadingBar.start()
+  next()
+})
+
+router.afterEach(route => {
+  setTimeout(() => {
+    iView.LoadingBar.finish()
+  }, 2000)
+})
+
 /* eslint-disable no-new */
 new Vue({
   el: '#app',
