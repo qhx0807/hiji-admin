@@ -43,8 +43,12 @@ export default {
         },
         {
           title: '支付金额',
-          key: 'total',
+          key: 'total_fee',
           width: '120'
+        },
+        {
+          title: '商户',
+          key: 'name'
         },
         {
           title: 'openid',
@@ -52,21 +56,12 @@ export default {
         },
         {
           title: '设备号',
-          key: 'equipmentno'
+          key: 'device_info'
         },
         {
           title: '创建时间',
           key: 'createtime',
           width: 200
-        },
-        {
-          title: '支付时间',
-          key: 'paytime',
-          width: 200
-        },
-        {
-          title: '支付状态',
-          key: 'ispay'
         }
     ],
     }
@@ -79,11 +74,13 @@ export default {
       this.$store.commit('pageLoading', true)
       let d = {
         pageSize: size,
-        page: page
+        page: page,
+        like: this.searchKey,
+        userid: sessionStorage.userid
       }
       serverApi('/Depar/salenolist', d,
         response => {
-          // console.log(response)
+          console.log(response)
           if (response.data.code === 0){
             this.tableData = response.data.data.result
             this.count = response.data.data.counts
@@ -114,7 +111,8 @@ export default {
       let d = {
         starttime: this.starttime,
         endtime: this.endtime,
-        like: this.searchKey
+        like: this.searchKey,
+        userid: sessionStorage.userid
       }
       this.$store.commit('pageLoading', true)
       serverApi('/Depar/salenolist', d,
