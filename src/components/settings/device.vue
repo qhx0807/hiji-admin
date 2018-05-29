@@ -362,7 +362,8 @@ export default {
       this.qrModal = true
     },
     bdQrcode (id) {
-      this.qrUrl = ""
+      this.qrUrl = ''
+      this.deviceInfo = ''
       this.qrModal = true
     }
   }

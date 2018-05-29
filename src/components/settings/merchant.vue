@@ -51,7 +51,7 @@
     </Modal>
 
     <!-- edit -->
-    <Modal v-model="editModal" width="500">
+    <Modal v-model="editModal" width="500" :styles="{top: '20px'}">
       <p slot="header" style="text-align:center">
         <span>修改信息</span>
       </p>
