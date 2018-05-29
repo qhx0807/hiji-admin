@@ -69,6 +69,7 @@
       </p>
       <div>
         <img :src="qrUrl" alt="qrcode">
+        <p class="device-info">{{deviceInfo}}</p>
       </div>
       <div slot="footer">
         <Button type="ghost"  @click="qrModal = false">取消</Button>
@@ -96,6 +97,7 @@ export default {
         departmentcode: '',
         equipmentno: ''
       },
+      deviceInfo: '',
       rules: {
         departmentcode: [{ required: true, message: '不能为空', trigger: 'blur' }],
         equipmentno: [{ required: true, message: '不能为空', trigger: 'blur' }]
@@ -121,23 +123,54 @@ export default {
           key: 'departmentcode',
         },
         {
-          title: '操作',
+          title: '收款二维码',
           key: 'id',
-          align: 'center',
+          width: 130,
           render: (h, params) => {
             return h('div', [
               h('Button', {
-                  props: {
-                    type: 'text',
-                    size: 'small',
-                    icon: 'qr-scanner'
-                  },
-                  on: {
-                    click: () => {
-                      this.qrcode(params.row.id)
-                    }
+                props: {
+                  type: 'text',
+                  size: 'small',
+                  icon: 'qr-scanner'
+                },
+                on: {
+                  click: () => {
+                    this.qrcode(params.row.id, params.row.equipmentno)
                   }
-              }, '二维码'),
+                }
+              }, '二维码')
+            ])
+          }
+        },
+        {
+          title: '绑定二维码',
+          key: 'id',
+          width: 130,
+          render: (h, params) => {
+            return h('div', [
+              h('Button', {
+                props: {
+                  type: 'text',
+                  size: 'small',
+                  icon: 'qr-scanner'
+                },
+                on: {
+                  click: () => {
+                    this.bdQrcode(params.row.id)
+                  }
+                }
+              }, '二维码')
+            ])
+          }
+        },
+        {
+          title: '操作',
+          key: 'id',
+          align: 'center',
+          width: 160,
+          render: (h, params) => {
+            return h('div', [
               h('Button', {
                   props: {
                     type: 'text',
@@ -323,8 +356,13 @@ export default {
         this.editData.departmentcode = e[e.length-1]
       }
     },
-    qrcode (code) {
-      this.qrUrl = 'https://pan.baidu.com/share/qrcode?w=480&h=450&url=http://h5.cqyyy.cn/payment.html?deviceid=' + code
+    qrcode (id, code) {
+      this.qrUrl = 'https://pan.baidu.com/share/qrcode?w=480&h=440&url=http://h5.cqyyy.cn/payment.html?deviceid=' + id
+      this.deviceInfo = code
+      this.qrModal = true
+    },
+    bdQrcode (id) {
+      this.qrUrl = ""
       this.qrModal = true
     }
   }
@@ -333,5 +371,9 @@ export default {
 <style lang="less" scoped>
 .head{
   padding-bottom: 12px;
+}
+.device-info{
+  text-align: center;
+  font-size: 18px;
 }
 </style>
