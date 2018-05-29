@@ -1,11 +1,11 @@
 import axios from 'axios'
 
 // const apiUrl = 'http://192.168.1.200/index.php/admin'
-// const apiUrl = 'http://39.108.15.145:8082/index.php?s=/admin'
+const apiUrl = 'http://39.108.15.145:8082/index.php?s=/admin'
 
 const host = 'http://' + window.location.host
 
-let apiUrl = process.env.API_URL
+// let apiUrl = process.env.API_URL
 
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'
 
@@ -20,7 +20,7 @@ axios.interceptors.request.use(function (config) {
 
 axios.interceptors.response.use(function (res) {
   if (res.data.code === 100 || res.data.code === 80) {
-    // alert('token 错误，请重新登录')
+    alert('token 错误，请重新登录')
     window.location.href = host
   }
   return res

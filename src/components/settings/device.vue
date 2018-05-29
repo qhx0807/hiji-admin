@@ -62,6 +62,20 @@
       </div>
     </Modal>
 
+    <!-- qrcode -->
+    <Modal v-model="qrModal" width="500">
+      <p slot="header" style="text-align:center">
+        <span>二维码</span>
+      </p>
+      <div>
+        <img :src="qrUrl" alt="qrcode">
+      </div>
+      <div slot="footer">
+        <Button type="ghost"  @click="qrModal = false">取消</Button>
+        <Button type="primary" @click="qrModal = false">确定</Button>
+      </div>
+    </Modal>
+
   </div>
 </template>
 <script>
@@ -73,6 +87,7 @@ export default {
       searchKey: '',
       addModal: false,
       editModal: false,
+      qrModal: false,
       modal_loading: false,
       count: 0,
       page: 1,
@@ -111,38 +126,51 @@ export default {
           align: 'center',
           render: (h, params) => {
             return h('div', [
-                h('Button', {
-                    props: {
-                      type: 'text',
-                      size: 'small',
-                      icon: 'edit'
-                    },
-                    style: {
-                      marginRight: '5px'
-                    },
-                    on: {
-                      click: () => {
-                        this.onClickEdit(params.row)
-                      }
+              h('Button', {
+                  props: {
+                    type: 'text',
+                    size: 'small',
+                    icon: 'qr-scanner'
+                  },
+                  on: {
+                    click: () => {
+                      this.qrcode(params.row.id)
                     }
-                }, '编辑'),
-                h('Button', {
-                    props: {
-                      type: 'text',
-                      size: 'small',
-                      icon: 'trash-a'
-                    },
-                    on: {
-                      click: () => {
-                        this.remove(params.row.id)
-                      }
+                  }
+              }, '二维码'),
+              h('Button', {
+                  props: {
+                    type: 'text',
+                    size: 'small',
+                    icon: 'edit'
+                  },
+                  style: {
+                    marginRight: '5px'
+                  },
+                  on: {
+                    click: () => {
+                      this.onClickEdit(params.row)
                     }
-                }, '删除')
+                  }
+              }, '编辑'),
+              h('Button', {
+                  props: {
+                    type: 'text',
+                    size: 'small',
+                    icon: 'trash-a'
+                  },
+                  on: {
+                    click: () => {
+                      this.remove(params.row.id)
+                    }
+                  }
+              }, '删除')
             ])
           }
         }
       ],
       tableData: [],
+      qrUrl: ''
     }
   },
   created () {
@@ -294,6 +322,10 @@ export default {
       if (e && e.length) {
         this.editData.departmentcode = e[e.length-1]
       }
+    },
+    qrcode (code) {
+      this.qrUrl = 'https://pan.baidu.com/share/qrcode?w=480&h=450&url=http://h5.cqyyy.cn/payment.html?deviceid=' + code
+      this.qrModal = true
     }
   }
 }
