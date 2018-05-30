@@ -36,10 +36,10 @@
         <FormItem prop="addres" label="联系地址">
           <Input  v-model="form.addres" placeholder="请输入"></Input>
         </FormItem>
-        <FormItem prop="departmentcode" label="所属部门">
-          <!-- <Input  v-model="form.departmentcode" placeholder="请输入"></Input> -->
+        <!-- <FormItem prop="departmentcode" label="所属部门">
+          <Input  v-model="form.departmentcode" placeholder="请输入"></Input>
           <Cascader change-on-select @on-change="onSelectDep" :data="casData"></Cascader>
-        </FormItem>
+        </FormItem> -->
         <FormItem prop="info" label="商户信息">
           <Input type="textarea" v-model="form.info" placeholder="请输入"></Input>
         </FormItem>
@@ -134,10 +134,6 @@ export default {
         {
           title: '名称',
           key: 'name',
-        },
-        {
-          title: '部门',
-          key: 'departmentname',
         },
         {
           title: '联系人',

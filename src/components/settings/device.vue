@@ -69,7 +69,7 @@
       </p>
       <div>
         <img :src="qrUrl" alt="qrcode">
-        <p class="device-info">{{deviceInfo}}</p>
+        <p class="device-info" v-show="deviceInfo">{{deviceInfo}}</p>
       </div>
       <div slot="footer">
         <Button type="ghost"  @click="qrModal = false">取消</Button>
@@ -119,8 +119,8 @@ export default {
           key: 'departmentname',
         },
         {
-          title: '部门编号',
-          key: 'departmentcode',
+          title: '商户',
+          key: 'merchantcode',
         },
         {
           title: '收款二维码',
