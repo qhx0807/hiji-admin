@@ -170,7 +170,7 @@ export default {
                 },
                 on: {
                   click: () => {
-                    this.bdQrcode(params.row.id)
+                    this.bdQrcode(params.row.equipmentno)
                   }
                 }
               }, '二维码')
@@ -401,12 +401,13 @@ export default {
       }
     },
     qrcode (id, code) {
-      this.qrUrl = 'https://pan.baidu.com/share/qrcode?w=480&h=440&url=http://h5.cqyyy.cn/payment.html?deviceid=' + id
+      let city = '1'
+      this.qrUrl = 'https://pan.baidu.com/share/qrcode?w=480&h=440&url=http://h5.cqyyy.cn/payment.html?deviceid=' + id + '&city=' + city
       this.deviceInfo = code
       this.qrModal = true
     },
     bdQrcode (id) {
-      this.qrUrl = ''
+      this.qrUrl = 'https://pan.baidu.com/share/qrcode?w=480&h=440&url=http://server.cqyyy.cn/index.php/admin/login/equimentbingding/departmentcode/' + id
       this.deviceInfo = ''
       this.qrModal = true
     },
