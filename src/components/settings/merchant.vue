@@ -51,7 +51,7 @@
     </Modal>
 
     <!-- edit -->
-    <Modal v-model="editModal" width="500" :styles="{top: '20px'}">
+    <Modal v-model="editModal" width="500" :styles="{top: '70px'}">
       <p slot="header" style="text-align:center">
         <span>修改信息</span>
       </p>
@@ -71,16 +71,16 @@
         <FormItem prop="addres" label="联系地址">
           <Input  v-model="editData.addres" placeholder="请输入"></Input>
         </FormItem>
-        <FormItem prop="departmentname" label="所属部门">
+        <!-- <FormItem prop="departmentname" label="所属部门">
           <Input  v-model="editData.departmentname" placeholder="请输入"></Input>
         </FormItem>
         <FormItem prop="departmentcode" label="部门编码">
           <Input  v-model="editData.departmentcode" placeholder="请输入"></Input>
         </FormItem>
         <FormItem prop="departmentcode" label="所属部门">
-          <!-- <Input  v-model="editData.departmentcode" placeholder="请输入"></Input> -->
+          <Input  v-model="editData.departmentcode" placeholder="请输入"></Input>
           <Cascader change-on-select @on-change="onSelectDepEdit" :data="casData"></Cascader>
-        </FormItem>
+        </FormItem> -->
         <FormItem prop="info" label="商户信息">
           <Input type="textarea" v-model="editData.info" placeholder="请输入"></Input>
         </FormItem>
@@ -134,6 +134,10 @@ export default {
         {
           title: '名称',
           key: 'name',
+        },
+        {
+          title: '编码',
+          key: 'merchantcode',
         },
         {
           title: '联系人',

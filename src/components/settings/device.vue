@@ -24,11 +24,16 @@
         <FormItem prop="equipmentno" label="设备号">
           <Input  v-model="form.equipmentno" placeholder="请输入设备号"></Input>
         </FormItem>
-        <FormItem prop="updid" label="部门编号">
+        <FormItem prop="departmentcode" label="部门编号">
           <Cascader change-on-select @on-change="onSelectDep" :data="casData"></Cascader>
         </FormItem>
-        <FormItem prop="departmentcode" label="部门编号">
+        <!-- <FormItem prop="departmentcode" label="部门编号">
           <Input v-model="form.departmentcode" readonly placeholder="请输入部门编号"></Input>
+        </FormItem> -->
+        <FormItem prop="merchantcode" label="商户">
+          <Select v-model="form.merchantcode" filterable :loading="selectLoading" @on-query-change="queryChange">
+            <Option v-for="item in merchData" :key="item.id" :value="item.merchantcode">{{item.name}}</Option>
+          </Select>
         </FormItem>
       </Form>
       <div slot="footer">
@@ -42,17 +47,22 @@
       <p slot="header" style="text-align:center">
         <span>修改信息</span>
       </p>
-      <Form :model="editData"  :rules="rules" :label-width="70">
+      <Form :model="editData"  :rules="rules" :label-width="77">
         <FormItem prop="equipmentno" label="设备号">
           <Input  v-model="editData.equipmentno" placeholder="请输入设备号"></Input>
         </FormItem>
         <FormItem  label="部门名称">
-          <Input v-model="editData.departmentname" readonly placeholder="请输入部门编号"></Input>
+          <Input v-model="editData.deparmentname" readonly placeholder="请输入部门编号"></Input>
         </FormItem>
-        <FormItem prop="departmentcode" label="部门编号">
+        <FormItem prop="merchantcode" label="商户">
+          <Select v-model="editData.merchantcode">
+            <Option v-for="item in merchData" :key="item.id" :value="item.merchantcode">{{item.name}}</Option>
+          </Select>
+        </FormItem>
+        <!-- <FormItem prop="departmentcode" label="部门编号">
           <Input v-model="editData.departmentcode" readonly placeholder="请输入部门编号"></Input>
-        </FormItem>
-        <FormItem label="修改部门">
+        </FormItem> -->
+        <FormItem label="修改部门为">
           <Cascader change-on-select @on-change="onSelectDepEdit" :data="casData"></Cascader>
         </FormItem>
       </Form>
@@ -93,14 +103,17 @@ export default {
       count: 0,
       page: 1,
       pageSize: 10,
+      selectLoading: false,
       form: {
         departmentcode: '',
-        equipmentno: ''
+        equipmentno: '',
+        merchantcode: ''
       },
       deviceInfo: '',
       rules: {
         departmentcode: [{ required: true, message: '不能为空', trigger: 'blur' }],
-        equipmentno: [{ required: true, message: '不能为空', trigger: 'blur' }]
+        equipmentno: [{ required: true, message: '不能为空', trigger: 'blur' }],
+        merchantcode: [{ required: true, message: '不能为空', trigger: 'blur' }]
       },
       editData: {},
       casData: [],
@@ -116,11 +129,11 @@ export default {
         },
         {
           title: '部门',
-          key: 'departmentname',
+          key: 'deparmentname',
         },
         {
           title: '商户',
-          key: 'merchantcode',
+          key: 'merchantname',
         },
         {
           title: '收款二维码',
@@ -203,12 +216,14 @@ export default {
         }
       ],
       tableData: [],
-      qrUrl: ''
+      qrUrl: '',
+      merchData: [],
     }
   },
   created () {
     this.getTableData(1, 10, '')
     this.getDepData()
+    this.getMerchData(1, 30, '')
   },
   methods: {
     getTableData (page, size, key) {
@@ -220,7 +235,7 @@ export default {
       this.$store.commit('pageLoading', true)
       serverApi('/Equipment/index', d,
         response => {
-          // console.log(response)
+          console.log(response)
           if (response.data.code === 0){
             this.tableData = response.data.data.result
             this.count = response.data.data.counts
@@ -261,9 +276,34 @@ export default {
         }
       )
     },
+    getMerchData (page, size, key) {
+      let d = {
+        pageSize: size,
+        page: page,
+        like: key
+      }
+      this.selectLoading = true
+      serverApi('/Merchant/index', d,
+        response => {
+          // console.log(response)
+          this.selectLoading = false
+          if (response.data.code === 0){
+            this.merchData = response.data.data.result
+            this.count = response.data.data.counts
+          }else{
+            this.$Message.warning(response.data.msg)
+          }
+        },
+        error => {
+          this.selectLoading = false
+          console.log(error)
+        }
+      )
+    },
     onClickAdd () {
       this.form.equipmentno = ''
       this.form.departmentname = ''
+      this.form.merchantcode = ''
       this.addModal = true
     },
     onClickEdit (row) {
@@ -276,8 +316,12 @@ export default {
       }
     },
     edit () {
+      console.log(this.editData)
       delete this.editData._index
       delete this.editData._rowKey
+      delete this.editData.createtime
+      // delete this.editData.deparmentname
+      delete this.editData.merchantname
       this.modal_loading = true
       serverApi('/Equipment/edit', this.editData,
         response => {
@@ -365,6 +409,9 @@ export default {
       this.qrUrl = ''
       this.deviceInfo = ''
       this.qrModal = true
+    },
+    queryChange (e) {
+      // this.getMerchData(1, 30, e)
     }
   }
 }
