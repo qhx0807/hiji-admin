@@ -87,6 +87,46 @@
       </div>
     </Modal>
 
+    <!-- qrcode -->
+    <Modal v-model="bdModal" width="700">
+      <p slot="header" style="text-align:center">
+        <span>{{seeOneData.equipmentno}}已绑定微信账户</span>
+      </p>
+      <div>
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>头像</th>
+              <th>昵称</th>
+              <th>性别</th>
+              <th>openid</th>
+              <th>是否关注</th>
+              <th>移除</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="item in bindPeopleData" :key="item.openid">
+              <td><img class="headimg" :src="item.headimgurl" alt=""></td>
+              <td>{{item.nickname}}</td>
+              <td>{{item.sex == '1' ? '男' : '女'}}</td>
+              <td>{{item.openid}}</td>
+              <td>
+                <Tag v-if="item.subscribe == 1" type="border" color="green">已关注</Tag>
+                <Tag v-else type="border" color="yellow">未关注</Tag>
+              </td>
+              <td><a href="javascript:void(0)" @click="removeBindPeople(item.openid)">移除</a></td>
+            </tr>
+            <tr v-if="bindPeopleData.length==0">
+              <td colspan="6" style="text-align:center">暂无数据</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div slot="footer">
+        <Button type="ghost"  @click="bdModal = false">取消</Button>
+        <Button type="primary" @click="bdModal = false">确定</Button>
+      </div>
+    </Modal>
   </div>
 </template>
 <script>
@@ -100,6 +140,7 @@ export default {
       editModal: false,
       qrModal: false,
       modal_loading: false,
+      bdModal: false,
       count: 0,
       page: 1,
       pageSize: 10,
@@ -138,7 +179,7 @@ export default {
         {
           title: '收款二维码',
           key: 'id',
-          width: 130,
+          width: 100,
           render: (h, params) => {
             return h('div', [
               h('Button', {
@@ -159,7 +200,7 @@ export default {
         {
           title: '绑定二维码',
           key: 'id',
-          width: 130,
+          width: 100,
           render: (h, params) => {
             return h('div', [
               h('Button', {
@@ -174,6 +215,27 @@ export default {
                   }
                 }
               }, '二维码')
+            ])
+          }
+        },
+        {
+          title: '绑定管理',
+          key: 'id',
+          width: 100,
+          render: (h, params) => {
+            return h('div', [
+              h('Button', {
+                props: {
+                  type: 'text',
+                  size: 'small',
+                  icon: 'ios-people'
+                },
+                on: {
+                  click: () => {
+                    this.seeBdPeople(params.row)
+                  }
+                }
+              }, '查看绑定')
             ])
           }
         },
@@ -218,6 +280,8 @@ export default {
       tableData: [],
       qrUrl: '',
       merchData: [],
+      bindPeopleData: [],
+      seeOneData: {}
     }
   },
   created () {
@@ -228,7 +292,7 @@ export default {
   methods: {
     getTableData (page, size, key) {
       let d = {
-        pageSize: size,
+        pagesize: size,
         page: page,
         like: key
       }
@@ -413,6 +477,57 @@ export default {
     },
     queryChange (e) {
       // this.getMerchData(1, 30, e)
+    },
+    seeBdPeople (row) {
+      this.seeOneData = row
+      serverApi('/equipment/getequipmentinfo', {equipmentno: row.equipmentno},
+        response => {
+          // console.log(response)
+          if (response.data.code === 0){
+            this.bindPeopleData = response.data.data
+            this.bdModal = true
+          }else{
+            this.$Message.warning(response.data.msg)
+          }
+        },
+        error => {
+          console.log(error)
+        }
+      )
+    },
+    removeBindPeople (openid) {
+      let d = {
+        equiptmentno: this.seeOneData.equipmentno,
+        openid: openid
+      }
+      serverApi('/equipment/delopenid', d,
+        response => {
+          console.log(response)
+          if (response.data.code === 0){
+            this.getBindPeople(this.seeOneData.equipmentno)
+            this.$Message.success('移除成功！')
+          }else{
+            this.$Message.warning(response.data.msg)
+          }
+        },
+        error => {
+          console.log(error)
+        }
+      )
+    },
+    getBindPeople (code) {
+      serverApi('/equipment/getequipmentinfo', {equipmentno: code},
+        response => {
+          if (response.data.code === 0){
+            this.bindPeopleData = response.data.data
+          }else{
+            this.$Message.warning(response.data.msg)
+          }
+        },
+        error => {
+          console.log(error)
+        }
+      )
     }
   }
 }
@@ -424,5 +539,11 @@ export default {
 .device-info{
   text-align: center;
   font-size: 18px;
+}
+.headimg{
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  vertical-align: top;
 }
 </style>

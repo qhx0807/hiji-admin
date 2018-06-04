@@ -35,20 +35,26 @@ export default {
         {
           title: '序号',
           type: 'index',
-          width: 80
+          width: 60
         },
         {
           title: '订单号',
           key: 'orderno',
+          width: 150
         },
         {
           title: '支付金额',
           key: 'total_fee',
-          width: '120'
+          width: 100
         },
         {
           title: '商户',
-          key: 'name'
+          key: 'name',
+          width: 170
+        },
+        {
+          title: '微信交易流水',
+          key: 'transaction_id'
         },
         {
           title: 'openid',
@@ -61,7 +67,7 @@ export default {
         {
           title: '创建时间',
           key: 'createtime',
-          width: 200
+          width: 160
         }
     ],
     }
@@ -73,7 +79,7 @@ export default {
     getTableData (page, size) {
       this.$store.commit('pageLoading', true)
       let d = {
-        pageSize: size,
+        pagesize: size,
         page: page,
         like: this.searchKey,
         userid: sessionStorage.userid

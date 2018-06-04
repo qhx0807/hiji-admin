@@ -61,7 +61,7 @@ export default {
     getTableData (page, size) {
       this.$store.commit('pageLoading', true)
       let d = {
-        pageSize: size,
+        pagesize: size,
         page: page
       }
       serverApi('/log/index', d,

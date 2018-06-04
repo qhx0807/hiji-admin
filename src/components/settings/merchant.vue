@@ -208,7 +208,7 @@ export default {
   methods: {
     getTableData (page, size, key) {
       let d = {
-        pageSize: size,
+        pagesize: size,
         page: page,
         like: key
       }
