@@ -179,7 +179,7 @@ export default {
         {
           title: '收款二维码',
           key: 'id',
-          width: 100,
+          width: 110,
           render: (h, params) => {
             return h('div', [
               h('Button', {
@@ -200,7 +200,7 @@ export default {
         {
           title: '绑定二维码',
           key: 'id',
-          width: 100,
+          width: 110,
           render: (h, params) => {
             return h('div', [
               h('Button', {
@@ -243,7 +243,7 @@ export default {
           title: '操作',
           key: 'id',
           align: 'center',
-          width: 160,
+          width: 170,
           render: (h, params) => {
             return h('div', [
               h('Button', {

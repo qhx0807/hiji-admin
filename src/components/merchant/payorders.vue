@@ -35,34 +35,31 @@ export default {
         {
           title: '序号',
           type: 'index',
-          width: 60
+          width: 80
         },
         {
           title: '订单号',
           key: 'orderno',
-          width: 150
+          width: 180
+        },
+        {
+          title: '商户',
+          key: 'name',
+          width: 250
+        },
+        {
+          title: '设备号',
+          key: 'device_info'
+        },
+        {
+          title: '微信交易流水',
+          key: 'transaction_id',
+          width: 250
         },
         {
           title: '支付金额',
           key: 'total_fee',
           width: 100
-        },
-        {
-          title: '商户',
-          key: 'name',
-          width: 170
-        },
-        {
-          title: '微信交易流水',
-          key: 'transaction_id'
-        },
-        {
-          title: 'openid',
-          key: 'openid'
-        },
-        {
-          title: '设备号',
-          key: 'device_info'
         },
         {
           title: '创建时间',
@@ -81,6 +78,8 @@ export default {
       let d = {
         pagesize: size,
         page: page,
+        starttime: this.starttime,
+        endtime: this.endtime,
         like: this.searchKey,
         userid: sessionStorage.userid
       }

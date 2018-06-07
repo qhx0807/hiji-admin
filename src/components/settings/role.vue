@@ -1,5 +1,5 @@
 <template>
-  <div class="user">
+  <div class="box">
     <Card>
       <div class="head">
         <Input v-model="searchKey" placeholder="搜索关键字..." style="width: 200px"></Input>
@@ -14,21 +14,20 @@
       </div>
       <div style="clear:both"></div>
     </Card>
-
     <!-- add -->
-    <Modal v-model="addModal" width="500">
+    <Modal v-model="addModal" width="550">
       <p slot="header" style="text-align:center">
         <span>新增</span>
       </p>
       <Form ref="form" :model="form" :rules="rules" :label-width="70">
-        <FormItem prop="username" label="账户名称">
-          <Input v-model="form.username" placeholder="请输入账户名称"></Input>
+        <FormItem prop="rolename" label="角色名称">
+          <Input v-model="form.rolename" placeholder="请输入名称"></Input>
         </FormItem>
-        <FormItem prop="password" label="账户密码">
-          <Input  v-model="form.password" placeholder="请输入账户密码"></Input>
+        <FormItem prop="rolecode" label="角色编码">
+          <Input v-model="form.rolecode" placeholder="请输入code"></Input>
         </FormItem>
-        <FormItem prop="departmentcode" label="选择部门">
-          <Cascader change-on-select @on-change="onSelectDep" :data="casData"></Cascader>
+        <FormItem label="备注信息">
+          <Input type="textarea" v-model="form.remark" placeholder="请输入"></Input>
         </FormItem>
       </Form>
       <div slot="footer">
@@ -38,24 +37,19 @@
     </Modal>
 
     <!-- edit -->
-    <Modal v-model="editModal" width="500">
+    <Modal v-model="editModal" width="500" :styles="{top: '70px'}">
       <p slot="header" style="text-align:center">
         <span>修改信息</span>
       </p>
       <Form :model="editData"  :rules="rules" :label-width="70">
-        <FormItem prop="username" label="账户名称">
-          <Input disabled v-model="editData.username" placeholder="请输入账户名称"></Input>
+        <FormItem prop="rolename" label="角色名称">
+          <Input v-model="editData.rolename" placeholder="请输入名称"></Input>
         </FormItem>
-        <FormItem label="账户密码">
-          <Tooltip content="输入密码保存将会改变原密码！" placement="top-start">
-            <Input v-model="editPass" style="width:100%" placeholder="请输入账户密码"></Input>
-          </Tooltip>
+        <FormItem prop="rolecode" label="角色编码">
+          <Input v-model="editData.rolecode" placeholder="请输入code"></Input>
         </FormItem>
-        <FormItem label="当前部门">
-          <Input readonly v-model="editData.departmentname" placeholder="请输入"></Input>
-        </FormItem>
-        <FormItem label="修改部门">
-          <Cascader change-on-select @on-change="onSelectDepEdit" :data="casData"></Cascader>
+        <FormItem label="备注信息">
+          <Input type="textarea" v-model="editData.remark" placeholder="请输入"></Input>
         </FormItem>
       </Form>
       <div slot="footer">
@@ -69,7 +63,7 @@
 <script>
 import serverApi from '../../axios'
 export default {
-  name: 'User',
+  name: 'Role',
   data () {
     return {
       searchKey: '',
@@ -80,13 +74,13 @@ export default {
       page: 1,
       pageSize: 10,
       form: {
-        username: '',
-        password: '',
-        departmentcode: ''
+        rolename: '',
+        rolecode: '',
+        remark: ''
       },
       rules: {
-        username: [{ required: true, message: '名称不能为空', trigger: 'blur' }],
-        password: [{ required: true, message: '密码不能为空', trigger: 'blur' }]
+        rolename: [{ required: true, message: '不能为空', trigger: 'blur' }],
+        rolecode: [{ required: true, message: '不能为空', trigger: 'blur' }]
       },
       editData: {},
       columns: [
@@ -96,52 +90,26 @@ export default {
           width: 80
         },
         {
-          title: '账户名',
-          key: 'username',
+          title: '角色名称',
+          key: 'rolename',
         },
         {
-          title: '部门',
-          key: 'departmentname',
+          title: '角色编码',
+          key: 'rolecode',
         },
         {
-          title: '部门编号',
-          key: 'departmentcode',
-        },
-        {
-          title: '权限',
-          key: 'authority',
-        },
-        {
-          title: '状态',
-          key: 'isuse',
-          render: (h, params) => {
-            let color = params.row.isuse == 1 ? 'green' : 'yellow'
-            let text = params.row.isuse == 1 ? '正常' : '未启用'
-            return h('Tag', {
-              props: {
-                color: color,
-                type: 'dot'
-              }
-            }, text)
-          }
+          title: '备注',
+          key: 'remark'
         },
         {
           title: '创建时间',
           key: 'createtime',
         },
         {
-          title: '最后登录时间',
-          key: 'lasttime',
-        },
-        {
-          title: '最后登录IP',
-          key: 'lastip',
-        },
-        {
           title: '操作',
           key: 'id',
-          width: 165,
           align: 'center',
+          width: 170,
           render: (h, params) => {
             return h('div', [
                 h('Button', {
@@ -177,7 +145,6 @@ export default {
       ],
       tableData: [],
       casData: [],
-      editPass: ''
     }
   },
   created () {
@@ -192,9 +159,9 @@ export default {
         like: key
       }
       this.$store.commit('pageLoading', true)
-      serverApi('/account/index', d,
+      serverApi('/Merchant/index', d,
         response => {
-          // console.log(response)
+          console.log(response)
           if (response.data.code === 0){
             this.tableData = response.data.data.result
             this.count = response.data.data.counts
@@ -213,7 +180,6 @@ export default {
       serverApi('/depar/index', '',
         response => {
           if (response.data.code === 0){
-            // console.log(response)
             let cas = response.data.data
             let getCas = function (arr) {
               arr.forEach(item => {
@@ -247,13 +213,8 @@ export default {
     edit () {
       delete this.editData._index
       delete this.editData._rowKey
-      delete this.editData.lastip
-      delete this.editData.lasttime
-      delete this.editData.authority
-      delete this.editData.departmentname
-      this.editData.password = this.editPass
       this.modal_loading = true
-      serverApi('/account/edit', this.editData,
+      serverApi('/Merchant/edit', this.editData,
         response => {
           this.modal_loading = false
           if (response.data.code === 0) {
@@ -273,10 +234,10 @@ export default {
         title: '提示',
         content: '<p>确认删除此条信息？</p>',
         onOk: () => {
-          serverApi('/account/del', {id: id},
+          serverApi('/Merchant/del', {id: id},
             response => {
               this.$Message.info(response.data.msg)
-              this.getTableData()
+              this.getTableData(this.page, this.pageSize, this.searchKey)
             },
             error => {
               console.log(error)
@@ -290,7 +251,7 @@ export default {
       this.$refs.form.validate(valid => {
         if (valid) {
           this.modal_loading = true
-          serverApi('/account/add', this.form,
+          serverApi('/Merchant/add', this.form,
             response => {
               this.modal_loading = false
               if (response.data.code === 0) {
@@ -327,12 +288,16 @@ export default {
     },
     onSelectDep (e) {
       if (e && e.length) {
-        this.form.departmentcode = String(e[e.length-1])
+        this.form.departmentcode = e[e.length-1]
       }
     },
     onSelectDepEdit (e) {
       if (e && e.length) {
         this.editData.departmentcode = e[e.length-1]
+        let dep = this.casData.find(item => {
+          return item.departmentcode === e[e.length-1]
+        })
+        // console.log(dep)
       }
     }
   }
@@ -343,3 +308,5 @@ export default {
   padding-bottom: 12px;
 }
 </style>
+
+

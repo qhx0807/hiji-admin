@@ -24,7 +24,7 @@ router.beforeEach((to, from, next) => {
 router.afterEach(route => {
   setTimeout(() => {
     iView.LoadingBar.finish()
-  }, 2000)
+  }, 1500)
 })
 
 /* eslint-disable no-new */
