@@ -10,8 +10,39 @@ const Log = r => require.ensure([], () => r(require('@/components/settings/log.v
 const Home = r => require.ensure([], () => r(require('@/components/home/home.vue')))
 const Account = r => require.ensure([], () => r(require('@/components/settings/account.vue')))
 const Device = r => require.ensure([], () => r(require('@/components/settings/device.vue')))
-const Merchant = r => require.ensure([], () => r(require('@/components/settings/merchant.vue')))
-const PayOrders = r => require.ensure([], () => r(require('@/components/settings/payorders.vue')))
+const Role = r => require.ensure([], () => r(require('@/components/settings/role.vue')))
+const Merchant = r => require.ensure([], () => r(require('@/components/merchant/merchant.vue')))
+const PayOrders = r => require.ensure([], () => r(require('@/components/merchant/payorders.vue')))
+const Handler = r => require.ensure([], () => r(require('@/components/settings/handler.vue')))
+const ApplyCash = r => require.ensure([], () => r(require('@/components/merchant/applycash.vue')))
+const ReviewCashApply = r => require.ensure([], () => r(require('@/components/merchant/ReviewCashApply.vue')))
+
+const routesArr = [
+  Department,
+  Menu,
+  Api,
+  Auction,
+  Log,
+  Account,
+  Device,
+  Merchant,
+  PayOrders,
+  Handler,
+  ApplyCash,
+  ReviewCashApply,
+  Role
+]
+
+let arr = []
+
+routesArr.forEach((item, index) => {
+  let obj = {}
+  obj[`path`] = item.name
+  obj[`name`] = item.name
+  obj[`component`] = item
+
+  arr.push(obj)
+})
 
 const routes = [
   {
@@ -32,51 +63,7 @@ const routes = [
         component: Home,
         name: 'Home'
       },
-      {
-        path: 'Department',
-        name: 'Department',
-        component: Department
-      },
-      {
-        path: 'Menu',
-        name: 'Menu',
-        component: Menu
-      },
-      {
-        path: 'Api',
-        name: 'Api',
-        component: Api
-      },
-      {
-        path: 'Auction',
-        name: 'Auction',
-        component: Auction
-      },
-      {
-        path: 'Log',
-        name: 'Log',
-        component: Log
-      },
-      {
-        path: 'Account',
-        name: 'Account',
-        component: Account
-      },
-      {
-        path: 'Device',
-        name: 'Device',
-        component: Device
-      },
-      {
-        path: 'Merchant',
-        name: 'Merchant',
-        component: Merchant
-      },
-      {
-        path: 'PayOrders',
-        name: 'PayOrders',
-        component: PayOrders
-      }
+      ...arr
     ]
   },
   {
