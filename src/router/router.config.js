@@ -15,9 +15,10 @@ const Merchant = r => require.ensure([], () => r(require('@/components/merchant/
 const PayOrders = r => require.ensure([], () => r(require('@/components/merchant/payorders.vue')))
 const Handler = r => require.ensure([], () => r(require('@/components/settings/handler.vue')))
 const ApplyCash = r => require.ensure([], () => r(require('@/components/merchant/applycash.vue')))
-const ReviewCashApply = r => require.ensure([], () => r(require('@/components/merchant/ReviewCashApply.vue')))
+const ReviewCashApply = r => require.ensure([], () => r(require('@/components/merchant/reviewcashapply.vue')))
 
 const routesArr = [
+  Home,
   Department,
   Menu,
   Api,
@@ -35,7 +36,7 @@ const routesArr = [
 
 let arr = []
 
-routesArr.forEach((item, index) => {
+routesArr.forEach((item) => {
   let obj = {}
   obj[`path`] = item.name
   obj[`name`] = item.name
@@ -63,7 +64,71 @@ const routes = [
         component: Home,
         name: 'Home'
       },
-      ...arr
+      {
+        path: 'Department',
+        component: Department,
+        name: 'Department'
+      },
+      {
+        path: 'Menu',
+        component: Menu,
+        name: 'Menu'
+      },
+      {
+        path: 'Api',
+        component: Api,
+        name: 'Api'
+      },
+      {
+        path: 'Auction',
+        component: Auction,
+        name: 'Auction'
+      },
+      {
+        path: 'Log',
+        component: Log,
+        name: 'Log'
+      },
+      {
+        path: 'Account',
+        component: Account,
+        name: 'Account'
+      },
+      {
+        path: 'Device',
+        component: Device,
+        name: 'Device'
+      },
+      {
+        path: 'Merchant',
+        component: Merchant,
+        name: 'Merchant'
+      },
+      {
+        path: 'PayOrders',
+        component: PayOrders,
+        name: 'PayOrders'
+      },
+      {
+        path: 'Handler',
+        component: Handler,
+        name: 'Handler'
+      },
+      {
+        path: 'ApplyCash',
+        component: ApplyCash,
+        name: 'ApplyCash'
+      },
+      {
+        path: 'ReviewCashApply',
+        component: ReviewCashApply,
+        name: 'ReviewCashApply'
+      },
+      {
+        path: 'Role',
+        component: Role,
+        name: 'Role'
+      }
     ]
   },
   {

@@ -7,25 +7,40 @@
       </div>
       <Row>
         <Col span="24">
-
+          ApplyCash
         </Col>
       </Row>
     </Card>
   </div>
 </template>
 <script>
+import serverApi from '../../axios'
 export default {
   name: 'ApplyCash',
   data () {
     return {
-      searchKey: ''
+      searchKey: '',
+      text: ''
     }
   },
-  created () {},
+  created () {
+    // this.getTableData()
+  },
   methods: {
     onClickSearch () {
 
-    }
+    },
+    getTableData () {
+      serverApi('/api/find', '',
+        response => {
+          console.log(response)
+          this.text = JSON.stringify(response)
+        },
+        error => {
+          console.log(error)
+        }
+      )
+    },
   }
 }
 </script>
