@@ -27,12 +27,14 @@
         <FormItem prop="departmentcode" label="部门编号">
           <Cascader change-on-select @on-change="onSelectDep" :data="casData"></Cascader>
         </FormItem>
-        <!-- <FormItem prop="departmentcode" label="部门编号">
-          <Input v-model="form.departmentcode" readonly placeholder="请输入部门编号"></Input>
-        </FormItem> -->
-        <FormItem prop="merchantcode" label="商户">
-          <Select v-model="form.merchantcode" filterable :loading="selectLoading" @on-query-change="queryChange">
+        <FormItem prop="merchantcode" label="选择商户">
+          <Select v-model="form.merchantcode" :loading="selectLoading" @on-query-change="queryChange">
             <Option v-for="item in merchData" :key="item.id" :value="item.merchantcode">{{item.name}}</Option>
+          </Select>
+        </FormItem>
+        <FormItem prop="areaid" label="所属城市">
+          <Select v-model="form.areaid">
+            <Option v-for="item in areaData" :key="item.id" :value="item.id">{{item.areaname}}</Option>
           </Select>
         </FormItem>
       </Form>
@@ -59,6 +61,11 @@
             <Option v-for="item in merchData" :key="item.id" :value="item.merchantcode">{{item.name}}</Option>
           </Select>
         </FormItem>
+        <FormItem prop="areaid" label="所属城市">
+          <Select v-model="editData.areaid">
+            <Option v-for="item in areaData" :key="item.id" :value="item.id">{{item.areaname}}</Option>
+          </Select>
+        </FormItem>
         <!-- <FormItem prop="departmentcode" label="部门编号">
           <Input v-model="editData.departmentcode" readonly placeholder="请输入部门编号"></Input>
         </FormItem> -->
@@ -77,7 +84,7 @@
       <p slot="header" style="text-align:center">
         <span>二维码</span>
       </p>
-      <div>
+      <div style="text-align:center">
         <img :src="qrUrl" alt="qrcode">
         <p class="device-info" v-show="deviceInfo">{{deviceInfo}}</p>
       </div>
@@ -148,13 +155,15 @@ export default {
       form: {
         departmentcode: '',
         equipmentno: '',
-        merchantcode: ''
+        merchantcode: '',
+        areaid: ''
       },
       deviceInfo: '',
       rules: {
         departmentcode: [{ required: true, message: '不能为空', trigger: 'blur' }],
         equipmentno: [{ required: true, message: '不能为空', trigger: 'blur' }],
-        merchantcode: [{ required: true, message: '不能为空', trigger: 'blur' }]
+        merchantcode: [{ required: true, message: '不能为空', trigger: 'blur' }],
+        // areaid: [{ required: true, message: '不能为空', trigger: 'blur' }]
       },
       editData: {},
       casData: [],
@@ -177,6 +186,11 @@ export default {
           key: 'merchantname',
         },
         {
+          title: '地区',
+          key: 'areaname',
+          width: 130,
+        },
+        {
           title: '收款二维码',
           key: 'id',
           width: 110,
@@ -190,7 +204,7 @@ export default {
                 },
                 on: {
                   click: () => {
-                    this.qrcode(params.row.id, params.row.equipmentno)
+                    this.qrcode(params.row.id, params.row.equipmentno, params.row.areaid)
                   }
                 }
               }, '二维码')
@@ -281,13 +295,16 @@ export default {
       qrUrl: '',
       merchData: [],
       bindPeopleData: [],
-      seeOneData: {}
+      seeOneData: {},
+      areaData: [],
+      qrPreFix: 'https://api.qrserver.com/v1/create-qr-code/?size=480x440&data='
     }
   },
   created () {
     this.getTableData(1, 10, '')
     this.getDepData()
     this.getMerchData(1, 30, '')
+    this.getAreaData()
   },
   methods: {
     getTableData (page, size, key) {
@@ -340,6 +357,21 @@ export default {
         }
       )
     },
+    getAreaData () {
+      serverApi('/area/index', '',
+        response => {
+          console.log(response)
+          if (response.data.code === 0){
+            this.areaData = response.data.data
+          }else{
+            this.$Message.warning(response.data.msg)
+          }
+        },
+        error => {
+          console.log(error)
+        }
+      )
+    },
     getMerchData (page, size, key) {
       let d = {
         pageSize: size,
@@ -365,9 +397,7 @@ export default {
       )
     },
     onClickAdd () {
-      this.form.equipmentno = ''
-      this.form.departmentname = ''
-      this.form.merchantcode = ''
+      this.$refs.form.resetFields()
       this.addModal = true
     },
     onClickEdit (row) {
@@ -421,6 +451,7 @@ export default {
       })
     },
     add () {
+      console.log(this.form)
       this.$refs.form.validate(valid => {
         if (valid) {
           this.modal_loading = true
@@ -464,14 +495,13 @@ export default {
         this.editData.departmentcode = e[e.length-1]
       }
     },
-    qrcode (id, code) {
-      let city = '1'
-      this.qrUrl = 'https://pan.baidu.com/share/qrcode?w=480&h=440&url=http://h5.cqyyy.cn/payment.html?deviceid=' + id + '&city=' + city
+    qrcode (id, code, areaid) {
+      this.qrUrl = this.qrPreFix +'http://h5.cqyyy.cn/payment.html?deviceid=' + id + '&city=' + areaid
       this.deviceInfo = code
       this.qrModal = true
     },
     bdQrcode (id) {
-      this.qrUrl = 'https://pan.baidu.com/share/qrcode?w=480&h=440&url=http://server.cqyyy.cn/index.php/admin/login/equimentbingding/departmentcode/' + id
+      this.qrUrl = this.qrPreFix + 'http://server.cqyyy.cn/index.php/admin/login/equimentbingding/departmentcode/' + id
       this.deviceInfo = ''
       this.qrModal = true
     },

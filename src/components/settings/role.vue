@@ -159,11 +159,12 @@ export default {
         like: key
       }
       this.$store.commit('pageLoading', true)
-      serverApi('/Merchant/index', d,
+      serverApi('/role/index', d,
         response => {
           console.log(response)
           if (response.data.code === 0){
-            this.tableData = response.data.data.result
+            // this.tableData = response.data.data.result
+            this.tableData = response.data.data
             this.count = response.data.data.counts
           }else{
             this.$Message.warning(response.data.msg)
@@ -214,7 +215,7 @@ export default {
       delete this.editData._index
       delete this.editData._rowKey
       this.modal_loading = true
-      serverApi('/Merchant/edit', this.editData,
+      serverApi('/role/edit', this.editData,
         response => {
           this.modal_loading = false
           if (response.data.code === 0) {
@@ -234,7 +235,7 @@ export default {
         title: '提示',
         content: '<p>确认删除此条信息？</p>',
         onOk: () => {
-          serverApi('/Merchant/del', {id: id},
+          serverApi('/role/del', {id: id},
             response => {
               this.$Message.info(response.data.msg)
               this.getTableData(this.page, this.pageSize, this.searchKey)
@@ -251,7 +252,7 @@ export default {
       this.$refs.form.validate(valid => {
         if (valid) {
           this.modal_loading = true
-          serverApi('/Merchant/add', this.form,
+          serverApi('/role/add', this.form,
             response => {
               this.modal_loading = false
               if (response.data.code === 0) {

@@ -30,6 +30,11 @@
         <FormItem prop="departmentcode" label="选择部门">
           <Cascader change-on-select @on-change="onSelectDep" :data="casData"></Cascader>
         </FormItem>
+        <FormItem prop="roleid" label="账户角色">
+          <Select v-model="form.roleid">
+            <Option v-for="item in roleData" :key="item.id" :value="item.id">{{item.rolename}}</Option>
+          </Select>
+        </FormItem>
       </Form>
       <div slot="footer">
         <Button type="ghost"  @click="addModal = false">取消</Button>
@@ -42,19 +47,24 @@
       <p slot="header" style="text-align:center">
         <span>修改信息</span>
       </p>
-      <Form :model="editData"  :rules="rules" :label-width="70">
+      <Form :model="editData"  :rules="rules" :label-width="80">
         <FormItem prop="username" label="账户名称">
           <Input disabled v-model="editData.username" placeholder="请输入账户名称"></Input>
         </FormItem>
         <FormItem label="账户密码">
           <Tooltip content="输入密码保存将会改变原密码！" placement="top-start">
-            <Input v-model="editPass" style="width:100%" placeholder="请输入账户密码"></Input>
+            <Input v-model="editPass" style="width:388px" placeholder="请输入账户密码"></Input>
           </Tooltip>
         </FormItem>
+        <!-- <FormItem prop="roleid" label="账户角色">
+          <Select v-model="editData.roleid">
+            <Option v-for="item in roleData" :key="item.id" :value="item.id">{{item.rolename}}</Option>
+          </Select>
+        </FormItem> -->
         <FormItem label="当前部门">
           <Input readonly v-model="editData.departmentname" placeholder="请输入"></Input>
         </FormItem>
-        <FormItem label="修改部门">
+        <FormItem label="修改部门为">
           <Cascader change-on-select @on-change="onSelectDepEdit" :data="casData"></Cascader>
         </FormItem>
       </Form>
@@ -82,11 +92,13 @@ export default {
       form: {
         username: '',
         password: '',
+        roleid: null,
         departmentcode: ''
       },
       rules: {
         username: [{ required: true, message: '名称不能为空', trigger: 'blur' }],
-        password: [{ required: true, message: '密码不能为空', trigger: 'blur' }]
+        password: [{ required: true, message: '密码不能为空', trigger: 'blur' }],
+        // roleid: [{ required: true, message: '密码不能为空', trigger: 'blur' }]
       },
       editData: {},
       columns: [
@@ -177,12 +189,14 @@ export default {
       ],
       tableData: [],
       casData: [],
-      editPass: ''
+      editPass: '',
+      roleData: []
     }
   },
   created () {
     this.getTableData(1, 10, '')
     this.getDepData()
+    this.getRoleData()
   },
   methods: {
     getTableData (page, size, key) {
@@ -236,6 +250,21 @@ export default {
         }
       )
     },
+    getRoleData () {
+      serverApi('/role/index', '',
+        response => {
+          console.log(response)
+          if (response.data.code === 0){
+            this.roleData = response.data.data
+          }else{
+            this.$Message.warning(response.data.msg)
+          }
+        },
+        error => {
+          console.log(error)
+        }
+      )
+    },
     onClickAdd () {
       this.$refs.form.resetFields()
       this.addModal = true
@@ -243,6 +272,7 @@ export default {
     onClickEdit (row) {
       this.editData = Object.assign({}, row)
       this.editModal = true
+      // console.log(this.editData)
     },
     edit () {
       delete this.editData._index

@@ -171,6 +171,7 @@ export default {
       )
     },
     onClickAdd () {
+      this.$refs.form.resetFields()
       this.addModal = true
     },
     onClickEdit (row) {
