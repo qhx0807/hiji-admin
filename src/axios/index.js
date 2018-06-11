@@ -22,6 +22,9 @@ axios.interceptors.response.use(function (res) {
   if (res.data.code === 100 || res.data.code === 80) {
     alert('token 错误，请重新登录')
     window.location.href = host
+  } else if (res.data.code === 10) {
+    alert('无权限访问！')
+    window.location.href = host
   }
   return res
 }, function (error) {
