@@ -8,7 +8,9 @@ const store = new Vuex.Store({
   state: {
     login: true,
     pageLoading: false,
-    breadcrumbArr: []
+    breadcrumbArr: [],
+    menuTheme: 'dark',
+    themeColor: ''
   },
   getters: {
     isLoading (state) {
@@ -25,6 +27,12 @@ const store = new Vuex.Store({
     updateBread (state, arr) {
       let base = [{name: 'Home', to: '/Main'}]
       state.breadcrumbArr = base.concat(arr)
+    },
+    changeMenuTheme (state, theme) {
+      state.menuTheme = theme
+    },
+    changeMainTheme (state, mainTheme) {
+      state.themeColor = mainTheme
     }
   },
   actions: {},

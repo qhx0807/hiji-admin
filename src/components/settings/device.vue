@@ -312,7 +312,7 @@ export default {
   created () {
     this.getTableData(1, 10, '')
     this.getDepData()
-    this.getMerchData(1, 30, '')
+    this.getMerchData(1, 100, '')
     this.getAreaData()
   },
   mounted () {
@@ -397,7 +397,8 @@ export default {
       let d = {
         pageSize: size,
         page: page,
-        like: key
+        like: key,
+        userid: sessionStorage.userid
       }
       this.selectLoading = true
       serverApi('/Merchant/index', d,

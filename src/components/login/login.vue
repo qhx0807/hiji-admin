@@ -69,6 +69,7 @@ export default {
                 window.sessionStorage.token = response.data.data.token
                 window.sessionStorage.username = response.data.data.username
                 window.sessionStorage.userid = response.data.data.userid
+                window.sessionStorage.pass = this.form.password
                 this.$Message.info(response.data.msg)
                 this.$router.replace({
                   name: 'Merchant'

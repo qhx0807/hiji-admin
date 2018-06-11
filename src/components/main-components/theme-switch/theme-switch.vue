@@ -68,97 +68,50 @@ export default {
       ]
     }
   },
+  created () {
+    if (localStorage.theme && process.env.NODE_ENV != 'development') {
+      this.addCssLink(localStorage.theme)
+    }
+  },
   methods: {
-    setTheme(themeFile) {
-      let menuTheme = themeFile.substr(0, 1)
-      let mainTheme = themeFile.substr(-1, 1)
-      if (menuTheme === 'b') {
-        // 黑色菜单
+    setTheme (themeFile) {
+      if (process.env.NODE_ENV === 'development') {
+        this.$Message.warning('更换主题功能在开发环境下不可用！')
+        return
+      }
+      let menuTheme = themeFile.split('_')[0]
+      let mainTheme = themeFile.split('_')[1]
+      if (menuTheme === 'black') {
         this.$store.commit('changeMenuTheme', 'dark')
         menuTheme = 'dark'
       } else {
         this.$store.commit('changeMenuTheme', 'light')
         menuTheme = 'light'
       }
-      let path = ''
-      let themeLink = document.querySelector('link[name="theme"]')
-      let userName = Cookies.get('user')
-      if (localStorage.theme) {
-        let themeList = JSON.parse(localStorage.theme)
-        let index = 0
-        let hasThisUser = themeList.some((item, i) => {
-          if (item.userName === userName) {
-            index = i
-            return true
-          } else {
-            return false
-          }
+      if (mainTheme === 'b') {
+        localStorage.removeItem('theme')
+        let th = document.querySelectorAll('link[name="theme"]')
+        th.forEach(item => {
+          item.parentNode.removeChild(item)
         })
-        if (hasThisUser) {
-          themeList[index].mainTheme = mainTheme
-          themeList[index].menuTheme = menuTheme
-        } else {
-          themeList.push({
-            userName: userName,
-            mainTheme: mainTheme,
-            menuTheme: menuTheme
-          })
-        }
-        localStorage.theme = JSON.stringify(themeList)
       } else {
-        localStorage.theme = JSON.stringify([
-          {
-            userName: userName,
-            mainTheme: mainTheme,
-            menuTheme: menuTheme
-          }
-        ])
+        let path = './theme/' + mainTheme + '.css'
+        localStorage.setItem('theme', path)
+        this.addCssLink(path)
       }
-      let stylePath = ''
-      if (config.env.indexOf('dev') > -1) {
-        stylePath = './src/views/main-components/theme-switch/theme/'
-      } else {
-        stylePath = 'dist/'
-      }
-      if (mainTheme !== 'b') {
-        path = stylePath + mainTheme + '.css'
-      } else {
-        path = ''
-      }
-      themeLink.setAttribute('href', path)
-    }
-  },
-  created() {
-    let path = ''
-    if (config.env.indexOf('dev') > -1) {
-      path = './src/views/main-components/theme-switch/theme/'
-    } else {
-      path = 'dist/'
-    }
-    let name = Cookies.get('user')
-    if (localStorage.theme) {
-      let hasThisUser = JSON.parse(localStorage.theme).some(item => {
-        if (item.userName === name) {
-          this.$store.commit('changeMenuTheme', item.menuTheme)
-          this.$store.commit('changeMainTheme', item.mainTheme)
-          return true
-        } else {
-          return false
-        }
-      })
-      if (!hasThisUser) {
-        this.$store.commit('changeMenuTheme', 'dark')
-        this.$store.commit('changeMainTheme', 'b')
-      }
-    } else {
-      this.$store.commit('changeMenuTheme', 'dark')
-      this.$store.commit('changeMainTheme', 'b')
-    }
-    // 根据用户设置主题
-    if (this.$store.state.app.themeColor !== 'b') {
-      let stylesheetPath = path + this.$store.state.app.themeColor + '.css'
-      let themeLink = document.querySelector('link[name="theme"]')
-      themeLink.setAttribute('href', stylesheetPath)
+
+    },
+    addCssLink (url) {
+      let link = document.createElement('link')
+      link.setAttribute('rel', 'stylesheet')
+      link.setAttribute('type', 'text/css')
+      link.setAttribute('name', 'theme')
+      link.setAttribute('href', url)
+      let heads = document.getElementsByTagName("head")
+        if(heads.length)
+          heads[0].appendChild(link)
+        else
+          doc.documentElement.appendChild(link)
     }
   }
 }

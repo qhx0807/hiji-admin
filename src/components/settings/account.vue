@@ -317,6 +317,7 @@ export default {
       })
     },
     add () {
+      // console.log(this.form)
       this.$refs.form.validate(valid => {
         if (valid) {
           this.modal_loading = true

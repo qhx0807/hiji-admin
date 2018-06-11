@@ -210,7 +210,8 @@ export default {
       let d = {
         pagesize: size,
         page: page,
-        like: key
+        like: key,
+        userid: sessionStorage.userid
       }
       this.$store.commit('pageLoading', true)
       serverApi('/Merchant/index', d,

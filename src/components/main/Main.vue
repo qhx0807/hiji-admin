@@ -35,8 +35,10 @@
                     </div>
                 </div>
                 <div class="header-avator-con">
-                    <full-screen v-model="isFullScreen" @on-change="fullscreenChange"></full-screen>
-                    <lock-screen></lock-screen>
+                    <full-screen v-model="isFullScreen" @on-change="fullscreenChange"></full-screen>&nbsp;
+                    <lock-screen></lock-screen>&nbsp;
+                    <theme-switch></theme-switch>
+
                     <div class="user-dropdown-menu-con">
                         <Row type="flex" justify="end" align="middle" class="user-dropdown-innercon">
                             <Dropdown transfer trigger="click" @on-click="handleClickUserDropdown">
@@ -69,6 +71,7 @@
 import shrinkableMenu from '../main-components/shrinkable-menu/shrinkable-menu.vue'
 import fullScreen from '../main-components/fullscreen/fullscreen.vue'
 import lockScreen from '../main-components/lockscreen/lockscreen.vue'
+import themeSwitch from '../main-components/theme-switch/theme-switch.vue';
 import scrollBar from '../scroll-bar/vue-scroller-bars'
 import serverApi from '../../axios'
 import { formatJsonTree } from '../../utlis/tools.js'
@@ -78,7 +81,7 @@ export default {
     fullScreen,
     lockScreen,
     // messageTip,
-    // themeSwitch,
+    themeSwitch,
     scrollBar
   },
   data () {
@@ -95,7 +98,7 @@ export default {
   },
   computed: {
     menuTheme () {
-      return 'dark'
+      return this.$store.state.menuTheme
     },
     mesCount () {
       return '0'
