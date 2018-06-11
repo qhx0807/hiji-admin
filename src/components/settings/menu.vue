@@ -155,7 +155,8 @@ export default {
   methods: {
     getTableData () {
       this.$store.commit('pageLoading', true)
-      serverApi('/menu/index', '',
+      let userid = sessionStorage.userid
+      serverApi('/menu/index', {userid, userid},
         response => {
           // console.log(response)
           if (response.data.code === 0){

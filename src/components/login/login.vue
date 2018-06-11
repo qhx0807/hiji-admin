@@ -44,8 +44,8 @@ export default {
   data () {
     return {
       form: {
-        username: 'admin ',
-        password: '123456'
+        username: '',
+        password: ''
       },
       loading: false,
       rules: {
@@ -71,7 +71,7 @@ export default {
                 window.sessionStorage.userid = response.data.data.userid
                 this.$Message.info(response.data.msg)
                 this.$router.replace({
-                  name: 'Home'
+                  name: 'Merchant'
                 })
               } else {
                 this.$Message.info(response.data.msg)

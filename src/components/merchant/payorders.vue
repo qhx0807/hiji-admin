@@ -96,6 +96,7 @@ export default {
         },
         error => {
           console.log(error)
+          this.$Message.error('网络错误，请重试！')
           this.$store.commit('pageLoading', false)
         }
       )

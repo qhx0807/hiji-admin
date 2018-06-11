@@ -98,7 +98,7 @@ export default {
       rules: {
         username: [{ required: true, message: '名称不能为空', trigger: 'blur' }],
         password: [{ required: true, message: '密码不能为空', trigger: 'blur' }],
-        // roleid: [{ required: true, message: '密码不能为空', trigger: 'blur' }]
+        roleid: [{ required: true, type: 'number', message: '不能为空', trigger: 'blur' }]
       },
       editData: {},
       columns: [
@@ -119,10 +119,10 @@ export default {
           title: '部门编号',
           key: 'departmentcode',
         },
-        {
-          title: '权限',
-          key: 'authority',
-        },
+        // {
+        //   title: '权限',
+        //   key: 'authority',
+        // },
         {
           title: '状态',
           key: 'isuse',
@@ -253,7 +253,7 @@ export default {
     getRoleData () {
       serverApi('/role/index', '',
         response => {
-          console.log(response)
+          // console.log(response)
           if (response.data.code === 0){
             this.roleData = response.data.data
           }else{

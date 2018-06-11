@@ -82,11 +82,14 @@
     <!-- qrcode -->
     <Modal v-model="qrModal" width="500">
       <p slot="header" style="text-align:center">
-        <span>二维码</span>
+        <span>{{deviceInfo}}</span>
       </p>
       <div style="text-align:center">
-        <img :src="qrUrl" alt="qrcode">
-        <p class="device-info" v-show="deviceInfo">{{deviceInfo}}</p>
+        <div  style="text-align:center" id="qrcode" ref="qrcode"></div>
+      </div>
+      <div class="qrval">
+        QRcode Value:
+        <code>{{qrcodeVal}}</code>
       </div>
       <div slot="footer">
         <Button type="ghost"  @click="qrModal = false">取消</Button>
@@ -94,7 +97,7 @@
       </div>
     </Modal>
 
-    <!-- qrcode -->
+    <!-- bind -->
     <Modal v-model="bdModal" width="700">
       <p slot="header" style="text-align:center">
         <span>{{seeOneData.equipmentno}}已绑定微信账户</span>
@@ -138,6 +141,7 @@
 </template>
 <script>
 import serverApi from '../../axios'
+import QRCode from 'qrcodejs2'
 export default {
   name: 'Device',
   data () {
@@ -297,14 +301,31 @@ export default {
       bindPeopleData: [],
       seeOneData: {},
       areaData: [],
-      qrPreFix: 'https://api.qrserver.com/v1/create-qr-code/?size=480x440&data='
+      qrPreFix: 'https://api.qrserver.com/v1/create-qr-code/?size=480x440&data=',
+      qrCodeInit: null,
+      qrcodeVal: ''
     }
+  },
+  components: {
+    QRCode
   },
   created () {
     this.getTableData(1, 10, '')
     this.getDepData()
     this.getMerchData(1, 30, '')
     this.getAreaData()
+  },
+  mounted () {
+    this.$nextTick(() => {
+      this.qrCodeInit = new QRCode('qrcode', {
+        width: 390,
+        height: 350,
+        text: 'loading...',
+        colorDark : "#000000",
+        colorLight : "#ffffff",
+        correctLevel : QRCode.CorrectLevel.H
+      })
+    })
   },
   methods: {
     getTableData (page, size, key) {
@@ -316,7 +337,7 @@ export default {
       this.$store.commit('pageLoading', true)
       serverApi('/Equipment/index', d,
         response => {
-          console.log(response)
+          // console.log(response)
           if (response.data.code === 0){
             this.tableData = response.data.data.result
             this.count = response.data.data.counts
@@ -360,7 +381,7 @@ export default {
     getAreaData () {
       serverApi('/area/index', '',
         response => {
-          console.log(response)
+          // console.log(response)
           if (response.data.code === 0){
             this.areaData = response.data.data
           }else{
@@ -496,13 +517,18 @@ export default {
       }
     },
     qrcode (id, code, areaid) {
-      this.qrUrl = this.qrPreFix +'http://h5.cqyyy.cn/payment.html?deviceid=' + id + '&city=' + areaid
-      this.deviceInfo = code
+      let qrData = 'http://h5.cqyyy.cn/payment.html?deviceid=' + id + '&city=' + areaid
+      // this.qrUrl = this.qrPreFix + encodeURIComponent(qrData)
+      this.qrCodeInit.makeCode(qrData)
+      this.qrcodeVal = qrData
+      this.deviceInfo = code + '收款二维码'
       this.qrModal = true
     },
     bdQrcode (id) {
-      this.qrUrl = this.qrPreFix + 'http://server.cqyyy.cn/index.php/admin/login/equimentbingding/departmentcode/' + id
-      this.deviceInfo = ''
+      let qrData ='http://server.cqyyy.cn/index.php/admin/login/equimentbingding/departmentcode/' + id
+      this.qrcodeVal = qrData
+      this.qrCodeInit.makeCode(qrData)
+      this.deviceInfo = id + '绑定微信账号二维码'
       this.qrModal = true
     },
     queryChange (e) {
@@ -569,11 +595,26 @@ export default {
 .device-info{
   text-align: center;
   font-size: 18px;
+  margin: 10px;
 }
 .headimg{
   width: 30px;
   height: 30px;
   border-radius: 50%;
   vertical-align: top;
+}
+.qrval{
+  margin-top: 12px;
+  font-size: 14px;
+  background-color: #f3f3f3;
+  padding: 10px 6px;
+  code{
+    font-size: 12px;
+    word-break: break-all;
+  }
+}
+#qrcode{
+  display: flex;
+  justify-content: center;
 }
 </style>
