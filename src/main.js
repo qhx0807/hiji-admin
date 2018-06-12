@@ -22,9 +22,11 @@ router.beforeEach((to, from, next) => {
 })
 
 router.afterEach(route => {
-  setTimeout(() => {
-    iView.LoadingBar.finish()
-  }, 1500)
+  // setTimeout(() => {
+  //   iView.LoadingBar.finish()
+  // }, 1500)
+  iView.LoadingBar.finish()
+  window.scrollTo(0, 0)
 })
 
 /* eslint-disable no-new */

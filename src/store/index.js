@@ -10,7 +10,8 @@ const store = new Vuex.Store({
     pageLoading: false,
     breadcrumbArr: [],
     menuTheme: 'dark',
-    themeColor: ''
+    themeColor: '',
+    messageNum: 0
   },
   getters: {
     isLoading (state) {
