@@ -183,7 +183,7 @@ export default {
         },
         {
           title: '部门',
-          key: 'deparmentname',
+          key: 'departmentname',
         },
         {
           title: '商户',
@@ -332,7 +332,8 @@ export default {
       let d = {
         pagesize: size,
         page: page,
-        like: key
+        like: key,
+        userid: sessionStorage.userid
       }
       this.$store.commit('pageLoading', true)
       serverApi('/Equipment/index', d,

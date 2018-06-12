@@ -3,21 +3,19 @@
 </style>
 <template>
     <div class="main" :class="{'main-hide-text': shrink}">
-        <div class="sidebar-menu-con" :style="{width: shrink?'60px':'200px', overflow: shrink ? 'visible' : 'auto'}">
-            <scroll-bar ref="scrollBarRef">
+        <div class="sidebar-menu-con" :style="{width: shrink?'60px':'200px', overflow: shrink ? 'visible' : 'auto', background: bgColor}">
                 <shrinkable-menu
-                    :shrink="shrink"
-                    @on-change="handleSubmenuChange"
-                    :theme="menuTheme"
-                    :active-name="activeName"
-                    :open-names="openedSubmenuArr"
-                    :menu-list="menuList">
-                    <div slot="top" class="logo-con" style="padding-top:18px">
-                      <!-- <img v-show="!shrink"  src="../../images/logo.jpg" key="max-logo" /> -->
-                      <img v-show="shrink" src="../../images/mini.png" key="min-logo" style="height:25px"/>
-                    </div>
+                  :shrink="shrink"
+                  @on-change="handleSubmenuChange"
+                  :theme="menuTheme"
+                  :active-name="activeName"
+                  :open-names="openedSubmenuArr"
+                  :menu-list="menuList">
+                  <div slot="top" class="logo-con" style="padding-top:18px">
+                    <!-- <img v-show="!shrink"  src="../../images/logo.jpg" key="max-logo" /> -->
+                    <img v-show="shrink" src="../../images/mini.png" key="min-logo" style="height:25px"/>
+                  </div>
                 </shrinkable-menu>
-            </scroll-bar>
         </div>
         <div class="main-header-con" :style="{paddingLeft: shrink?'60px':'200px'}">
             <div class="main-header">
@@ -28,17 +26,16 @@
                 </div>
                 <div class="header-middle-con">
                     <div class="main-breadcrumb">
-                        <!-- <breadcrumb-nav :currentPath="currentPath"></breadcrumb-nav> -->
                       <Breadcrumb>
                         <BreadcrumbItem v-for="(item, index) in breadcrumbArr" :key="index" :to="item.to">{{item.name}}</BreadcrumbItem>
                       </Breadcrumb>
                     </div>
                 </div>
                 <div class="header-avator-con">
-                    <full-screen v-model="isFullScreen" @on-change="fullscreenChange"></full-screen>&nbsp;
-                    <lock-screen></lock-screen>&nbsp;
+                    <full-screen v-model="isFullScreen" @on-change="fullscreenChange"></full-screen>
+                    <lock-screen></lock-screen>
+                    <message-tip :value="messageNum"></message-tip>
                     <theme-switch></theme-switch>
-
                     <div class="user-dropdown-menu-con">
                         <Row type="flex" justify="end" align="middle" class="user-dropdown-innercon">
                             <Dropdown transfer trigger="click" @on-click="handleClickUserDropdown">
@@ -71,8 +68,8 @@
 import shrinkableMenu from '../main-components/shrinkable-menu/shrinkable-menu.vue'
 import fullScreen from '../main-components/fullscreen/fullscreen.vue'
 import lockScreen from '../main-components/lockscreen/lockscreen.vue'
-import themeSwitch from '../main-components/theme-switch/theme-switch.vue';
-import scrollBar from '../scroll-bar/vue-scroller-bars'
+import themeSwitch from '../main-components/theme-switch/theme-switch.vue'
+import messageTip from '../main-components/message-tip/message-tip.vue'
 import serverApi from '../../axios'
 import { formatJsonTree } from '../../utlis/tools.js'
 export default {
@@ -80,9 +77,8 @@ export default {
     shrinkableMenu,
     fullScreen,
     lockScreen,
-    // messageTip,
+    messageTip,
     themeSwitch,
-    scrollBar
   },
   data () {
     return {
@@ -108,6 +104,12 @@ export default {
     },
     breadcrumbArr () {
       return this.$store.getters.breadcrumList
+    },
+    bgColor () {
+      return this.menuTheme === 'dark' ? '#495060' : '#fff'
+    },
+    messageNum () {
+      return this.$store.state.messageNum
     }
   },
   created () {
@@ -118,9 +120,6 @@ export default {
   methods: {
     toggleClick () {
       this.shrink = !this.shrink
-    },
-    scrollBarResize () {
-      this.$refs.scrollBarRef.resize()
     },
     handleSubmenuChange (e) {
       let arr = []

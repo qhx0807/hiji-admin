@@ -4,11 +4,13 @@
       <Row>
         <Col span="24" style="padding-bottom:12px">
           <Input v-model="searchKey" placeholder="搜索关键字..." style="width: 200px"></Input>
-          <DatePicker type="daterange" placeholder="日期范围" @on-change="onSelectDate" style="width: 220px"></DatePicker>
+          <DatePicker :options="dateOptions" type="daterange" placeholder="日期范围" @on-change="onSelectDate" style="width: 220px"></DatePicker>
           <Button type="primary" style="margin-left:8px" icon="ios-search" @click="onClickSearch">搜索</Button>
         </Col>
       </Row>
-      <Table size="small" :columns="columns1" :data="tableData"></Table>
+      <Table size="small" :columns="columns1" :data="tableData">
+        <div slot="footer"></div>
+      </Table>
       <div style="float: right; padding-top:12px">
         <Page :total="count" show-total :current="page" @on-change="changePage" show-sizer @on-page-size-change="onChangeSize"></Page>
       </div>
@@ -44,12 +46,12 @@ export default {
         },
         {
           title: '商户',
-          key: 'name',
-          width: 250
+          key: 'name'
         },
         {
           title: '设备号',
-          key: 'device_info'
+          key: 'device_info',
+          minWidth: 200,
         },
         {
           title: '微信交易流水',
@@ -66,7 +68,38 @@ export default {
           key: 'createtime',
           width: 160
         }
-    ],
+      ],
+      dateOptions: {
+        shortcuts: [
+          {
+            text: '最近一周',
+            value () {
+              const end = new Date()
+              const start = new Date()
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7)
+              return [start, end]
+            }
+          },
+          {
+            text: '最近一月',
+            value () {
+              const end = new Date()
+              const start = new Date()
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30)
+              return [start, end]
+            }
+          },
+          {
+            text: '最近三月',
+            value () {
+              const end = new Date()
+              const start = new Date()
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90)
+              return [start, end]
+            }
+          }
+        ]
+      },
     }
   },
   created () {
@@ -78,8 +111,8 @@ export default {
       let d = {
         pagesize: size,
         page: page,
-        starttime: this.starttime,
-        endtime: this.endtime,
+        datefrom: this.starttime,
+        dateto: this.endtime,
         like: this.searchKey,
         userid: sessionStorage.userid
       }
@@ -115,8 +148,10 @@ export default {
     },
     onClickSearch () {
       let d = {
-        starttime: this.starttime,
-        endtime: this.endtime,
+        pagesize: this.pageSize,
+        page: this.page,
+        datefrom: this.starttime,
+        dateto: this.endtime,
         like: this.searchKey,
         userid: sessionStorage.userid
       }

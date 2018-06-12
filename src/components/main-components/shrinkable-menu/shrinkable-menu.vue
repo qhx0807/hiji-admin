@@ -25,7 +25,6 @@
 <script>
 import sidebarMenu from './components/sidebarMenu.vue'
 import sidebarMenuShrink from './components/sidebarMenuShrink.vue'
-// import util from '@/libs/util';
 export default {
   name: 'shrinkableMenu',
   components: {
