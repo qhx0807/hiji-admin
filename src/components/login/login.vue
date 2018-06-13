@@ -38,7 +38,7 @@
 </template>
 
 <script>
-// import Cookies from 'js-cookie'
+import Cookies from 'js-cookie'
 import serverApi from '../../axios/index.js'
 export default {
   data () {
@@ -55,6 +55,10 @@ export default {
         password: [{ required: true, message: '密码不能为空', trigger: 'blur' }]
       }
     }
+  },
+  created () {
+    Cookies.set('locking', '0')
+    sessionStorage.clear()
   },
   methods: {
     handleSubmit () {

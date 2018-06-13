@@ -1,8 +1,8 @@
 <template>
     <div @click="lockScreen" class="lock-screen-btn-con">
-        <Tooltip content="锁屏" placement="bottom">
-            <Icon type="locked" :size="20"></Icon>
-        </Tooltip>
+      <Tooltip content="锁屏" placement="bottom">
+        <Icon type="locked" :size="20"></Icon>
+      </Tooltip>
     </div>
 </template>
 
@@ -33,7 +33,7 @@ export default {
       Cookies.set('last_page_name', this.$route.name) // 本地存储锁屏之前打开的页面以便解锁后打开
       setTimeout(() => {
         lockScreenBack.style.transition = 'all 0s'
-        this.$router.replace({
+        this.$router.push({
           name: 'Lock'
         })
       }, 800)
