@@ -216,7 +216,7 @@ export default {
       this.$store.commit('pageLoading', true)
       serverApi('/Merchant/index', d,
         response => {
-          console.log(response)
+          // console.log(response)
           if (response.data.code === 0){
             this.tableData = response.data.data.result
             this.count = response.data.data.counts

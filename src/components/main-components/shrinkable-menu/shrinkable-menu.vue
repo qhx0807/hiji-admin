@@ -11,6 +11,7 @@
         :menu-list="menuList"
         :open-names="openNames"
         @on-change="handleChange"
+        :active-name="activeName"
     ></sidebar-menu>
     <sidebar-menu-shrink
         v-show="shrink"
@@ -49,6 +50,9 @@ export default {
     },
     openNames: {
       type: Array
+    },
+    activeName: {
+      type: String
     }
   },
   computed: {

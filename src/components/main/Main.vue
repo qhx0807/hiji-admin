@@ -170,12 +170,10 @@ export default {
               arr.push({name: obj.name, to: obj.url})
             }
             let a = obj.updid
-            // this.openedSubmenuArr =
             let b = []
-            b.push(a)
+            b.push(Number(a))
             this.openedSubmenuArr = b
             this.$store.commit('updateBread', arr)
-
           } else {
             this.$Message.warning(response.data.msg)
           }
