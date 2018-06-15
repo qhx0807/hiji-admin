@@ -161,7 +161,7 @@ export default {
       this.$store.commit('pageLoading', true)
       serverApi('/role/index', d,
         response => {
-          console.log(response)
+          // console.log(response)
           if (response.data.code === 0){
             // this.tableData = response.data.data.result
             this.tableData = response.data.data

@@ -16,6 +16,7 @@ const PayOrders = r => require.ensure([], () => r(require('@/components/merchant
 const Handler = r => require.ensure([], () => r(require('@/components/settings/handler.vue')))
 const ApplyCash = r => require.ensure([], () => r(require('@/components/merchant/applycash.vue')))
 const ReviewCashApply = r => require.ensure([], () => r(require('@/components/merchant/reviewcashapply.vue')))
+const WorldCup = r => require.ensure([], () => r(require('@/components/settings/worldcup.vue')))
 
 const routesArr = [
   Home,
@@ -128,6 +129,11 @@ const routes = [
         path: 'Role',
         component: Role,
         name: 'Role'
+      },
+      {
+        path: 'WorldCup',
+        component: WorldCup,
+        name: 'WorldCup'
       }
     ]
   },
