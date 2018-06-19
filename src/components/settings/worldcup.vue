@@ -12,7 +12,7 @@
     </Card>
 
     <!-- win -->
-    <Modal v-model="winModal" width="500">
+    <Modal v-model="winModal" width="500" :closable="false">
       <p slot="header" style="text-align:center">
         <span>录入比赛结果</span>
       </p>
@@ -26,7 +26,7 @@
         </FormItem>
       </Form>
       <div slot="footer">
-        <Button type="ghost"  @click="winModal = false">取消</Button>
+        <Button type="ghost"  @click="coloseModal">取消</Button>
         <Button type="primary" :loading="modal_loading" @click="saveWin">保存</Button>
       </div>
     </Modal>
@@ -201,10 +201,17 @@ export default {
     updateWin (row) {
       this.optionList = []
       this.winData = row
+      console.log(this.optionList)
       this.optionList.push({name: '(主)'+row.zhuchang+'胜', value: '1'})
       this.optionList.push({name: '(客)'+row.kechang+'胜', value: '2'})
       this.optionList.push({name: '平分秋色', value: '3'})
+      this.selectOption = ''
       this.winModal = true
+    },
+    coloseModal () {
+      this.selectOption = ''
+      this.winModal = false
+      window.location.reload()
     },
     saveWin () {
       if (!this.selectOption) {
