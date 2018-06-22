@@ -91,6 +91,24 @@
       </div>
     </Modal>
 
+    <Modal v-model="bindModal" width="500" :styles="{top: '70px'}">
+      <p slot="header" style="text-align:center">
+        <span>绑定收款账户</span>
+      </p>
+      <Form :model="editData"  :rules="rules" :label-width="70">
+        <FormItem label="收款账户">
+          <Input v-model="editData.aliphone" placeholder="请输入名称"></Input>
+        </FormItem>
+        <FormItem label="真实姓名">
+          <Input  v-model="editData.realname" placeholder="请输入"></Input>
+        </FormItem>
+      </Form>
+      <div slot="footer">
+        <Button type="ghost"  @click="bindModal = false">取消</Button>
+        <Button type="primary" :loading="modal_loading" @click="bingAliPay">保存</Button>
+      </div>
+    </Modal>
+
   </div>
 </template>
 <script>
@@ -103,6 +121,7 @@ export default {
       addModal: false,
       editModal: false,
       modal_loading: false,
+      bindModal: false,
       count: 0,
       page: 1,
       pageSize: 10,
@@ -134,36 +153,57 @@ export default {
         {
           title: '名称',
           key: 'name',
+          minWidth: 120
         },
         {
           title: '编码',
           key: 'merchantcode',
+          minWidth: 90
         },
         {
           title: '联系人',
-          key: 'contact'
+          key: 'contact',
+          minWidth: 100
         },
         {
           title: '电话',
-          key: 'mobile'
+          key: 'mobile',
+          minWidth: 120
         },
         {
           title: '商户地址',
-          key: 'addres'
+          key: 'addres',
+          minWidth: 150
+          // ellipsis: true
         },
         {
           title: '商户信息',
-          key: 'info'
+          key: 'info',
+          minWidth: 130
+          // ellipsis: true
+        },
+        {
+          title: '收款账户',
+          key: 'alipay',
+          minWidth: 120,
+          render: (h, params) => {
+            return h('div', [
+              h('p', {}, params.row.realname),
+              h('p', {}, params.row.aliphone)
+            ])
+          }
         },
         {
           title: '创建时间',
           key: 'createtime',
+          minWidth: 150
         },
         {
           title: '操作',
           key: 'id',
           align: 'center',
-          width: 165,
+          minWidth: 220,
+          fixed: 'right',
           render: (h, params) => {
             return h('div', [
                 h('Button', {
@@ -185,6 +225,18 @@ export default {
                     props: {
                       type: 'text',
                       size: 'small',
+                      icon: 'social-yen'
+                    },
+                    on: {
+                      click: () => {
+                        this.binding(params.row)
+                      }
+                    }
+                }, '绑定'),
+                h('Button', {
+                    props: {
+                      type: 'text',
+                      size: 'small',
                       icon: 'trash-a'
                     },
                     on: {
@@ -198,7 +250,7 @@ export default {
         }
       ],
       tableData: [],
-      casData: [],
+      casData: []
     }
   },
   created () {
@@ -354,6 +406,36 @@ export default {
         })
         // console.log(dep)
       }
+    },
+    binding (row) {
+      this.editData = Object.assign({}, row)
+      this.bindModal = true
+    },
+    bingAliPay () {
+      if (!this.editData.aliphone || !this.editData.realname) {
+        this.$Message.warning('请输入信息！')
+        return false
+      }
+      this.modal_loading = true
+      var d = {
+        aliphone: this.editData.aliphone,
+        realname: this.editData.realname,
+        merchantcode: this.editData.merchantcode
+      }
+       serverApi('/miss/binding', this.form,
+            response => {
+              this.modal_loading = false
+              if (response.data.code === 0) {
+                this.bindModal = false
+                this.getTableData(this.page, this.pageSize, this.searchKey)
+              }
+              this.$Message.info(response.data.msg)
+            },
+            error => {
+              console.log(error)
+              this.modal_loading = false
+            }
+          )
     }
   }
 }
