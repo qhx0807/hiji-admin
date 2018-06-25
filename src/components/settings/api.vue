@@ -1,5 +1,5 @@
 <template>
-  <Card>
+  <Card :bordered="false">
     <Row>
       <Col span="24">
         <Input v-model="searchKey"  placeholder="Search..." style="width: 230px"></Input>

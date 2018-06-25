@@ -1,6 +1,6 @@
 <template>
   <div class="box">
-    <Card>
+    <Card :bordered="false">
       <div class="tips">
         <h4 v-show="action == 'apply'">申请提现</h4>
         <h4 v-show="action == 'records'">我的提现申请记录</h4>
@@ -8,7 +8,7 @@
         <p v-show="action == 'records'">此商户的申请提现记录，详情请咨询【<a>宏帆Hi集</a>】  <a @click="seeMyRecords('apply')" href="javascript: void(0)">去申请提现</a></p>
       </div>
     </Card>
-    <Card style="margin-top:10px" v-show="action == 'apply'">
+    <Card :bordered="false" style="margin-top:10px" v-show="action == 'apply'">
       <Row>
         <Col span="24">
           <Steps :current="stepNum" style="max-width:880px; margin:20px auto 0 auto">
@@ -32,6 +32,13 @@
                     :parser="value => value.replace(/$s?|(,*)/g, '')"
                     ></InputNumber>
                   <p><a>点击查看可提现金额</a></p>
+                </FormItem>
+                <FormItem label="可选商户">
+                  <Select v-model="formItem.sh" style="width: 400px">
+                    <Option value="beijing">New York</Option>
+                    <Option value="shanghai">London</Option>
+                    <Option value="shenzhen">Sydney</Option>
+                  </Select>
                 </FormItem>
                 <FormItem label="收款账户">
                   <Input v-model="formItem.sh" style="width: 400px" placeholder="输入收款账户"></Input>
@@ -98,8 +105,19 @@
         </Col>
       </Row>
     </Card>
-    <Card style="margin-top: 10px" v-show="action == 'records'">
-      12
+    <Card :bordered="false" style="margin-top: 10px" v-show="action == 'records'">
+      <Row>
+        <Col span="24">
+          <Table :columns="columns" :loading="tableLoading" :border="false" :data="tableData"></Table>
+        </Col>
+        <Col span="24">
+          <div style="padding-top:12px;text-align:right">
+            <Page :total="count" show-total :current="page" @on-change="changePage" show-sizer @on-page-size-change="onChangeSize"></Page>
+          </div>
+        </Col>
+      </Row>
+
+
     </Card>
   </div>
 </template>
@@ -117,11 +135,55 @@ export default {
         price: null,
         sh:''
       },
+      tableLoading: false,
       ruleValidate: {
         price: [
           { required: true, type: 'number', message: '提现金额不能为空', trigger: 'blur' }
         ],
-      }
+      },
+      count: 0,
+      page: 1,
+      pageSize: 10,
+      tableData: [
+        {
+            name: 'John Brown',
+            age: 18,
+            address: 'New York No. 1 Lake Park',
+            date: '2016-10-03'
+        },
+        {
+            name: 'Jim Green',
+            age: 24,
+            address: 'London No. 1 Lake Park',
+            date: '2016-10-01'
+        },
+        {
+            name: 'Joe Black',
+            age: 30,
+            address: 'Sydney No. 1 Lake Park',
+            date: '2016-10-02'
+        },
+        {
+            name: 'Jon Snow',
+            age: 26,
+            address: 'Ottawa No. 2 Lake Park',
+            date: '2016-10-04'
+        }
+      ],
+      columns: [
+        {
+            title: 'Name',
+            key: 'name'
+        },
+        {
+            title: 'Age',
+            key: 'age'
+        },
+        {
+            title: 'Address',
+            key: 'address'
+        }
+      ],
     }
   },
   created () {
@@ -156,7 +218,18 @@ export default {
     },
     handleReset (name) {
       this.$refs[name].resetFields()
-    }
+    },
+    changePage (e) {
+      this.page = e
+      // this.getTableData(e, this.pageSize)
+    },
+    onChangeSize (e) {
+      this.pageSize = e
+      // this.getTableData(this.page, e)
+    },
+    getCashInfo () {
+      // 获取可提现金额，可选择的商户，商户的收款账号 姓名
+    },
   }
 }
 </script>

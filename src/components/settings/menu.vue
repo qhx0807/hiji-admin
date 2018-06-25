@@ -1,5 +1,5 @@
 <template>
-  <Card>
+  <Card :bordered="false">
     <div class="head">
       <Button type="primary" @click="onClickAdd">新增</Button>
     </div>

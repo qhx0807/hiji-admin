@@ -27,7 +27,7 @@
                 <div class="header-middle-con">
                     <div class="main-breadcrumb">
                       <Breadcrumb>
-                        <BreadcrumbItem v-for="(item, index) in breadcrumbArr" :key="index" :to="item.to">{{item.name}}</BreadcrumbItem>
+                        <BreadcrumbItem :style="{cursor: 'pointer'}" @click.native="onClickBread(item.to)" v-for="(item, index) in breadcrumbArr" :key="index">{{item.name}}</BreadcrumbItem>
                       </Breadcrumb>
                     </div>
                 </div>
@@ -189,14 +189,17 @@ export default {
       if (lock==1 && token) {
         this.$router.push({name: 'Lock'})
       }
+    },
+    onClickBread (to) {
+      if (to == '/Main') {
+        this.$router.push({name: 'Home'})
+        let arr = []
+        this.$store.commit('updateBread', arr)
+        this.openedSubmenuArr = []
+        this.activeName = ''
+      }
     }
   },
-  watch: { },
-  mounted () {
-    window.addEventListener('resize', this.scrollBarResize)
-  },
-  dispatch () {
-    window.removeEventListener('resize', this.scrollBarResize)
-  }
+  watch: { }
 }
 </script>

@@ -1,6 +1,6 @@
 <template>
   <div class="box">
-    <Card>
+    <Card :bordered="false">
       <Row>
         <Col span="24" style="padding-bottom:12px">
           <Input v-model="searchKey" placeholder="搜索关键字..." style="width: 200px"></Input>
@@ -54,7 +54,7 @@ export default {
           minWidth: 200,
         },
         {
-          title: '微信交易流水',
+          title: '交易流水',
           key: 'transaction_id',
           width: 250
         },
@@ -62,6 +62,11 @@ export default {
           title: '支付金额',
           key: 'total_fee',
           width: 100
+        },
+        {
+          title: '支付方式',
+          key: 'pay_type',
+          width: 120
         },
         {
           title: '创建时间',

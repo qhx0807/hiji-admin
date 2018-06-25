@@ -1,6 +1,6 @@
 <template>
   <div class="user">
-    <Card>
+    <Card :bordered="false">
       <div class="head">
         <Input v-model="searchKey" placeholder="搜索关键字..." style="width: 200px"></Input>
         <Button type="primary" style="margin-left:8px" icon="ios-search" @click="onClickSearch">搜索</Button>
@@ -22,7 +22,7 @@
       </p>
       <Form ref="form" :model="form" :rules="rules" :label-width="70">
         <FormItem prop="equipmentno" label="设备号">
-          <Input  v-model="form.equipmentno" placeholder="请输入设备号"></Input>
+          <Input v-model="form.equipmentno" placeholder="请输入设备号"></Input>
         </FormItem>
         <FormItem prop="departmentcode" label="部门编号">
           <Cascader change-on-select @on-change="onSelectDep" :data="casData"></Cascader>
@@ -54,7 +54,7 @@
           <Input  v-model="editData.equipmentno" placeholder="请输入设备号"></Input>
         </FormItem>
         <FormItem  label="部门名称">
-          <Input v-model="editData.deparmentname" readonly placeholder="请输入部门编号"></Input>
+          <Input v-model="editData.departmentname" readonly placeholder="请输入部门编号"></Input>
         </FormItem>
         <FormItem prop="merchantcode" label="商户">
           <Select v-model="editData.merchantcode">
@@ -433,7 +433,11 @@ export default {
       }
     },
     edit () {
-      console.log(this.editData)
+      let reg = /[\W]/g
+      if (reg.test(this.editData.equipmentno)) {
+        this.$Message.info('设备号不允许出现汉字等非法字符！')
+        return false
+      }
       delete this.editData._index
       delete this.editData._rowKey
       delete this.editData.createtime
@@ -442,6 +446,7 @@ export default {
       this.modal_loading = true
       serverApi('/Equipment/edit', this.editData,
         response => {
+          // console.log(response)
           this.modal_loading = false
           if (response.data.code === 0) {
             this.editModal = false
@@ -474,7 +479,11 @@ export default {
       })
     },
     add () {
-      console.log(this.form)
+      let reg = /[\W]/g
+      if (reg.test(this.form.equipmentno)) {
+        this.$Message.info('设备号不允许出现汉字等非法字符！')
+        return false
+      }
       this.$refs.form.validate(valid => {
         if (valid) {
           this.modal_loading = true

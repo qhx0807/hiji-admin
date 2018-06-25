@@ -1,6 +1,6 @@
 <template>
   <div class="box">
-    <Card>
+    <Card :bordered="false">
       <Row>
         <Col span="24" style="padding-bottom:12px">
           <Input v-model="searchKey" placeholder="搜索关键字..." style="width: 200px"></Input>
