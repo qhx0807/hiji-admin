@@ -13,11 +13,13 @@
   "dependencies": {
     "axios": "^0.18.0",
     "babel-polyfill": "^6.26.0",
+    "countup.js": "^1.9.3",
     "iview": "^2.14.3",
     "js-cookie": "^2.2.0",
     "lodash": "^4.17.10",
     "qrcodejs2": "0.0.2",
     "vue": "^2.5.2",
+    "vue-countup-v2": "^1.0.3",
     "vue-qart": "^2.1.1",
     "vue-router": "^3.0.1",
     "vue-table-with-tree-grid": "^0.2.4",
