@@ -420,9 +420,10 @@ export default {
       var d = {
         aliphone: this.editData.aliphone,
         realname: this.editData.realname,
-        merchantcode: this.editData.merchantcode
+        merchantcode: this.editData.merchantcode,
+        userid: sessionStorage.userid
       }
-       serverApi('/miss/binding', this.form,
+       serverApi('/putforward/binding', d,
             response => {
               this.modal_loading = false
               if (response.data.code === 0) {

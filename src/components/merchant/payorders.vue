@@ -46,7 +46,8 @@ export default {
         },
         {
           title: '商户',
-          key: 'name'
+          key: 'name',
+          minWidth: 140
         },
         {
           title: '设备号',
@@ -61,7 +62,17 @@ export default {
         {
           title: '支付金额',
           key: 'total_fee',
-          width: 100
+          width: 120,
+          align: 'center',
+          render: (h, params) => {
+            return h('div', {
+              style: {
+                color: '#f90',
+                fontSize: '14px',
+                fontWeight: '600'
+              }
+            }, `+ ${params.row.total_fee.toFixed(2)}`)
+          }
         },
         {
           title: '支付方式',

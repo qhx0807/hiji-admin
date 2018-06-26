@@ -18,62 +18,55 @@
           </Steps>
         </Col>
         <Col span="24">
-          <div style="max-width: 650px;margin:0 auto; padding-top: 40px;">
+          <div style="max-width: 600px;margin:0 auto; padding-top: 40px;">
             <div v-show="stepNum == 0">
-              <Form ref="formValidate" :model="formItem" :label-width="80" :rules="ruleValidate" >
-                <FormItem label="提现金额" prop="price">
+              <Form ref="formValidate" :model="formItem" :label-width="100" :rules="ruleValidate" >
+                <FormItem label="提现金额：" prop="price">
                   <InputNumber
-                    :max="9999999999999999"
+                    :max="maxApplyNum"
                     :min="0"
                     v-model="formItem.price"
                     style="width: 400px"
                     placeholder="输入提现金额"
-                    :formatter="value => `￥ ${value}`.replace(/B(?=(d{3})+(?!d))/g, ',')"
-                    :parser="value => value.replace(/$s?|(,*)/g, '')"
                     ></InputNumber>
-                  <p><a>点击查看可提现金额</a></p>
+                  <p><a @click="toggleSeeFee">点击查看可提现金额</a> <span v-if="seeFee" class="applyable-fee">可提现金额：<span>￥{{seeInfoData.balance}}</span></span></p>
                 </FormItem>
-                <FormItem label="可选商户">
-                  <Select v-model="formItem.sh" style="width: 400px">
-                    <Option value="beijing">New York</Option>
-                    <Option value="shanghai">London</Option>
-                    <Option value="shenzhen">Sydney</Option>
-                  </Select>
+                <FormItem label="收款账户：">
+                  {{seeInfoData.aliphone}}
+                  <!-- <Input v-model="" disabled style="width: 400px" placeholder="输入收款账户"></Input> -->
                 </FormItem>
-                <FormItem label="收款账户">
-                  <Input v-model="formItem.sh" style="width: 400px" placeholder="输入收款账户"></Input>
-                </FormItem>
-                <FormItem label="收款人姓名">
-                  <Input v-model="formItem.sh" style="width: 400px" placeholder="输入收款人姓名"></Input>
+                <FormItem label="收款人姓名：">
+                  {{seeInfoData.realname}}
+                  <!-- <Input v-model="seeInfoData.realname" disabled style="width: 400px" placeholder="输入收款人姓名"></Input> -->
                 </FormItem>
                 <FormItem>
                   <Button type="primary" @click="nextStepApply('formValidate')">下一步</Button>
-                  <Button type="ghost" @click="handleReset('formValidate')" style="margin-left: 8px">重置</Button>
+                  <!-- <Button type="ghost" @click="handleReset('formValidate')" style="margin-left: 8px">重置</Button> -->
                 </FormItem>
               </Form>
             </div>
             <div style="max-width: 450px;" v-show="stepNum == 1">
               <Row class="infoitem">
                 <Col span="24">
-                  <Alert show-icon closable>确认申请后，资金将直接打入此账户，无法退回。</Alert>
+                  <Alert show-icon closable>确认申请审核后，资金将直接打入此账户，无法退回。</Alert>
                 </Col>
               </Row>
               <Row class="infoitem">
                 <Col span="8" style="text-align:right">收款账户：</Col>
-                <Col span="16"><p class="infovalue">18716742604</p></Col>
+                <Col span="16"><p class="infovalue">{{seeInfoData.aliphone}}</p></Col>
               </Row>
               <Row class="infoitem">
                 <Col span="8" style="text-align:right">收款人：</Col>
-                <Col span="16"><p class="infovalue">测试账户</p></Col>
+                <Col span="16"><p class="infovalue">{{seeInfoData.realname}}</p></Col>
               </Row>
               <Row class="infoitem">
                 <Col span="8" style="text-align:right">提现金额：</Col>
-                <Col span="16"><b class="infovalue money">￥500.00</b></Col>
+                <Col span="16"><b class="infovalue money">￥{{formItem.price}}</b></Col>
               </Row>
               <Row class="infoitem">
                 <Col span="13" style="text-align:right">
-                  <Button type="primary">确认</Button>
-                  <Button type="ghost" style="margin-left:8px">上一步</Button>
+                  <Button type="primary" @click="confirmApply" :loading="submitLoading">确认</Button>
+                  <Button type="ghost" @click="stepNum = 0" style="margin-left:8px">上一步</Button>
                 </Col>
               </Row>
             </div>
@@ -85,19 +78,19 @@
               </div>
               <Row class="infoitem">
                 <Col span="12" style="text-align:right">收款账户：</Col>
-                <Col span="12"><p class="infovalue">18716742604</p></Col>
+                <Col span="12"><p class="infovalue">{{seeInfoData.aliphone}}</p></Col>
               </Row>
               <Row class="infoitem">
                 <Col span="12" style="text-align:right">收款人：</Col>
-                <Col span="12"><p class="infovalue">测试账户</p></Col>
+                <Col span="12"><p class="infovalue">{{seeInfoData.realname}}</p></Col>
               </Row>
               <Row class="infoitem" style="margin-bottom:35px;">
                 <Col span="12" style="text-align:right">提现金额：</Col>
-                <Col span="12"><b class="infovalue money">￥500.00</b></Col>
+                <Col span="12"><b class="infovalue money">￥{{formItem.price}}</b></Col>
               </Row>
               <Row class="infoitem" >
                 <Col span="24" style="text-align:center">
-                  <Button type="primary">查看申请记录</Button>
+                  <Button type="primary" @click="seeMyRecordsFinaly">查看申请记录</Button>
                 </Col>
               </Row>
             </div>
@@ -116,8 +109,6 @@
           </div>
         </Col>
       </Row>
-
-
     </Card>
   </div>
 </template>
@@ -130,7 +121,10 @@ export default {
       searchKey: '',
       text: '',
       stepNum: 0,
+      maxApplyNum: 0,
       action: 'apply',
+      seeFee: false,
+      submitLoading: false,
       formItem: {
         price: null,
         sh:''
@@ -144,60 +138,91 @@ export default {
       count: 0,
       page: 1,
       pageSize: 10,
-      tableData: [
-        {
-            name: 'John Brown',
-            age: 18,
-            address: 'New York No. 1 Lake Park',
-            date: '2016-10-03'
-        },
-        {
-            name: 'Jim Green',
-            age: 24,
-            address: 'London No. 1 Lake Park',
-            date: '2016-10-01'
-        },
-        {
-            name: 'Joe Black',
-            age: 30,
-            address: 'Sydney No. 1 Lake Park',
-            date: '2016-10-02'
-        },
-        {
-            name: 'Jon Snow',
-            age: 26,
-            address: 'Ottawa No. 2 Lake Park',
-            date: '2016-10-04'
-        }
-      ],
+      tableData: [],
       columns: [
         {
-            title: 'Name',
-            key: 'name'
+          title: '序号',
+          type: 'index',
+          width: 80
         },
         {
-            title: 'Age',
-            key: 'age'
+          title: '商户名称',
+          key: 'name'
         },
         {
-            title: 'Address',
-            key: 'address'
+          title: '申请账户',
+          key: 'username'
+        },
+        {
+          title: '支付宝账户',
+          key: 'aliphone'
+        },
+        {
+          title: '账户姓名',
+          key: 'realname'
+        },
+        {
+          title: '提现金额',
+          key: 'price'
+        },
+        {
+          title: '申请时间',
+          key: 'createtime'
+        },
+        {
+          title: '状态',
+          key: 'ispass',
+          render: (h, params) => {
+            const waitState = `等待审核`
+            const succState = `审核通过`
+            const errState = `审核拒绝`
+            h('a', {}, '')
+            if (params.row.ispass == 0) {
+              return h('a', {
+                style: {
+                  color: '#f90'
+                }
+              }, waitState)
+            } else if (params.row.ispass == 1) {
+              return h('a', {}, succState)
+            }else if (params.row.ispass == 2) {
+              return h('a', {
+                style: {
+                  color: '#ed3f14'
+                }
+              }, errState)
+            } else {
+              return  h('a', {}, waitState)
+            }
+          }
         }
       ],
+      seeInfoData: {}
     }
   },
   created () {
-    // this.getTableData()
+    this.getCashInfo()
+    this.getTableData()
   },
   methods: {
     onClickSearch () {
 
     },
     getTableData () {
-      serverApi('/api/find', '',
+      let d = {
+        userid: sessionStorage.userid,
+        pagesize: this.pageSize,
+        page: this.page
+      }
+      serverApi('/putforward/auditshow', d,
         response => {
           console.log(response)
-          this.text = JSON.stringify(response)
+          if (response.data.code == 0) {
+            this.count = response.data.data.count
+            this.tableData = response.data.data.result
+          } else {
+            this.$Message.warning(response.data.msg)
+          }
         },
         error => {
           console.log(error)
@@ -205,14 +230,14 @@ export default {
       )
     },
     seeMyRecords (str) {
+      this.stepNum = 0
+      this.formItem.price = null
       this.action = str
     },
     nextStepApply (name) {
       this.$refs[name].validate((valid) => {
         if (valid) {
-          this.$Message.success('Success!')
-        } else {
-          this.$Message.error('Fail!')
+          this.stepNum = 1
         }
       })
     },
@@ -221,15 +246,63 @@ export default {
     },
     changePage (e) {
       this.page = e
-      // this.getTableData(e, this.pageSize)
+      this.getTableData()
     },
     onChangeSize (e) {
       this.pageSize = e
-      // this.getTableData(this.page, e)
+      this.getTableData()
     },
     getCashInfo () {
-      // 获取可提现金额，可选择的商户，商户的收款账号 姓名
+      // 获取可提现金额 商户的收款账号 姓名
+      this.$store.commit('pageLoading', true)
+      serverApi('/putforward/showmoney', {userid: sessionStorage.userid},
+        response => {
+          this.$store.commit('pageLoading', false)
+          if (response.data.code == 0) {
+            this.seeInfoData = response.data.data
+            this.maxApplyNum = Number(this.seeInfoData.balance)>50000 ? 50000 : Number(this.seeInfoData.balance)
+          } else {
+            this.$Message.warning(response.data.msg)
+          }
+        },
+        error => {
+          this.$store.commit('pageLoading', false)
+          console.log(error)
+        }
+      )
     },
+    toggleSeeFee () {
+      this.seeFee = !this.seeFee
+    },
+    confirmApply () {
+      this.submitLoading = true
+      let d = {
+        userid: sessionStorage.userid,
+        price: this.formItem.price
+      }
+      serverApi('/putforward/withdrawal', d,
+        response => {
+          if (response.data.code == 0) {
+            this.stepNum = 2
+            this.$Notice.success({
+              title: '提现申请成功',
+              desc: '您的申请已提交，等待后台审核通过后金额将在2小时内到账。'
+            })
+          } else {
+            this.$Message.warning(response.data.msg)
+          }
+          this.submitLoading = false
+        },
+        error => {
+          this.submitLoading = false
+          this.$Message.error('网络错误！')
+        }
+      )
+    },
+    seeMyRecordsFinaly () {
+      this.getTableData()
+      this.action = 'records'
+    }
   }
 }
 </script>
@@ -268,6 +341,14 @@ export default {
   p{
     color: #999;
     margin-top: 5px;
+  }
+}
+.applyable-fee{
+  margin-left: 14px;
+  span{
+    color: #f60;
+    font-weight: 600;
+    // font-size: 14px;
   }
 }
 </style>
