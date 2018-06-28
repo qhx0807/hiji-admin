@@ -185,7 +185,7 @@ export default {
         {
           title: '收款账户',
           key: 'alipay',
-          minWidth: 120,
+          minWidth: 130,
           render: (h, params) => {
             return h('div', [
               h('p', {}, params.row.realname),

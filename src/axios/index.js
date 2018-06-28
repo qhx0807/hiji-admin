@@ -20,9 +20,9 @@ axios.interceptors.request.use(function (config) {
 
 axios.interceptors.response.use(function (res) {
   if (res.data.code === 100 || res.data.code === 80) {
-    sessionStorage.clear()
-    alert('token 错误，请重新登录')
-    window.location.href = host
+    // sessionStorage.clear()
+    // alert('token 错误，请重新登录')
+    // window.location.href = host
   } else if (res.data.code === 10) {
     // sessionStorage.clear()
     // alert('无权限访问！')
@@ -34,10 +34,11 @@ axios.interceptors.response.use(function (res) {
 })
 
 const serverApi = (url, data, succFoo, errorFoo) => {
+  let userid = sessionStorage.userid || ''
   axios({
     method: 'post',
     url: apiUrl + url,
-    data: data,
+    data: Object.assign({userid: userid}, data),
     transformRequest: [function (data) {
       let ret = ''
       for (let it in data) {

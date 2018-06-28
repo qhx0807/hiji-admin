@@ -7,12 +7,14 @@ import store from './store'
 import iView from 'iview'
 import ZkTable from 'vue-table-with-tree-grid'
 import _ from 'lodash'
+import viserVue from 'viser-vue'
 
 import './theme/index.less'
 
 Vue.use(iView)
 Vue.component(ZkTable.name, ZkTable)
 Vue.prototype._ = _
+Vue.use(viserVue)
 
 Vue.config.productionTip = false
 

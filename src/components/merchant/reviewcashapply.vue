@@ -5,10 +5,12 @@
         <Input v-model="searchKey" placeholder="搜索关键字..." style="width: 200px"></Input>
         <DatePicker :options="dateOptions" @on-change="onSelectDate" type="daterange" placeholder="日期范围" style="width: 220px"></DatePicker>
         <Button type="primary" style="margin-left:8px" icon="ios-search" @click="onClickSearch">搜索</Button>
+        <Button v-show="activeTab == '0'" type="primary" style="margin-left:8px" @click="onClickReview('1')">审核通过</Button>
+        <Button v-show="activeTab == '0'" type="error" style="margin-left:8px" @click="onClickReview('2')">审核驳回</Button>
       </div>
       <Row>
         <Col span="24">
-          <Tabs type="card" size="small" @on-click="onClickTabItem" :animated="false">
+          <Tabs type="card" v-model="activeTab" size="small" @on-click="onClickTabItem" :animated="false">
             <TabPane label="全部" name="-1"></TabPane>
             <TabPane :label="awaitReviewLabel" name="0"></TabPane>
             <!-- <TabPane label="已通过"></TabPane> -->
@@ -17,7 +19,7 @@
           </Tabs>
         </Col>
         <Col span="24">
-          <Table :columns="columns" :loading="tableLoading" :border="false" :data="tableData"></Table>
+          <Table @on-selection-change="onSelectTable" :columns="columns" :loading="tableLoading" :border="false" :data="tableData"></Table>
           <div style="float: right; padding-top:12px">
             <Page :total="count" show-total :current="page" @on-change="changePage" show-sizer @on-page-size-change="onChangeSize"></Page>
           </div>
@@ -119,6 +121,7 @@ export default {
     return {
       searchKey: '',
       count: 0,
+      activeTab: '0',
       page: 1,
       pageSize: 10,
       isList: true,
@@ -140,9 +143,9 @@ export default {
       tableData: [],
       columns: [
         {
-          title: '编号',
-          key: 'auditnumber',
-          width: 170
+          type: 'selection',
+          width: 60,
+          align: 'center'
         },
         {
           title: '商户名称',
@@ -150,42 +153,47 @@ export default {
           minWidth: 100,
         },
         {
-          title: '申请账户',
-          key: 'username',
-          minWidth: 100,
+          title: '对账编号',
+          key: 'checknum',
+          minWidth: 170,
         },
+        // {
+        //   title: '申请账户',
+        //   key: 'username',
+        //   minWidth: 100,
+        // },
+        // {
+        //   title: '支付宝账户',
+        //   key: 'aliphone',
+        //   minWidth: 100
+        // },
+        // {
+        //   title: '账户姓名',
+        //   key: 'realname',
+        //   width: 100
+        // },
         {
-          title: '支付宝账户',
-          key: 'aliphone',
-          minWidth: 100
-        },
-        {
-          title: '账户姓名',
-          key: 'realname',
-          width: 100
-        },
-        {
-          title: '提现金额',
-          key: 'price',
+          title: '金额',
+          key: 'billmoney',
           minWidth: 100,
         },
         {
           title: '申请时间',
-          key: 'createtime',
+          key: 'withdrawtime',
           width: 150
         },
         {
           title: '审核时间',
-          key: 'audittime',
+          key: 'totime',
           width: 150
         },
         {
           title: '状态',
-          key: 'ispass',
+          key: 'isto',
           width: 140,
           render: (h, params) => {
-            const color = params.row.ispass === 0 ? 'yellow' : params.row.ispass === 1 ? 'green' : 'red'
-            const text = params.row.ispass === 0 ? '待审核' : params.row.ispass === 1 ? '审核通过' : '已拒绝'
+            const color = params.row.isto === 0 ? 'yellow' : params.row.isto === 1 ? 'green' : 'red'
+            const text = params.row.isto === 0 ? '待审核' : params.row.isto === 1 ? '审核通过' : '已拒绝'
             return h('Tag', {
               props: {
                 type: 'dot',
@@ -194,20 +202,20 @@ export default {
             }, text)
           }
         },
-        {
-          title: '操作',
-          key: 'id',
-          width: 100,
-          render: (h, params) => {
-            return h('a', {
-              on: {
-                click: () => {
-                  this.onClickAppleItem(params.row)
-                }
-              }
-            }, '查看详情')
-          }
-        }
+        // {
+        //   title: '操作',
+        //   key: 'id',
+        //   width: 100,
+        //   render: (h, params) => {
+        //     return h('a', {
+        //       on: {
+        //         click: () => {
+        //           this.onClickAppleItem(params.row)
+        //         }
+        //       }
+        //     }, '查看详情')
+        //   }
+        // }
       ],
       tableLoading: false,
       seeOneData: {},
@@ -242,12 +250,13 @@ export default {
           }
         ]
       },
-      selectDateRange: ['','']
+      selectDateRange: ['',''],
+      selectArr: []
     }
   },
   created () {
     this.getWaitNum()
-    this.getTableData('-1')
+    this.getTableData('0')
   },
   methods: {
     getTableData (type) {
@@ -259,10 +268,11 @@ export default {
         like: this.searchKey,
         starttime: this.selectDateRange[0] || '',
         endtime: this.selectDateRange[1] || '',
-        ispass: type || ''
+        isto: type || ''
       }
-      serverApi('/putforward/auditshow', d,
+      serverApi('/bill/showwithdrawal', d,
         response => {
+          // console.log(response)
           this.$store.commit('pageLoading', false)
           if (response.data.code == 0) {
             this.count = response.data.data.count
@@ -283,7 +293,7 @@ export default {
         pagesize: '100',
         ispass: '0'
       }
-      serverApi('/putforward/auditshow', d,
+      serverApi('/bill/showwithdrawal', d,
         response => {
           if (response.data.code == 0) {
             this.waitReviewNum = response.data.data.count
@@ -372,6 +382,52 @@ export default {
       } else {
         this.selectDateRange = ['','']
       }
+    },
+    onSelectTable (e) {
+      if (this.activeTab === '0') {
+        this.selectArr = e
+      }
+    },
+    onClickReview (status) {
+      let text = status == '1' ? '通过' : '驳回'
+      if (this.selectArr.length == 0) {
+        this.$Message.info('请选择要操作的项目！')
+        return false
+      }
+      let arr = []
+      this.selectArr.forEach(item => {
+        arr.push(item.id)
+      })
+
+      this.$Modal.confirm({
+        title: '提示',
+        content: text+'所选提现申请项？',
+        onOk: () => {
+          let d = {
+            isto: status,
+            id: arr
+          }
+          serverApi('/bill/auditedit', d,
+            response => {
+              console.log(response)
+              if (response.data.code == 0) {
+                this.$Notice.success({
+                  title: '审核通过',
+                  desc: '资金将打款到相应账户。'
+                })
+                this.getTableData('0')
+              } else {
+                this.$Message.warning(response.data.msg)
+              }
+            },
+            error => {
+              this.$store.commit('pageLoading', false)
+              this.$Message.error('连接失败')
+            }
+          )
+        }
+
+      })
     }
   }
 }

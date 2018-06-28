@@ -20,8 +20,19 @@
         <Col span="24">
           <div style="max-width: 600px;margin:0 auto; padding-top: 40px;">
             <div v-show="stepNum == 0">
+              <div class="apply-list">
+                <CheckboxGroup v-model="checkAllGroup" @on-change="checkAllGroupChange">
+                  <ul style="padding-left: 40px;list-style:none;">
+                    <li v-show="isApplyCashData.length==0">无可提现流水！</li>
+                    <li v-for="item in isApplyCashData" :key="item.id">
+                      <Checkbox :label="item.id">{{item.name + '  ' + item.createtime + '  ￥' +item.billmoney}}</Checkbox>
+                    </li>
+                  </ul>
+                </CheckboxGroup>
+              </div>
+              <p class="check-tips">已选：{{checkAllGroup.length}}条 &nbsp;&nbsp;</p>
               <Form ref="formValidate" :model="formItem" :label-width="100" :rules="ruleValidate" >
-                <FormItem label="提现金额：" prop="price">
+                <!-- <FormItem label="提现金额：" prop="price">
                   <InputNumber
                     :max="maxApplyNum"
                     :min="0"
@@ -30,18 +41,15 @@
                     placeholder="输入提现金额"
                     ></InputNumber>
                   <p><a @click="toggleSeeFee">点击查看可提现金额</a> <span v-if="seeFee" class="applyable-fee">可提现金额：<span>￥{{seeInfoData.balance}}</span></span></p>
-                </FormItem>
+                </FormItem> -->
                 <FormItem label="收款账户：">
                   {{seeInfoData.aliphone}}
-                  <!-- <Input v-model="" disabled style="width: 400px" placeholder="输入收款账户"></Input> -->
                 </FormItem>
                 <FormItem label="收款人姓名：">
                   {{seeInfoData.realname}}
-                  <!-- <Input v-model="seeInfoData.realname" disabled style="width: 400px" placeholder="输入收款人姓名"></Input> -->
                 </FormItem>
                 <FormItem>
                   <Button type="primary" @click="nextStepApply('formValidate')">下一步</Button>
-                  <!-- <Button type="ghost" @click="handleReset('formValidate')" style="margin-left: 8px">重置</Button> -->
                 </FormItem>
               </Form>
             </div>
@@ -60,8 +68,8 @@
                 <Col span="16"><p class="infovalue">{{seeInfoData.realname}}</p></Col>
               </Row>
               <Row class="infoitem">
-                <Col span="8" style="text-align:right">提现金额：</Col>
-                <Col span="16"><b class="infovalue money">￥{{formItem.price}}</b></Col>
+                <Col span="8" style="text-align:right">提现条数：</Col>
+                <Col span="16"><p class="infovalue">{{checkAllGroup.length}}条</p></Col>
               </Row>
               <Row class="infoitem">
                 <Col span="13" style="text-align:right">
@@ -85,8 +93,8 @@
                 <Col span="12"><p class="infovalue">{{seeInfoData.realname}}</p></Col>
               </Row>
               <Row class="infoitem" style="margin-bottom:35px;">
-                <Col span="12" style="text-align:right">提现金额：</Col>
-                <Col span="12"><b class="infovalue money">￥{{formItem.price}}</b></Col>
+                <Col span="12" style="text-align:right">提现条数：</Col>
+                <Col span="12"><p class="infovalue">{{checkAllGroup.length}}条</p></Col>
               </Row>
               <Row class="infoitem" >
                 <Col span="24" style="text-align:center">
@@ -115,7 +123,7 @@
 <script>
 import serverApi from '../../axios'
 export default {
-  name: 'ApplyCash',
+  name: 'ApplyCashBill',
   data () {
     return {
       searchKey: '',
@@ -150,42 +158,42 @@ export default {
           key: 'name'
         },
         {
-          title: '申请账户',
-          key: 'username'
+          title: '交易时间',
+          key: 'createtime'
         },
-        {
-          title: '支付宝账户',
-          key: 'aliphone'
-        },
-        {
-          title: '账户姓名',
-          key: 'realname'
-        },
+        // {
+        //   title: '支付宝账户',
+        //   key: 'aliphone'
+        // },
+        // {
+        //   title: '账户姓名',
+        //   key: 'realname'
+        // },
         {
           title: '提现金额',
-          key: 'price'
+          key: 'billmoney'
         },
         {
           title: '申请时间',
-          key: 'createtime'
+          key: 'withdrawtime'
         },
         {
           title: '状态',
-          key: 'ispass',
+          key: 'isto',
           render: (h, params) => {
             const waitState = `等待审核`
             const succState = `审核通过`
             const errState = `审核拒绝`
             h('a', {}, '')
-            if (params.row.ispass == 0) {
+            if (params.row.isto == 0) {
               return h('a', {
                 style: {
                   color: '#f90'
                 }
               }, waitState)
-            } else if (params.row.ispass == 1) {
+            } else if (params.row.isto == 1) {
               return h('a', {}, succState)
-            }else if (params.row.ispass == 2) {
+            }else if (params.row.isto == 2) {
               return h('a', {
                 style: {
                   color: '#ed3f14'
@@ -197,31 +205,52 @@ export default {
           }
         }
       ],
-      seeInfoData: {}
+      seeInfoData: {},
+      isApplyCashData: [],
+      checkAllGroup: [],
+      checkListArr: []
     }
   },
   created () {
     this.getCashInfo()
     this.getTableData()
-    this.onClickSearch()
+    this.getIsApplyableBill()
+  },
+  computed: {
+    // checkedMoney () {
+    //   let num = 0
+    //   if (this.checkAllGroup.length > 0){
+    //     this.checkAllGroup.forEach(item => {
+    //       console.log(item.billmoney)
+    //       num += Number(item.billmoney)
+    //     })
+    //   } else {
+    //     num = 0
+    //   }
+    //   return num
+    // }
   },
   methods: {
-    onClickSearch () {
+    getIsApplyableBill () {
+      let arr = []
       serverApi('/bill/showmoney', null,
         response => {
-          console.log(response)
+          // console.log(response)
           if (response.data.code == 0) {
+            this.isApplyCashData = response.data.data
+            this.isApplyCashData.forEach( item => {
+              arr.push(item.id)
+            })
+            this.checkListArr = arr
           } else {
             this.$Message.warning(response.data.msg)
           }
         },
         error => {
+          this.$Message.warning('连接失败！')
           console.log(error)
         }
       )
-    },
-    getIsApplyableBill () {
-
     },
     getTableData () {
       let d = {
@@ -229,9 +258,9 @@ export default {
         pagesize: this.pageSize,
         page: this.page
       }
-      serverApi('/putforward/auditshow', d,
+      serverApi('/bill/showapply', d,
         response => {
-          // console.log(response)
+          console.log(response)
           if (response.data.code == 0) {
             this.count = response.data.data.count
             this.tableData = response.data.data.result
@@ -250,11 +279,11 @@ export default {
       this.action = str
     },
     nextStepApply (name) {
-      this.$refs[name].validate((valid) => {
-        if (valid) {
-          this.stepNum = 1
-        }
-      })
+      if (this.checkAllGroup.length > 0) {
+        this.stepNum = 1
+      } else {
+        this.$Message.info('请选择要提现的交易！')
+      }
     },
     handleReset (name) {
       this.$refs[name].resetFields()
@@ -293,10 +322,11 @@ export default {
       this.submitLoading = true
       let d = {
         userid: sessionStorage.userid,
-        price: this.formItem.price
+        id: this.checkAllGroup
       }
       serverApi('/putforward/withdrawal', d,
         response => {
+          console.log(response)
           if (response.data.code == 0) {
             this.stepNum = 2
             this.$Notice.success({
@@ -317,6 +347,9 @@ export default {
     seeMyRecordsFinaly () {
       this.getTableData()
       this.action = 'records'
+    },
+    checkAllGroupChange () {
+      // console.log(this.checkAllGroup)
     }
   }
 }
@@ -365,6 +398,24 @@ export default {
     font-weight: 600;
     // font-size: 14px;
   }
+}
+.apply-list{
+  max-height: 300px;
+  overflow: auto;
+  border: 1px solid #eee;
+  padding: 10px 0px;
+  margin-bottom: 10px;
+  ul{
+    list-style: none;
+    li{
+      height: 30px;
+      line-height: 30px;
+    }
+  }
+}
+.check-tips{
+  font-size: 12px;
+  text-align: right;
 }
 </style>
 
