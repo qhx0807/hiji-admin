@@ -18,6 +18,7 @@
     "js-cookie": "^2.2.0",
     "lodash": "^4.17.10",
     "qrcodejs2": "0.0.2",
+    "viser-vue": "^2.2.5",
     "vue": "^2.5.2",
     "vue-countup-v2": "^1.0.3",
     "vue-qart": "^2.1.1",
