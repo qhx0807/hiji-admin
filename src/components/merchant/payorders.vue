@@ -6,13 +6,13 @@
           <Input v-model="searchKey" placeholder="搜索关键字..." style="width: 200px"></Input>
           <DatePicker :options="dateOptions" type="daterange" placeholder="日期范围" @on-change="onSelectDate" style="width: 220px"></DatePicker>
           <Button type="primary" style="margin-left:8px" icon="ios-search" @click="onClickSearch">搜索</Button>
+          <Button type="primary" style="margin-left:8px" v-if="isAdmin" icon="checkmark" @click="onClickCheckBill">对账</Button>
         </Col>
       </Row>
       <Table size="small" :columns="columns1" :data="tableData">
-        <div slot="footer"></div>
       </Table>
       <div style="float: right; padding-top:12px">
-        <Page :total="count" show-total :current="page" @on-change="changePage" show-sizer @on-page-size-change="onChangeSize"></Page>
+        <Page :page-size-opts="pageSizeOpts" :page-size="pageSize" :total="count" show-total :current="page" @on-change="changePage" show-sizer @on-page-size-change="onChangeSize"></Page>
       </div>
       <div style="clear:both"></div>
     </Card>
@@ -30,7 +30,7 @@ export default {
       searchKey: '',
       count: 0,
       page: 1,
-      pageSize: 10,
+      pageSize: 15,
       starttime: '',
       endtime: '',
       columns1: [
@@ -52,7 +52,7 @@ export default {
         {
           title: '设备号',
           key: 'device_info',
-          minWidth: 200,
+          minWidth: 160,
         },
         {
           title: '交易流水',
@@ -60,7 +60,7 @@ export default {
           width: 250
         },
         {
-          title: '支付金额',
+          title: '应收',
           key: 'total_fee',
           width: 120,
           align: 'center',
@@ -71,18 +71,51 @@ export default {
                 fontSize: '14px',
                 fontWeight: '600'
               }
-            }, `+ ${params.row.total_fee.toFixed(2)}`)
+            }, `+ ${params.row.total_fee}`)
           }
         },
         {
+          title: '补贴',
+          key: 'subsidy',
+          width: 70,
+          align: 'center'
+        },
+        {
+          title: '优惠',
+          key: 'coupon_fee',
+          width: 70,
+          align: 'center'
+        },
+        {
+          title: '实收',
+          key: 'cash_fee',
+          width: 70,
+          align: 'center'
+        },
+        {
           title: '支付方式',
-          key: 'pay_type',
-          width: 120
+          key: 'paytype',
+          width: 90
         },
         {
           title: '创建时间',
           key: 'createtime',
           width: 160
+        },
+        {
+          title: '对账',
+          key: 'id',
+          fixed: 'right',
+          width: 100,
+          render: (h, params) => {
+            if (params.row.ischeck == 0) {
+              return h('a', {style: {color: '#f90'}}, '未对账')
+            } else if (params.row.ischeck == 1) {
+              return h('a', {style: {color: '#19be6b'}}, '已对账')
+            } else {
+              return h('a', {style: {color: '#ed3f14'}}, '对账错误')
+            }
+          }
         }
       ],
       dateOptions: {
@@ -116,10 +149,20 @@ export default {
           }
         ]
       },
+      pageSizeOpts: [15, 20, 30]
     }
   },
   created () {
-    this.getTableData(1, 10)
+    this.getTableData(1, 15)
+  },
+  computed: {
+    isAdmin () {
+      if (sessionStorage.username == 'admin' && sessionStorage.userid == '1') {
+        return true
+      } else {
+        return false
+      }
+    }
   },
   methods: {
     getTableData (page, size) {
@@ -187,6 +230,41 @@ export default {
           this.$store.commit('pageLoading', false)
         }
       )
+    },
+    onClickCheckBill () {
+      this.$Modal.confirm({
+        title: '提示',
+        content: '将昨日订单进行对账操作！',
+        onOk: () => {
+          let tTime = new Date().getTime()
+          let yTime = tTime - (24*60*60*1000)
+          let a = new Date(yTime)
+          let y = a.getFullYear()
+          let m = a.getMonth() + 1
+          let s = a.getDate()
+
+          let n = m > 9 ? m : '0'+m
+          let z = s > 9 ? s : '0'+s
+
+          let d = {
+            date: y+''+n+''+z
+          }
+          serverApi('/equipment/download', d,
+            response => {
+              console.log(response)
+              if (response.data.code === 0){
+                this.$Message.info(response.data.msg)
+              }else{
+                this.$Message.warning(response.data.msg)
+              }
+            },
+            error => {
+              console.log(error)
+              this.$Message.error('网络错误，请重试！')
+            }
+          )
+        }
+      })
     }
   }
 }

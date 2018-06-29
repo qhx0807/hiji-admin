@@ -272,7 +272,7 @@ export default {
       }
       serverApi('/bill/showwithdrawal', d,
         response => {
-          // console.log(response)
+          console.log(response)
           this.$store.commit('pageLoading', false)
           if (response.data.code == 0) {
             this.count = response.data.data.count
@@ -313,11 +313,11 @@ export default {
     },
     changePage (e) {
       this.page = e
-      // this.getTableData()
+      this.getTableData(this.activeTab)
     },
     onChangeSize (e) {
       this.pageSize = e
-      // this.getTableData()
+      this.getTableData(this.activeTab)
     },
     onClickAppleItem (row) {
       this.seeOneData = row
@@ -409,13 +409,14 @@ export default {
           }
           serverApi('/bill/auditedit', d,
             response => {
-              console.log(response)
+              // console.log(response)
               if (response.data.code == 0) {
                 this.$Notice.success({
                   title: '审核通过',
                   desc: '资金将打款到相应账户。'
                 })
                 this.getTableData('0')
+                this.getWaitNum()
               } else {
                 this.$Message.warning(response.data.msg)
               }

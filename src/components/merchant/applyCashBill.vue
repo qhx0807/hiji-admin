@@ -25,7 +25,7 @@
                   <ul style="padding-left: 40px;list-style:none;">
                     <li v-show="isApplyCashData.length==0">无可提现流水！</li>
                     <li v-for="item in isApplyCashData" :key="item.id">
-                      <Checkbox :label="item.id">{{item.name + '  ' + item.createtime + '  ￥' +item.billmoney}}</Checkbox>
+                      <Checkbox :label="item.id">{{item.name + '  ' + item.billdate + '  ￥' +item.billmoney}}</Checkbox>
                     </li>
                   </ul>
                 </CheckboxGroup>
@@ -154,12 +154,12 @@ export default {
           width: 80
         },
         {
-          title: '商户名称',
-          key: 'name'
+          title: '商户',
+          key: 'merchantcode'
         },
         {
           title: '交易时间',
-          key: 'createtime'
+          key: 'billdate'
         },
         // {
         //   title: '支付宝账户',
@@ -235,7 +235,7 @@ export default {
       let arr = []
       serverApi('/bill/showmoney', null,
         response => {
-          // console.log(response)
+          console.log(response)
           if (response.data.code == 0) {
             this.isApplyCashData = response.data.data
             this.isApplyCashData.forEach( item => {
@@ -324,7 +324,7 @@ export default {
         userid: sessionStorage.userid,
         id: this.checkAllGroup
       }
-      serverApi('/putforward/withdrawal', d,
+      serverApi('/bill/withdrawal', d,
         response => {
           console.log(response)
           if (response.data.code == 0) {

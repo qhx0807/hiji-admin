@@ -314,8 +314,14 @@ export default {
       this.addModal = true
     },
     onClickEdit (row) {
-      this.editData = Object.assign({}, row)
-      this.editModal = true
+      this.$router.push({name: 'MerchantDetail', params: {id: row.id}})
+      // let arr = [].concat(this.$store.state.breadcrumbArr)
+      // arr.push({name: row.name, to: ''})
+      // console.log(arr)
+      // this.$store.commit('updateBread', arr)
+      // this.$store.commit('pushBreadArr', {name: row.name, to: ''})
+      // this.editData = Object.assign({}, row)
+      // this.editModal = true
     },
     edit () {
       delete this.editData._index

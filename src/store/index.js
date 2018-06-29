@@ -34,6 +34,12 @@ const store = new Vuex.Store({
     },
     changeMainTheme (state, mainTheme) {
       state.themeColor = mainTheme
+    },
+    popBreadArr (state) {
+      state.breadcrumbArr.pop()
+    },
+    pushBreadArr (state, obj) {
+      state.breadcrumbArr.push(obj)
     }
   },
   actions: {},

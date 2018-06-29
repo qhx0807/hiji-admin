@@ -26,6 +26,15 @@ body {
   height: 100%;
   width: 100%;
 }
+.tips {
+  h4{
+    font-size: 14px;
+  }
+  p{
+    font-size: 12px;
+    margin-top: 10px;
+  }
+}
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.4s;

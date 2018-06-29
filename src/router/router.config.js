@@ -12,6 +12,7 @@ const Account = r => require.ensure([], () => r(require('@/components/settings/a
 const Device = r => require.ensure([], () => r(require('@/components/settings/device.vue')))
 const Role = r => require.ensure([], () => r(require('@/components/settings/role.vue')))
 const Merchant = r => require.ensure([], () => r(require('@/components/merchant/merchant.vue')))
+const MerchantDetail = r => require.ensure([], () => r(require('@/components/merchant/merchantdetail.vue')))
 const PayOrders = r => require.ensure([], () => r(require('@/components/merchant/payorders.vue')))
 const Handler = r => require.ensure([], () => r(require('@/components/settings/handler.vue')))
 const ApplyCash = r => require.ensure([], () => r(require('@/components/merchant/applycash.vue')))
@@ -106,6 +107,11 @@ const routes = [
         path: 'Merchant',
         component: Merchant,
         name: 'Merchant'
+      },
+      {
+        path: 'Merchant/:id',
+        component: MerchantDetail,
+        name: 'MerchantDetail'
       },
       {
         path: 'PayOrders',

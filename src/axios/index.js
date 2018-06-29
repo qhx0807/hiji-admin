@@ -1,9 +1,7 @@
 import axios from 'axios'
+import { apiUrl } from '../config/index.js'
 
-// const apiUrl = 'http://192.168.1.200/index.php/admin'
-const apiUrl = 'http://39.108.15.145:8082/index.php?s=/admin'
-
-const host = 'http://' + window.location.host
+// const host = 'http://' + window.location.host
 
 // let apiUrl = process.env.API_URL
 
