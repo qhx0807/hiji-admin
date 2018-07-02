@@ -12,9 +12,9 @@
       <Row>
         <Col span="24">
           <Steps :current="stepNum" style="max-width:880px; margin:20px auto 0 auto">
-            <Step title="填写信息" content="这里是该步骤的描述信息"></Step>
-            <Step title="确认信息" content="这里是该步骤的描述信息"></Step>
-            <Step title="完成" content="这里是该步骤的描述信息"></Step>
+            <Step title="选择流水" content="请选择要申请提现的项目"></Step>
+            <Step title="确认信息" content="确认选择"></Step>
+            <Step title="完成" content="申请完成，等待审核"></Step>
           </Steps>
         </Col>
         <Col span="24">

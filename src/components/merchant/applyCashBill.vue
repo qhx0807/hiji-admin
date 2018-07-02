@@ -11,10 +11,15 @@
     <Card :bordered="false" style="margin-top:10px" v-show="action == 'apply'">
       <Row>
         <Col span="24">
-          <Steps :current="stepNum" style="max-width:880px; margin:20px auto 0 auto">
+          <!-- <Steps :current="stepNum" style="max-width:880px; margin:20px auto 0 auto">
             <Step title="填写信息" content="这里是该步骤的描述信息"></Step>
             <Step title="确认信息" content="这里是该步骤的描述信息"></Step>
             <Step title="完成" content="这里是该步骤的描述信息"></Step>
+          </Steps> -->
+          <Steps :current="stepNum" style="max-width:880px; margin:20px auto 0 auto">
+            <Step title="选择流水" content="请选择要申请提现的项目"></Step>
+            <Step title="确认信息" content="确认选择"></Step>
+            <Step title="完成" content="申请完成，等待审核"></Step>
           </Steps>
         </Col>
         <Col span="24">
@@ -23,7 +28,7 @@
               <div class="apply-list">
                 <CheckboxGroup v-model="checkAllGroup" @on-change="checkAllGroupChange">
                   <ul style="padding-left: 40px;list-style:none;">
-                    <li v-show="isApplyCashData.length==0">无可提现流水！</li>
+                    <li v-show="isApplyCashData.length==0">暂无可提现流水！等待HI集财务对账。如有疑问请联系客服。</li>
                     <li v-for="item in isApplyCashData" :key="item.id">
                       <Checkbox :label="item.id">{{item.name + '  ' + item.billdate + '  ￥' +item.billmoney}}</Checkbox>
                     </li>

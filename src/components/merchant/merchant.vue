@@ -93,7 +93,7 @@
 
     <Modal v-model="bindModal" width="500" :styles="{top: '70px'}">
       <p slot="header" style="text-align:center">
-        <span>绑定收款账户</span>
+        <span>绑定收款账户（仅限支付宝）</span>
       </p>
       <Form :model="editData"  :rules="rules" :label-width="70">
         <FormItem label="收款账户">

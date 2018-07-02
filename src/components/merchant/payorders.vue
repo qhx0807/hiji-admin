@@ -17,10 +17,25 @@
       <div style="clear:both"></div>
     </Card>
     <BackTop></BackTop>
+    <Modal v-model="checkModal" width="500" :styles="{top: '70px'}">
+      <p slot="header" style="text-align:center">
+        <span>对账</span>
+      </p>
+      <Form label-position="top">
+        <FormItem label="请选择要对账的日期">
+          <DatePicker type="date" style="width:100%" v-model="selectCheckDate" placeholder="选择日期"></DatePicker>
+        </FormItem>
+      </Form>
+      <div slot="footer">
+        <Button type="ghost"  @click="checkModal = false">取消</Button>
+        <Button type="primary" :loading="modal_loading" @click="confirmCheckBill">确认对账</Button>
+      </div>
+    </Modal>
   </div>
 </template>
 
 <script>
+import moment from 'moment'
 import serverApi from '../../axios'
 export default {
   name: 'PayOrders',
@@ -32,6 +47,8 @@ export default {
       page: 1,
       pageSize: 15,
       starttime: '',
+      checkModal: false,
+      modal_loading: false,
       endtime: '',
       columns1: [
         {
@@ -149,7 +166,8 @@ export default {
           }
         ]
       },
-      pageSizeOpts: [15, 20, 30]
+      pageSizeOpts: [15, 20, 30],
+      selectCheckDate: null
     }
   },
   created () {
@@ -232,39 +250,29 @@ export default {
       )
     },
     onClickCheckBill () {
-      this.$Modal.confirm({
-        title: '提示',
-        content: '将昨日订单进行对账操作！',
-        onOk: () => {
-          let tTime = new Date().getTime()
-          let yTime = tTime - (24*60*60*1000)
-          let a = new Date(yTime)
-          let y = a.getFullYear()
-          let m = a.getMonth() + 1
-          let s = a.getDate()
-
-          let n = m > 9 ? m : '0'+m
-          let z = s > 9 ? s : '0'+s
-
-          let d = {
-            date: y+''+n+''+z
+      this.checkModal = true
+    },
+    confirmCheckBill () {
+      if (!this.selectCheckDate) {
+        this.$Message.warning('请选择日期！')
+        return false
+      }
+      let date = moment(this.selectCheckDate).format('YYYY-MM-DD')
+      serverApi('/equipment/download', {date: date},
+        response => {
+          console.log(response)
+          if (response.data.code === 0){
+            this.$Message.info(response.data.msg)
+            this.getTableData(this.page, this.pageSize)
+          }else{
+            this.$Message.warning(response.data.msg)
           }
-          serverApi('/equipment/download', d,
-            response => {
-              console.log(response)
-              if (response.data.code === 0){
-                this.$Message.info(response.data.msg)
-              }else{
-                this.$Message.warning(response.data.msg)
-              }
-            },
-            error => {
-              console.log(error)
-              this.$Message.error('网络错误，请重试！')
-            }
-          )
+        },
+        error => {
+          console.log(error)
+          this.$Message.error('网络错误，请重试！')
         }
-      })
+      )
     }
   }
 }
