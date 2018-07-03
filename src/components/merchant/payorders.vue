@@ -106,7 +106,7 @@ export default {
         {
           title: '实收',
           key: 'cash_fee',
-          width: 70,
+          width: 80,
           align: 'center'
         },
         {
