@@ -4,7 +4,6 @@
       <Col span="24">
         <Input v-model="searchKey"  placeholder="Search..." style="width: 230px"></Input>
         <Button type="default" class="ml10">搜索</Button>
-        <Button type="default" class="ml10" @click="exportTable">导出</Button>
         <Button type="primary" class="ml10" @click="onClickAdd">新增</Button>
       </Col>
     </Row>
@@ -103,7 +102,6 @@
 <script>
 import serverApi from '../../axios'
 import {arrSearch} from '../../utlis/tools.js'
-import exportExcel from '../../utlis/table2excel.js'
 export default {
   name: 'Api',
   data () {
@@ -265,14 +263,6 @@ export default {
           )
         }
       })
-    },
-    exportTable () {
-      if (this.searchData.length > 0) {
-        exportExcel(this.searchData, 'Api表格导出')
-      } else {
-        this.$Message.info('无数据！！')
-      }
-
     }
   }
 }

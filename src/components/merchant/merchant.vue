@@ -36,6 +36,9 @@
         <FormItem prop="addres" label="联系地址">
           <Input  v-model="form.addres" placeholder="请输入"></Input>
         </FormItem>
+        <FormItem label="营业时间">
+          <Input v-model="form.businesstime"></Input>
+        </FormItem>
         <!-- <FormItem prop="departmentcode" label="所属部门">
           <Input  v-model="form.departmentcode" placeholder="请输入"></Input>
           <Cascader change-on-select @on-change="onSelectDep" :data="casData"></Cascader>
@@ -71,6 +74,7 @@
         <FormItem prop="addres" label="联系地址">
           <Input  v-model="editData.addres" placeholder="请输入"></Input>
         </FormItem>
+
         <!-- <FormItem prop="departmentname" label="所属部门">
           <Input  v-model="editData.departmentname" placeholder="请输入"></Input>
         </FormItem>
@@ -132,7 +136,8 @@ export default {
         mobile: '',
         addres: '',
         info: '',
-        merchantcode: ''
+        merchantcode: '',
+        businesstime: ''
       },
       rules: {
         name: [{ required: true, message: '不能为空', trigger: 'blur' }],
@@ -363,6 +368,10 @@ export default {
     add () {
       this.$refs.form.validate(valid => {
         if (valid) {
+          if (/[\u4E00-\u9FA5]/g.test(this.form.merchantcode)) {
+            this.$Message.warning('商户编码不能包含汉字字符！')
+            return false
+          }
           this.modal_loading = true
           serverApi('/Merchant/add', this.form,
             response => {

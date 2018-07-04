@@ -20,6 +20,8 @@ const ApplyCashBill = r => require.ensure([], () => r(require('@/components/merc
 const ReviewCashApply = r => require.ensure([], () => r(require('@/components/merchant/reviewcashapply.vue')))
 const WorldCup = r => require.ensure([], () => r(require('@/components/settings/worldcup.vue')))
 const DataSta = r => require.ensure([], () => r(require('@/components/merchant/datasta.vue')))
+const AdminParking = r => require.ensure([], () => r(require('@/components/merchant/admin-parking.vue')))
+const MerchantParking = r => require.ensure([], () => r(require('@/components/merchant/merchant-parking.vue')))
 
 const routesArr = [
   Home,
@@ -147,6 +149,16 @@ const routes = [
         path: 'DataSta',
         component: DataSta,
         name: 'DataSta'
+      },
+      {
+        path: 'AdminParking',
+        component: AdminParking,
+        name: 'AdminParking'
+      },
+      {
+        path: 'MerchantParking',
+        component: MerchantParking,
+        name: 'MerchantParking'
       }
     ]
   },

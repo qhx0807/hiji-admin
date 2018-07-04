@@ -243,7 +243,7 @@ export default {
         },
         error => {
           console.log(error)
-          this.$Message.error('连接失败2222！')
+          this.$Message.error('连接失败！')
         }
       )
     },
@@ -277,7 +277,7 @@ export default {
       }
       serverApi('/depar/monthcount', d,
         response => {
-          console.log(response)
+          // console.log(response)
           if (response.data.code == 0) {
             this.lineChartData = response.data.data
             console.log(this.lineChartData)

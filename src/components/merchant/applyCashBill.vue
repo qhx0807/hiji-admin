@@ -217,7 +217,7 @@ export default {
     }
   },
   created () {
-    this.getCashInfo()
+    // this.getCashInfo()
     this.getTableData()
     this.getIsApplyableBill()
   },
@@ -240,9 +240,11 @@ export default {
       let arr = []
       serverApi('/bill/showmoney', null,
         response => {
+          this.$store.commit('pageLoading', false)
           console.log(response)
           if (response.data.code == 0) {
             this.isApplyCashData = response.data.data
+            this.seeInfoData = response.data.data[0]
             this.isApplyCashData.forEach( item => {
               arr.push(item.id)
             })
@@ -252,6 +254,7 @@ export default {
           }
         },
         error => {
+          this.$store.commit('pageLoading', false)
           this.$Message.warning('连接失败！')
           console.log(error)
         }
@@ -265,7 +268,7 @@ export default {
       }
       serverApi('/bill/showapply', d,
         response => {
-          console.log(response)
+          // console.log(response)
           if (response.data.code == 0) {
             this.count = response.data.data.count
             this.tableData = response.data.data.result
@@ -304,9 +307,9 @@ export default {
     getCashInfo () {
       // 获取可提现金额 商户的收款账号 姓名
       this.$store.commit('pageLoading', true)
-      serverApi('/putforward/showmoney', {userid: sessionStorage.userid},
+      serverApi('/bill/showmoney', {userid: sessionStorage.userid},
         response => {
-          this.$store.commit('pageLoading', false)
+          console.log(response)
           if (response.data.code == 0) {
             this.seeInfoData = response.data.data
             this.maxApplyNum = Number(this.seeInfoData.balance)>50000 ? 50000 : Number(this.seeInfoData.balance)
@@ -315,7 +318,6 @@ export default {
           }
         },
         error => {
-          this.$store.commit('pageLoading', false)
           console.log(error)
         }
       )

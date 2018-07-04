@@ -79,6 +79,7 @@
 
 <script>
 import serverApi from '../../axios'
+import ZkTable from 'vue-table-with-tree-grid'
 export default {
   name: 'Department',
   data () {
@@ -131,9 +132,11 @@ export default {
       casData: []
     }
   },
+  components: {
+    ZkTable
+  },
   created () {
     this.getTableData()
-
   },
   computed: {
   },

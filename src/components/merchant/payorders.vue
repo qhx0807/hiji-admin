@@ -195,7 +195,7 @@ export default {
       }
       serverApi('/Depar/salenolist', d,
         response => {
-          console.log(response)
+          // console.log(response)
           if (response.data.code === 0){
             this.tableData = response.data.data.result
             this.count = response.data.data.counts
@@ -257,7 +257,7 @@ export default {
         this.$Message.warning('请选择日期！')
         return false
       }
-      let date = moment(this.selectCheckDate).format('YYYY-MM-DD')
+      let date = moment(this.selectCheckDate).format('YYYYMMDD')
       serverApi('/equipment/download', {date: date},
         response => {
           console.log(response)

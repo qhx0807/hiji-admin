@@ -1,9 +1,10 @@
-import Vue from 'vue'
-import Router from 'vue-router'
+/* eslint-disable */
+// import Vue from 'vue'
+// import Router from 'vue-router'
 import routes from './router.config'
 
-Vue.use(Router)
+// Vue.use(Router)
 
-export default new Router({
+export default new VueRouter({
   routes: routes
 })

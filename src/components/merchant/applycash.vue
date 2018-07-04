@@ -270,7 +270,7 @@ export default {
     getCashInfo () {
       // 获取可提现金额 商户的收款账号 姓名
       this.$store.commit('pageLoading', true)
-      serverApi('/putforward/showmoney', {userid: sessionStorage.userid},
+      serverApi('/bill/showmoney', {userid: sessionStorage.userid},
         response => {
           this.$store.commit('pageLoading', false)
           if (response.data.code == 0) {

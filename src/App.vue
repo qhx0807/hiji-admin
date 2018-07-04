@@ -35,6 +35,9 @@ body {
     margin-top: 10px;
   }
 }
+.mb10{
+  margin-bottom: 10px;
+}
 .fade-enter-active,
 .fade-leave-active {
   transition: opacity 0.4s;

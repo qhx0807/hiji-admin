@@ -41,6 +41,9 @@
             <FormItem label="联系地址">
               <Input v-model="merchantData.addres"></Input>
             </FormItem>
+            <FormItem label="营业时间">
+              <Input v-model="merchantData.businesstime"></Input>
+            </FormItem>
           </Col>
           <Col span="6">
             <FormItem style="margin-bottom: 0" label="商户缩略图">
