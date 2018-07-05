@@ -101,7 +101,6 @@ export default {
   },
   mounted () {
     let height = document.body.offsetHeight - 380
-    this.options.height = height
   },
   computed: {
     shopImg () {

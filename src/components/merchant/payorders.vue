@@ -92,13 +92,13 @@ export default {
           }
         },
         {
-          title: '补贴',
+          title: '商家佣金',
           key: 'subsidy',
           width: 70,
           align: 'center'
         },
         {
-          title: '优惠',
+          title: '宏帆优惠',
           key: 'coupon_fee',
           width: 70,
           align: 'center'

@@ -40,7 +40,7 @@ export default {
     }
   },
   destroyed () {
-    this.editor.destroyed()
+    // this.editor.destroyed()
   }
 }
 </script>

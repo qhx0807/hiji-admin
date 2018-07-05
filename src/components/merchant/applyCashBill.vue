@@ -26,17 +26,20 @@
           <div style="max-width: 600px;margin:0 auto; padding-top: 40px;">
             <div v-show="stepNum == 0">
               <div class="apply-list">
-                <CheckboxGroup v-model="checkAllGroup" @on-change="checkAllGroupChange">
+                <CheckboxGroup v-model="checkAllGroup">
                   <ul style="padding-left: 40px;list-style:none;">
                     <li v-show="isApplyCashData.length==0">暂无可提现流水！等待HI集财务对账。如有疑问请联系客服。</li>
                     <li v-for="item in isApplyCashData" :key="item.id">
-                      <Checkbox :label="item.id">{{item.name + '  ' + item.billdate + '  ￥' +item.billmoney}}</Checkbox>
+                      <Checkbox :label="item">{{item.name + '  ' + item.billdate + '  ￥' +item.billmoney}}</Checkbox>
                     </li>
                   </ul>
                 </CheckboxGroup>
               </div>
-              <p class="check-tips">已选：{{checkAllGroup.length}}条 &nbsp;&nbsp;</p>
-              <Form ref="formValidate" :model="formItem" :label-width="100" :rules="ruleValidate" >
+              <p class="check-tips">
+                <span><Checkbox @on-change="onClickCheckAll" :value="checkAll">全选</Checkbox></span>
+                <span>已选：{{checkAllGroup.length}}条 / 合计金额：￥{{totalCheckFee}}&nbsp;&nbsp;</span>
+              </p>
+              <Form ref="formValidate" style="margin-top:20px" :model="formItem" :label-width="100" :rules="ruleValidate" >
                 <!-- <FormItem label="提现金额：" prop="price">
                   <InputNumber
                     :max="maxApplyNum"
@@ -73,8 +76,8 @@
                 <Col span="16"><p class="infovalue">{{seeInfoData.realname}}</p></Col>
               </Row>
               <Row class="infoitem">
-                <Col span="8" style="text-align:right">提现条数：</Col>
-                <Col span="16"><p class="infovalue">{{checkAllGroup.length}}条</p></Col>
+                <Col span="8" style="text-align:right">提现金额：</Col>
+                <Col span="16"><p class="infovalue">{{checkAllGroup.length}}条 / 合计￥{{totalCheckFee}}</p></Col>
               </Row>
               <Row class="infoitem">
                 <Col span="13" style="text-align:right">
@@ -213,7 +216,7 @@ export default {
       seeInfoData: {},
       isApplyCashData: [],
       checkAllGroup: [],
-      checkListArr: []
+      checkListArr: [],
     }
   },
   created () {
@@ -222,36 +225,39 @@ export default {
     this.getIsApplyableBill()
   },
   computed: {
-    // checkedMoney () {
-    //   let num = 0
-    //   if (this.checkAllGroup.length > 0){
-    //     this.checkAllGroup.forEach(item => {
-    //       console.log(item.billmoney)
-    //       num += Number(item.billmoney)
-    //     })
-    //   } else {
-    //     num = 0
-    //   }
-    //   return num
-    // }
+    totalCheckFee () {
+      let num = 0
+      if (this.checkAllGroup.length > 0){
+        this.checkAllGroup.forEach(item => {
+          num += Number(item.billmoney)
+        })
+      } else {
+        num = 0
+      }
+      return num.toFixed(2)
+    },
+    checkAll () {
+      if (this.checkAllGroup.length === this.checkListArr.length && this.checkAllGroup.length != 0) {
+        return true
+      } else {
+        return false
+      }
+    }
   },
   methods: {
     getIsApplyableBill () {
       let arr = []
       serverApi('/bill/showmoney', null,
         response => {
-          this.$store.commit('pageLoading', false)
-          console.log(response)
+          // console.log(response)
           if (response.data.code == 0) {
             this.isApplyCashData = response.data.data
+            this.checkListArr = response.data.data
             this.seeInfoData = response.data.data[0]
-            this.isApplyCashData.forEach( item => {
-              arr.push(item.id)
-            })
-            this.checkListArr = arr
           } else {
             this.$Message.warning(response.data.msg)
           }
+          this.$store.commit('pageLoading', false)
         },
         error => {
           this.$store.commit('pageLoading', false)
@@ -306,7 +312,6 @@ export default {
     },
     getCashInfo () {
       // 获取可提现金额 商户的收款账号 姓名
-      this.$store.commit('pageLoading', true)
       serverApi('/bill/showmoney', {userid: sessionStorage.userid},
         response => {
           console.log(response)
@@ -327,9 +332,13 @@ export default {
     },
     confirmApply () {
       this.submitLoading = true
+      let arr = []
+      this.checkAllGroup.forEach(item => {
+        arr.push(item.id)
+      })
       let d = {
         userid: sessionStorage.userid,
-        id: this.checkAllGroup
+        id: arr
       }
       serverApi('/bill/withdrawal', d,
         response => {
@@ -355,8 +364,12 @@ export default {
       this.getTableData()
       this.action = 'records'
     },
-    checkAllGroupChange () {
-      // console.log(this.checkAllGroup)
+    onClickCheckAll (e) {
+      if (e) {
+        this.checkAllGroup = this.checkListArr
+      } else {
+        this.checkAllGroup = []
+      }
     }
   }
 }
@@ -422,7 +435,12 @@ export default {
 }
 .check-tips{
   font-size: 12px;
-  text-align: right;
+  // text-align: right;
+  display: flex;
+  justify-content: space-between;
+  span{
+    padding-left: 40px;
+  }
 }
 </style>
 

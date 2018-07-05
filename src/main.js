@@ -7,13 +7,13 @@ import router from './router'
 import store from './store'
 import iView from 'iview'
 import _ from 'lodash'
-import viserVue from 'viser-vue'
+// import viserVue from 'viser-vue'
 
 import 'iview/dist/styles/iview.css'
 
 Vue.use(iView)
 Vue.prototype._ = _
-Vue.use(viserVue)
+// Vue.use(viserVue)
 
 Vue.config.productionTip = false
 

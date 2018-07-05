@@ -136,6 +136,7 @@
 <script>
 import serverApi from '../../axios'
 import ICountUp from 'vue-countup-v2'
+// import '../../../static/Viser/viser-vue.min.js'
 export default {
   name: 'DataSta',
   components: {
@@ -280,7 +281,6 @@ export default {
           // console.log(response)
           if (response.data.code == 0) {
             this.lineChartData = response.data.data
-            console.log(this.lineChartData)
           } else {
             this.$Message.warning(response.data.msg)
           }
