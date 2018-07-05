@@ -31,12 +31,19 @@ export default {
       this.editor.setContent(this.defaultMsg)
     })
   },
+  methods: {
+    getUEContent () {
+      return this.editor.getContent()
+    },
+    getUEContentTxt () {
+      return this.editor.getContentTxt()
+    }
+  },
   destroyed () {
     this.editor.destroyed()
   }
 }
 </script>
 
-<style lang="less" scoped>
-
+<style lang="less">
 </style>
