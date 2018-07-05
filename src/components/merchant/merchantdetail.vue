@@ -62,9 +62,7 @@
       </Form>
       <Row>
         <Col span="24">
-          <!-- <Button :loading="modal_loading" @click="onEditMerchant" type="primary">保存</Button> -->
-          <!-- <tinymce id="d1" :other_options="options" ref="tm" v-model="richTextData"></tinymce> -->
-          <!-- <TextEditor></TextEditor> -->
+          <TextEditor :config="config"></TextEditor>
         </Col>
         <Col span="24" style="text-align:center; padding-top:30px">
           <Button :loading="modal_loading" style="width:200px" @click="onEditMerchant" type="primary">保存</Button>
@@ -76,8 +74,7 @@
 <script>
 import { uploadApiUrl } from '../../config'
 import serverApi from '../../axios'
-// import tinymce from 'vue-tinymce-editor'
-// import TextEditor from '../common/text-editor'
+import TextEditor from '../common/text-editor'
 export default {
   name: 'MerchantDetail',
   data () {
@@ -87,33 +84,14 @@ export default {
       uploadApiUrl: uploadApiUrl,
       modal_loading: false,
       richTextData: '',
-      options: {
-        height: 300,
-        language_url: 'https://dyonir.github.io/vue-tinymce-editor/static/langs/zh_CN.js',
-        menubar: 'edit insert view format table tools help',
-        plugins: [
-          'help image advlist autolink lists link image charmap print preview hr anchor pagebreak imagetools',
-          'searchreplace visualblocks visualchars code fullpage',
-          'insertdatetime media nonbreaking save table contextmenu directionality',
-          'emoticons paste textcolor colorpicker textpattern imagetools codesample'
-        ],
-        toolbar1:
-          'newnote print preview | undo redo | insert | styleselect | forecolor backcolor bold italic | alignleft aligncenter alignright alignjustify | bullist numlist outdent indent | link image emoticons media codesample',
-        autosave_interval: '20s',
-        imagetools_cors_hosts: ['mydomain.com', 'otherdomain.com'],
-        image_advtab: true,
-        table_default_styles: {
-          width: '100%',
-          borderCollapse: 'collapse',
-          boder: 'none',
-          padding: '0'
-        },
-      }
+      config: {
+        initialFrameWidth: null,
+        initialFrameHeight: 350
+      },
     }
   },
   components: {
-    // tinymce,
-    // TextEditor
+    TextEditor
   },
   created () {
     if (this.$route.params.id) {

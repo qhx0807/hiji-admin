@@ -9,7 +9,7 @@ import iView from 'iview'
 import _ from 'lodash'
 import viserVue from 'viser-vue'
 
-import './theme/index.less'
+import 'iview/dist/styles/iview.css'
 
 Vue.use(iView)
 Vue.prototype._ = _
