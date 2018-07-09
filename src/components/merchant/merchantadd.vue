@@ -2,10 +2,10 @@
   <div class="box">
     <Card :bordered="false">
       <div class="shop-img">
-        <img :src="shopImg" alt="">
+        <img src="http://cqcother.zlzmm.com/2.png" alt="">
       </div>
       <div class="tips">
-        <h4>{{merchantData.name}} <span style="font-size:14px;font-weight:500">商户详情</span></h4>
+        <h4><span style="font-size:14px;font-weight:500">新增商户</span></h4>
         <p>维护商户的详细信息，图文编辑。
           <router-link :to="{name: 'Merchant'}">返回【商户列表】</router-link>
         </p>
@@ -13,35 +13,35 @@
       <div class="clear-fix"></div>
     </Card>
     <Card style="margin-top:10px" :bordered="false">
-      <Form :model="merchantData" :label-width="80">
+      <Form :model="merchantData" ref="form" :rules="rules" :label-width="80">
         <Row>
           <Col span="6">
-            <FormItem label="商户名称">
+            <FormItem label="商户名称" prop="name">
               <Input v-model="merchantData.name"></Input>
             </FormItem>
           </Col>
           <Col span="6">
-            <FormItem label="商户编码">
+            <FormItem label="商户编码" prop="merchantcode">
               <Input v-model="merchantData.merchantcode"></Input>
             </FormItem>
           </Col>
           <Col span="6">
-            <FormItem label="联系人">
+            <FormItem label="联系人" prop="contact">
               <Input v-model="merchantData.contact"></Input>
             </FormItem>
           </Col>
           <Col span="6">
-            <FormItem label="联系电话">
+            <FormItem label="联系电话" prop="mobile">
               <Input v-model="merchantData.mobile"></Input>
             </FormItem>
           </Col>
         </Row>
         <Row>
           <Col span="6">
-            <FormItem label="商户地址">
+            <FormItem label="商户地址" prop="addres">
               <Input v-model="merchantData.addres"></Input>
             </FormItem>
-            <FormItem label="营业时间">
+            <FormItem label="营业时间" prop="businesstime">
               <Input v-model="merchantData.businesstime"></Input>
             </FormItem>
           </Col>
@@ -54,7 +54,7 @@
             </FormItem>
           </Col>
           <Col span="12">
-            <FormItem label="商户简介">
+            <FormItem label="商户简介" prop="info">
               <Input type="textarea" :autosize="{minRows: 3, maxRows: 4}" v-model="merchantData.info"></Input>
             </FormItem>
           </Col>
@@ -64,15 +64,6 @@
             <FormItem label="商户相册">
               <div class="shop-pics">
                 <ul>
-                  <!-- <li>
-                    <img src="http://cdn.cqyyy.cn/my-php-logo.png" alt="">
-                    <transition name="fade">
-                      <div class="cover">
-                        <Icon type="ios-eye-outline" @click.native="handleView"></Icon>
-                        <Icon type="ios-trash-outline" @click.native="handleRemove"></Icon>
-                      </div>
-                    </transition>
-                  </li> -->
                   <li v-for="(item, index) in photos" :key="index" @mouseover="onMouseOverLi(index)" @mouseout="onMouseOutLi">
                     <img :src="item" alt="">
                     <transition name="fade">
@@ -101,7 +92,7 @@
       </Form>
       <Row>
         <Col span="24" style="text-align:center; padding-top:30px">
-          <Button :loading="modal_loading" style="width:200px" @click="onEditMerchant" type="primary">保存</Button>
+          <Button :loading="modal_loading" style="width:200px" @click="onClickAddMerchant" type="primary">新增商户</Button>
         </Col>
       </Row>
     </Card>
@@ -117,8 +108,26 @@ export default {
   name: 'MerchantDetail',
   data () {
     return {
-      merchantID: null,
-      merchantData: {},
+      merchantData: {
+        name: '',
+        contact: '',
+        mobile: '',
+        addres: '',
+        info: '',
+        merchantcode: '',
+        businesstime: '',
+        photos: null
+      },
+      rules: {
+        name: [{ required: true, message: '不能为空', trigger: 'blur' }],
+        mobile: [{ required: true, message: '不能为空', trigger: 'blur' }],
+        departmentcode: [{ required: true, message: '不能为空', trigger: 'blur' }],
+        contact: [{ required: true, message: '不能为空', trigger: 'blur' }],
+        addres: [{ required: true, message: '不能为空', trigger: 'blur' }],
+        info: [{ required: true, message: '不能为空', trigger: 'blur' }],
+        merchantcode: [{ required: true, message: '不能为空', trigger: 'blur' }],
+        businesstime: [{ required: true, message: '不能为空', trigger: 'blur' }]
+      },
       uploadApiUrl: uploadApiUrl,
       modal_loading: false,
       photos: [],
@@ -130,36 +139,9 @@ export default {
     }
   },
   created () {
-    if (this.$route.params.id) {
-      this.merchantID = this.$route.params.id
-      this.getMerchangById(this.$route.params.id)
-    }
   },
-  mounted () {
-    let height = document.body.offsetHeight - 380
-  },
-  computed: {
-    shopImg () {
-      return this.merchantData.merchantimg || '../../../static/no-img.png'
-    }
-  },
+  computed: { },
   methods: {
-    getMerchangById (id) {
-      serverApi('/Merchant/getbyid', {id: id},
-        response => {
-          // console.log(response)
-          if (response.data.code == 0) {
-            this.merchantData = response.data.data[0]
-            this.photos = response.data.data[0].photos || []
-          } else {
-            this.$Message.warning(response.data.msg)
-          }
-        },
-        error => {
-          console.log(error)
-          this.$Message.error('连接失败！')
-        })
-    },
     uploadPhotosBefore () {
       this.uploadPercent = 0
       this.isShowProgress = true
@@ -184,23 +166,32 @@ export default {
       this.$Message.success('上传成功！请注意保存！')
       // console.log(response)
     },
-    onEditMerchant () {
-      this.modal_loading = true
+    onClickAddMerchant () {
       this.merchantData.photos = this.photos
-      serverApi('/Merchant/edit', this.merchantData,
-        response => {
-          this.modal_loading = false
-          if (response.data.code === 0) {
-            this.$Message.info(response.data.msg)
-          } else {
-            this.$Message.warning(response.data.msg)
+      this.$refs.form.validate(valid => {
+        if (valid) {
+          if (/[\u4E00-\u9FA5]/g.test(this.merchantData.merchantcode)) {
+            this.$Message.warning('商户编码不能包含汉字字符！')
+            return false
           }
-        },
-        error => {
-          console.log(error)
-          this.modal_loading = false
+          this.modal_loading = true
+          serverApi('/Merchant/add', this.merchantData,
+            response => {
+              this.modal_loading = false
+              if (response.data.code === 0) {
+                this.$Message.success('添加成功！')
+                this.$router.push({name: 'Merchant'})
+              }
+              this.$Message.info(response.data.msg)
+            },
+            error => {
+              console.log(error)
+              this.modal_loading = false
+              this.$Message.error("连接失败！")
+            }
+          )
         }
-      )
+      })
     },
     onMouseOverLi (index) {
       this.activeImgIndex = index
@@ -220,7 +211,7 @@ export default {
 </script>
 <style lang="less" scoped>
 .shop-img{
-  width: 90px;
+  width: 80px;
   height: 80px;
   float: left;
   img{

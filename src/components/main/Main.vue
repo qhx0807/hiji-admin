@@ -128,7 +128,7 @@ export default {
       let obj = this.menuTable.find((item) => {
         return item.url === e
       })
-      if (obj.upname) {
+      if (obj && obj.upname) {
         arr.push({name: obj.upname, to: ''})
         arr.push({name: obj.name, to: obj.url})
       } else {
@@ -163,7 +163,7 @@ export default {
             let obj = this.menuTable.find((item) => {
               return item.url === n
             })
-            if (obj.upname) {
+            if (obj && obj.upname) {
               arr.push({name: obj.upname, to: ''})
               arr.push({name: obj.name, to: obj.url})
             } else {
@@ -179,7 +179,7 @@ export default {
           }
         },
         error => {
-          console.log(error)
+          // console.log(error)
         }
       )
     },

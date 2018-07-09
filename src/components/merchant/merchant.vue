@@ -33,7 +33,7 @@
         <FormItem prop="mobile" label="联系电话">
           <Input  v-model="form.mobile" placeholder="请输入"></Input>
         </FormItem>
-        <FormItem prop="addres" label="联系地址">
+        <FormItem prop="addres" label="商户地址">
           <Input  v-model="form.addres" placeholder="请输入"></Input>
         </FormItem>
         <FormItem label="营业时间">
@@ -158,34 +158,22 @@ export default {
         {
           title: '名称',
           key: 'name',
-          minWidth: 120
+          minWidth: 130
         },
         {
           title: '编码',
           key: 'merchantcode',
-          minWidth: 90
+          minWidth: 120
         },
         {
           title: '联系人',
           key: 'contact',
-          minWidth: 100
+          minWidth: 120
         },
         {
           title: '电话',
           key: 'mobile',
           minWidth: 120
-        },
-        {
-          title: '商户地址',
-          key: 'addres',
-          minWidth: 150
-          // ellipsis: true
-        },
-        {
-          title: '商户信息',
-          key: 'info',
-          minWidth: 130
-          // ellipsis: true
         },
         {
           title: '收款账户',
@@ -197,6 +185,18 @@ export default {
               h('p', {}, params.row.aliphone)
             ])
           }
+        },
+        {
+          title: '商户地址',
+          key: 'addres',
+          minWidth: 180
+          // ellipsis: true
+        },
+        {
+          title: '商户信息',
+          key: 'info',
+          minWidth: 180
+          // ellipsis: true
         },
         {
           title: '创建时间',
@@ -315,8 +315,9 @@ export default {
       )
     },
     onClickAdd () {
-      this.$refs.form.resetFields()
-      this.addModal = true
+      this.$router.push({name: 'MerchantAdd'})
+      // this.$refs.form.resetFields()
+      // this.addModal = true
     },
     onClickEdit (row) {
       this.$router.push({name: 'MerchantDetail', params: {id: row.id}})
