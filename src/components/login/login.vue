@@ -75,9 +75,15 @@ export default {
                 window.sessionStorage.userid = response.data.data.userid
                 window.sessionStorage.pass = this.form.password
                 this.$Message.info(response.data.msg)
-                this.$router.replace({
-                  name: 'Merchant'
-                })
+                if (response.data.data.userid == '25') {
+                  this.$router.replace({
+                    name: 'MerchantParking'
+                  })
+                } else {
+                  this.$router.replace({
+                    name: 'Merchant'
+                  })
+                }
               } else {
                 this.$Message.info(response.data.msg)
               }

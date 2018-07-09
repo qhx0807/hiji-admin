@@ -17,10 +17,16 @@
         <Row>
           <Col span="6">
             <FormItem label="卡券名称">
-             <Input v-model="editData.cardname"></Input>
+              <Input v-model="editData.cardname"></Input>
             </FormItem>
             <FormItem label="开始发放时间">
-             <Input v-model="editData.startsendtime"></Input>
+              <Input v-model="editData.startsendtime"></Input>
+            </FormItem>
+            <FormItem label="卡券状态">
+              <!-- <Input v-model="editData.cardmainstate"></Input> -->
+              <Select v-model="editData.cardmainstate">
+                <Option v-for="item in stateData" :value="item.value" :key="item.value">{{ item.name }}</Option>
+              </Select>
             </FormItem>
           </Col>
           <Col span="6">
@@ -28,7 +34,10 @@
               <Input v-model="editData.cardcode"></Input>
             </FormItem>
             <FormItem label="结束发放时间">
-             <Input v-model="editData.endsendtime"></Input>
+              <Input v-model="editData.endsendtime"></Input>
+            </FormItem>
+            <FormItem label="总数量">
+              <Input v-model="editData.totalcount"></Input>
             </FormItem>
           </Col>
           <Col span="6">
@@ -40,6 +49,9 @@
             <FormItem label="开始使用时间">
              <Input v-model="editData.startusetime"></Input>
             </FormItem>
+            <FormItem label="关联活动">
+             <Input v-model="editData.assignactiveid"></Input>
+            </FormItem>
           </Col>
           <Col span="6">
             <FormItem label="剩余数量">
@@ -48,14 +60,12 @@
             <FormItem label="开始使用时间">
              <Input v-model="editData.endusetime"></Input>
             </FormItem>
-            <!-- <FormItem label="总数量">
-              <Input v-model="editData.totalcount"></Input>
-            </FormItem> -->
           </Col>
         </Row>
         <Row>
           <Col span="24">
-            <FormItem label="" prop="merchantcode">
+            <FormItem label="扩展信息">
+              <Input type="textarea" disabled v-model="editData.CardExtraInfo"></Input>
             </FormItem>
           </Col>
         </Row>
@@ -88,7 +98,14 @@ export default {
         allowuseprice: '满减限制',
         couponfee: '优惠',
       },
-      typeData: []
+      typeData: [],
+      stateData: [
+        { name: '发布', value: 1 },
+        { name: '有效', value: 2 },
+        { name: '停止', value: 3 },
+        { name: '无效', value: 4 },
+        { name: '过期', value: 5 }
+      ]
     }
   },
   created () {
@@ -145,7 +162,7 @@ export default {
           response => {
             this.modal_loading = false
             if (response.data.code === 0) {
-              // this.$router.push({name: 'CouponExtra'})
+              this.$router.push({name: 'CouponItem'})
             }
             this.$Message.info(response.data.msg)
           },

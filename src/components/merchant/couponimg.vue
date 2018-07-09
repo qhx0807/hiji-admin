@@ -47,11 +47,15 @@
         <Button type="primary" :loading="modal_loading" @click="add">提交</Button>
       </div>
     </Modal>
+    <Modal title="查看图片" v-model="visibleImg">
+        <img :src="viewImgSrc" v-if="visibleImg" style="width: 100%">
+    </Modal>
   </div>
 </template>
 <script>
 import { uploadApiUrl } from '../../config'
 import serverApi from '../../axios'
+import '../../../static/photo-view/vue-photo-view.js'
 export default {
   name: 'CouponImg',
   data () {
@@ -61,6 +65,8 @@ export default {
       addModal: false,
       editModal: false,
       modal_loading: false,
+      visibleImg: false,
+      viewImgSrc: '',
       uploadApiUrl: uploadApiUrl,
       form: {
         imgsrc: '',
@@ -79,6 +85,27 @@ export default {
           title: 'ID',
           key: 'id',
           minWidth: 130
+        },
+        {
+          title: '预览',
+          key: 'imgsrc',
+          minWidth: 100,
+          render: (h, params) => {
+            return h('img', {
+              attrs: {
+                src: params.row.imgsrc
+              },
+              style: {
+                width: '40px',
+                height: '40px'
+              },
+              on: {
+                click: () => {
+                  this.onClickImgView(params.row.imgsrc)
+                }
+              }
+            })
+          }
         },
         {
           title: '所属卡券',
@@ -104,7 +131,7 @@ export default {
         {
           title: '图片地址',
           key: 'imgsrc',
-          minWidth: 150
+          minWidth: 280
         },
         {
           title: '操作',
@@ -152,7 +179,7 @@ export default {
       this.$store.commit('pageLoading', true)
       serverApi('/card/img', d,
         response => {
-          console.log(response)
+          // console.log(response)
           if (response.data.code === 0){
             this.tableData = response.data.data.result
             this.count = response.data.data.counts
@@ -251,6 +278,10 @@ export default {
       this.$Message.warning('上传失败！')
       console.log('err'+response,file,fileList)
     },
+    onClickImgView (path) {
+      this.viewImgSrc = path
+      this.visibleImg = true
+    }
   }
 }
 </script>

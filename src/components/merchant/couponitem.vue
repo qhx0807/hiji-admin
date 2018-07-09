@@ -153,10 +153,19 @@ export default {
         {
           title: '状态',
           key: 'cardmainstate',
+          minWidth: 90,
+          render: (h, params) => {
+            let text = this.stateData[params.row.cardmainstate] || ''
+            return h('span', {}, text)
+          }
+        },
+        {
+          title: '总数量',
+          key: 'totalcount',
           minWidth: 90
         },
         {
-          title: '数量',
+          title: '剩余数量',
           key: 'remaincount',
           minWidth: 90
         },
@@ -227,7 +236,8 @@ export default {
       ],
       activtyData: [],
       editData: {},
-      typeData: []
+      typeData: [],
+      stateData: ['默认', '发布', '有效', '停止', '无效', '过期'],
     }
   },
   created () {
