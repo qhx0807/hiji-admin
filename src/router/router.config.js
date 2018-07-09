@@ -13,6 +13,7 @@ const Device = r => require.ensure([], () => r(require('@/components/settings/de
 const Role = r => require.ensure([], () => r(require('@/components/settings/role.vue')))
 const Merchant = r => require.ensure([], () => r(require('@/components/merchant/merchant.vue')))
 const MerchantDetail = r => require.ensure([], () => r(require('@/components/merchant/merchantdetail.vue')))
+const MerchantAdd = r => require.ensure([], () => r(require('@/components/merchant/merchantadd.vue')))
 const PayOrders = r => require.ensure([], () => r(require('@/components/merchant/payorders.vue')))
 const Handler = r => require.ensure([], () => r(require('@/components/settings/handler.vue')))
 const ApplyCash = r => require.ensure([], () => r(require('@/components/merchant/applycash.vue')))
@@ -22,6 +23,13 @@ const WorldCup = r => require.ensure([], () => r(require('@/components/settings/
 const DataSta = r => require.ensure([], () => r(require('@/components/merchant/datasta.vue')))
 const AdminParking = r => require.ensure([], () => r(require('@/components/merchant/admin-parking.vue')))
 const MerchantParking = r => require.ensure([], () => r(require('@/components/merchant/merchant-parking.vue')))
+const CouponType = r => require.ensure([], () => r(require('@/components/merchant/coupontype.vue')))
+const CouponItem = r => require.ensure([], () => r(require('@/components/merchant/couponitem.vue')))
+const CouponItemEdit = r => require.ensure([], () => r(require('@/components/merchant/couponitemedit.vue')))
+const CouponImg = r => require.ensure([], () => r(require('@/components/merchant/couponimg.vue')))
+const CouponExtra = r => require.ensure([], () => r(require('@/components/merchant/couponextra.vue')))
+const CouponExtraAdd = r => require.ensure([], () => r(require('@/components/merchant/couponextraadd.vue')))
+const CouponExtraEdit = r => require.ensure([], () => r(require('@/components/merchant/couponextraedit.vue')))
 
 const routesArr = [
   Home,
@@ -116,6 +124,11 @@ const routes = [
         name: 'MerchantDetail'
       },
       {
+        path: 'MerchantAdd',
+        component: MerchantAdd,
+        name: 'MerchantAdd'
+      },
+      {
         path: 'PayOrders',
         component: PayOrders,
         name: 'PayOrders'
@@ -159,6 +172,41 @@ const routes = [
         path: 'MerchantParking',
         component: MerchantParking,
         name: 'MerchantParking'
+      },
+      {
+        path: 'CouponType',
+        component: CouponType,
+        name: 'CouponType'
+      },
+      {
+        path: 'CouponItem',
+        component: CouponItem,
+        name: 'CouponItem'
+      },
+      {
+        path: 'CouponItem/:id',
+        component: CouponItemEdit,
+        name: 'CouponItemEdit'
+      },
+      {
+        path: 'CouponImg',
+        component: CouponImg,
+        name: 'CouponImg'
+      },
+      {
+        path: 'CouponExtra',
+        component: CouponExtra,
+        name: 'CouponExtra'
+      },
+      {
+        path: 'CouponExtraAdd',
+        component: CouponExtraAdd,
+        name: 'CouponExtraAdd'
+      },
+      {
+        path: 'CouponExtra/:id',
+        component: CouponExtraEdit,
+        name: 'CouponExtraEdit'
       }
     ]
   },
