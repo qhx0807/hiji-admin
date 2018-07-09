@@ -150,7 +150,7 @@ export default {
           // console.log(response)
           if (response.data.code == 0) {
             this.merchantData = response.data.data[0]
-            this.photos = response.data.data[0].photos.split(",") || []
+            this.photos = response.data.data[0].photos ? response.data.data[0].photos.split(",") : []
           } else {
             this.$Message.warning(response.data.msg)
           }

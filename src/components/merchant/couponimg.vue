@@ -55,7 +55,6 @@
 <script>
 import { uploadApiUrl } from '../../config'
 import serverApi from '../../axios'
-import '../../../static/photo-view/vue-photo-view.js'
 export default {
   name: 'CouponImg',
   data () {
