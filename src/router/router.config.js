@@ -9,6 +9,7 @@ const Auction = r => require.ensure([], () => r(require('@/components/auction/au
 const Log = r => require.ensure([], () => r(require('@/components/settings/log.vue')))
 const Home = r => require.ensure([], () => r(require('@/components/home/home.vue')))
 const Account = r => require.ensure([], () => r(require('@/components/settings/account.vue')))
+const SysSetting = r => require.ensure([], () => r(require('@/components/settings/syssetting.vue')))
 const Device = r => require.ensure([], () => r(require('@/components/settings/device.vue')))
 const Role = r => require.ensure([], () => r(require('@/components/settings/role.vue')))
 const Merchant = r => require.ensure([], () => r(require('@/components/merchant/merchant.vue')))
@@ -31,6 +32,11 @@ const CouponExtra = r => require.ensure([], () => r(require('@/components/mercha
 const CouponExtraAdd = r => require.ensure([], () => r(require('@/components/merchant/couponextraadd.vue')))
 const CouponExtraEdit = r => require.ensure([], () => r(require('@/components/merchant/couponextraedit.vue')))
 const CouponList = r => require.ensure([], () => r(require('@/components/merchant/couponlist.vue')))
+const UserMember = r => require.ensure([], () => r(require('@/components/usermember/usermember.vue')))
+const UserMemberEdit = r => require.ensure([], () => r(require('@/components/usermember/usermemberedit.vue')))
+const UserMemberAdd = r => require.ensure([], () => r(require('@/components/usermember/usermemberadd.vue')))
+const UserAnalysis = r => require.ensure([], () => r(require('@/components/usermember/useranalysis.vue')))
+const ShoppingCar = r => require.ensure([], () => r(require('@/components/usermember/shoppingcar.vue')))
 
 const routesArr = [
   Home,
@@ -213,6 +219,36 @@ const routes = [
         path: 'CouponList',
         component: CouponList,
         name: 'CouponList'
+      },
+      {
+        path: 'UserMember',
+        component: UserMember,
+        name: 'UserMember'
+      },
+      {
+        path: 'UserMemberAdd',
+        component: UserMemberAdd,
+        name: 'UserMemberAdd'
+      },
+      {
+        path: 'UserMember/:id',
+        component: UserMemberEdit,
+        name: 'UserMemberEdit'
+      },
+      {
+        path: 'UserAnalysis',
+        component: UserAnalysis,
+        name: 'UserAnalysis'
+      },
+      {
+        path: 'ShoppingCar',
+        component: ShoppingCar,
+        name: 'ShoppingCar'
+      },
+      {
+        path: 'SysSetting',
+        component: SysSetting,
+        name: 'SysSetting'
       }
     ]
   },
