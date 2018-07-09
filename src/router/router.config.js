@@ -30,6 +30,7 @@ const CouponImg = r => require.ensure([], () => r(require('@/components/merchant
 const CouponExtra = r => require.ensure([], () => r(require('@/components/merchant/couponextra.vue')))
 const CouponExtraAdd = r => require.ensure([], () => r(require('@/components/merchant/couponextraadd.vue')))
 const CouponExtraEdit = r => require.ensure([], () => r(require('@/components/merchant/couponextraedit.vue')))
+const CouponList = r => require.ensure([], () => r(require('@/components/merchant/couponlist.vue')))
 
 const routesArr = [
   Home,
@@ -207,6 +208,11 @@ const routes = [
         path: 'CouponExtra/:id',
         component: CouponExtraEdit,
         name: 'CouponExtraEdit'
+      },
+      {
+        path: 'CouponList',
+        component: CouponList,
+        name: 'CouponList'
       }
     ]
   },
