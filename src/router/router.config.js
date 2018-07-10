@@ -35,6 +35,7 @@ const CouponList = r => require.ensure([], () => r(require('@/components/merchan
 const UserMember = r => require.ensure([], () => r(require('@/components/usermember/usermember.vue')))
 const UserMemberEdit = r => require.ensure([], () => r(require('@/components/usermember/usermemberedit.vue')))
 const UserMemberAdd = r => require.ensure([], () => r(require('@/components/usermember/usermemberadd.vue')))
+const UserMemberCenter = r => require.ensure([], () => r(require('@/components/usermember/usermembercenter.vue')))
 const UserAnalysis = r => require.ensure([], () => r(require('@/components/usermember/useranalysis.vue')))
 const ShoppingCar = r => require.ensure([], () => r(require('@/components/usermember/shoppingcar.vue')))
 
@@ -234,6 +235,11 @@ const routes = [
         path: 'UserMember/:id',
         component: UserMemberEdit,
         name: 'UserMemberEdit'
+      },
+      {
+        path: 'UserMemberCenter/:id',
+        component: UserMemberCenter,
+        name: 'UserMemberCenter'
       },
       {
         path: 'UserAnalysis',
