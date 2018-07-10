@@ -4,7 +4,7 @@
       <div class="head">
         <Input v-model="searchKey" placeholder="搜索关键字..." style="width: 200px"></Input>
         <Button type="primary" style="margin-left:8px" icon="ios-search" @click="onClickSearch">搜索</Button>
-        <Button type="primary" style="margin-left:8px" icon="plus" @click="onClickAdd">新增</Button>
+        <Button type="primary" style="margin-left:8px" icon="plus" v-if="showAddbtn" @click="onClickAdd">新增</Button>
       </div>
       <div class="body">
         <Table :columns="columns" :data="tableData"></Table>
@@ -78,12 +78,12 @@ export default {
         {
           title: '名称',
           key: 'name',
-          minWidth: 130
+          minWidth: 160
         },
         {
           title: '编码',
           key: 'merchantcode',
-          minWidth: 120
+          minWidth: 160
         },
         {
           title: '联系人',
@@ -93,7 +93,7 @@ export default {
         {
           title: '电话',
           key: 'mobile',
-          minWidth: 120
+          minWidth: 140
         },
         {
           title: '收款账户',
@@ -130,55 +130,62 @@ export default {
           minWidth: 220,
           fixed: 'right',
           render: (h, params) => {
-            return h('div', [
-                h('Button', {
-                    props: {
-                      type: 'text',
-                      size: 'small',
-                      icon: 'edit'
-                    },
-                    style: {
-                      marginRight: '5px'
-                    },
-                    on: {
-                      click: () => {
-                        this.onClickEdit(params.row)
-                      }
+            let del = h('Button', {
+                  props: {
+                    type: 'text',
+                    size: 'small',
+                    icon: 'trash-a'
+                  },
+                  on: {
+                    click: () => {
+                      this.remove(params.row.id)
                     }
-                }, '编辑'),
-                h('Button', {
-                    props: {
-                      type: 'text',
-                      size: 'small',
-                      icon: 'social-yen'
-                    },
-                    on: {
-                      click: () => {
-                        this.binding(params.row)
-                      }
-                    }
-                }, '绑定'),
-                h('Button', {
-                    props: {
-                      type: 'text',
-                      size: 'small',
-                      icon: 'trash-a'
-                    },
-                    on: {
-                      click: () => {
-                        this.remove(params.row.id)
-                      }
-                    }
-                }, '删除')
-            ])
+                  }
+              }, '删除')
+
+            let edit = h('Button', {
+                props: {
+                  type: 'text',
+                  size: 'small',
+                  icon: 'edit'
+                },
+                style: {
+                  marginRight: '5px'
+                },
+                on: {
+                  click: () => {
+                    this.onClickEdit(params.row)
+                  }
+                }
+            }, '编辑')
+            let bind = h('Button', {
+                props: {
+                  type: 'text',
+                  size: 'small',
+                  icon: 'social-yen'
+                },
+                on: {
+                  click: () => {
+                    this.binding(params.row)
+                  }
+                }
+              }, '绑定')
+
+            return h('div', [edit, bind, del])
           }
         }
       ],
       tableData: [],
-      casData: []
+      casData: [],
+      showAddbtn: false
     }
   },
   created () {
+    if (sessionStorage.roleid == '6') {
+      this.showAddbtn = false
+    } else {
+      this.showAddbtn = true
+    }
     this.getTableData(1, 10, '')
     this.getDepData()
   },

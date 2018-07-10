@@ -67,12 +67,13 @@ export default {
           this.loading = true
           serverApi('/login', this.form,
             response => {
-              // console.log(response)
+              console.log(response)
               this.loading = false
               if (response.data.code === 0) {
                 window.sessionStorage.token = response.data.data.token
                 window.sessionStorage.username = response.data.data.username
                 window.sessionStorage.userid = response.data.data.userid
+                window.sessionStorage.roleid = response.data.data.roleid
                 window.sessionStorage.pass = this.form.password
                 this.$Message.info(response.data.msg)
                 this.$router.replace({name: response.data.data.dashboard})

@@ -312,7 +312,7 @@ export default {
   created () {
     this.getTableData(1, 10, '')
     this.getDepData()
-    this.getMerchData(1, 100, '')
+    this.getMerchData(1, 999999, '')
     this.getAreaData()
   },
   mounted () {
@@ -396,7 +396,7 @@ export default {
     },
     getMerchData (page, size, key) {
       let d = {
-        pageSize: size,
+        pagesize: size,
         page: page,
         like: key,
         userid: sessionStorage.userid
@@ -404,7 +404,7 @@ export default {
       this.selectLoading = true
       serverApi('/Merchant/index', d,
         response => {
-          // console.log(response)
+          console.log(response)
           this.selectLoading = false
           if (response.data.code === 0){
             this.merchData = response.data.data.result

@@ -305,8 +305,10 @@ export default {
         onOk: () => {
           serverApi('/account/del', {id: id},
             response => {
+              if (response.data.code == 0) {
+                 this.getTableData(this.page, this.pageSize, this.searchKey)
+              }
               this.$Message.info(response.data.msg)
-              this.getTableData()
             },
             error => {
               console.log(error)

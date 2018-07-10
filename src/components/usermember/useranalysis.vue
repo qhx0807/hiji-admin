@@ -4,6 +4,7 @@
   </div>
 </template>
 <script>
+import serverApi from '../../axios'
 export default {
   name: 'UserAnalysis',
   data () {

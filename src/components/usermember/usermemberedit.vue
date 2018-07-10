@@ -2,48 +2,52 @@
   <div class="box">
     <Card :bordered="false">
       <div class="shop-img">
-        <img src="http://cqcother.zlzmm.com/2.png" alt="">
+        <img :src="avatarSrc" alt="">
       </div>
       <div class="tips">
-        <h4><span style="font-size:14px;font-weight:500">新增卡券扩展信息</span></h4>
-        <p>说明说明说明说明说明说明说明说明
+        <h4><span style="font-size:14px;font-weight:500">
+          <b>{{userData.nickname}}</b>
+          用户信息</span></h4>
+        <p>编辑用户的个人信息。
           <router-link :to="{name: 'UserMember'}">返回【会员列表】</router-link>
         </p>
       </div>
       <div class="clear-fix"></div>
     </Card>
     <Card style="margin-top:10px" :bordered="false">
-      <Form :model="merchantData" ref="form" :rules="rules" :label-width="90">
+      <Form :model="userData" ref="form" :rules="rules" :label-width="90">
         <Row>
           <Col span="6">
-            <FormItem label="选择卡券">
-              <Select v-model="form.cardmainid">
-                <Option v-for="item in couponData" :value="item.id" :key="item.id">{{ item.cardname }}</Option>
-              </Select>
+            <FormItem label="用户名称">
+              <Input v-model="userData.username"></Input>
             </FormItem>
           </Col>
           <Col span="6">
-            <FormItem label="扩展信息值" prop="merchantcode">
-              <Input v-model="form.extrainfovalue"></Input>
+            <FormItem label="昵称">
+              <Input v-model="userData.nickname"></Input>
+            </FormItem>
+          </Col>
+          <Col span="6">
+            <FormItem label="电话">
+              <Input v-model="userData.phone"></Input>
+            </FormItem>
+          </Col>
+          <Col span="6">
+            <FormItem label="电话">
+              <Input v-model="userData.phone"></Input>
             </FormItem>
           </Col>
         </Row>
         <Row>
           <Col span="24">
-            <FormItem label="扩展信息" prop="merchantcode">
-              <Input type="textarea" v-model="form.extrainfocode"></Input>
-              <!-- <div class="kz-info">{{form.extrainfocode}}</div> -->
-            </FormItem>
-          </Col>
-          <Col span="24">
-            <FormItem label="" prop="merchantcode">
+            <FormItem label="">
             </FormItem>
           </Col>
         </Row>
       </Form>
       <Row>
         <Col span="24" style="text-align:center; padding-top:30px">
-          <Button :loading="modal_loading" style="width:200px" @click="onClickAdd" type="primary">新增卡券扩展信息</Button>
+          <Button :loading="modal_loading" style="width:200px" @click="onClickSave" type="primary">保存</Button>
         </Col>
       </Row>
     </Card>
@@ -55,57 +59,52 @@ export default {
   name: 'UserMemberEdit',
   data () {
     return {
-      form: {
-        cardmainid: null,
-        extrainfocode: '',
-        extrainfovalue: ''
-      },
       rules: {
         extrainfocode: [{ required: true, message: '不能为空', trigger: 'blur' }],
         extrainfovalue: [{ required: true, message: '不能为空', trigger: 'blur' }]
       },
       modal_loading: false,
-      couponData: [],
-      selectData: {
-        sellprice: '售价',
-        drawlimittotal: '每人限制领取',
-        allowuseprice: '满减限制',
-        couponfee: '优惠',
-      }
+      userData: {}
     }
   },
   created () {
-    this.getCouponData()
+    this.getUserData()
   },
-  computed: { },
+  computed: {
+    avatarSrc () {
+      return this.userData.avatar ? JSON.parse(this.userData.avatar)[0].picImg : ''
+    }
+  },
   methods: {
-    getCouponData () {
+    getUserData () {
       let d = {
-        pagesize: 99999,
-        page: 1,
-        userid: sessionStorage.userid
+        userid: this.$route.params.id
       }
-      serverApi('/card/coupon', d,
+      this.$store.commit('pageLoading', true)
+      serverApi('/member/getbyid', d,
         response => {
+          console.log(response)
+          this.$store.commit('pageLoading', false)
           if (response.data.code === 0){
-            this.couponData = response.data.data.result
+            this.userData = response.data.data
           }else{
             this.$Message.warning(response.data.msg)
           }
         },
         error => {
           console.log(error)
+          this.$store.commit('pageLoading', false)
           this.$Message.error('连接失败！')
         }
       )
     },
-    onClickAdd () {
+    onClickSave () {
       this.modal_loading = true
-        serverApi('/card/cardexpansionadd', this.form,
+        serverApi('/member/editmember', this.userData,
           response => {
             this.modal_loading = false
             if (response.data.code === 0) {
-              this.$router.push({name: 'CouponExtra'})
+              this.$router.push({name: 'UserMember'})
             }
             this.$Message.info(response.data.msg)
           },

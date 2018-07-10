@@ -73,7 +73,6 @@
         <Button type="primary" :loading="modal_loading" @click="edit">保存</Button>
       </div>
     </Modal>
-
   </div>
 </template>
 
@@ -190,9 +189,9 @@ export default {
           this.modal_loading = false
           if (response.data.code === 0) {
             this.editModal = false
+            this.getTableData()
           }
           this.$Message.info(response.data.msg)
-          this.getTableData()
         },
         error => {
           console.log(error)

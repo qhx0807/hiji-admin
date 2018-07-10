@@ -17,6 +17,7 @@
   </div>
 </template>
 <script>
+import serverApi from '../../axios'
 export default {
   name: 'ShoppingCar',
   data () {
