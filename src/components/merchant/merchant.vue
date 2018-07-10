@@ -15,86 +15,6 @@
       <div style="clear:both"></div>
     </Card>
 
-    <!-- add -->
-    <Modal v-model="addModal" width="550">
-      <p slot="header" style="text-align:center">
-        <span>新增</span>
-      </p>
-      <Form ref="form" :model="form" :rules="rules" :label-width="70">
-        <FormItem prop="name" label="商户名称">
-          <Input v-model="form.name" placeholder="请输入名称"></Input>
-        </FormItem>
-        <FormItem prop="merchantcode" label="商户编码">
-          <Input v-model="form.merchantcode" placeholder="请输入名称"></Input>
-        </FormItem>
-        <FormItem prop="contact" label="联系人">
-          <Input  v-model="form.contact" placeholder="请输入"></Input>
-        </FormItem>
-        <FormItem prop="mobile" label="联系电话">
-          <Input  v-model="form.mobile" placeholder="请输入"></Input>
-        </FormItem>
-        <FormItem prop="addres" label="商户地址">
-          <Input  v-model="form.addres" placeholder="请输入"></Input>
-        </FormItem>
-        <FormItem label="营业时间">
-          <Input v-model="form.businesstime"></Input>
-        </FormItem>
-        <!-- <FormItem prop="departmentcode" label="所属部门">
-          <Input  v-model="form.departmentcode" placeholder="请输入"></Input>
-          <Cascader change-on-select @on-change="onSelectDep" :data="casData"></Cascader>
-        </FormItem> -->
-        <FormItem prop="info" label="商户信息">
-          <Input type="textarea" v-model="form.info" placeholder="请输入"></Input>
-        </FormItem>
-      </Form>
-      <div slot="footer">
-        <Button type="ghost"  @click="addModal = false">取消</Button>
-        <Button type="primary" :loading="modal_loading" @click="add">提交</Button>
-      </div>
-    </Modal>
-
-    <!-- edit -->
-    <Modal v-model="editModal" width="500" :styles="{top: '70px'}">
-      <p slot="header" style="text-align:center">
-        <span>修改信息</span>
-      </p>
-      <Form :model="editData"  :rules="rules" :label-width="70">
-        <FormItem prop="name" label="商户名称">
-          <Input v-model="editData.name" placeholder="请输入名称"></Input>
-        </FormItem>
-        <FormItem prop="merchantcode" label="商户编码">
-          <Input v-model="editData.merchantcode" placeholder="请输入名称"></Input>
-        </FormItem>
-        <FormItem prop="contact" label="联系人">
-          <Input  v-model="editData.contact" placeholder="请输入"></Input>
-        </FormItem>
-        <FormItem prop="mobile" label="联系电话">
-          <Input  v-model="editData.mobile" placeholder="请输入"></Input>
-        </FormItem>
-        <FormItem prop="addres" label="联系地址">
-          <Input  v-model="editData.addres" placeholder="请输入"></Input>
-        </FormItem>
-
-        <!-- <FormItem prop="departmentname" label="所属部门">
-          <Input  v-model="editData.departmentname" placeholder="请输入"></Input>
-        </FormItem>
-        <FormItem prop="departmentcode" label="部门编码">
-          <Input  v-model="editData.departmentcode" placeholder="请输入"></Input>
-        </FormItem>
-        <FormItem prop="departmentcode" label="所属部门">
-          <Input  v-model="editData.departmentcode" placeholder="请输入"></Input>
-          <Cascader change-on-select @on-change="onSelectDepEdit" :data="casData"></Cascader>
-        </FormItem> -->
-        <FormItem prop="info" label="商户信息">
-          <Input type="textarea" v-model="editData.info" placeholder="请输入"></Input>
-        </FormItem>
-      </Form>
-      <div slot="footer">
-        <Button type="ghost"  @click="editModal = false">取消</Button>
-        <Button type="primary" :loading="modal_loading" @click="edit">保存</Button>
-      </div>
-    </Modal>
-
     <Modal v-model="bindModal" width="500" :styles="{top: '70px'}">
       <p slot="header" style="text-align:center">
         <span>绑定收款账户（仅限支付宝）</span>
@@ -316,37 +236,9 @@ export default {
     },
     onClickAdd () {
       this.$router.push({name: 'MerchantAdd'})
-      // this.$refs.form.resetFields()
-      // this.addModal = true
     },
     onClickEdit (row) {
       this.$router.push({name: 'MerchantDetail', params: {id: row.id}})
-      // let arr = [].concat(this.$store.state.breadcrumbArr)
-      // arr.push({name: row.name, to: ''})
-      // console.log(arr)
-      // this.$store.commit('updateBread', arr)
-      // this.$store.commit('pushBreadArr', {name: row.name, to: ''})
-      // this.editData = Object.assign({}, row)
-      // this.editModal = true
-    },
-    edit () {
-      delete this.editData._index
-      delete this.editData._rowKey
-      this.modal_loading = true
-      serverApi('/Merchant/edit', this.editData,
-        response => {
-          this.modal_loading = false
-          if (response.data.code === 0) {
-            this.editModal = false
-          }
-          this.$Message.info(response.data.msg)
-          this.getTableData(this.page, this.pageSize, this.searchKey)
-        },
-        error => {
-          console.log(error)
-          this.modal_loading = false
-        }
-      )
     },
     remove (id) {
       this.$Modal.confirm({
@@ -365,38 +257,6 @@ export default {
           )
         }
       })
-    },
-    add () {
-      this.$refs.form.validate(valid => {
-        if (valid) {
-          if (/[\u4E00-\u9FA5]/g.test(this.form.merchantcode)) {
-            this.$Message.warning('商户编码不能包含汉字字符！')
-            return false
-          }
-          this.modal_loading = true
-          serverApi('/Merchant/add', this.form,
-            response => {
-              this.modal_loading = false
-              if (response.data.code === 0) {
-                this.addModal = false
-                this.getTableData(this.page, this.pageSize, this.searchKey)
-              }
-              this.$Message.info(response.data.msg)
-            },
-            error => {
-              console.log(error)
-              this.modal_loading = false
-            }
-          )
-        }
-      })
-    },
-    exportTable () {
-      if (this.searchData.length > 0) {
-        exportExcel(this.searchData, 'Api表格导出')
-      } else {
-        this.$Message.info('无数据！！')
-      }
     },
     changePage (e) {
       this.page = e

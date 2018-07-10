@@ -26,6 +26,9 @@
         <FormItem prop="rolecode" label="角色编码">
           <Input v-model="form.rolecode" placeholder="请输入code"></Input>
         </FormItem>
+        <FormItem prop="dashboard" label="首屏路由">
+          <Input v-model="form.dashboard" placeholder="请输入"></Input>
+        </FormItem>
         <FormItem label="备注信息">
           <Input type="textarea" v-model="form.remark" placeholder="请输入"></Input>
         </FormItem>
@@ -47,6 +50,9 @@
         </FormItem>
         <FormItem prop="rolecode" label="角色编码">
           <Input v-model="editData.rolecode" placeholder="请输入code"></Input>
+        </FormItem>
+        <FormItem prop="dashboard" label="首屏路由">
+          <Input v-model="editData.dashboard" placeholder="请输入"></Input>
         </FormItem>
         <FormItem label="备注信息">
           <Input type="textarea" v-model="editData.remark" placeholder="请输入"></Input>
@@ -76,11 +82,13 @@ export default {
       form: {
         rolename: '',
         rolecode: '',
-        remark: ''
+        remark: '',
+        dashboard: ''
       },
       rules: {
         rolename: [{ required: true, message: '不能为空', trigger: 'blur' }],
-        rolecode: [{ required: true, message: '不能为空', trigger: 'blur' }]
+        rolecode: [{ required: true, message: '不能为空', trigger: 'blur' }],
+        dashboard: [{ required: true, message: '不能为空', trigger: 'blur' }]
       },
       editData: {},
       columns: [
@@ -96,6 +104,10 @@ export default {
         {
           title: '角色编码',
           key: 'rolecode',
+        },
+        {
+          title: '首屏路由',
+          key: 'dashboard',
         },
         {
           title: '备注',
@@ -149,7 +161,7 @@ export default {
   },
   created () {
     this.getTableData(1, 10, '')
-    this.getDepData()
+    // this.getDepData()
   },
   methods: {
     getTableData (page, size, key) {
@@ -219,10 +231,10 @@ export default {
         response => {
           this.modal_loading = false
           if (response.data.code === 0) {
+            this.getTableData(this.page, this.pageSize, this.searchKey)
             this.editModal = false
           }
           this.$Message.info(response.data.msg)
-          this.getTableData(this.page, this.pageSize, this.searchKey)
         },
         error => {
           console.log(error)
