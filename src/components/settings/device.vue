@@ -6,6 +6,8 @@
         <Button type="primary" style="margin-left:8px" icon="ios-search" @click="onClickSearch">搜索</Button>
         <Button type="primary" style="margin-left:8px" icon="plus" @click="onClickAdd">新增</Button>
       </div>
+    </Card>
+    <Card :bordered="false" style="margin-top:12px;">
       <div class="body">
         <Table :columns="columns" :data="tableData"></Table>
       </div>
@@ -28,7 +30,7 @@
           <Cascader change-on-select @on-change="onSelectDep" :data="casData"></Cascader>
         </FormItem>
         <FormItem prop="merchantcode" label="选择商户">
-          <Select v-model="form.merchantcode" :loading="selectLoading" @on-query-change="queryChange">
+          <Select filterable v-model="form.merchantcode" :loading="selectLoading" @on-query-change="queryChange">
             <Option v-for="item in merchData" :key="item.id" :value="item.merchantcode">{{item.name}}</Option>
           </Select>
         </FormItem>
@@ -600,9 +602,6 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-.head{
-  padding-bottom: 12px;
-}
 .device-info{
   text-align: center;
   font-size: 18px;

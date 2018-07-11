@@ -7,7 +7,6 @@
         <router-link :to="{name: 'UserMemberAdd'}">
           <Button type="primary" style="margin-left:8px" icon="plus">新增</Button>
         </router-link>
-
       </div>
     </Card>
     <Card :bordered="false" style="margin-top:10px">
@@ -47,11 +46,16 @@ export default {
           key: 'avatar',
           width: 90,
           render: (h, params) => {
-            let path = params.row.avatar ? JSON.parse(params.row.avatar)[0].picImg : ''
+            let path = params.row.avatar
             return h('img', {
               attrs: {
                 src: path
               },
+              directives: [
+                {
+                  name: 'imgview'
+                }
+              ],
               style: {
                 height: '40px',
                 width: '40px',

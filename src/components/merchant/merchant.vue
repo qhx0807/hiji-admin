@@ -6,6 +6,8 @@
         <Button type="primary" style="margin-left:8px" icon="ios-search" @click="onClickSearch">搜索</Button>
         <Button type="primary" style="margin-left:8px" icon="plus" v-if="showAddbtn" @click="onClickAdd">新增</Button>
       </div>
+    </Card>
+    <Card :bordered="false" style="margin-top:12px;">
       <div class="body">
         <Table :columns="columns" :data="tableData"></Table>
       </div>
@@ -325,7 +327,5 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-.head{
-  padding-bottom: 12px;
-}
+
 </style>

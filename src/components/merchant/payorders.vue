@@ -2,13 +2,16 @@
   <div class="box">
     <Card :bordered="false">
       <Row>
-        <Col span="24" style="padding-bottom:12px">
+        <Col span="24">
           <Input v-model="searchKey" placeholder="搜索关键字..." style="width: 200px"></Input>
           <DatePicker :options="dateOptions" type="daterange" placeholder="日期范围" @on-change="onSelectDate" style="width: 220px"></DatePicker>
           <Button type="primary" style="margin-left:8px" icon="ios-search" @click="onClickSearch">搜索</Button>
           <Button type="primary" style="margin-left:8px" v-if="isAdmin" icon="checkmark" @click="onClickCheckBill">对账</Button>
         </Col>
       </Row>
+    </Card>
+    <Card :bordered="false" style="margin-top:12px;">
+
       <Table size="small" :columns="columns1" :data="tableData">
       </Table>
       <div style="float: right; padding-top:12px">
