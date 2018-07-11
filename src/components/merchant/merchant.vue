@@ -102,23 +102,25 @@ export default {
           key: 'alipay',
           minWidth: 130,
           render: (h, params) => {
-            return h('div', [
-              h('p', {}, params.row.realname),
-              h('p', {}, params.row.aliphone)
-            ])
+            if (params.row.realname && params.row.aliphone) {
+              return h('div', [
+                h('p', {}, params.row.realname),
+                h('p', {}, params.row.aliphone)
+              ])
+            } else {
+              return h('div', {}, '未绑定')
+            }
           }
         },
         {
           title: '商户地址',
           key: 'addres',
           minWidth: 180
-          // ellipsis: true
         },
         {
           title: '商户信息',
           key: 'info',
           minWidth: 180
-          // ellipsis: true
         },
         {
           title: '创建时间',
@@ -129,22 +131,25 @@ export default {
           title: '操作',
           key: 'id',
           align: 'center',
+          maxWidth: 220,
           minWidth: 220,
           fixed: 'right',
           render: (h, params) => {
             let del = h('Button', {
-                  props: {
-                    type: 'text',
-                    size: 'small',
-                    icon: 'trash-a'
-                  },
-                  on: {
-                    click: () => {
-                      this.remove(params.row.id)
-                    }
-                  }
-              }, '删除')
-
+              props: {
+                type: 'text',
+                size: 'small',
+                icon: 'trash-a'
+              },
+              style: {
+                color: '#ed3f14'
+              },
+              on: {
+                click: () => {
+                  this.remove(params.row.id)
+                }
+              }
+            }, '删除')
             let edit = h('Button', {
                 props: {
                   type: 'text',
@@ -152,7 +157,8 @@ export default {
                   icon: 'edit'
                 },
                 style: {
-                  marginRight: '5px'
+                  marginRight: '5px',
+                  color: '#2d8cf0'
                 },
                 on: {
                   click: () => {
@@ -161,18 +167,17 @@ export default {
                 }
             }, '编辑')
             let bind = h('Button', {
-                props: {
-                  type: 'text',
-                  size: 'small',
-                  icon: 'social-yen'
-                },
-                on: {
-                  click: () => {
-                    this.binding(params.row)
-                  }
+              props: {
+                type: 'text',
+                size: 'small',
+                icon: 'social-yen'
+              },
+              on: {
+                click: () => {
+                  this.binding(params.row)
                 }
-              }, '绑定')
-
+              }
+            }, '绑定')
             return h('div', [edit, bind, del])
           }
         }
