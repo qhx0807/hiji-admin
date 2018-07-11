@@ -1,12 +1,20 @@
 <template>
   <div id="app">
     <router-view/>
+    <div id="imgViewDom" @click="onClickImgBox" style="disply: none">
+      <img @click="onClickImgBox" src="" alt="">
+    </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'App'
+  name: 'App',
+  methods: {
+    onClickImgBox (e) {
+      document.getElementById('imgViewDom').style.display = 'none'
+    }
+  }
 }
 </script>
 
@@ -25,6 +33,24 @@ body {
   -moz-osx-font-smoothing: grayscale;
   height: 100%;
   width: 100%;
+}
+#imgViewDom{
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  z-index: 99999999;
+  background: rgba(255, 255, 255,0.8);
+  overflow: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  display: none;
+  transition: all ease-in-out .3s;
+  img{
+    cursor: zoom-out;
+  }
 }
 .tips {
   h4{
@@ -85,9 +111,6 @@ th {
 .table > colgroup + thead > tr:first-child > td,
 .table > thead:first-child > tr:first-child > td {
   border-top: 0;
-}
-.table > tbody + tbody {
-  // border-top: 2px solid #dddddd;
 }
 .table .table {
   background-color: #ffffff;
