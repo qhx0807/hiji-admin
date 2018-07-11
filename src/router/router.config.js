@@ -17,55 +17,29 @@ const MerchantDetail = r => require.ensure([], () => r(require('@/components/mer
 const MerchantAdd = r => require.ensure([], () => r(require('@/components/merchant/merchantadd.vue')))
 const PayOrders = r => require.ensure([], () => r(require('@/components/merchant/payorders.vue')))
 const Handler = r => require.ensure([], () => r(require('@/components/settings/handler.vue')))
-const ApplyCash = r => require.ensure([], () => r(require('@/components/merchant/applycash.vue')))
 const ApplyCashBill = r => require.ensure([], () => r(require('@/components/merchant/applyCashBill.vue')))
 const ReviewCashApply = r => require.ensure([], () => r(require('@/components/merchant/reviewcashapply.vue')))
 const WorldCup = r => require.ensure([], () => r(require('@/components/settings/worldcup.vue')))
 const DataSta = r => require.ensure([], () => r(require('@/components/merchant/datasta.vue')))
 const AdminParking = r => require.ensure([], () => r(require('@/components/merchant/admin-parking.vue')))
 const MerchantParking = r => require.ensure([], () => r(require('@/components/merchant/merchant-parking.vue')))
-const CouponType = r => require.ensure([], () => r(require('@/components/merchant/coupontype.vue')))
-const CouponItem = r => require.ensure([], () => r(require('@/components/merchant/couponitem.vue')))
-const CouponItemEdit = r => require.ensure([], () => r(require('@/components/merchant/couponitemedit.vue')))
-const CouponImg = r => require.ensure([], () => r(require('@/components/merchant/couponimg.vue')))
-const CouponExtra = r => require.ensure([], () => r(require('@/components/merchant/couponextra.vue')))
-const CouponExtraAdd = r => require.ensure([], () => r(require('@/components/merchant/couponextraadd.vue')))
-const CouponExtraEdit = r => require.ensure([], () => r(require('@/components/merchant/couponextraedit.vue')))
-const CouponList = r => require.ensure([], () => r(require('@/components/merchant/couponlist.vue')))
+const CouponType = r => require.ensure([], () => r(require('@/components/coupon/coupontype.vue')))
+const CouponItem = r => require.ensure([], () => r(require('@/components/coupon/couponitem.vue')))
+const CouponItemEdit = r => require.ensure([], () => r(require('@/components/coupon/couponitemedit.vue')))
+const CouponImg = r => require.ensure([], () => r(require('@/components/coupon/couponimg.vue')))
+const CouponExtra = r => require.ensure([], () => r(require('@/components/coupon/couponextra.vue')))
+const CouponExtraAdd = r => require.ensure([], () => r(require('@/components/coupon/couponextraadd.vue')))
+const CouponExtraEdit = r => require.ensure([], () => r(require('@/components/coupon/couponextraedit.vue')))
+const CouponList = r => require.ensure([], () => r(require('@/components/coupon/couponlist.vue')))
 const UserMember = r => require.ensure([], () => r(require('@/components/usermember/usermember.vue')))
 const UserMemberEdit = r => require.ensure([], () => r(require('@/components/usermember/usermemberedit.vue')))
 const UserMemberAdd = r => require.ensure([], () => r(require('@/components/usermember/usermemberadd.vue')))
 const UserMemberCenter = r => require.ensure([], () => r(require('@/components/usermember/usermembercenter.vue')))
 const UserAnalysis = r => require.ensure([], () => r(require('@/components/usermember/useranalysis.vue')))
+const UserMemberType = r => require.ensure([], () => r(require('@/components/usermember/usermembertype.vue')))
+const UserMemberGrade = r => require.ensure([], () => r(require('@/components/usermember/usermembergrade.vue')))
 const ShoppingCar = r => require.ensure([], () => r(require('@/components/usermember/shoppingcar.vue')))
-
-const routesArr = [
-  Home,
-  Department,
-  Menu,
-  Api,
-  Auction,
-  Log,
-  Account,
-  Device,
-  Merchant,
-  PayOrders,
-  Handler,
-  ApplyCash,
-  ReviewCashApply,
-  Role
-]
-
-let arr = []
-
-routesArr.forEach((item) => {
-  let obj = {}
-  obj[`path`] = item.name
-  obj[`name`] = item.name
-  obj[`component`] = item
-
-  arr.push(obj)
-})
+const ShopOrders = r => require.ensure([], () => r(require('@/components/shop/shoporders.vue')))
 
 const routes = [
   {
@@ -255,6 +229,21 @@ const routes = [
         path: 'SysSetting',
         component: SysSetting,
         name: 'SysSetting'
+      },
+      {
+        path: 'UserMemberType',
+        component: UserMemberType,
+        name: 'UserMemberType'
+      },
+      {
+        path: 'UserMemberGrade',
+        component: UserMemberGrade,
+        name: 'UserMemberGrade'
+      },
+      {
+        path: 'ShopOrders',
+        component: ShopOrders,
+        name: 'ShopOrders'
       }
     ]
   },
