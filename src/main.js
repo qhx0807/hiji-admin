@@ -27,6 +27,22 @@ router.afterEach(route => {
   window.scrollTo(0, 0)
 })
 
+Vue.directive('imgview', {
+  bind (el, binding, vnode) {
+    let imgSrc = el.getAttribute('src')
+    el.style.cursor = 'zoom-in'
+    el.addEventListener('click', function (e) {
+      if (imgSrc) {
+        document.getElementById('imgViewDom').firstChild.src = imgSrc
+        document.getElementById('imgViewDom').style.display = 'flex'
+      }
+    })
+  },
+  unbind (el) {
+    el.removeEventListener('click', null)
+  }
+})
+
 new Vue({
   el: '#app',
   router,
