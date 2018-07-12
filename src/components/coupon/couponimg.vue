@@ -132,7 +132,7 @@ export default {
           title: '操作',
           key: 'id',
           align: 'center',
-          width: 180,
+          width: 130,
           fixed: 'right',
           render: (h, params) => {
             return h('div', [

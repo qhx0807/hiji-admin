@@ -6,7 +6,7 @@
       </div>
       <div class="tips">
         <h4><span style="font-size:14px;font-weight:500">新增卡券扩展信息</span></h4>
-        <p>扩展信息说明：一个卡券对应可能多个扩展信息：例如：某卡券，售价10元，每人限制领取一次，满20可用，优惠12元，则该卡券在本表有4条记录，第一条extrainfocode为sellprice,值为1000，第二条extrinfocode为drawlimittotal，值为1，第三条记录extrainfocode为allowuseprice，值为2000，第四条记录extrainfocode为couponfee，值为1200
+        <p>自定义卡券扩展信息属性
           <router-link :to="{name: 'CouponExtra'}">返回【扩展列表】</router-link>
         </p>
       </div>
@@ -16,27 +16,27 @@
       <Form :model="merchantData" ref="form" :rules="rules" :label-width="90">
         <Row>
           <Col span="6">
-            <FormItem label="选择卡券">
-              <Select v-model="form.cardmainid">
-                <Option v-for="item in couponData" :value="item.id" :key="item.id">{{ item.cardname }}</Option>
+            <FormItem label="选择卡券类型">
+              <Select v-model="form.cardtypeid">
+                <Option v-for="item in typeData" :value="item.id" :key="item.id">{{ item.typename }}</Option>
               </Select>
             </FormItem>
           </Col>
           <Col span="6">
-            <FormItem label="扩展信息值" prop="merchantcode">
+            <FormItem label="扩展信息值">
               <Input v-model="form.extrainfovalue"></Input>
             </FormItem>
           </Col>
         </Row>
         <Row>
-          <Col span="24">
-            <FormItem label="扩展信息" prop="merchantcode">
-              <Input type="textarea" v-model="form.extrainfocode"></Input>
+          <Col span="12">
+            <FormItem label="扩展信息编码">
+              <Input v-model="form.extrainfocode"></Input>
               <!-- <div class="kz-info">{{form.extrainfocode}}</div> -->
             </FormItem>
           </Col>
           <Col span="24">
-            <FormItem label="" prop="merchantcode">
+            <FormItem label="">
             </FormItem>
           </Col>
         </Row>
@@ -56,7 +56,7 @@ export default {
   data () {
     return {
       form: {
-        cardmainid: null,
+        cardtypeid: null,
         extrainfocode: '',
         extrainfovalue: ''
       },
@@ -66,19 +66,34 @@ export default {
       },
       modal_loading: false,
       couponData: [],
-      selectData: {
-        sellprice: '售价',
-        drawlimittotal: '每人限制领取',
-        allowuseprice: '满减限制',
-        couponfee: '优惠',
-      }
+      typeData: []
     }
   },
   created () {
-    this.getCouponData()
+    this.getCardType()
   },
   computed: { },
   methods: {
+    getCardType () {
+      let d = {
+        pagesize: 99999,
+        page: 1
+      }
+      serverApi('/card/type', d,
+        response => {
+          console.log(response)
+          if (response.data.code === 0){
+            this.typeData = response.data.data.result
+          }else{
+            this.$Message.warning(response.data.msg)
+          }
+        },
+        error => {
+          console.log(error)
+          this.$Message.error('连接失败！')
+        }
+      )
+    },
     getCouponData () {
       let d = {
         pagesize: 99999,

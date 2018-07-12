@@ -5,87 +5,83 @@
         <img src="http://cqcother.zlzmm.com/2.png" alt="">
       </div>
       <div class="tips">
-        <h4><span style="font-size:14px;font-weight:500">编辑卡券信息</span></h4>
-        <p>编辑卡券信息
+        <h4><span style="font-size:14px;font-weight:500">新增卡券</span></h4>
+        <p>新增卡券信息
           <router-link :to="{name: 'CouponItem'}">返回【卡券列表】</router-link>
         </p>
       </div>
       <div class="clear-fix"></div>
     </Card>
     <Card style="margin-top:10px" :bordered="false">
-      <Form :model="merchantData" ref="form" :rules="rules" :label-width="90">
+      <Form :model="addData" ref="form" :rules="rules" :label-width="90">
         <Row>
           <Col span="6">
-            <FormItem label="卡券名称">
-              <Input v-model="editData.cardname"></Input>
-            </FormItem>
-            <FormItem label="开始发放时间">
-              <Input v-model="editData.startsendtime"></Input>
+            <FormItem label="卡券名称" prop="cardname">
+              <Input v-model="addData.cardname"></Input>
             </FormItem>
             <FormItem label="卡券状态">
-              <!-- <Input v-model="editData.cardmainstate"></Input> -->
-              <Select v-model="editData.cardmainstate">
+              <Select v-model="addData.cardmainstate">
                 <Option v-for="item in stateData" :value="item.value" :key="item.value">{{ item.name }}</Option>
               </Select>
             </FormItem>
           </Col>
           <Col span="6">
-            <FormItem label="卡券编码" prop="merchantcode">
-              <Input v-model="editData.cardcode"></Input>
+            <FormItem label="卡券编码" prop="cardcode">
+              <Input v-model="addData.cardcode"></Input>
             </FormItem>
-            <FormItem label="结束发放时间">
-              <Input v-model="editData.endsendtime"></Input>
-            </FormItem>
-            <FormItem label="总数量">
-              <Input v-model="editData.totalcount"></Input>
+             <FormItem label="关联活动">
+             <Input v-model="addData.assignactiveid"></Input>
             </FormItem>
           </Col>
           <Col span="6">
             <FormItem label="卡券类型">
-              <Select v-model="editData.typeid" @on-change="onSelectType">
+              <Select v-model="addData.typeid" @on-change="onSelectType">
                 <Option v-for="item in typeData" :value="item.id" :key="item.id">{{ item.typename }}</Option>
               </Select>
             </FormItem>
-            <FormItem label="开始使用时间">
-             <Input v-model="editData.startusetime"></Input>
-            </FormItem>
-            <FormItem label="关联活动">
-             <Input v-model="editData.assignactiveid"></Input>
-            </FormItem>
           </Col>
           <Col span="6">
-            <FormItem label="剩余数量">
-              <Input v-model="editData.remaincount"></Input>
-            </FormItem>
-            <FormItem label="开始使用时间">
-             <Input v-model="editData.endusetime"></Input>
+            <FormItem label="总数量">
+              <Input v-model="addData.totalcount"></Input>
             </FormItem>
           </Col>
         </Row>
         <Row>
-          <Col span="24">
+          <Row>
+            <Col span="12">
+              <FormItem label="发放时间">
+                <DatePicker type="datetimerange" @on-change="onSelectSendDate" style="width:100%" placeholder="选择时间"></DatePicker>
+              </FormItem>
+            </Col>
+            <Col span="12">
+              <FormItem label="使用时间">
+                <DatePicker type="datetimerange" @on-change="onSelectUseDate" style="width:100%" placeholder="选择时间"></DatePicker>
+              </FormItem>
+            </Col>
+          </Row>
+          <!-- <Col span="24">
             <FormItem label="扩展信息">
-              <Input type="textarea" :rows="1" disabled v-model="editData.cardextrainfo"></Input>
+              <Input type="textarea" v-model="cardExtraInfo"></Input>
             </FormItem>
-          </Col>
+          </Col> -->
         </Row>
       </Form>
       <hr style="margin-bottom:20px">
       <div style="text-align:center">
         <Icon v-show="propLoading" type="load-d" color="#2d8cf0" size="30" class="loading-icon"></Icon>
       </div>
-      <Form :model="extProps" :label-width="200">
+      <Form :model="propsObj" :label-width="200">
         <Row>
           <Col span="12" v-for="item in typePropsData" :key="item.id">
             <FormItem :label="item.extrainfovalue">
-              <Input v-model="extProps[item.extrainfocode]"></Input>
+              <Input v-model="propsObj[item.extrainfocode]"></Input>
             </FormItem>
           </Col>
         </Row>
       </Form>
       <Row>
         <Col span="24" style="text-align:center; padding-top:30px">
-          <Button :loading="modal_loading" style="width:200px" @click="onClickEdit" type="primary">保存</Button>
+          <Button :loading="modal_loading" style="width:200px" @click="onClickAdd" type="primary">保存</Button>
         </Col>
       </Row>
     </Card>
@@ -94,15 +90,27 @@
 <script>
 import serverApi from '../../axios'
 export default {
-  name: 'CouponItemEdit',
+  name: 'CouponItemAdd',
   data () {
     return {
       editData: {},
+      addData: {
+        cardcode: '',
+        cardname: '',
+        startsendtime: '',
+        endsendtime: '',
+        startusetime: '',
+        endusetime: '',
+        assignactiveid: '',
+        typeid: null,
+        totalcount: 1,
+        cardextrainfo: '',
+        cardmainstate: 0
+      },
       id: null,
-      propLoading: false,
       rules: {
-        extrainfocode: [{ required: true, message: '不能为空', trigger: 'blur' }],
-        extrainfovalue: [{ required: true, message: '不能为空', trigger: 'blur' }]
+        cardcode: [{ required: true, message: '不能为空', trigger: 'blur' }],
+        cardname: [{ required: true, message: '不能为空', trigger: 'blur' }]
       },
       modal_loading: false,
       couponData: [],
@@ -122,46 +130,23 @@ export default {
         { name: '过期', value: 5 }
       ],
       typePropsData: [],
-      propsObj: {}
+      propsObj: {},
+      propLoading: false
     }
   },
   created () {
     this.getCardType()
-    if (this.$route.params.id) {
-      this.id = this.$route.params.id
-      this.getOneById(this.$route.params.id)
+  },
+  computed: {
+    cardExtraInfo () {
+      return JSON.stringify(this.propsObj)
     }
   },
-  computed: { },
   methods: {
-    getOneById (id) {
-      this.$store.commit('pageLoading', true)
-      serverApi('/card/getcouponbyid', {id: id},
-        response => {
-          // console.log(response)
-          this.$store.commit('pageLoading', false)
-          if (response.data.code == 0) {
-            this.editData = response.data.data
-            this.extProps = response.data.data.cardextrainfo ? JSON.parse(response.data.data.cardextrainfo) : ''
-            this.getPropsByid(this.editData.typeid)
-          } else {
-            this.$Message.warning(response.data.msg)
-          }
-        },
-        error => {
-          console.log(error)
-          this.$store.commit('pageLoading', false)
-          this.$Message.error('连接失败！')
-        })
-    },
-    onSelectType (e) {
-      this.getPropsByid(e)
-    },
     getCardType () {
       let d = {
         pagesize: 99999,
-        page: 1,
-        userid: sessionStorage.userid
+        page: 1
       }
       serverApi('/card/type', d,
         response => {
@@ -186,7 +171,7 @@ export default {
       }
       serverApi('/card/cardexpansionlist', d,
         response => {
-          // console.log(response)
+          console.log(response)
           this.propLoading = false
           if (response.data.code === 0){
             this.typePropsData = response.data.data
@@ -204,23 +189,35 @@ export default {
         }
       )
     },
-    onClickEdit () {
+    onSelectSendDate (e) {
+      this.addData.startsendtime = e[0]
+      this.addData.endsendtime = e[1]
+    },
+    onSelectUseDate (e) {
+      this.addData.startusetime = e[0]
+      this.addData.endusetime = e[1]
+    },
+    onSelectType (e) {
+      this.getPropsByid(e)
+    },
+    onClickAdd () {
+      this.addData.cardextrainfo = JSON.stringify(this.propsObj)
+      console.log(this.addData)
       this.modal_loading = true
-      this.editData.cardextrainfo = JSON.stringify(this.extProps)
-        serverApi('/card/couponedit', this.editData,
-          response => {
-            this.modal_loading = false
-            if (response.data.code === 0) {
-              this.$router.push({name: 'CouponItem'})
-            }
-            this.$Message.info(response.data.msg)
-          },
-          error => {
-            console.log(error)
-            this.modal_loading = false
-            this.$Message.error("连接失败！")
+      serverApi('/card/couponadd', this.addData,
+        response => {
+          this.modal_loading = false
+          if (response.data.code === 0) {
+            this.$router.push({name: 'CouponItem'})
           }
-        )
+          this.$Message.info(response.data.msg)
+        },
+        error => {
+          console.log(error)
+          this.modal_loading = false
+          this.$Message.error("连接失败！")
+        }
+      )
     }
   }
 }
@@ -235,10 +232,15 @@ export default {
     width: 100%;
   }
 }
-.tips{
-  padding-left: 100px;
-  h4{
-    margin-top: 17px;
+@keyframes loading {
+  form {
+    transform: rotateZ(0)
   }
+  to{
+    transform: rotateZ(360deg)
+  }
+}
+.loading-icon{
+  animation:  loading 1s linear infinite;
 }
 </style>

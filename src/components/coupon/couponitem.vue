@@ -102,14 +102,21 @@ export default {
         },
         {
           title: '类型',
-          key: 'typeid',
-          width: 130
+          key: 'typename',
+          minWidth: 140
         },
         {
           title: '状态',
           key: 'cardmainstate',
-          width: 90,
+          width: 80,
           render: (h, params) => {
+            if (params.row.cardmainstate == 1) {
+              return h('Tag', {
+                props: {
+                  color: 'green'
+                }
+              }, '发布')
+            }
             let text = this.stateData[params.row.cardmainstate] || ''
             return h('span', {}, text)
           }
@@ -127,12 +134,22 @@ export default {
         {
           title: '扩展信息',
           key: 'cardextrainfo',
-          minWidth: 130
+          minWidth: 280,
+          ellipsis: true,
+          render: (h, params) => {
+            return h('Poptip', {
+              props: {
+                content: params.row.cardextrainfo,
+                placement: 'top-start',
+                trigger: 'hover'
+              }
+            }, params.row.cardextrainfo)
+          }
         },
         {
           title: '关联活动',
           key: 'assignactiveid',
-          width: 130
+          width: 100
         },
         {
           title: '发放时间',
@@ -192,7 +209,7 @@ export default {
       activtyData: [],
       editData: {},
       typeData: [],
-      stateData: ['默认', '发布', '有效', '停止', '无效', '过期'],
+      stateData: ['编制', '发布', '有效', '停止', '无效', '过期'],
     }
   },
   created () {
@@ -259,8 +276,9 @@ export default {
       this.getTableData()
     },
     onClickAdd () {
-      this.$refs.form.resetFields()
-      this.addModal = true
+      // this.$refs.form.resetFields()
+      // this.addModal = true
+      this.$router.push({name: 'CouponItemAdd'})
     },
     add () {
       if (!this.form.typeid) {
