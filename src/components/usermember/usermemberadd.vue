@@ -2,7 +2,7 @@
   <div class="box">
     <Card :bordered="false">
       <div class="shop-img">
-        <img src="../../assets/true.png" alt="">
+        <img src="../../../static/avatar.jpg" alt="">
       </div>
       <div class="tips">
         <h4><span style="font-size:14px;font-weight:500">新增会员信息</span></h4>
@@ -16,13 +16,37 @@
       <Form :model="merchantData" ref="form" :rules="rules" :label-width="90">
         <Row>
           <Col span="6">
-            <FormItem label="用户昵称">
-              <Input v-model="form.extrainfovalue"></Input>
+            <FormItem label="用户名">
+              <Input v-model="userData.username"></Input>
+            </FormItem>
+            <FormItem label="所属城市">
+              <Select v-model="userData.city">
+                <Option v-for="item in areaData" :key="item.id" :value="item.id">{{item.areaname}}</Option>
+              </Select>
             </FormItem>
           </Col>
           <Col span="6">
-            <FormItem label="手机号码" prop="merchantcode">
-              <Input v-model="form.extrainfovalue"></Input>
+            <FormItem label="昵称">
+              <Input v-model="userData.nickname"></Input>
+            </FormItem>
+            <FormItem label="积分">
+              <Input v-model="userData.intergral"></Input>
+            </FormItem>
+          </Col>
+           <Col span="6">
+            <FormItem label="电话">
+              <Input v-model="userData.phone"></Input>
+            </FormItem>
+            <FormItem label="证件号码">
+              <Input v-model="userData.id_card"></Input>
+            </FormItem>
+          </Col>
+          <Col span="6">
+            <FormItem label="头像">
+              <Input v-model="userData.avatar"></Input>
+            </FormItem>
+            <FormItem label="密码">
+              <Input style="width:100%" v-model="userData.password"></Input>
             </FormItem>
           </Col>
         </Row>
@@ -47,10 +71,15 @@ export default {
   name: 'UserMemberAdd',
   data () {
     return {
-      form: {
-        cardmainid: null,
-        extrainfocode: '',
-        extrainfovalue: ''
+      userData: {
+        username: '',
+        city: 1,
+        password: '',
+        nickname: '',
+        intergral: '0',
+        phone: '',
+        id_card: '',
+        avatar: ''
       },
       rules: {
         extrainfocode: [{ required: true, message: '不能为空', trigger: 'blur' }],
@@ -58,16 +87,12 @@ export default {
       },
       modal_loading: false,
       couponData: [],
-      selectData: {
-        sellprice: '售价',
-        drawlimittotal: '每人限制领取',
-        allowuseprice: '满减限制',
-        couponfee: '优惠',
-      }
+      areaData: []
     }
   },
   created () {
     this.getCouponData()
+    this.getAreaData()
   },
   computed: { },
   methods: {
@@ -91,13 +116,28 @@ export default {
         }
       )
     },
+    getAreaData () {
+      serverApi('/area/index', '',
+        response => {
+          // console.log(response)
+          if (response.data.code === 0){
+            this.areaData = response.data.data
+          }else{
+            this.$Message.warning(response.data.msg)
+          }
+        },
+        error => {
+          console.log(error)
+        }
+      )
+    },
     onClickAdd () {
       this.modal_loading = true
-        serverApi('/card/cardexpansionadd', this.form,
+        serverApi('/member/addmember', this.userData,
           response => {
             this.modal_loading = false
             if (response.data.code === 0) {
-              this.$router.push({name: 'CouponExtra'})
+              this.$router.push({name: 'UserMember'})
             }
             this.$Message.info(response.data.msg)
           },

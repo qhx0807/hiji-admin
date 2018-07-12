@@ -126,7 +126,8 @@ export default {
           title: '对账',
           key: 'id',
           fixed: 'right',
-          width: 100,
+          width: 90,
+          align: 'center',
           render: (h, params) => {
             if (params.row.ischeck == 0) {
               return h('a', {style: {color: '#f90'}}, '未对账')

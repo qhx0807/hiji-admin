@@ -47,6 +47,9 @@ export default {
           width: 90,
           render: (h, params) => {
             let path = params.row.avatar
+            if (!path) {
+              return h('div')
+            }
             return h('img', {
               attrs: {
                 src: path
@@ -68,7 +71,7 @@ export default {
         // {
         //   title: '用户名',
         //   key: 'username',
-        //   minWidth: 120
+        //   width: 120
         // },
         {
           title: '昵称',
