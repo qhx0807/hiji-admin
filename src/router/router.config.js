@@ -25,6 +25,7 @@ const AdminParking = r => require.ensure([], () => r(require('@/components/merch
 const MerchantParking = r => require.ensure([], () => r(require('@/components/merchant/merchant-parking.vue')))
 const CouponType = r => require.ensure([], () => r(require('@/components/coupon/coupontype.vue')))
 const CouponItem = r => require.ensure([], () => r(require('@/components/coupon/couponitem.vue')))
+const CouponItemAdd = r => require.ensure([], () => r(require('@/components/coupon/couponitemadd.vue')))
 const CouponItemEdit = r => require.ensure([], () => r(require('@/components/coupon/couponitemedit.vue')))
 const CouponImg = r => require.ensure([], () => r(require('@/components/coupon/couponimg.vue')))
 const CouponExtra = r => require.ensure([], () => r(require('@/components/coupon/couponextra.vue')))
@@ -164,6 +165,11 @@ const routes = [
         path: 'CouponItem',
         component: CouponItem,
         name: 'CouponItem'
+      },
+      {
+        path: 'CouponItemAdd',
+        component: CouponItemAdd,
+        name: 'CouponItemAdd'
       },
       {
         path: 'CouponItem/:id',
