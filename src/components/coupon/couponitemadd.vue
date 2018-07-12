@@ -232,6 +232,15 @@ export default {
     width: 100%;
   }
 }
+.tips{
+  padding-left: 100px;
+  h4{
+    margin-top: 17px;
+  }
+}
+.clear-fix{
+  clear: both;
+}
 @keyframes loading {
   form {
     transform: rotateZ(0)

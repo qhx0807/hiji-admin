@@ -34,6 +34,9 @@ body {
   height: 100%;
   width: 100%;
 }
+.clear-fix{
+  clear: both;
+}
 #imgViewDom{
   position: fixed;
   top: 0;

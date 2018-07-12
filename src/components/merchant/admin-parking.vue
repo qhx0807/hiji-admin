@@ -38,9 +38,13 @@ export default {
             if (this.currentRow == params.row.id) {
               return h('InputNumber',{
                 props: {
+                  step: 100,
                   max: 99999,
                   min: 0,
                   value: params.row.parkingtickets
+                },
+                style: {
+                  width: '120px'
                 },
                 on: {
                   'on-change': (event) => {
