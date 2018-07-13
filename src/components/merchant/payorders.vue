@@ -174,7 +174,7 @@ export default {
   },
   computed: {
     isAdmin () {
-      if (sessionStorage.username == 'admin' && sessionStorage.userid == '1') {
+      if (sessionStorage.roleid == '1') {
         return true
       } else {
         return false
