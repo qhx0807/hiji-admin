@@ -199,7 +199,6 @@ export default {
         this.activeName = ''
       }
     }
-  },
-  watch: { }
+  }
 }
 </script>
