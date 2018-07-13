@@ -18,6 +18,7 @@ const MerchantAdd = r => require.ensure([], () => r(require('@/components/mercha
 const PayOrders = r => require.ensure([], () => r(require('@/components/merchant/payorders.vue')))
 const Handler = r => require.ensure([], () => r(require('@/components/settings/handler.vue')))
 const ApplyCashBill = r => require.ensure([], () => r(require('@/components/merchant/applyCashBill.vue')))
+const ApplyRecords = r => require.ensure([], () => r(require('@/components/merchant/applyrecords.vue')))
 const ReviewCashApply = r => require.ensure([], () => r(require('@/components/merchant/reviewcashapply.vue')))
 const WorldCup = r => require.ensure([], () => r(require('@/components/settings/worldcup.vue')))
 const DataSta = r => require.ensure([], () => r(require('@/components/merchant/datasta.vue')))
@@ -125,6 +126,11 @@ const routes = [
         path: 'ApplyCash',
         component: ApplyCashBill,
         name: 'ApplyCash'
+      },
+      {
+        path: 'ApplyRecords',
+        component: ApplyRecords,
+        name: 'ApplyRecords'
       },
       {
         path: 'ReviewCashApply',
