@@ -11,11 +11,6 @@
     <Card :bordered="false" style="margin-top:10px" v-show="action == 'apply'">
       <Row>
         <Col span="24">
-          <!-- <Steps :current="stepNum" style="max-width:880px; margin:20px auto 0 auto">
-            <Step title="填写信息" content="这里是该步骤的描述信息"></Step>
-            <Step title="确认信息" content="这里是该步骤的描述信息"></Step>
-            <Step title="完成" content="这里是该步骤的描述信息"></Step>
-          </Steps> -->
           <Steps :current="stepNum" style="max-width:880px; margin:20px auto 0 auto">
             <Step title="选择流水" content="请选择要申请提现的项目"></Step>
             <Step title="确认信息" content="确认选择"></Step>
@@ -36,7 +31,7 @@
                 </CheckboxGroup>
               </div>
               <p class="check-tips">
-                <span><Checkbox @on-change="onClickCheckAll" :value="checkAll">全选</Checkbox></span>
+                <span><Checkbox @on-change="onClickCheckAll" v-if="checkListArr.length > 0" :value="checkAll">全选</Checkbox></span>
                 <span>已选：{{checkAllGroup.length}}条 / 合计金额：￥{{totalCheckFee}}&nbsp;&nbsp;</span>
               </p>
               <Form ref="formValidate" style="margin-top:20px" :model="formItem" :label-width="100" :rules="ruleValidate" >
@@ -253,7 +248,7 @@ export default {
           if (response.data.code == 0) {
             this.isApplyCashData = response.data.data
             this.checkListArr = response.data.data
-            this.seeInfoData = response.data.data[0]
+            this.seeInfoData = response.data.data[0] || {}
           } else {
             this.$Message.warning(response.data.msg)
           }
