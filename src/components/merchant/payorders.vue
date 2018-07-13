@@ -55,14 +55,9 @@ export default {
       endtime: '',
       columns1: [
         {
-          title: '序号',
-          type: 'index',
-          width: 80
-        },
-        {
           title: '订单号',
           key: 'orderno',
-          width: 180
+          width: 150
         },
         {
           title: '商户',
@@ -77,12 +72,12 @@ export default {
         {
           title: '交易流水',
           key: 'transaction_id',
-          width: 250
+          width: 230
         },
         {
           title: '应收',
           key: 'total_fee',
-          width: 120,
+          width: 100,
           align: 'center',
           render: (h, params) => {
             return h('div', {
