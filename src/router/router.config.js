@@ -42,6 +42,7 @@ const UserMemberType = r => require.ensure([], () => r(require('@/components/use
 const UserMemberGrade = r => require.ensure([], () => r(require('@/components/usermember/usermembergrade.vue')))
 const ShoppingCar = r => require.ensure([], () => r(require('@/components/usermember/shoppingcar.vue')))
 const ShopOrders = r => require.ensure([], () => r(require('@/components/shop/shoporders.vue')))
+const ShopOrdersInfo = r => require.ensure([], () => r(require('@/components/shop/shopordersinfo.vue')))
 
 const routes = [
   {
@@ -256,6 +257,11 @@ const routes = [
         path: 'ShopOrders',
         component: ShopOrders,
         name: 'ShopOrders'
+      },
+      {
+        path: 'ShopOrders/:id',
+        component: ShopOrdersInfo,
+        name: 'ShopOrdersInfo'
       }
     ]
   },
