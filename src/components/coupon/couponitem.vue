@@ -17,41 +17,16 @@
       <div style="clear:both"></div>
     </Card>
 
-    <!-- add -->
-    <Modal v-model="addModal" width="550">
+    <Modal v-model="recModal" width="750">
       <p slot="header" style="text-align:center">
-        <span>新增</span>
+        <span>卡券领取记录</span>
       </p>
-      <Form ref="form" :model="form" :rules="rules" :label-width="70">
-        <FormItem prop="cardname" label="卡券名称">
-          <Input v-model="form.cardname" placeholder="请输入"></Input>
-        </FormItem>
-        <FormItem prop="cardcode" label="卡券编码">
-          <Input v-model="form.cardcode" placeholder="请输入"></Input>
-        </FormItem>
-        <FormItem prop="typeid" label="卡券类型">
-          <Select v-model="form.typeid">
-            <Option v-for="item in typeData" :value="item.id" :key="item.id">{{ item.typename }}</Option>
-          </Select>
-        </FormItem>
-        <FormItem label="发放时间">
-          <DatePicker type="datetimerange" @on-change="onSelectSendDate" style="width:100%" placeholder="选择时间"></DatePicker>
-        </FormItem>
-        <FormItem label="使用时间">
-          <DatePicker type="datetimerange" @on-change="onSelectUseDate" style="width:100%" placeholder="选择时间"></DatePicker>
-        </FormItem>
-        <FormItem prop="assignactiveid" label="关联活动">
-          <Select v-model="form.assignactiveid">
-            <Option v-for="item in activtyData" :value="item.id" :key="item.id">{{ item.name }}</Option>
-          </Select>
-        </FormItem>
-        <FormItem prop="totalcount" label="卡券总数">
-          <InputNumber v-model="form.totalcount" style="width:100%" :max="99999999" :min="1" placeholder="请输入"></InputNumber>
-        </FormItem>
-      </Form>
+      <div>
+        建设中...
+      </div>
       <div slot="footer">
-        <Button type="ghost"  @click="addModal = false">取消</Button>
-        <Button type="primary" :loading="modal_loading" @click="add">提交</Button>
+        <Button type="ghost"  @click="recModal = false">取消</Button>
+        <Button type="primary" @click="recModal = false">确定</Button>
       </div>
     </Modal>
   </div>
@@ -66,28 +41,14 @@ export default {
       tableData: [],
       addModal: false,
       modal_loading: false,
-      form: {
-        cardcode: '',
-        cardname: '',
-        startsendtime: '',
-        endsendtime: '',
-        startusetime: '',
-        endusetime: '',
-        assignactiveid: '',
-        typeid: null,
-        totalcount: 1
-      },
-      rules: {
-        cardcode: [{ required: true, message: '不能为空', trigger: 'blur' }],
-        cardname: [{ required: true, message: '不能为空', trigger: 'blur' }]
-      },
+      recModal: false,
       count: 0,
       page: 1,
       pageSize: 10,
       columns: [
         {
-          title: '序号',
-          type: 'index',
+          title: '编号',
+          key: 'id',
           width: 80
         },
         {
@@ -171,44 +132,47 @@ export default {
           title: '操作',
           key: 'id',
           align: 'center',
-          width: 220,
+          width: 160,
           fixed: 'right',
           render: (h, params) => {
-            return h('div', [
-                h('Button', {
-                    props: {
-                      type: 'text',
-                      size: 'small',
-                      icon: 'edit'
-                    },
-                    style: {
-                      marginRight: '5px'
-                    },
-                    on: {
-                      click: () => {
-                        this.onClickEdit(params.row)
-                      }
-                    }
-                }, '编辑'),
-                h('Button', {
-                    props: {
-                      type: 'text',
-                      size: 'small',
-                      icon: 'trash-a'
-                    },
-                    on: {
-                      click: () => {
-                        this.remove(params.row)
-                      }
-                    }
-                }, '删除')
-            ])
+            let edit = h('a', {
+              style: {
+                marginRight: '10px'
+              },
+              on: {
+                click: () => {
+                  this.onClickEdit(params.row)
+                }
+              }
+            }, '编辑')
+            let del = h('a', {
+              style: {
+                color: '#f90',
+                marginRight: '10px'
+              },
+              on: {
+                click: () => {
+                  this.remove(params.row)
+                }
+              }
+            }, '删除')
+            let records = h('a', {
+              style: {
+                color: '#19be6b',
+              },
+              on: {
+                click: () => {
+                  this.seeRecords(params.row)
+                }
+              }
+            }, '领取记录')
+
+            return h('div', [edit, del, records])
           }
         }
       ],
       activtyData: [],
       editData: {},
-      typeData: [],
       stateData: ['编制', '发布', '有效', '停止', '无效', '过期'],
     }
   },
@@ -246,27 +210,6 @@ export default {
         }
       )
     },
-    getCardType () {
-      let d = {
-        pagesize: 99999,
-        page: 1,
-        userid: sessionStorage.userid
-      }
-      serverApi('/card/type', d,
-        response => {
-          // console.log(response)
-          if (response.data.code === 0){
-            this.typeData = response.data.data.result
-          }else{
-            this.$Message.warning(response.data.msg)
-          }
-        },
-        error => {
-          console.log(error)
-          this.$Message.error('连接失败！')
-        }
-      )
-    },
     changePage (e) {
       this.page = e
       this.getTableData()
@@ -276,39 +219,7 @@ export default {
       this.getTableData()
     },
     onClickAdd () {
-      // this.$refs.form.resetFields()
-      // this.addModal = true
       this.$router.push({name: 'CouponItemAdd'})
-    },
-    add () {
-      if (!this.form.typeid) {
-        this.$Message.info('请选择卡券类型')
-        return false
-      }
-      this.$refs.form.validate(valid => {
-        if (valid) {
-          if (/[\u4E00-\u9FA5]/g.test(this.form.cardcode)) {
-            this.$Message.warning('类型编码不能包含汉字字符！')
-            return false
-          }
-          this.modal_loading = true
-          serverApi('/card/couponadd', this.form,
-            response => {
-              this.modal_loading = false
-              if (response.data.code === 0) {
-                this.addModal = false
-                this.getTableData()
-              }
-              this.$Message.info(response.data.msg)
-            },
-            error => {
-              console.log(error)
-              this.modal_loading = false
-              this.$Message.error('连接失败！')
-            }
-          )
-        }
-      })
     },
     onClickEdit (row) {
       this.$router.push({name: 'CouponItemEdit', params: {id: row.id}})
@@ -340,6 +251,9 @@ export default {
     onSelectUseDate (e) {
       this.form.startusetime = e[0]
       this.form.endusetime = e[1]
+    },
+    seeRecords (row) {
+      this.recModal = true
     }
   }
 }

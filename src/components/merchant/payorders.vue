@@ -5,6 +5,11 @@
         <Col span="24">
           <Input v-model="searchKey" placeholder="搜索关键字..." style="width: 200px"></Input>
           <DatePicker :options="dateOptions" type="daterange" placeholder="日期范围" @on-change="onSelectDate" style="width: 220px"></DatePicker>
+          <Select v-model="isCheck" style="width:200px" placeholder="是否对账">
+            <Option value="0">全部</Option>
+            <Option value="1">已对账</Option>
+            <Option value="2">未对账</Option>
+          </Select>
           <Button type="primary" style="margin-left:8px" icon="ios-search" @click="onClickSearch">搜索</Button>
           <Button type="primary" style="margin-left:8px" v-if="isAdmin" icon="checkmark" @click="onClickCheckBill">对账</Button>
         </Col>
@@ -45,6 +50,7 @@ export default {
   data () {
     return {
       tableData: [],
+      isCheck: '',
       searchKey: '',
       count: 0,
       page: 1,

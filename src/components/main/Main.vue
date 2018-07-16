@@ -58,7 +58,9 @@
           <div class="single-page">
             <Spin v-show="pageLoading" size="large" fix></Spin>
             <!-- <transition name="fade"> -->
-              <router-view></router-view>
+              <keep-alive :include="keepAliveName">
+                <router-view></router-view>
+              </keep-alive>
             <!-- </transition> -->
           </div>
         </div>
@@ -90,7 +92,9 @@ export default {
       avatorPath: '',
       activeName: '',
       menuList: [],
-      menuTable: []
+      menuTable: [],
+      keepAliveName: []
+      // keepAliveName: ['UserMember','CouponItem',]
     }
   },
   computed: {

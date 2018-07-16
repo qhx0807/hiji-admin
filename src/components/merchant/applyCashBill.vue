@@ -288,11 +288,15 @@ export default {
       this.action = str
     },
     nextStepApply (name) {
-      if (this.checkAllGroup.length > 0) {
-        this.stepNum = 1
-      } else {
+      if (this.checkAllGroup.length == 0) {
         this.$Message.info('请选择要提现的交易！')
+        return false
       }
+      if (this.totalCheckFee < 0.1) {
+        this.$Message.info('提现金额必须大于0.1元！')
+        return false
+      }
+      this.stepNum = 1
     },
     handleReset (name) {
       this.$refs[name].resetFields()

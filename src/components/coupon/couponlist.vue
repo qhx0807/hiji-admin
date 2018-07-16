@@ -17,6 +17,7 @@
   </div>
 </template>
 <script>
+import serverApi from '../../axios'
 export default {
   name: 'CouponList',
   data () {
@@ -26,11 +27,62 @@ export default {
       page: 1,
       count: 0,
       tableData: [],
-      columns: []
+      columns: [
+        {
+          title: '编号',
+          key: 'cardmainid',
+          width: 90
+        },
+        {
+          title: '用户昵称',
+          key: 'nickname',
+          width: 120
+        },
+        {
+          title: '用户编号',
+          key: 'nickname',
+          width: 120
+        },
+        {
+          title: '发放时间',
+          key: 'cardsendtime',
+          minWidth: 160
+        },
+        {
+          title: '领取时间',
+          key: 'carddrawtime',
+          minWidth: 160
+        },
+        {
+          title: '卡券名称',
+          key: 'cardname',
+          minWidth: 120
+        },
+        {
+          title: '卡券类型',
+          key: 'typename',
+          minWidth: 120
+        },
+        {
+          title: '卡券编码',
+          key: 'cardItemcode',
+          minWidth: 120
+        },
+        {
+          title: '使用时间',
+          key: 'usetime',
+          minWidth: 120
+        },
+        {
+          title: '状态',
+          key: 'CardItemState',
+          width: 120
+        }
+      ]
     }
   },
   created () {
-    // this.getTableData()
+    this.getTableData()
   },
   methods: {
     onClickSearch () {
@@ -48,16 +100,15 @@ export default {
       let d = {
         pagesize: this.pageSize,
         page: this.page,
-        like: this.searchKey,
-        userid: sessionStorage.userid
+        like: this.searchKey
       }
       this.$store.commit('pageLoading', true)
-      serverApi('/Merchant/index', d,
+      serverApi('/card/cardall', d,
         response => {
           console.log(response)
           if (response.data.code === 0){
             this.tableData = response.data.data.result
-            this.count = response.data.data.counts
+            this.count = response.data.data.count
           }else{
             this.$Message.warning(response.data.msg)
           }

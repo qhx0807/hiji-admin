@@ -136,6 +136,11 @@ export default {
           prop: 'createtime',
         },
         {
+          label: 'ISUSE',
+          prop: 'isuse',
+          width: '120px'
+        },
+        {
           label: '操作',
           prop: 'id',
           type: 'template',

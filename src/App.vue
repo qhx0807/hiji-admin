@@ -37,6 +37,12 @@ body {
 .clear-fix{
   clear: both;
 }
+.mb10{
+  margin-bottom: 10px;
+}
+.mb12{
+  margin-bottom: 12px;
+}
 #imgViewDom{
   position: fixed;
   top: 0;

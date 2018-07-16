@@ -194,7 +194,7 @@ export default {
         {
           title: '地区',
           key: 'areaname',
-          width: 130,
+          width: 100,
         },
         {
           title: '收款二维码',
@@ -241,7 +241,8 @@ export default {
         {
           title: '绑定管理',
           key: 'id',
-          width: 100,
+          width: 120,
+          align: 'center',
           render: (h, params) => {
             return h('div', [
               h('Button', {
@@ -263,7 +264,8 @@ export default {
           title: '操作',
           key: 'id',
           align: 'center',
-          width: 170,
+          fixed: 'right',
+          width: 160,
           render: (h, params) => {
             return h('div', [
               h('Button', {
