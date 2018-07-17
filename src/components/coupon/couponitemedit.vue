@@ -84,22 +84,50 @@
         </Row>
       </Form>
       <Row>
+        <Col span="24">
+          <TextEditor ref="ue" :config="ueConfig" :defaultMsg="defaultMsg"></TextEditor>
+        </Col>
+      </Row>
+      <Row>
         <Col span="24" style="text-align:center; padding-top:30px">
-          <Button :loading="modal_loading" style="width:200px" @click="onClickEdit" type="primary">保存</Button>
+          <Button :loading="modal_loading" style="width:180px" @click="onClickEdit" type="primary">保存</Button>
+          <Button style="width:100px; margin-left:10px" @click="previewCoupon" type="info">预览卡券</Button>
         </Col>
       </Row>
     </Card>
+
+    <Modal v-model="recModal" width="410">
+      <p slot="header" style="text-align:center">
+        <span>预览卡券</span>
+      </p>
+      <div>
+        <div class="preview" v-html="ueContent"></div>
+      </div>
+      <div slot="footer">
+        <Button type="ghost"  @click="recModal = false">取消</Button>
+        <Button type="primary" @click="recModal = false">确定</Button>
+      </div>
+    </Modal>
   </div>
 </template>
 <script>
 import serverApi from '../../axios'
+import TextEditor from '../common/text-editor'
 export default {
   name: 'CouponItemEdit',
+  components: {
+    TextEditor
+  },
   data () {
     return {
       editData: {},
       id: null,
       propLoading: false,
+      recModal: false,
+      ueConfig: {
+        initialFrameWidth: '100%',
+        initialFrameHeight: 350
+      },
       rules: {
         extrainfocode: [{ required: true, message: '不能为空', trigger: 'blur' }],
         extrainfovalue: [{ required: true, message: '不能为空', trigger: 'blur' }]
@@ -122,7 +150,9 @@ export default {
         { name: '过期', value: 5 }
       ],
       typePropsData: [],
-      propsObj: {}
+      propsObj: {},
+      ueContent: '',
+      defaultMsg: ''
     }
   },
   created () {
@@ -138,11 +168,13 @@ export default {
       this.$store.commit('pageLoading', true)
       serverApi('/card/getcouponbyid', {id: id},
         response => {
-          // console.log(response)
+          console.log(response)
           this.$store.commit('pageLoading', false)
           if (response.data.code == 0) {
             this.editData = response.data.data
             this.extProps = response.data.data.cardextrainfo ? JSON.parse(response.data.data.cardextrainfo) : ''
+            this.defaultMsg = response.data.data.carddesc ? decodeURIComponent(response.data.data.carddesc) : ''
+            this.$refs.ue.setContent(this.defaultMsg)
             this.getPropsByid(this.editData.typeid)
           } else {
             this.$Message.warning(response.data.msg)
@@ -206,6 +238,8 @@ export default {
     },
     onClickEdit () {
       this.modal_loading = true
+      let content = this.$refs.ue.getUEContent()
+      this.editData.carddesc = content ?  encodeURIComponent(content) : ''
       this.editData.cardextrainfo = JSON.stringify(this.extProps)
         serverApi('/card/couponedit', this.editData,
           response => {
@@ -221,6 +255,13 @@ export default {
             this.$Message.error("连接失败！")
           }
         )
+    },
+    previewCoupon () {
+      let content = this.$refs.ue.getUEContent()
+      if (content) {
+        this.ueContent = content
+        this.recModal = true
+      }
     }
   }
 }

@@ -39,23 +39,23 @@
                 <Option v-for="item in typeData" :value="item.id" :key="item.id">{{ item.typename }}</Option>
               </Select>
             </FormItem>
-          </Col>
-          <Col span="6">
             <FormItem label="总数量">
               <Input v-model="addData.totalcount"></Input>
             </FormItem>
+          </Col>
+          <Col span="6">
           </Col>
         </Row>
         <Row>
           <Row>
             <Col span="12">
               <FormItem label="发放时间">
-                <DatePicker type="datetimerange" @on-change="onSelectSendDate" style="width:100%" placeholder="选择时间"></DatePicker>
+                <DatePicker type="datetimerange" transfer @on-change="onSelectSendDate" style="width:100%" placeholder="选择时间"></DatePicker>
               </FormItem>
             </Col>
             <Col span="12">
               <FormItem label="使用时间">
-                <DatePicker type="datetimerange" @on-change="onSelectUseDate" style="width:100%" placeholder="选择时间"></DatePicker>
+                <DatePicker type="datetimerange" transfer @on-change="onSelectUseDate" style="width:100%" placeholder="选择时间"></DatePicker>
               </FormItem>
             </Col>
           </Row>
@@ -80,20 +80,48 @@
         </Row>
       </Form>
       <Row>
+        <Col span="24">
+          <TextEditor ref="ue" :config="ueConfig"></TextEditor>
+        </Col>
+      </Row>
+      <Row>
         <Col span="24" style="text-align:center; padding-top:30px">
-          <Button :loading="modal_loading" style="width:200px" @click="onClickAdd" type="primary">保存</Button>
+          <Button :loading="modal_loading" style="width:180px" @click="onClickAdd" type="primary">保存</Button>
+          <Button style="width:100px; margin-left:10px" @click="previewCoupon" type="info">预览卡券</Button>
         </Col>
       </Row>
     </Card>
+
+    <Modal v-model="recModal" width="410">
+      <p slot="header" style="text-align:center">
+        <span>预览卡券</span>
+      </p>
+      <div>
+        <div class="preview" v-html="ueContent"></div>
+      </div>
+      <div slot="footer">
+        <Button type="ghost"  @click="recModal = false">取消</Button>
+        <Button type="primary" @click="recModal = false">确定</Button>
+      </div>
+    </Modal>
   </div>
 </template>
 <script>
 import serverApi from '../../axios'
+import TextEditor from '../common/text-editor'
 export default {
   name: 'CouponItemAdd',
+  components: {
+    TextEditor
+  },
   data () {
     return {
       editData: {},
+      recModal: false,
+      ueConfig: {
+        initialFrameWidth: '100%',
+        initialFrameHeight: 350
+      },
       addData: {
         cardcode: '',
         cardname: '',
@@ -105,7 +133,8 @@ export default {
         typeid: null,
         totalcount: 1,
         cardextrainfo: '',
-        cardmainstate: 0
+        cardmainstate: 0,
+        carddesc: ''
       },
       id: null,
       rules: {
@@ -131,7 +160,8 @@ export default {
       ],
       typePropsData: [],
       propsObj: {},
-      propLoading: false
+      propLoading: false,
+      ueContent: ''
     }
   },
   created () {
@@ -201,6 +231,8 @@ export default {
       this.getPropsByid(e)
     },
     onClickAdd () {
+      let content = this.$refs.ue.getUEContent()
+      this.addData.carddesc = content ?  encodeURIComponent(content) : ''
       this.addData.cardextrainfo = JSON.stringify(this.propsObj)
       console.log(this.addData)
       this.modal_loading = true
@@ -218,6 +250,13 @@ export default {
           this.$Message.error("连接失败！")
         }
       )
+    },
+    previewCoupon () {
+      let content = this.$refs.ue.getUEContent()
+      if (content) {
+        this.ueContent = content
+        this.recModal = true
+      }
     }
   }
 }
