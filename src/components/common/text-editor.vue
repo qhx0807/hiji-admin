@@ -37,6 +37,9 @@ export default {
     },
     getUEContentTxt () {
       return this.editor.getContentTxt()
+    },
+    setContent (content) {
+      this.editor.setContent(content)
     }
   },
   destroyed () {
