@@ -29,9 +29,9 @@ router.afterEach(route => {
 
 Vue.directive('imgview', {
   bind (el, binding, vnode) {
-    let imgSrc = el.getAttribute('src')
     el.style.cursor = 'zoom-in'
     el.addEventListener('click', function (e) {
+      let imgSrc = el.getAttribute('src')
       if (imgSrc) {
         document.getElementById('imgViewDom').firstChild.src = imgSrc
         document.getElementById('imgViewDom').style.display = 'flex'
