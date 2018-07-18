@@ -185,6 +185,7 @@ export default {
       serverApi('/Merchant/sendparkingvoucher', d,
         response => {
           // console.log(response)
+          this.submitLoading = false
           if (response.data.code == 0) {
             this.stepNum = 2
             this.$Notice.success({
@@ -198,6 +199,7 @@ export default {
           }
         },
         error => {
+          this.submitLoading = false
           console.log(error)
         })
     },

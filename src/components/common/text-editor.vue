@@ -1,5 +1,5 @@
 <template>
-  <div class="ueditor">
+  <div class="ueditor" id="editorWrap">
     <script id="editor" type="text/plain"></script>
   </div>
 </template>
@@ -7,8 +7,6 @@
 <script>
 import '../../../static/UE/ueditor.config'
 import '../../../static/UE/ueditor.all.min.js'
-import '../../../static/UE/lang/zh-cn/zh-cn.js'
-import '../../../static/UE/ueditor.parse.min.js'
 export default {
   name: 'TextEditor',
   data () {
@@ -20,8 +18,11 @@ export default {
     defaultMsg: {
       type: String
     },
-    config:{
+    config: {
       type: Object
+    },
+    id: {
+      type: String
     }
   },
   created () {},
@@ -29,6 +30,12 @@ export default {
     this.editor = UE.getEditor('editor', this.config)
     this.editor.addListener("ready", () => {
       this.editor.setContent(this.defaultMsg)
+      this.editor.container.addEventListener('click', function(e) {
+        e.stopPropagation()
+      })
+    })
+    document.getElementById("editorWrap").addEventListener('click', function(e) {
+      e.stopPropagation()
     })
   },
   methods: {

@@ -4,7 +4,7 @@
       <div class="head">
         <Input v-model="searchKey" placeholder="搜索关键字..." style="width: 200px"></Input>
         <Button type="primary" style="margin-left:8px" icon="ios-search" @click="onClickSearch">搜索</Button>
-        <Button type="primary" style="margin-left:8px" icon="plus">操作</Button>
+        <!-- <Button type="primary" style="margin-left:8px" icon="plus">操作</Button> -->
       </div>
     </Card>
     <Card :bordered="false" style="margin-top:10px">
@@ -23,15 +23,80 @@ export default {
   data () {
     return {
       searchKey: '',
-      pageSize: 15,
+      pageSize: 10,
       page: 1,
       count: 0,
       tableData: [],
-      columns: []
+      columns: [
+        {
+          title: '订单编号',
+          key: 'orderno',
+          width: 150
+        },
+        {
+          title: '订单类型',
+          key: 'type',
+          width: 120
+        },
+        {
+          title: '订单金额',
+          key: 'amount',
+          width: 120
+        },
+        {
+          title: '支付金额',
+          key: 'cash_amount',
+          width: 120
+        },
+        {
+          title: '商户',
+          key: 'merchantname',
+          width: 120
+        },
+        {
+          title: '订单状态',
+          key: 'order_status',
+          width: 120
+        },
+        {
+          title: '支付',
+          key: 'pay_status',
+          width: 120
+        },
+        {
+          title: '创建时间',
+          key: 'createtime',
+          minWidth: 160
+        },
+        // {
+        //   title: '订单编号',
+        //   key: 'orderno',
+        // },
+        // {
+        //   title: '订单编号',
+        //   key: 'orderno',
+        // },
+        {
+          title: '详情',
+          key: 'orderno',
+          fixed: 'right',
+          align: 'center',
+          width: 90,
+          render: (h, params) => {
+            return h('a', {
+              on: {
+                click: () => {
+                  this.onClickSeeInfo(params.row)
+                }
+              }
+            }, '查看详情')
+          }
+        },
+      ]
     }
   },
   created () {
-    // this.getTableData()
+    this.getTableData()
   },
   methods: {
     onClickSearch () {
@@ -49,11 +114,10 @@ export default {
       let d = {
         pagesize: this.pageSize,
         page: this.page,
-        like: this.searchKey,
-        userid: sessionStorage.userid
+        like: this.searchKey
       }
       this.$store.commit('pageLoading', true)
-      serverApi('/Merchant/index', d,
+      serverApi('/order/orderlist', d,
         response => {
           console.log(response)
           if (response.data.code === 0){
@@ -70,6 +134,9 @@ export default {
         }
       )
     },
+    onClickSeeInfo (row) {
+      this.$router.push({name: 'ShopOrdersInfo', params: {id: row.orderid}})
+    }
   }
 }
 </script>

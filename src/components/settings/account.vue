@@ -35,6 +35,11 @@
             <Option v-for="item in roleData" :key="item.id" :value="item.id">{{item.rolename}}</Option>
           </Select>
         </FormItem>
+        <FormItem label="绑定商户">
+          <Select filterable v-model="form.merchantcode">
+            <Option v-for="item in merData" :key="item.id" :value="item.merchantcode">{{item.name}}</Option>
+          </Select>
+        </FormItem>
       </Form>
       <div slot="footer">
         <Button type="ghost"  @click="addModal = false">取消</Button>
@@ -55,6 +60,11 @@
           <Tooltip content="输入密码保存将会改变原密码！" placement="top-start">
             <Input v-model="editPass" style="width:388px" placeholder="请输入账户密码"></Input>
           </Tooltip>
+        </FormItem>
+        <FormItem label="绑定商户">
+          <Select filterable v-model="editData.merchantcode">
+            <Option v-for="item in merData" :key="item.id" :value="item.merchantcode">{{item.name}}</Option>
+          </Select>
         </FormItem>
         <!-- <FormItem prop="roleid" label="账户角色">
           <Select v-model="editData.roleid">
@@ -93,23 +103,29 @@ export default {
         username: '',
         password: '',
         roleid: null,
-        departmentcode: ''
+        departmentcode: '',
+        merchantcode: ''
       },
       rules: {
         username: [{ required: true, message: '名称不能为空', trigger: 'blur' }],
         password: [{ required: true, message: '密码不能为空', trigger: 'blur' }],
         roleid: [{ required: true, type: 'number', message: '不能为空', trigger: 'blur' }]
       },
+      merData: [],
       editData: {},
       columns: [
         {
           title: '序号',
-          type: 'index',
+          key: 'id',
           width: 80
         },
         {
           title: '账户名',
           key: 'username',
+        },
+        {
+          title: '绑定商户',
+          key: 'merchantname',
         },
         {
           title: '部门',
@@ -197,6 +213,7 @@ export default {
     this.getTableData(1, 10, '')
     this.getDepData()
     this.getRoleData()
+    this.getMerchantData()
   },
   methods: {
     getTableData (page, size, key) {
@@ -272,7 +289,7 @@ export default {
     onClickEdit (row) {
       this.editData = Object.assign({}, row)
       this.editModal = true
-      // console.log(this.editData)
+      console.log(this.editData)
     },
     edit () {
       delete this.editData._index
@@ -367,6 +384,25 @@ export default {
       if (e && e.length) {
         this.editData.departmentcode = e[e.length-1]
       }
+    },
+    getMerchantData () {
+      let d = {
+        pagesize: 99999999,
+        page: 1
+      }
+      serverApi('/Merchant/index', d,
+        response => {
+          // console.log(response)
+          if (response.data.code === 0){
+            this.merData = response.data.data.result
+          }else{
+            this.$Message.warning(response.data.msg)
+          }
+        },
+        error => {
+          console.log(error)
+        }
+      )
     }
   }
 }

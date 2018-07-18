@@ -43,6 +43,12 @@ body {
 .mb12{
   margin-bottom: 12px;
 }
+.divider{
+  border: none;
+  border-bottom: 1px solid #e8e8e8;
+  margin-bottom: 25px;
+  margin-top: 6px;
+}
 #imgViewDom{
   position: fixed;
   top: 0;

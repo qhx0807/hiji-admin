@@ -4,7 +4,7 @@
       <div class="head">
         <Input v-model="searchKey" placeholder="搜索关键字..." style="width: 200px"></Input>
         <Button type="primary" style="margin-left:8px" icon="ios-search" @click="onClickSearch">搜索</Button>
-        <Button type="primary" style="margin-left:8px" icon="plus">发放</Button>
+        <!-- <Button type="primary" style="margin-left:8px" icon="plus">发放</Button> -->
       </div>
     </Card>
     <Card :bordered="false" style="margin-top:10px">
@@ -34,14 +34,14 @@ export default {
           width: 90
         },
         {
-          title: '用户昵称',
-          key: 'nickname',
-          width: 120
+          title: '卡券名称',
+          key: 'cardname',
+          minWidth: 120
         },
         {
-          title: '用户编号',
-          key: 'nickname',
-          width: 120
+          title: '用户',
+          key: 'username',
+          minWidth: 120
         },
         {
           title: '发放时间',
@@ -54,30 +54,30 @@ export default {
           minWidth: 160
         },
         {
-          title: '卡券名称',
-          key: 'cardname',
-          minWidth: 120
-        },
-        {
           title: '卡券类型',
           key: 'typename',
           minWidth: 120
         },
         {
-          title: '卡券编码',
-          key: 'cardItemcode',
-          minWidth: 120
-        },
-        {
           title: '使用时间',
           key: 'usetime',
-          minWidth: 120
+          width: 150
         },
         {
           title: '状态',
-          key: 'CardItemState',
-          width: 120
+          key: 'carditemstate',
+          width: 120,
+          render: (h, params) => {
+            let text = this.couponState[params.row.carditemstate].name
+            return h('a', {}, text)
+          }
         }
+      ],
+      couponState: [
+        {name: '可用', value: '0'},
+        {name: '已使用', value: '1'},
+        {name: '已过期', value: '2'},
+        {name: '失效', value: '3'},
       ]
     }
   },
@@ -108,7 +108,7 @@ export default {
           console.log(response)
           if (response.data.code === 0){
             this.tableData = response.data.data.result
-            this.count = response.data.data.count
+            this.count = response.data.data.counts
           }else{
             this.$Message.warning(response.data.msg)
           }

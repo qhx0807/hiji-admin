@@ -17,12 +17,18 @@
       <div style="clear:both"></div>
     </Card>
 
-    <Modal v-model="recModal" width="750">
+    <Modal v-model="recModal" width="950">
       <p slot="header" style="text-align:center">
         <span>卡券领取记录</span>
       </p>
       <div>
-        建设中...
+        <div class="body">
+          <Table :columns="recordsColumns" :data="recordsData"></Table>
+        </div>
+        <div style="float: right; padding-top:12px">
+          <Page :total="recordsCount" show-total :current="recpage" @on-change="recCchangePage" show-sizer @on-page-size-change="onChangeSize"></Page>
+        </div>
+        <div style="clear:both"></div>
       </div>
       <div slot="footer">
         <Button type="ghost"  @click="recModal = false">取消</Button>
@@ -57,11 +63,6 @@ export default {
           minWidth: 130
         },
         {
-          title: '卡券编码',
-          key: 'cardcode',
-          minWidth: 130
-        },
-        {
           title: '类型',
           key: 'typename',
           minWidth: 140
@@ -83,30 +84,25 @@ export default {
           }
         },
         {
-          title: '总数量',
-          key: 'totalcount',
-          width: 90
-        },
-        {
-          title: '剩余数量',
+          title: '剩余库存',
           key: 'remaincount',
           width: 90
         },
-        {
-          title: '扩展信息',
-          key: 'cardextrainfo',
-          minWidth: 280,
-          ellipsis: true,
-          render: (h, params) => {
-            return h('Poptip', {
-              props: {
-                content: params.row.cardextrainfo,
-                placement: 'top-start',
-                trigger: 'hover'
-              }
-            }, params.row.cardextrainfo)
-          }
-        },
+        // {
+        //   title: '扩展信息',
+        //   key: 'cardextrainfo',
+        //   minWidth: 280,
+        //   ellipsis: true,
+        //   render: (h, params) => {
+        //     return h('Poptip', {
+        //       props: {
+        //         content: params.row.cardextrainfo,
+        //         placement: 'top-start',
+        //         trigger: 'hover'
+        //       }
+        //     }, params.row.cardextrainfo)
+        //   }
+        // },
         {
           title: '关联活动',
           key: 'assignactiveid',
@@ -174,11 +170,56 @@ export default {
       activtyData: [],
       editData: {},
       stateData: ['编制', '发布', '有效', '停止', '无效', '过期'],
+      recordsColumns: [
+        {
+          title: '用户',
+          key: 'username',
+          width: 100
+        },
+        {
+          title: '发放时间',
+          key: 'cardsendtime',
+          width: 150
+        },
+        {
+          title: '领取时间',
+          key: 'carddrawtime',
+          width: 150
+        },
+        {
+          title: '卡券名称',
+          key: 'cardname',
+          minWidth: 120
+        },
+        {
+          title: '卡券类型',
+          key: 'typename',
+          minWidth: 120
+        },
+        // {
+        //   title: '卡券编码',
+        //   key: 'cardItemcode',
+        //   minWidth: 120
+        // },
+        {
+          title: '使用时间',
+          key: 'usetime',
+          width: 150
+        },
+        {
+          title: '状态',
+          key: 'carditemstate',
+          width: 120
+        }
+      ],
+      recordsData: [],
+      recordsCount: 0,
+      recpage: 1,
+      recId: null,
     }
   },
   created () {
     this.getTableData()
-    this.getCardType()
   },
   methods: {
     onClickSearch () {
@@ -188,8 +229,7 @@ export default {
       let d = {
         pagesize: this.pageSize,
         page: this.page,
-        like: this.searchKey,
-        userid: sessionStorage.userid
+        like: this.searchKey
       }
       this.$store.commit('pageLoading', true)
       serverApi('/card/coupon', d,
@@ -253,7 +293,35 @@ export default {
       this.form.endusetime = e[1]
     },
     seeRecords (row) {
+      this.recId = row.id
+      this.getRecData(this.recId)
       this.recModal = true
+    },
+    getRecData (id) {
+      let d = {
+        pagesize: this.pageSize,
+        page: this.page,
+        like: this.searchKey,
+        id: id
+      }
+      serverApi('/card/cardall', d,
+        response => {
+          console.log(response)
+          if (response.data.code === 0){
+            this.recordsData = response.data.data.result
+            this.recordsCount = response.data.data.counts
+          }else{
+            this.$Message.warning(response.data.msg)
+          }
+        },
+        error => {
+          console.log(error)
+        }
+      )
+    },
+    recCchangePage (e) {
+      this.recpage = e
+      this.getRecData(this.recId)
     }
   }
 }
