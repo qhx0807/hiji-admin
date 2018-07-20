@@ -60,12 +60,12 @@ export default {
         {
           title: '卡券名称',
           key: 'cardname',
-          minWidth: 130
+          width: 160
         },
         {
           title: '类型',
           key: 'typename',
-          minWidth: 140
+          width: 140
         },
         {
           title: '状态',
@@ -103,11 +103,11 @@ export default {
         //     }, params.row.cardextrainfo)
         //   }
         // },
-        {
-          title: '关联活动',
-          key: 'assignactiveid',
-          width: 100
-        },
+        // {
+        //   title: '关联活动',
+        //   key: 'assignactiveid',
+        //   width: 100
+        // },
         {
           title: '发放时间',
           key: 'id',

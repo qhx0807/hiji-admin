@@ -25,7 +25,11 @@
                   <ul style="padding-left: 40px;list-style:none;">
                     <li v-show="isApplyCashData.length==0">暂无可提现流水！等待HI集财务对账。如有疑问请联系客服。</li>
                     <li v-for="item in isApplyCashData" :key="item.id">
-                      <Checkbox :label="item">{{item.name + '  ' + item.billdate + '  ￥' +item.billmoney}}</Checkbox>
+                      <Checkbox :label="item">
+                          <span style="width:180px;display:inline-block;">{{item.name}}</span>
+                          <span style="width:120px;display:inline-block;">{{item.billdate.substring(0,10)}}</span>
+                          <span>￥{{item.billmoney}}</span>
+                      </Checkbox>
                     </li>
                   </ul>
                 </CheckboxGroup>

@@ -24,18 +24,28 @@
                 <Option v-for="item in stateData" :value="item.value" :key="item.value">{{ item.name }}</Option>
               </Select>
             </FormItem>
+            <FormItem label="限制属性">
+              <Select v-model="addData.restrict">
+                <Option value="0">不限制</Option>
+                <Option value="1">每天</Option>
+                <Option value="2">活动期间</Option>
+              </Select>
+            </FormItem>
           </Col>
           <Col span="6">
             <!-- <FormItem label="卡券编码" prop="cardcode">
               <Input v-model="addData.cardcode"></Input>
             </FormItem> -->
-             <FormItem label="关联活动">
-             <Input v-model="addData.assignactiveid"></Input>
+            <FormItem label="关联活动">
+              <Input v-model="addData.assignactiveid"></Input>
             </FormItem>
             <FormItem label="卡券类型">
               <Select v-model="addData.typeid" @on-change="onSelectType">
                 <Option v-for="item in typeData" :value="item.id" :key="item.id">{{ item.typename }}</Option>
               </Select>
+            </FormItem>
+            <FormItem label="限制属性值">
+              <InputNumber :max="999999" :min="1" v-model="addData.restrictvalue"></InputNumber>
             </FormItem>
           </Col>
           <Col span="6">
@@ -175,12 +185,12 @@ export default {
         initialFrameWidth: '100%',
         initialFrameHeight: 221,
         toolbars: [['fullscreen', 'source', 'undo', 'redo', 'bold', 'italic',
-          'underline','fontborder', 'backcolor', 'fontsize', 'fontfamily',
+          'underline','forecolor','fontborder', 'backcolor', 'fontsize', 'fontfamily',
           'justifyleft', 'justifyright','justifycenter', 'justifyjustify',
-          'strikethrough','superscript', 'subscript', 'removeformat',
-          'formatmatch','autotypeset', 'blockquote', 'pasteplain', '|',
-          'forecolor', 'backcolor','insertorderedlist', 'insertunorderedlist',
-          'selectall', 'cleardoc', 'link', 'unlink','emotion', 'help']
+          'strikethrough','superscript', 'subscript','map', 'inserttable',
+           'pasteplain', 'insertimage', 'lineheight', 'edittable', 'edittd', '|',
+           'backcolor','insertorderedlist', 'insertunorderedlist',
+          'selectall', 'cleardoc', 'link','emotion']
         ]
       },
       addData: {
@@ -199,7 +209,9 @@ export default {
         imgmaster: '',
         imgdetailed: '',
         userule: '',
-        userange: ''
+        userange: '',
+        restricts: '0',
+        restrictsvalue: '1'
       },
       id: null,
       rules: {
@@ -216,11 +228,7 @@ export default {
       typeData: [],
       stateData: [
         { name: '编制', value: 0 },
-        { name: '发布', value: 1 },
-        { name: '有效', value: 2 },
-        { name: '停止', value: 3 },
-        { name: '无效', value: 4 },
-        { name: '过期', value: 5 }
+        { name: '发布', value: 1 }
       ],
       typePropsData: [],
       propsObj: {},

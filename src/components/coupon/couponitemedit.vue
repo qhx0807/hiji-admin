@@ -28,11 +28,15 @@
                 <Option v-for="item in stateData" :value="item.value" :key="item.value">{{ item.name }}</Option>
               </Select>
             </FormItem>
+            <FormItem label="限制属性">
+              <Select v-model="editData.restricts">
+                <Option :value="0">不限制</Option>
+                <Option :value="1">每天</Option>
+                <Option :value="2">活动期间</Option>
+              </Select>
+            </FormItem>
           </Col>
           <Col span="6">
-            <!-- <FormItem label="卡券编码" prop="merchantcode">
-              <Input v-model="editData.cardcode"></Input>
-            </FormItem> -->
             <FormItem label="剩余数量">
               <Input disabled v-model="editData.remaincount"></Input>
             </FormItem>
@@ -41,6 +45,9 @@
             </FormItem>
             <FormItem label="库存">
               <Input v-model="editData.totalcount"></Input>
+            </FormItem>
+            <FormItem label="限制属性值">
+              <InputNumber :max="999999" :min="1" v-model="editData.restrictsvalue"></InputNumber>
             </FormItem>
           </Col>
           <Col span="6">
@@ -199,12 +206,12 @@ export default {
         initialFrameWidth: '100%',
         initialFrameHeight: 221,
         toolbars: [['fullscreen', 'source', 'undo', 'redo', 'bold', 'italic',
-          'underline','fontborder', 'backcolor', 'fontsize', 'fontfamily',
+          'underline','forecolor','fontborder', 'backcolor', 'fontsize', 'fontfamily',
           'justifyleft', 'justifyright','justifycenter', 'justifyjustify',
-          'strikethrough','superscript', 'subscript', 'removeformat',
-          'formatmatch','autotypeset', 'blockquote', 'pasteplain', '|',
-          'forecolor', 'backcolor','insertorderedlist', 'insertunorderedlist',
-          'selectall', 'cleardoc', 'link', 'unlink','emotion', 'help']
+          'strikethrough','superscript', 'subscript','map', 'inserttable',
+          'pasteplain', 'insertimage', 'lineheight', 'edittable', 'edittd', '|',
+          'backcolor','insertorderedlist', 'insertunorderedlist',
+          'selectall', 'cleardoc', 'link','emotion']
         ]
       },
       modal_loading: false,
