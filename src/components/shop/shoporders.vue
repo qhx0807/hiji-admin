@@ -41,17 +41,17 @@ export default {
         {
           title: '订单金额',
           key: 'amount',
-          width: 120
+          width: 100
         },
         {
           title: '支付金额',
           key: 'cash_amount',
-          width: 120
+          width: 100
         },
         {
           title: '商户',
           key: 'merchantname',
-          width: 120
+          width: 150
         },
         {
           title: '订单状态',
@@ -61,7 +61,14 @@ export default {
         {
           title: '支付',
           key: 'pay_status',
-          width: 120
+          width: 120,
+          render: (h, params) => {
+            return h('Tag', {
+              props: {
+                color: params.row.pay_status == '已支付' ? 'green' : 'default'
+              }
+            }, params.row.pay_status)
+          }
         },
         {
           title: '创建时间',

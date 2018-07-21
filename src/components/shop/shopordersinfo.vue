@@ -48,6 +48,18 @@
         </Row>
       </Form>
       <hr class="divider">
+      <p class="info-title">商户信息</p>
+      <Form :label-width="100">
+        <Row>
+          <Col span="8">
+            <FormItem label="商户名称：">{{orderData.merchantname}}</FormItem>
+          </Col>
+          <Col span="8">
+            <FormItem label="商户编码：">{{orderData.merchantcode}}</FormItem>
+          </Col>
+        </Row>
+      </Form>
+      <hr class="divider">
       <p class="info-title">订单信息</p>
       <Form :label-width="100">
         <Row>
@@ -55,7 +67,7 @@
             <FormItem label="订单编号：">{{orderData.orderno ? orderData.orderno : ''}}</FormItem>
             <FormItem label="订单类型：">{{orderData.type}}</FormItem>
             <FormItem label="订单状态：">{{orderData.order_status}}</FormItem>
-            <!-- <FormItem label="收货人：">{{orderData.order_status}}</FormItem> -->
+            <FormItem label="流水号：">{{orderData.pay_no}}</FormItem>
           </Col>
           <Col span="8">
             <FormItem label="订单类型：">{{orderData.type}}</FormItem>
@@ -163,7 +175,7 @@ export default {
 </script>
 <style lang="less" scoped>
 .ivu-form-item{
-  margin-bottom: 5px!important;
+  margin-bottom: 0px!important;
 }
 .shop-img{
   width: 80px;
@@ -190,11 +202,11 @@ export default {
   th{
     font-size: 13px;
     font-weight: normal;
-    padding: 16px;
+    padding: 12px;
   }
   td{
     font-size: 12px;
-    padding: 16px;
+    padding: 12px;
   }
   .total{
     font-size: 14px;
