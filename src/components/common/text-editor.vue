@@ -1,5 +1,5 @@
 <template>
-  <div class="ueditor" id="editorWrap">
+  <div class="ueditor">
     <script id="editor" type="text/plain"></script>
   </div>
 </template>
@@ -11,7 +11,8 @@ export default {
   name: 'TextEditor',
   data () {
     return {
-      editor: null
+      editor: null,
+      bool: false
     }
   },
   props: {
@@ -28,14 +29,10 @@ export default {
   created () {},
   mounted () {
     this.editor = UE.getEditor('editor', this.config)
+    this.bool = false
     this.editor.addListener("ready", () => {
+      this.bool = true
       this.editor.setContent(this.defaultMsg)
-      this.editor.container.addEventListener('click', function(e) {
-        e.stopPropagation()
-      })
-    })
-    document.getElementById("editorWrap").addEventListener('click', function(e) {
-      e.stopPropagation()
     })
   },
   methods: {
@@ -46,7 +43,13 @@ export default {
       return this.editor.getContentTxt()
     },
     setContent (content) {
-      this.editor.setContent(content)
+      if (this.bool) {
+        this.editor.setContent(content)
+      } else {
+        this.editor.addListener("ready", () => {
+          this.editor.setContent(content)
+        })
+      }
     }
   },
   destroyed () {
