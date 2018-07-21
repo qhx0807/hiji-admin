@@ -125,10 +125,21 @@
           <div class="btn-box">
             <Button type="primary" @click="onClickEdit" :loading="submitLoading">提交数据</Button>
             <Button type="ghost" @click="backGoodsList" style="margin-left:10px;">返回列表</Button>
+            <Button type="ghost" @click="previewEditor" style="margin-left:10px;">预览详情</Button>
           </div>
         </Col>
       </Row>
     </Card>
+    <Modal v-model="preModal" width="500">
+      <p slot="header" style="text-align:center">
+        <span>预览</span>
+      </p>
+      <div v-html="preContent" class="preview"></div>
+      <div slot="footer">
+        <Button type="ghost"  @click="preModal = false">取消</Button>
+        <Button type="primary" @click="preModal = false">确定</Button>
+      </div>
+    </Modal>
   </div>
 </template>
 <script>
@@ -147,6 +158,7 @@ export default {
       merchantData: [],
       goodsTypeData: [],
       submitLoading: false,
+      preModal: false,
       uploadApiUrl: uploadApiUrl,
       rules: {
         goodsname: [{ required: true, message: '不能为空', trigger: 'blur' }],
@@ -165,9 +177,10 @@ export default {
           'strikethrough','superscript', 'subscript','map', 'inserttable',
            'pasteplain', 'insertimage', 'lineheight', 'edittable', 'edittd', '|',
            'backcolor','insertorderedlist', 'insertunorderedlist',
-          'selectall', 'cleardoc', 'link','emotion']
+          'selectall', 'cleardoc', 'link','emotion','preview']
         ]
       },
+      preContent: '',
     }
   },
   created () {
@@ -308,11 +321,19 @@ export default {
     },
     backGoodsList () {
       this.$router.push({name: 'ShopGoods'})
+    },
+    previewEditor () {
+      let content = this.$refs.ue.getUEContent()
+      this.preContent = content
+      this.preModal = true
     }
   }
 }
 </script>
 <style lang="less" scoped>
+img{
+  width: 100%;
+}
 .ivu-upload{
   display: inline!important;
 }
@@ -387,6 +408,13 @@ export default {
   padding-left: 100px;
   h4{
     margin-top: 17px;
+  }
+}
+.preview{
+  max-height: 500px;
+  overflow: auto;
+  img{
+    width: 100%;
   }
 }
 </style>
