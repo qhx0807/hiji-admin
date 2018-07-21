@@ -43,6 +43,10 @@ const UserMemberGrade = r => require.ensure([], () => r(require('@/components/us
 const ShoppingCar = r => require.ensure([], () => r(require('@/components/usermember/shoppingcar.vue')))
 const ShopOrders = r => require.ensure([], () => r(require('@/components/shop/shoporders.vue')))
 const ShopOrdersInfo = r => require.ensure([], () => r(require('@/components/shop/shopordersinfo.vue')))
+const ShopGoods = r => require.ensure([], () => r(require('@/components/shop/shopgoods.vue')))
+const ShopGoodsAdd = r => require.ensure([], () => r(require('@/components/shop/shopgoodsadd.vue')))
+const ShopGoodsEdit = r => require.ensure([], () => r(require('@/components/shop/shopgoodsedit.vue')))
+const ShopGoodsType = r => require.ensure([], () => r(require('@/components/shop/shopgoodstype.vue')))
 
 const routes = [
   {
@@ -262,6 +266,26 @@ const routes = [
         path: 'ShopOrders/:id',
         component: ShopOrdersInfo,
         name: 'ShopOrdersInfo'
+      },
+      {
+        path: 'ShopGoods',
+        component: ShopGoods,
+        name: 'ShopGoods'
+      },
+      {
+        path: 'ShopGoodsType',
+        component: ShopGoodsType,
+        name: 'ShopGoodsType'
+      },
+      {
+        path: 'ShopGoodsAdd',
+        component: ShopGoodsAdd,
+        name: 'ShopGoodsAdd'
+      },
+      {
+        path: 'ShopGoods/:id',
+        component: ShopGoodsEdit,
+        name: 'ShopGoodsEdit'
       }
     ]
   },
