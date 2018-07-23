@@ -338,8 +338,8 @@ export default {
     },
     onClickAdd () {
       let carddesc = this.editor1.getContent()
-      let userule = this.editor2.getContent()
-      let userange = this.editor3.getContent()
+      let userule = this.editor3.getContent()
+      let userange = this.editor2.getContent()
 
       this.addData.carddesc = carddesc ?  encodeURIComponent(carddesc) : ''
       this.addData.userule = userule ?  encodeURIComponent(userule) : ''

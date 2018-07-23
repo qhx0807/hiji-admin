@@ -1,5 +1,5 @@
 <template>
-  <div class="">
+  <div class="box">
     <Card :bordered="false" class="mb10">
       <div class="shop-img">
         <img v-imgview :src="editData.goodsimg" alt="">

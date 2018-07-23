@@ -58,9 +58,32 @@ export default {
           width: 80
         },
         {
+          title: '卡券图',
+          key: 'imgmaster',
+          width: 100,
+          align: 'center',
+          render: (h, params) => {
+            return h('img', {
+              attrs: {
+                src: params.row.imgmaster
+              },
+              style: {
+                maxHeight: '80px',
+                maxWidth: '80px',
+                margin: '3px 0'
+              },
+              directives: [
+                {
+                  name: 'imgview'
+                }
+              ]
+            })
+          }
+        },
+        {
           title: '卡券名称',
           key: 'cardname',
-          width: 160
+          width: 190
         },
         {
           title: '类型',

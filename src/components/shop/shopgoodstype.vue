@@ -49,7 +49,7 @@
         <Button type="primary" :loading="modal_loading" @click="add">提交</Button>
       </div>
     </Modal>
-    <!-- add -->
+    <!-- edit -->
     <Modal v-model="editModal" width="500">
       <p slot="header" style="text-align:center">
         <span>修改信息</span>

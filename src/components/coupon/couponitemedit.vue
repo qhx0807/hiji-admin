@@ -268,8 +268,8 @@ export default {
             this.merArr = response.data.data.merchantcode ? response.data.data.merchantcode.split(',') : []
 
             this.editor1.setContent(this.defaultMsg1)
-            this.editor2.setContent(this.defaultMsg2)
-            this.editor3.setContent(this.defaultMsg3)
+            this.editor3.setContent(this.defaultMsg2)
+            this.editor2.setContent(this.defaultMsg3)
             this.getPropsByid(this.editData.typeid)
           } else {
             this.$Message.warning(response.data.msg)
@@ -356,8 +356,8 @@ export default {
     onClickEdit () {
       this.modal_loading = true
       let carddesc = this.editor1.getContent()
-      let userule = this.editor2.getContent()
-      let userange = this.editor3.getContent()
+      let userule = this.editor3.getContent()
+      let userange = this.editor2.getContent()
       this.editData.carddesc = carddesc ?  encodeURIComponent(carddesc) : ''
       this.editData.userule = userule ?  encodeURIComponent(userule) : ''
       this.editData.userange = userange ?  encodeURIComponent(userange) : ''
@@ -375,7 +375,7 @@ export default {
         error => {
           console.log(error)
           this.modal_loading = false
-          // this.$Message.error("连接失败！")
+          this.$Message.error("连接失败！")
         }
       )
     },
