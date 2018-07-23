@@ -305,6 +305,7 @@ export default {
       )
     },
     onClickSearch () {
+      this.page = 1
       this.getTableData()
     },
     onClickTabItem (name) {

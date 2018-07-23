@@ -281,6 +281,7 @@ export default {
       this.getTableData(this.page, e, this.searchKey)
     },
     onClickSearch () {
+      this.page = 1
       this.getTableData(this.page, this.pageSize, this.searchKey)
     },
     onSelectDep (e) {

@@ -35,6 +35,7 @@ export default {
   },
   methods: {
     onClickSearch () {
+      this.page = 1
       this.getTableData()
     },
     changePage (e) {

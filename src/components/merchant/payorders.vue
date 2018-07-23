@@ -229,6 +229,7 @@ export default {
       this.endtime = e[1]
     },
     onClickSearch () {
+      this.page = 1
       let d = {
         pagesize: this.pageSize,
         page: this.page,
