@@ -151,12 +151,12 @@ export default {
           title: '操作',
           key: 'id',
           align: 'center',
-          width: 160,
+          width: 145,
           fixed: 'right',
           render: (h, params) => {
             let edit = h('a', {
               style: {
-                marginRight: '10px'
+                marginRight: '6px'
               },
               on: {
                 click: () => {
@@ -167,7 +167,7 @@ export default {
             let del = h('a', {
               style: {
                 color: '#f90',
-                marginRight: '10px'
+                marginRight: '6px'
               },
               on: {
                 click: () => {

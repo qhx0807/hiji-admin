@@ -73,8 +73,8 @@ export default {
       editData: {},
       columns: [
         {
-          title: '序号',
-          type: 'index',
+          title: '编号',
+          key: 'id',
           width: 80
         },
         {

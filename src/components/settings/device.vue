@@ -176,7 +176,7 @@ export default {
       columns: [
         {
           title: '序号',
-          type: 'index',
+          key: 'id',
           width: 80
         },
         {

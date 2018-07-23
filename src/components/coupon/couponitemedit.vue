@@ -38,7 +38,7 @@
           </Col>
           <Col span="6">
             <FormItem label="剩余数量">
-              <Input disabled v-model="editData.remaincount"></Input>
+              <Input  v-model="editData.remaincount"></Input>
             </FormItem>
             <FormItem label="结束发放时间">
               <Input v-model="editData.endsendtime"></Input>
@@ -57,7 +57,7 @@
               </Select>
             </FormItem>
             <FormItem label="开始使用时间">
-             <Input disabled v-model="editData.startusetime"></Input>
+             <Input  v-model="editData.startusetime"></Input>
             </FormItem>
             <FormItem label="关联活动">
              <Input v-model="editData.assignactiveid"></Input>
@@ -65,7 +65,7 @@
           </Col>
           <Col span="6">
             <FormItem label="结束使用时间">
-             <Input disabled v-model="editData.endusetime"></Input>
+             <Input  v-model="editData.endusetime"></Input>
             </FormItem>
             <FormItem label="卡券头图" style="margin-bottom:0px;">
              <Input v-model="editData.imgmaster">

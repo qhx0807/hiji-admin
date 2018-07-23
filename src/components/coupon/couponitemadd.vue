@@ -24,13 +24,7 @@
                 <Option v-for="item in stateData" :value="item.value" :key="item.value">{{ item.name }}</Option>
               </Select>
             </FormItem>
-            <FormItem label="限制属性">
-              <Select v-model="addData.restrict">
-                <Option value="0">不限制</Option>
-                <Option value="1">每天</Option>
-                <Option value="2">活动期间</Option>
-              </Select>
-            </FormItem>
+
           </Col>
           <Col span="6">
             <!-- <FormItem label="卡券编码" prop="cardcode">
@@ -44,9 +38,7 @@
                 <Option v-for="item in typeData" :value="item.id" :key="item.id">{{ item.typename }}</Option>
               </Select>
             </FormItem>
-            <FormItem label="限制属性值">
-              <InputNumber :max="999999" :min="1" v-model="addData.restrictvalue"></InputNumber>
-            </FormItem>
+
           </Col>
           <Col span="6">
             <FormItem label="库存">
@@ -66,16 +58,27 @@
             </FormItem>
           </Col>
           <Col span="6">
-            <FormItem label="明细图" style="margin-bottom:0px;">
-              <Upload
-                :action="uploadApiUrl"
-                :on-error="uploadImgErr"
-                :on-success="uploadImgSuccGlary"
-                :on-remove="onRemoveImg"
-                :on-preview="onPreviewImg"
-                >
-                <Button size="small" type="ghost" icon="ios-cloud-upload-outline">Upload files</Button>
-              </Upload>
+            <FormItem label="限制属性">
+              <Select v-model="addData.restrict">
+                <Option value="0">不限制</Option>
+                <Option value="1">每天</Option>
+                <Option value="2">活动期间</Option>
+              </Select>
+            </FormItem>
+            <FormItem label="限制属性值">
+              <InputNumber :max="999999" style="width: 100%" :min="1" v-model="addData.restrictvalue"></InputNumber>
+            </FormItem>
+          </Col>
+        </Row>
+        <Row>
+          <Col span="12">
+            <FormItem label="活动时间">
+              <DatePicker type="datetimerange" transfer @on-change="onSelectSendDate" style="width:100%" placeholder="选择时间"></DatePicker>
+            </FormItem>
+          </Col>
+          <Col span="12">
+            <FormItem label="使用时间">
+              <DatePicker type="datetimerange" transfer @on-change="onSelectUseDate" style="width:100%" placeholder="选择时间"></DatePicker>
             </FormItem>
           </Col>
         </Row>
@@ -89,26 +92,37 @@
           </Col>
         </Row>
         <Row>
-          <Row>
-            <Col span="12">
-              <FormItem label="活动时间">
-                <DatePicker type="datetimerange" transfer @on-change="onSelectSendDate" style="width:100%" placeholder="选择时间"></DatePicker>
+          <Col span="24">
+            <div>
+              <FormItem label="卡券明细图" style="margin-bottom:0px;">
+                <div class="shopimgs" style="padding-bottom:30px">
+                  <ul>
+                    <li v-for="(item, index) in picArr" :key="index">
+                      <img :src="item" alt="" v-imgview>
+                      <p class="tip">
+                        <a @click="onClickRemoveImg(index)">移除</a>
+                      </p>
+                    </li>
+                    <li class="add">
+                      <Upload
+                        :show-upload-list="false"
+                        :action="uploadApiUrl"
+                        :on-error="uploadImgErr"
+                        :on-success="uploadImgSuccGlary"
+                        :on-preview="onPreviewImg"
+                        >
+                        <Icon type="ios-cloud-upload-outline"></Icon>
+                      </Upload>
+                    </li>
+                  </ul>
+                  <div class="clear-fix"></div>
+                </div>
               </FormItem>
-            </Col>
-            <Col span="12">
-              <FormItem label="使用时间">
-                <DatePicker type="datetimerange" transfer @on-change="onSelectUseDate" style="width:100%" placeholder="选择时间"></DatePicker>
-              </FormItem>
-            </Col>
-          </Row>
-          <!-- <Col span="24">
-            <FormItem label="扩展信息">
-              <Input type="textarea" v-model="cardExtraInfo"></Input>
-            </FormItem>
-          </Col> -->
+            </div>
+          </Col>
         </Row>
       </Form>
-      <hr style="margin-bottom:20px" class="divider">
+      <!-- <hr style="margin-bottom:20px" class="divider"> -->
       <div style="text-align:center">
         <Icon v-show="propLoading" type="load-d" color="#2d8cf0" size="30" class="loading-icon"></Icon>
       </div>
@@ -404,7 +418,10 @@ export default {
     uploadImgErr (response, file, fileList) {
       this.$Message.warning('上传失败！')
       console.log('err'+response,file,fileList)
-    }
+    },
+    onClickRemoveImg (index) {
+      this.picArr.splice(index, 1)
+    },
   },
   destroyed () {
     this.editor1.destroy()
@@ -445,5 +462,43 @@ export default {
 }
 .loading-icon{
   animation:  loading 1s linear infinite;
+}
+.shopimgs{
+  ul{
+    padding: 0;
+    list-style: none;
+    display: block;
+    float: left;
+    li{
+      float: left;
+      height: 122px;
+      width: 110px;
+      border: 1px solid #e8e8e8;
+      margin-right: 12px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      text-align: center;
+      img{
+        max-height: 100%;
+        max-width: 100%;
+      }
+      .tip{
+        font-size: 12px;
+        position: absolute;
+        bottom: -32px;
+      }
+      i{
+        font-size: 48px;
+        color: #e8e8e8;
+        cursor: pointer;
+      }
+      p{
+        font-size: 12px;
+        color: #e8e8e8;
+      }
+    }
+  }
 }
 </style>
