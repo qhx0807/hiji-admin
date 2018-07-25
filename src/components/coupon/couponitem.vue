@@ -108,6 +108,24 @@ export default {
           }
         },
         {
+          title: '总库存',
+          key: 'totalcount',
+          width: 100,
+          render: (h, params) => {
+            return h('InputNumber', {
+              props: {
+                // min: params.row.remaincount,
+                value: params.row.totalcount
+              },
+              on: {
+                "on-change": (e) => {
+                  this.onChangeStock(e, params.row.id)
+                }
+              }
+            })
+          }
+        },
+        {
           title: '剩余库存',
           key: 'remaincount',
           width: 90
@@ -240,6 +258,7 @@ export default {
       recordsCount: 0,
       recpage: 1,
       recId: null,
+      bool: true
     }
   },
   created () {
@@ -347,6 +366,30 @@ export default {
     recCchangePage (e) {
       this.recpage = e
       this.getRecData(this.recId)
+    },
+    onChangeStock (e, id) {
+      let d = {
+        id: id,
+        stock: e
+      }
+      if (!this.bool) return false
+      this.bool = false
+      serverApi('/card/couponstockedit', d,
+        response => {
+          if (response.data.code === 0){
+            this.$Message.success(response.data.msg)
+            this.getTableData()
+          }else{
+            this.$Message.warning(response.data.msg)
+          }
+          this.bool = true
+        },
+        error => {
+          console.log(error)
+          this.bool = true
+          this.$Message.error('修改失败！')
+        }
+      )
     }
   }
 }

@@ -336,7 +336,6 @@ export default {
       }
       this.$refs.form.validate(valid => {
         if (valid) {
-          this.submitLoading = true
           let arr = []
           if (this.headerImgIndex != -1 && this.picArr[this.headerImgIndex]) {
             this.addData.goodsimg = this.picArr[this.headerImgIndex]
@@ -350,6 +349,7 @@ export default {
           }
           let content = this.$refs.ue.getUEContent()
           this.addData.goodsdetailed = content ? encodeURIComponent(content) : ''
+          this.submitLoading = true
           serverApi('/goods/goodsadd', this.addData,
             response => {
               this.submitLoading = false
