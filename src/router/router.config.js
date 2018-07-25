@@ -47,6 +47,7 @@ const ShopGoods = r => require.ensure([], () => r(require('@/components/shop/sho
 const ShopGoodsAdd = r => require.ensure([], () => r(require('@/components/shop/shopgoodsadd.vue')))
 const ShopGoodsEdit = r => require.ensure([], () => r(require('@/components/shop/shopgoodsedit.vue')))
 const ShopGoodsType = r => require.ensure([], () => r(require('@/components/shop/shopgoodstype.vue')))
+const ShopGoodsSort = r => require.ensure([], () => r(require('@/components/shop/shopgoodssort.vue')))
 
 const routes = [
   {
@@ -286,6 +287,11 @@ const routes = [
         path: 'ShopGoods/:id',
         component: ShopGoodsEdit,
         name: 'ShopGoodsEdit'
+      },
+      {
+        path: 'ShopGoodsSort',
+        component: ShopGoodsSort,
+        name: 'ShopGoodsSort'
       }
     ]
   },
