@@ -51,7 +51,7 @@ export default {
         {
           title: '商户',
           key: 'merchantname',
-          width: 150
+          width: 200
         },
         {
           title: '订单状态',

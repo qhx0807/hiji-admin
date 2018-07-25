@@ -39,7 +39,7 @@
             </FormItem>
           </Col>
           <Col span="6">
-            <FormItem label="所属分类" prop="goodsname">
+            <FormItem label="所属目录" prop="goodsname">
               <Input autosize disabled v-model="editData.categoryname"></Input>
             </FormItem>
             <FormItem label="库存数量" prop="goodsname">
@@ -47,6 +47,12 @@
             </FormItem>
             <FormItem label="移动端价格" prop="mobileprice">
               <InputNumber :max="9999999" style="width:100%" :min="0" v-model="editData.mobileprice"></InputNumber>
+            </FormItem>
+            <FormItem label="属性类型">
+              <!-- <Input v-model="addData.attrid"></Input> -->
+              <Select v-model="editData.typeid" @on-change="onSelectSort" filterable>
+                <Option v-for="item in sortData" :value="item.id" :key="item.id">{{ item.typename }}</Option>
+              </Select>
             </FormItem>
           </Col>
           <Col span="6">
@@ -72,6 +78,35 @@
             <FormItem label="会员价" prop="memberprice">
               <InputNumber :max="9999999" style="width:100%" :min="0" v-model="editData.memberprice"></InputNumber>
             </FormItem>
+          </Col>
+        </Row>
+        <!-- <Row>
+          <Col span="6" v-for="(item, index) in propsData" :key="index">
+            <FormItem :label="item.attributevalue">
+              <Input v-model="item.value"></Input>
+            </FormItem>
+          </Col>
+        </Row> -->
+        <Row v-if="editData.typeid">
+          <Col span="24" v-for="(prop, index) in propsArr" :key="index">
+            <div class="propAdd">
+              <ul>
+                <li v-for="(item, indexs) in prop" :key="indexs">
+                  <span>{{item.attrname}}</span>
+                  <Input v-model="item.attrvalue" style="width:90px" placeholder="属性值"></Input>
+                  <Select style="width:60px" v-model="item.ismain">
+                    <Option :value="0">否</Option>
+                    <Option :value="1">是</Option>
+                  </Select>
+                  <Input v-show="item.ismain == '1'" v-model="item.prcie" style="width:50px" placeholder="差价"></Input>
+                </li>
+              </ul>
+              <div class="addbtn" >
+                <Button type="default" v-show="index==propsArr.length-1" @click="onClickAddArr">添加</Button>
+                <Button type="default" @click="onClickRemoveArr(index)">移除</Button>
+              </div>
+              <div class="clear-fix"></div>
+            </div>
           </Col>
         </Row>
         <Row>
@@ -181,11 +216,15 @@ export default {
         ]
       },
       preContent: '',
+      sortData: [],
+      propsArr: [],
+      propsData: []
     }
   },
   created () {
     this.getMerchantData()
     this.getGoodsType()
+    this.getSortData()
   },
   mounted () {
     if (this.$route.params.id) {
@@ -246,6 +285,51 @@ export default {
         }
       )
     },
+    getSortData () {
+      let d = {
+        pagesize: 999999,
+        page: 1
+      }
+      this.$store.commit('pageLoading', true)
+      serverApi('/goods/attrindex', d,
+        response => {
+          // console.log(response)
+          if (response.data.code === 0){
+            this.sortData = response.data.data.result
+          }else{
+            this.$Message.warning(response.data.msg)
+          }
+          this.$store.commit('pageLoading', false)
+        },
+        error => {
+          console.log(error)
+          this.$store.commit('pageLoading', false)
+          this.$Message.error('连接失败！')
+        }
+      )
+    },
+    getSortProps (id) {
+      serverApi('/goods/attrcindex', {typeid: id},
+        response => {
+          console.log(response)
+          if (response.data.code === 0){
+            this.propsData = response.data.data.result
+            this.propsData.forEach(item => {
+              item.value = ''
+            })
+          }else{
+            this.$Message.warning(response.data.msg)
+          }
+        },
+        error => {
+          console.log(error)
+          this.$Message.error('连接失败！')
+        }
+      )
+    },
+    onSelectSort (e) {
+      this.getSortProps(e)
+    },
     getOneById (id) {
       this.$store.commit('pageLoading', true)
       serverApi('/goods/goodsinfo', {id: id},
@@ -257,6 +341,9 @@ export default {
             let content = response.data.data.goodsdetailed
             let arr = response.data.data.imgdetailed ? response.data.data.imgdetailed.split(',') : []
             let arr1 = arr.concat(this.picArr)
+            this.propsArr = response.data.data.attrvalue
+            this.getPropsData(response.data.data.typeid)
+            console.log(this.propsArr)
             arr1.length = 5
             this.picArr = arr1
             this.$refs.ue.setContent(decodeURIComponent(content))
@@ -266,8 +353,31 @@ export default {
         },
         error => {
           console.log(error)
+          this.$Message.warning('连接失败！')
           this.$store.commit('pageLoading', false)
         })
+    },
+    getPropsData (id) {
+      serverApi('/goods/attrcindex', {typeid: id},
+        response => {
+          if (response.data.code === 0){
+            let arr = response.data.data.result
+            arr.forEach(item => {
+             item.value = ''
+             item.price = ''
+             item.ismain = '0'
+             delete item.createtime
+            })
+            this.propsData = [...arr]
+          }else{
+            this.$Message.warning(response.data.msg)
+          }
+        },
+        error => {
+          console.log(error)
+          this.$Message.error('连接失败！')
+        }
+      )
     },
     uploadImgErr (response, file, fileList) {
       this.$Message.warning('上传失败！')
@@ -299,6 +409,11 @@ export default {
     },
     onClickEdit () {
       this.submitLoading = true
+      if (this.propsArr.length > 0) {
+        this.editData.attrvalue = JSON.stringify(this.propsArr)
+      } else {
+        this.editData.attrvalue = ''
+      }
       let realArr = this.picArr.filter(item => item !== '')
       this.editData.imgdetailed = realArr.toString()
       let content = this.$refs.ue.getUEContent()
@@ -326,6 +441,25 @@ export default {
       let content = this.$refs.ue.getUEContent()
       this.preContent = content
       this.preModal = true
+    },
+    onClickAddArr () {
+      let arr = []
+      this.propsData.forEach(item => {
+        let obj = {
+          id: item.id,
+          ismain: '0',
+          attrname: item.attributevalue,
+          price: '',
+          attrvalue: '',
+          typeid: item.typeid
+        }
+        arr.push(obj)
+      })
+      this.propsArr.push(arr)
+    },
+    onClickRemoveArr (index) {
+      if (this.propsArr.length == 1) return false
+      this.propsArr.splice(index, 1)
     }
   }
 }
@@ -415,6 +549,23 @@ img{
   overflow: auto;
   img{
     width: 100%;
+  }
+}
+.propAdd{
+  padding: 8px 12px;
+  background-color: #f5f5f5;
+  margin-bottom: 10px;
+  position: relative;
+  ul{
+    list-style: none;
+    li{
+      float: left;
+      margin-left: 12px;
+    }
+  }
+  .addbtn{
+    position: absolute;
+    right: 10px;
   }
 }
 </style>

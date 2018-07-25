@@ -63,6 +63,7 @@ export default {
           width: 100,
           align: 'center',
           render: (h, params) => {
+            if (!params.row.imgmaster) return h('div',{},'')
             return h('img', {
               attrs: {
                 src: params.row.imgmaster

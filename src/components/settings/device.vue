@@ -59,7 +59,7 @@
           <Input v-model="editData.departmentname" readonly placeholder="请输入部门编号"></Input>
         </FormItem>
         <FormItem prop="merchantcode" label="商户">
-          <Select v-model="editData.merchantcode">
+          <Select filterable v-model="editData.merchantcode">
             <Option v-for="item in merchData" :key="item.id" :value="item.merchantcode">{{item.name}}</Option>
           </Select>
         </FormItem>
