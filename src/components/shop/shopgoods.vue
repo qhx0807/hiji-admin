@@ -81,18 +81,22 @@ export default {
         {
           title: '类型',
           key: 'categoryname',
+          width: 120
         },
         {
           title: '库存',
           key: 'goodsstock',
+          width: 120
         },
         {
           title: '商品价格',
           key: 'goodsprice',
+          width: 120
         },
         {
           title: '促销',
           key: 'ispromote',
+          width: 120
         },
         {
           title: '状态',

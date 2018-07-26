@@ -95,7 +95,7 @@ export default {
       form: {
         name: '',
         sort: '',
-        updid: '1',
+        updid: '0',
         img: ''
       },
       rules: {
@@ -182,6 +182,7 @@ export default {
     },
     onClickAdd () {
       this.$refs.form.resetFields()
+      this.form.updid = '0'
       this.addModal = true
     },
     onSelectDep (e) {

@@ -26,7 +26,7 @@
           <Table :columns="recordsColumns" :data="recordsData"></Table>
         </div>
         <div style="float: right; padding-top:12px">
-          <Page :total="recordsCount" show-total :current="recpage" @on-change="recCchangePage" show-sizer @on-page-size-change="onChangeSize"></Page>
+          <Page :total="recordsCount" show-total :current="recpage" @on-change="recCchangePage"></Page>
         </div>
         <div style="clear:both"></div>
       </div>
@@ -343,9 +343,7 @@ export default {
     },
     getRecData (id) {
       let d = {
-        pagesize: this.pageSize,
-        page: this.page,
-        like: this.searchKey,
+        page: this.recpage,
         id: id
       }
       serverApi('/card/cardall', d,

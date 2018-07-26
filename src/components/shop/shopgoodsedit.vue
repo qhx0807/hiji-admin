@@ -341,9 +341,10 @@ export default {
             let content = response.data.data.goodsdetailed
             let arr = response.data.data.imgdetailed ? response.data.data.imgdetailed.split(',') : []
             let arr1 = arr.concat(this.picArr)
-            this.propsArr = response.data.data.attrvalue
-            this.getPropsData(response.data.data.typeid)
-            console.log(this.propsArr)
+            this.propsArr = response.data.data.attrvalue || []
+            if (response.data.data.typeid) {
+              this.getPropsData(response.data.data.typeid)
+            }
             arr1.length = 5
             this.picArr = arr1
             this.$refs.ue.setContent(decodeURIComponent(content))
@@ -409,7 +410,7 @@ export default {
     },
     onClickEdit () {
       this.submitLoading = true
-      if (this.propsArr.length > 0) {
+      if (this.propsArr && this.propsArr.length> 0) {
         this.editData.attrvalue = JSON.stringify(this.propsArr)
       } else {
         this.editData.attrvalue = ''
