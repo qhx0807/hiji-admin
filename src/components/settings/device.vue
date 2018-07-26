@@ -305,7 +305,6 @@ export default {
       bindPeopleData: [],
       seeOneData: {},
       areaData: [],
-      qrPreFix: 'https://api.qrserver.com/v1/create-qr-code/?size=480x440&data=',
       qrCodeInit: null,
       qrcodeVal: ''
     }
@@ -540,7 +539,7 @@ export default {
       this.qrModal = true
     },
     bdQrcode (id) {
-      let qrData ='http://server.cqyyy.cn/index.php/admin/login/equimentbingding/departmentcode/' + id
+      let qrData ='http://server.cqyyy.cn/index.php?s=/admin/login/equimentbingding/departmentcode/' + id
       this.qrcodeVal = qrData
       this.qrCodeInit.makeCode(qrData)
       this.deviceInfo = id + '绑定微信账号二维码'

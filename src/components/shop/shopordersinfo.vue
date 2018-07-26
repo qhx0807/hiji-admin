@@ -36,15 +36,15 @@
         <Row>
           <Col span="8">
             <FormItem label="用户姓名：">{{orderData.userid}}/{{orderData.username}}</FormItem>
-            <FormItem label="收货地址：">{{orderData.addrid}}</FormItem>
+            <!-- <FormItem label="收货地址：">{{orderData.address}}</FormItem> -->
           </Col>
-          <Col span="8">
-            <FormItem label="联系电话：">{{orderData.phone}}</FormItem>
-            <FormItem label="所属城市：">{{orderData.city}}</FormItem>
+          <Col span="16">
+            <FormItem label="收货地址：">{{orderData.address}}</FormItem>
+            <!-- <FormItem label="所属城市：">{{orderData.city}}</FormItem> -->
           </Col>
-          <Col span="8">
-            <!-- <FormItem label="常用快递：">菜鸟仓储</FormItem> -->
-          </Col>
+          <!-- <Col span="8">
+            <FormItem label="常用快递：">菜鸟仓储</FormItem>
+          </Col> -->
         </Row>
       </Form>
       <hr class="divider">
@@ -90,7 +90,7 @@
           <tr>
             <th>商品编号</th>
             <th>商品名称</th>
-            <th>商品条码</th>
+            <th>商品图</th>
             <th>单价</th>
             <th>市场价</th>
             <th>数量</th>
@@ -100,8 +100,14 @@
         <tbody>
           <tr v-for="(item, index) in goodsList" :key="index">
             <td>{{item.goodsid}}</td>
-            <td>{{item.goodsname}}</td>
-            <td>{{item.goodssn}}</td>
+            <td>
+
+              {{item.goodsname}}
+            </td>
+            <td>
+              <!-- {{item.goodssn}} -->
+              <img :src="item.goodsimg" v-imgview style="height:40px" alt="">
+            </td>
             <td>{{item.goodsprice}}</td>
             <td>{{item.marketprice}}</td>
             <td>{{item.goodsnum}}</td>
@@ -141,7 +147,7 @@ export default {
     shopPrice () {
       let price = 0
       this.goodsList.forEach(item => {
-        price += Number(item.memberprice)
+        price += Number(item.goodsprice)*Number(item.goodsnum)
       })
       return price
     }

@@ -444,7 +444,7 @@ export default {
       border: 1px solid #ddd;
       border-bottom: none;
       border-left: none;
-      width: 220px;
+      width: 180px;
       &:nth-child(6){
         border-bottom: 1px solid #ddd;
       }

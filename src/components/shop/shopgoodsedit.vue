@@ -512,14 +512,14 @@ img{
     float: left;
     // border: 1px solid #e8e8e8;
     height: 133px;
-    min-width: 240px;
+    min-width: 200px;
     input{
       display: block;
       height: 26px;
       border: 1px solid #ddd;
       border-bottom: none;
       // border-left: none;
-      width: 300px;
+      width: 200px;
       &:nth-child(5){
         border-bottom: 1px solid #ddd;
       }
