@@ -93,8 +93,9 @@ export default {
       activeName: '',
       menuList: [],
       menuTable: [],
-      keepAliveName: []
-      // keepAliveName: ['UserMember','CouponItem',]
+      keepAliveName: [],
+      // keepAliveName: []
+      keepAliveName: ['UserMember','CouponItem', 'ShopOrders']
     }
   },
   computed: {

@@ -2,7 +2,12 @@
   <div class="box">
     <Card :bordered="false">
       <div class="head">
-        <Input v-model="searchKey" placeholder="搜索关键字..." style="width: 200px"></Input>
+        <Input v-model="searchKey" @on-enter="getTableData" placeholder="搜索..." style="width: 200px"></Input>
+        <Select v-model="ordertype" style="width:210px">
+          <Option value="0">全部</Option>
+          <Option value="4">邮寄类商品订单</Option>
+          <Option value="3">购买卡券订单</Option>
+        </Select>
         <Button type="primary" style="margin-left:8px" icon="ios-search" @click="onClickSearch">搜索</Button>
         <!-- <Button type="primary" style="margin-left:8px" icon="plus">操作</Button> -->
       </div>
@@ -23,6 +28,7 @@ export default {
   data () {
     return {
       searchKey: '',
+      ordertype: '0',
       pageSize: 10,
       page: 1,
       count: 0,
@@ -122,7 +128,8 @@ export default {
       let d = {
         pagesize: this.pageSize,
         page: this.page,
-        like: this.searchKey
+        like: this.searchKey,
+        ordertype: this.ordertype
       }
       this.$store.commit('pageLoading', true)
       serverApi('/order/orderlist', d,
@@ -138,6 +145,7 @@ export default {
         },
         error => {
           console.log(error)
+          this.$Message.warning('连接失败！')
           this.$store.commit('pageLoading', false)
         }
       )
