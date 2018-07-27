@@ -17,7 +17,7 @@
       <div style="clear:both"></div>
     </Card>
 
-    <Modal v-model="recModal" width="950">
+    <Modal v-model="recModal" width="950":styles="{top: '20px'}">
       <p slot="header" style="text-align:center">
         <span>卡券领取记录</span>
       </p>
