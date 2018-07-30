@@ -86,6 +86,11 @@ export default {
           key: 'cardname',
           width: 190
         },
+        // {
+        //   title: '所属商家',
+        //   key: 'cardname',
+        //   width: 190
+        // },
         {
           title: '类型',
           key: 'typename',

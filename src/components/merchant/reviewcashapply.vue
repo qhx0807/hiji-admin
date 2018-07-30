@@ -178,14 +178,23 @@ export default {
           minWidth: 100,
         },
         {
+          title: '账单时间',
+          key: 'billdate',
+          width: 130,
+          render: (h, params) => {
+            let text = params.row.billdate ? params.row.billdate.substring(0,10) : ''
+            return h('div', {}, text)
+          }
+        },
+        {
           title: '申请时间',
           key: 'withdrawtime',
-          width: 150
+          width: 160
         },
         {
           title: '审核时间',
           key: 'totime',
-          width: 150
+          width: 160
         },
         {
           title: '状态',
