@@ -8,6 +8,7 @@
         <Button v-show="activeTab == '0'" type="primary" style="margin-left:8px" @click="onClickReview('1')">审核通过</Button>
         <Button v-show="activeTab == '0'" type="error" style="margin-left:8px" @click="onClickReview('2')">审核驳回</Button>
       </div>
+      <div class="count-box">已选合计：￥{{selectCountFee}}</div>
       <Row>
         <Col span="24">
           <Tabs type="card" v-model="activeTab" size="small" @on-click="onClickTabItem" :animated="false">
@@ -19,9 +20,11 @@
           </Tabs>
         </Col>
         <Col span="24">
-          <Table @on-selection-change="onSelectTable" :columns="columns" :loading="tableLoading" :border="false" :data="tableData"></Table>
+          <Table @on-selection-change="onSelectTable" :columns="columns" :loading="tableLoading" :border="false" :data="tableData">
+            <div slot="footer"></div>
+          </Table>
           <div style="float: right; padding-top:12px">
-            <Page :total="count" show-total :current="page" @on-change="changePage" show-sizer @on-page-size-change="onChangeSize"></Page>
+            <Page :page-size-opts="pagesizeArr" :total="count" show-total :current="page" @on-change="changePage" show-sizer @on-page-size-change="onChangeSize"></Page>
           </div>
         </Col>
       </Row>
@@ -127,6 +130,7 @@ export default {
       isList: true,
       stepNum: 0,
       submitLoading: false,
+      pagesizeArr: [10, 20, 30, 50, 100, 200],
       waitReviewNum: 0,
       awaitReviewLabel: (h) => {
         return h('div', [
@@ -267,6 +271,18 @@ export default {
     this.getWaitNum()
     this.getTableData('0')
   },
+  computed: {
+    selectCountFee () {
+      let fee = 0
+      console.log(this.selectArr)
+      if (this.selectArr.length > 0) {
+        this.selectArr.forEach(item => {
+          fee += Number(item.billmoney) * 100
+        })
+      }
+      return (fee / 100).toFixed(2)
+    }
+  },
   methods: {
     getTableData (type) {
       this.$store.commit('pageLoading', true)
@@ -315,7 +331,7 @@ export default {
     },
     onClickSearch () {
       this.page = 1
-      this.getTableData()
+      this.getTableData(this.activeTab)
     },
     onClickTabItem (name) {
       this.getTableData(name)
@@ -419,7 +435,7 @@ export default {
           }
           serverApi('/bill/auditedit', d,
             response => {
-              // console.log(response)
+              console.log(response)
               if (response.data.code == 0) {
                 this.$Notice.success({
                   title: '审核通过',
@@ -427,8 +443,13 @@ export default {
                 })
                 this.getTableData('0')
                 this.getWaitNum()
+              } else if (response.data.code == '40004') {
+                this.$Modal.error({
+                  title: '警告',
+                  content: response.data.msg
+                })
               } else {
-                this.$Message.warning(response.data.msg)
+                this.$Message.error(response.data.msg)
               }
             },
             error => {
@@ -483,6 +504,12 @@ export default {
     color: #999;
     margin-top: 5px;
   }
+}
+.count-box{
+  position: absolute;
+  left: 400px;
+  z-index: 99;
+  top: 73px;
 }
 </style>
 
