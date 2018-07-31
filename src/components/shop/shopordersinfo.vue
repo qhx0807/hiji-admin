@@ -116,7 +116,7 @@
           <tr class="total">
             <td colspan="5">总计</td>
             <td>{{shopNUm}}</td>
-            <td>{{shopPrice}}</td>
+            <td>{{orderData.amount}}</td>
           </tr>
         </tbody>
       </table>
@@ -146,10 +146,10 @@ export default {
     },
     shopPrice () {
       let price = 0
-      this.goodsList.forEach(item => {
-        price += Number(item.goodsprice)*Number(item.goodsnum)
-      })
-      return price
+      // this.goodsList.forEach(item => {
+      //   price += Number(item.goodsprice)*Number(item.goodsnum)
+      // })
+      return price.toFixed(2)
     }
   },
   methods: {

@@ -117,23 +117,27 @@ export default {
         {
           title: '序号',
           key: 'id',
-          width: 80
+          width: 60
         },
         {
           title: '账户名',
           key: 'username',
+          width: 100
         },
         {
           title: '绑定商户',
           key: 'merchantname',
+          minWidth: 120,
         },
         {
           title: '部门',
-          key: 'departmentname',
+          key: 'deparmentname',
+          minWidth: 120,
         },
         {
           title: '部门编号',
           key: 'departmentcode',
+          width: 120,
         },
         // {
         //   title: '权限',
@@ -142,6 +146,7 @@ export default {
         {
           title: '状态',
           key: 'isuse',
+          width: 120,
           render: (h, params) => {
             let color = params.row.isuse == 1 ? 'green' : 'yellow'
             let text = params.row.isuse == 1 ? '正常' : '未启用'
@@ -156,20 +161,24 @@ export default {
         {
           title: '创建时间',
           key: 'createtime',
+          width: 120,
         },
         {
           title: '最后登录时间',
           key: 'lasttime',
+          width: 160,
         },
         {
           title: '最后登录IP',
           key: 'lastip',
+          width: 130,
         },
         {
           title: '操作',
           key: 'id',
           width: 165,
           align: 'center',
+          fixed: 'right',
           render: (h, params) => {
             return h('div', [
                 h('Button', {

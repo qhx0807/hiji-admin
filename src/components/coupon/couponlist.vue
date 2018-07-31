@@ -3,6 +3,11 @@
     <Card :bordered="false">
       <div class="head">
         <Input v-model="searchKey" placeholder="搜索关键字..." style="width: 200px"></Input>
+        <Select v-model="isUse" style="width:200px" placeholder="是否对账">
+          <Option value="0">全部</Option>
+          <Option value="1">已使用</Option>
+          <Option value="2">未使用</Option>
+        </Select>
         <Button type="primary" style="margin-left:8px" icon="ios-search" @click="onClickSearch">搜索</Button>
         <!-- <Button type="primary" style="margin-left:8px" icon="plus">发放</Button> -->
       </div>
@@ -27,6 +32,7 @@ export default {
       page: 1,
       count: 0,
       tableData: [],
+      isUse: '0',
       columns: [
         {
           title: '编号',
