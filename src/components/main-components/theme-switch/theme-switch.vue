@@ -19,7 +19,6 @@
 
 <script>
 import Cookies from 'js-cookie'
-import config from '../../../../build/config.js'
 export default {
   name: 'themeSwitch',
   data() {
@@ -72,6 +71,12 @@ export default {
     if (localStorage.theme && process.env.NODE_ENV != 'development') {
       this.addCssLink(localStorage.theme)
     }
+    let menuTheme = localStorage.menuTheme
+    if (menuTheme == 'light') {
+      this.$store.commit('changeMenuTheme', 'light')
+    } else {
+       this.$store.commit('changeMenuTheme', 'dark')
+    }
   },
   methods: {
     setTheme (themeFile) {
@@ -82,9 +87,11 @@ export default {
       let menuTheme = themeFile.split('_')[0]
       let mainTheme = themeFile.split('_')[1]
       if (menuTheme === 'black') {
+        localStorage.setItem('menuTheme', 'dark')
         this.$store.commit('changeMenuTheme', 'dark')
         menuTheme = 'dark'
       } else {
+        localStorage.setItem('menuTheme', 'light')
         this.$store.commit('changeMenuTheme', 'light')
         menuTheme = 'light'
       }
