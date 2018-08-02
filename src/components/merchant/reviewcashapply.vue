@@ -8,7 +8,7 @@
         <Button v-show="activeTab == '0'" type="primary" style="margin-left:8px" @click="onClickReview('1')">审核通过</Button>
         <Button v-show="activeTab == '0'" type="error" style="margin-left:8px" @click="onClickReview('2')">审核驳回</Button>
       </div>
-      <div class="count-box">已选合计：￥{{selectCountFee}}</div>
+      <div class="count-box" v-show="activeTab == '0'">已选合计：￥{{selectCountFee}}</div>
       <Row>
         <Col span="24">
           <Tabs type="card" v-model="activeTab" size="small" @on-click="onClickTabItem" :animated="false">

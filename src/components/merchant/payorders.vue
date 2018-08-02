@@ -263,19 +263,24 @@ export default {
         this.$Message.warning('请选择日期！')
         return false
       }
+      this.modal_loading = true
       let date = moment(this.selectCheckDate).format('YYYYMMDD')
       serverApi('/equipment/download', {date: date},
         response => {
           console.log(response)
+          this.modal_loading = false
           if (response.data.code === 0){
             this.$Message.info(response.data.msg)
             this.getTableData(this.page, this.pageSize)
           }else{
             this.$Message.warning(response.data.msg)
           }
+          this.checkModal = false
         },
         error => {
           console.log(error)
+          this.checkModal = false
+          this.modal_loading = false
           this.$Message.error('网络错误，请重试！')
         }
       )
