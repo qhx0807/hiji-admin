@@ -185,6 +185,10 @@ export default {
       this.$router.push({name: 'FinaceTable'})
     },
     exportTable () {
+      if (this.filterTable.length < 1) {
+        this.$Message.info('暂无数据')
+        return false
+      }
       this.$refs.table.exportCsv({filename: '实收.csv'})
     }
   }

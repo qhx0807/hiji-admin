@@ -68,8 +68,8 @@ export default {
         },
         {
           title: '付款方式',
-          key: 'total',
-          minWidth: 140,
+          key: 'paytype',
+          minWidth: 120,
           sortable: true,
         },
         {
@@ -158,7 +158,11 @@ export default {
       this.$router.push({name: 'FinaceTable'})
     },
     exportTable () {
-      this.$refs.table.exportCsv({filename: '实收.csv'})
+      if (this.filterTable.length < 1) {
+        this.$Message.info('暂无数据')
+        return false
+      }
+      this.$refs.table.exportCsv({filename: '实付.csv'})
     }
   }
 }
