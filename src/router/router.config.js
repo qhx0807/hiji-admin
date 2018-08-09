@@ -48,6 +48,11 @@ const ShopGoodsAdd = r => require.ensure([], () => r(require('@/components/shop/
 const ShopGoodsEdit = r => require.ensure([], () => r(require('@/components/shop/shopgoodsedit.vue')))
 const ShopGoodsType = r => require.ensure([], () => r(require('@/components/shop/shopgoodstype.vue')))
 const ShopGoodsSort = r => require.ensure([], () => r(require('@/components/shop/shopgoodssort.vue')))
+const FinaceTable = r => require.ensure([], () => r(require('@/components/report-table/FinaceTable.vue')))
+const RealReceive = r => require.ensure([], () => r(require('@/components/report-table/RealReceive.vue')))
+const RealReceiveTotal = r => require.ensure([], () => r(require('@/components/report-table/RealReceiveTotal.vue')))
+const RealPay = r => require.ensure([], () => r(require('@/components/report-table/RealPay.vue')))
+const Remain = r => require.ensure([], () => r(require('@/components/report-table/Remain.vue')))
 
 const routes = [
   {
@@ -292,6 +297,31 @@ const routes = [
         path: 'ShopGoodsSort',
         component: ShopGoodsSort,
         name: 'ShopGoodsSort'
+      },
+      {
+        path: 'FinaceTable',
+        component: FinaceTable,
+        name: 'FinaceTable'
+      },
+      {
+        path: 'RealReceive',
+        component: RealReceive,
+        name: 'RealReceive'
+      },
+      {
+        path: 'RealReceiveTotal',
+        component: RealReceiveTotal,
+        name: 'RealReceiveTotal'
+      },
+      {
+        path: 'RealPay',
+        component: RealPay,
+        name: 'RealPay'
+      },
+      {
+        path: 'Remain',
+        component: Remain,
+        name: 'Remain'
       }
     ]
   },
