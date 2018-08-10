@@ -318,14 +318,17 @@ export default {
         pagesize: '100',
         ispass: '0'
       }
+      this.$store.commit('pageLoading', true)
       serverApi('/bill/showwithdrawal', d,
         response => {
           if (response.data.code == 0) {
             this.waitReviewNum = response.data.data.count
           }
+          this.$store.commit('pageLoading', false)
         },
         error => {
           this.$Message.error('连接失败')
+          this.$store.commit('pageLoading', false)
         }
       )
     },
@@ -433,9 +436,11 @@ export default {
             isto: status,
             id: arr
           }
+          this.$store.commit('pageLoading', true)
           serverApi('/bill/auditedit', d,
             response => {
               console.log(response)
+              this.$store.commit('pageLoading', false)
               if (response.data.code == 0) {
                 this.$Notice.success({
                   title: '审核通过',

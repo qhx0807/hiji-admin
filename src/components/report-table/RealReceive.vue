@@ -115,7 +115,7 @@ export default {
     }
   },
   created () {
-    this.getTableData()
+    // this.getTableData()
   },
   computed: {
     dateOptions () {

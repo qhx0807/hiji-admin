@@ -176,7 +176,7 @@ export default {
     }
   },
   created () {
-    this.getTableData(1, 15)
+    // this.getTableData(1, 15)
   },
   computed: {
     isAdmin () {
