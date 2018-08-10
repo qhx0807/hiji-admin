@@ -171,7 +171,7 @@ export default {
       )
     },
     goBackFinace () {
-      this.$router.push({name: 'FinaceTable'})
+      this.$router.push({name: 'FinaceTable', original: false})
     },
     exportTable () {
       if (this.filterTable.length < 1) {

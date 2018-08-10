@@ -13,15 +13,12 @@
       <Table border ref="table" :loading="tableLoading" size="small" height="600" :columns="columns" :data="filterTable">
         <div slot="footer">
           <div class="tablefooter" v-show="filterTable.length > 0">
-            <!-- <Row>
-              <Col span="3"><span></span><span>共{{filterTable.length}}条</span></Col>
-              <Col span="3"><span>微信收款：</span><span>{{wxFee}}元</span></Col>
-              <Col span="3"><span>支付宝收款：</span><span>{{aliFee}}元</span></Col>
-              <Col span="3"><span>合计收款：</span><span>{{totalFee}}元</span></Col>
-              <Col span="3"><span>合计笔数：</span><span>{{totalSum}}条</span></Col>
-              <Col span="3"><span>合计应收：</span><span>{{yingFee}}元</span></Col>
-              <Col span="3"><span>合计优惠：</span><span>{{couFee}}元</span></Col>
-            </Row> -->
+            <Row>
+              <Col span="6"><span></span><span>共{{filterTable.length}}条</span></Col>
+              <Col span="6"><span>代付金额合计：</span><span>{{sumData.dfFee.toFixed(2)}}元</span></Col>
+              <Col span="6"><span>平台补助合计：</span><span>{{sumData.bzFee.toFixed(2)}}元</span></Col>
+              <Col span="6"><span>结算金额合计：</span><span>{{sumData.jsFee.toFixed(2)}}元</span></Col>
+            </Row>
           </div>
         </div>
       </Table>
@@ -46,59 +43,77 @@ export default {
         {
           title: '商户编码',
           key: 'merchantcode',
-          minWidth: 140
+          minWidth: 120
         },
         {
           title: '商户名称',
-          key: 'merchanname',
+          key: 'merchantname',
           minWidth: 140,
           sortable: true
         },
         {
           title: '付款日期',
-          key: 'paytime',
-          minWidth: 140,
+          key: 'totime',
+          minWidth: 120,
           sortable: true
         },
         {
           title: '账单时间',
-          key: 'paytype',
-          minWidth: 140,
+          key: 'billdate',
+          minWidth: 120,
           sortable: true
         },
         {
           title: '付款方式',
-          key: 'paytype',
+          key: 'merchantcode',
+          minWidth: 120,
+          sortable: true,
+          render: (h, params) => {
+            return h('div', {}, '支付宝')
+          }
+        },
+        {
+          title: '代付金额',
+          key: 'cash',
           minWidth: 120,
           sortable: true,
         },
         {
-          title: '代付金额',
-          key: 'coupon',
-          minWidth: 140,
-          sortable: true,
-        },
-        {
           title: '平台补贴',
-          key: 'cash',
-          minWidth: 140,
+          key: 'coupon',
+          minWidth: 120,
           sortable: true,
         },
         {
           title: '结算金额',
-          key: 'num',
-          width: 120,
+          key: 'total',
+          minWidth: 120,
           sortable: true,
-          fixed: 'right',
           align: 'right'
-        }
+        },
+        // {
+        //   title: '明细',
+        //   key: 'merchantcode',
+        //   width: 100,
+        //   fixed: 'right',
+        //   align: 'center',
+        //   render: (h, params) => {
+        //     return h('a', {
+        //       on: {
+        //         click: () => {
+        //           this.onClickSeemx(params.row)
+        //         }
+        //       }
+        //     }, '查看明细')
+        //   }
+        // }
       ],
       starttime: '',
       endtime: '',
     }
   },
   created () {
-    // this.getTableData()
+    this.getTableData()
   },
   computed: {
     dateOptions () {
@@ -106,6 +121,19 @@ export default {
     },
     filterTable () {
       return arrSearch(this.tableData, this.searchKey)
+    },
+    sumData () {
+      let obj = {
+        bzFee: 0,
+        dfFee: 0,
+        jsFee: 0
+      }
+      this.filterTable.forEach(item => {
+        obj.bzFee += Number(item.coupon)
+        obj.dfFee += Number(item.cash)
+        obj.jsFee += Number(item.total)
+      })
+      return obj
     }
   },
   methods: {
@@ -125,24 +153,8 @@ export default {
       serverApi('/Finance/outofpocket', d,
         response => {
           console.log(response)
-          let arr = []
           if (response.data.code === 0){
-            let obj = response.data.data
-            for (let key in obj) {
-              console.log(obj[key])
-              let arritem =  {
-                merchantcode: obj[key].qqmerchntotal.merchantcode,
-                merchanname: obj[key].qqmerchntotal.merchanname,
-                qqcash: obj[key].qqmerchntotal.cash,
-                qqtotal: obj[key].qqmerchntotal.total,
-                qqsubsidy: obj[key].qqmerchntotal.subsidy,
-                qqcoupon: obj[key].qqmerchntotal.coupon,
-                bqcash: obj[key].bqmerchntotal.cash,
-                bqtotal: obj[key].bqmerchntotal.total,
-                bqsubsidy: obj[key].bqmerchntotal.subsidy,
-                bqcoupon: obj[key].bqmerchntotal.coupon
-              }
-            }
+            this.tableData = response.data.data
           }else{
             this.$Message.warning(response.data.msg)
           }
@@ -162,7 +174,10 @@ export default {
         this.$Message.info('暂无数据')
         return false
       }
-      this.$refs.table.exportCsv({filename: '实付.csv'})
+      this.$refs.table.exportCsv({filename: '实付.csv', original: false})
+    },
+    onClickSeemx (row) {
+      console.log(row)
     }
   }
 }

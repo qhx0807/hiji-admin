@@ -14,13 +14,11 @@
         <div slot="footer">
           <div class="tablefooter" v-show="filterTable.length > 0">
             <Row>
-              <Col span="3"><span></span><span>共{{filterTable.length}}条</span></Col>
-              <Col span="3"><span>微信收款：</span><span>{{wxFee}}元</span></Col>
-              <Col span="3"><span>支付宝收款：</span><span>{{aliFee}}元</span></Col>
-              <Col span="3"><span>合计收款：</span><span>{{totalFee}}元</span></Col>
-              <Col span="3"><span>合计笔数：</span><span>{{totalSum}}条</span></Col>
-              <Col span="3"><span>合计应收：</span><span>{{yingFee}}元</span></Col>
-              <Col span="3"><span>合计优惠：</span><span>{{couFee}}元</span></Col>
+              <Col span="4"><span></span><span>共{{filterTable.length}}条</span></Col>
+              <Col span="4"><span>微信收款：</span><span>{{wxFee}}元</span></Col>
+              <Col span="4"><span>支付宝收款：</span><span>{{aliFee}}元</span></Col>
+              <Col span="4"><span>合计收款：</span><span>{{totalFee}}元</span></Col>
+              <Col span="4"><span>合计笔数：</span><span>{{totalSum}}条</span></Col>
             </Row>
           </div>
         </div>
@@ -61,36 +59,54 @@ export default {
           sortable: true
         },
         {
-          title: '收款方式',
-          key: 'paytype',
-          minWidth: 140,
-          sortable: true
-        },
-        {
-          title: '应收金额',
-          key: 'total',
+          title: '微信收款',
+          key: 'wxcash',
           minWidth: 140,
           sortable: true,
-          className: 'shouldReceive'
+          align: 'right',
+          render: (h, params) => {
+            let fee = params.row.wxcash ? Number(params.row.wxcash).toFixed(2) : '0.00'
+            return h('div', {}, fee)
+          }
+
         },
         {
-          title: '优惠金额',
-          key: 'coupon',
+          title: '支付宝收款',
+          key: 'alicash',
           minWidth: 140,
+          align: 'right',
           sortable: true,
-          className: 'discount'
+          render: (h, params) => {
+            let fee = params.row.alicash ? Number(params.row.alicash).toFixed(2) : '0.00'
+            return h('div', {}, fee)
+          }
         },
+        // {
+        //   title: '应收金额',
+        //   key: 'total',
+        //   minWidth: 140,
+        //   sortable: true,
+        //   className: 'shouldReceive'
+        // },
+        // {
+        //   title: '优惠金额',
+        //   key: 'coupon',
+        //   minWidth: 140,
+        //   sortable: true,
+        //   className: 'discount'
+        // },
         {
-          title: '实收金额',
+          title: '实收合计',
           key: 'cash',
           minWidth: 140,
+          align: 'right',
           sortable: true,
-          className: 'realReceive'
         },
         {
           title: '收款小计',
           key: 'num',
           minWidth: 140,
+          align: 'right',
           sortable: true
         }
       ],
@@ -108,23 +124,19 @@ export default {
     wxFee () {
       let fee = 0
       this.tableData.forEach(item => {
-        if (item.paytype == '微信') {
-          fee += Number(item.cash)
-        }
+        fee += Number(item.wxcash)
       })
       return fee.toFixed(2)
     },
     aliFee () {
       let fee = 0
       this.tableData.forEach(item => {
-        if (item.paytype == '支付宝') {
-          fee += Number(item.cash)
-        }
+        fee += Number(item.alicash)
       })
       return fee.toFixed(2)
     },
     totalFee () {
-      return Number(this.wxFee) + Number(this.aliFee)
+      return (Number(this.wxFee) + Number(this.aliFee)).toFixed(2)
     },
     totalSum () {
       let num = 0
@@ -132,20 +144,6 @@ export default {
         num += item.num
       })
       return num
-    },
-    yingFee () {
-      let fee = 0
-      this.tableData.forEach(item => {
-        fee += Number(item.total)
-      })
-      return fee.toFixed(2)
-    },
-    couFee () {
-      let fee = 0
-      this.tableData.forEach(item => {
-        fee += Number(item.coupon)
-      })
-      return fee.toFixed(2)
     },
     filterTable () {
       return arrSearch(this.tableData, this.searchKey)
@@ -189,7 +187,7 @@ export default {
         this.$Message.info('暂无数据')
         return false
       }
-      this.$refs.table.exportCsv({filename: '实收.csv'})
+      this.$refs.table.exportCsv({filename: '实收.csv', original: false})
     }
   }
 }

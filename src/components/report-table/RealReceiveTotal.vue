@@ -206,7 +206,7 @@ export default {
         this.$Message.info('暂无数据')
         return false
       }
-      this.$refs.table.exportCsv({filename: '实收汇总.csv'})
+      this.$refs.table.exportCsv({filename: '实收汇总.csv', original: false})
     }
   }
 }
