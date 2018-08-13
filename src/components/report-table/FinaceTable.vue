@@ -31,27 +31,33 @@ export default {
         {
           imgSrc: 'https://gw.alipayobjects.com/zos/rmsportal/pbmKMSFpLurLALLNliUQ.svg',
           title: '实收统计',
-          desc: '实收统计实收统计实收统计实收统计',
+          desc: '商户实收，微信、支付宝收款合计',
           routeName: 'RealReceive'
         },
         {
           imgSrc: 'https://gw.alipayobjects.com/zos/rmsportal/hBbIHzUsSbSxrhoRFYzi.svg',
           title: '实收汇总',
-          desc: '实收汇总实收汇总实收汇总实收汇总',
+          desc: '本前期收款、优惠、补贴合计',
           routeName: 'RealReceiveTotal'
         },
         {
           imgSrc: 'https://gw.alipayobjects.com/zos/rmsportal/BISfzKcCNCYFmTYcUygW.svg',
           title: '实付统计',
-          desc: '实付统计实付统计',
+          desc: '向商户打款、补贴记录',
           routeName: 'RealPay'
         },
         {
           imgSrc: 'https://gw.alipayobjects.com/zos/rmsportal/RpJIQitGbSCHwLMimybX.svg',
           title: '结余',
-          desc: '结余',
+          desc: '商户结算合计',
           routeName: 'Remain'
-        }
+        },
+        // {
+        //   imgSrc: 'https://gw.alipayobjects.com/zos/rmsportal/VriUmzNjDnjoFoFFZvuh.svg',
+        //   title: '待审核提现',
+        //   desc: '各商户待审核提现（流水）',
+        //   routeName: 'Remain'
+        // }
       ]
     }
   },

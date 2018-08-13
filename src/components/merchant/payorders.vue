@@ -10,7 +10,9 @@
             <Option value="1">已对账</Option>
             <Option value="2">未对账</Option>
           </Select>
-          <Button type="primary" style="margin-left:8px" icon="ios-search" @click="onClickSearch">搜索</Button>
+           <Tooltip transfer :delay="1000" always content="请点击搜索按钮查看流水~~" placement="top">
+            <Button type="primary" style="margin-left:8px" icon="ios-search" @click="onClickSearch">搜索</Button>
+          </Tooltip>
           <Button type="primary" style="margin-left:8px" v-if="isAdmin" icon="checkmark" @click="onClickCheckBill">对账</Button>
         </Col>
       </Row>

@@ -41,7 +41,7 @@
 import serverApi from '../../axios'
 import { arrSearch } from '../../utlis/tools.js'
 export default {
-  name: 'RealReceive',
+  name: 'WaitReview',
   data () {
     return {
       searchKey: '',
@@ -97,40 +97,41 @@ export default {
       columns: [
         {
           type: 'index',
-          width: 60
+          width: 80
         },
         {
           title: '商户编码',
           key: 'merchantcode',
-          minWidth: 120
+          minWidth: 140
         },
         {
           title: '商户名称',
           key: 'merchanname',
-          minWidth: 120,
+          minWidth: 140,
           sortable: true
         },
         {
           title: '收款日期',
           key: 'paytime',
-          minWidth: 110,
+          minWidth: 140,
           sortable: true
         },
         {
           title: '微信收款',
           key: 'wxcash',
-          minWidth: 120,
+          minWidth: 140,
           sortable: true,
           align: 'right',
           render: (h, params) => {
             let fee = params.row.wxcash ? Number(params.row.wxcash).toFixed(2) : '0.00'
             return h('div', {}, fee)
           }
+
         },
         {
           title: '支付宝收款',
           key: 'alicash',
-          minWidth: 120,
+          minWidth: 140,
           align: 'right',
           sortable: true,
           render: (h, params) => {
@@ -138,66 +139,33 @@ export default {
             return h('div', {}, fee)
           }
         },
+        // {
+        //   title: '应收金额',
+        //   key: 'total',
+        //   minWidth: 140,
+        //   sortable: true,
+        //   className: 'shouldReceive'
+        // },
+        // {
+        //   title: '优惠金额',
+        //   key: 'coupon',
+        //   minWidth: 140,
+        //   sortable: true,
+        //   className: 'discount'
+        // },
         {
           title: '实收合计',
           key: 'cash',
-          minWidth: 110,
-          align: 'right',
-          sortable: true,
-        },
-        {
-          title: '应收合计',
-          key: 'total',
-          minWidth: 110,
-          align: 'right',
-          sortable: true,
-        },
-        {
-          title: '优惠合计',
-          key: 'coupon',
-          minWidth: 110,
+          minWidth: 140,
           align: 'right',
           sortable: true,
         },
         {
           title: '收款小计',
           key: 'num',
-          minWidth: 120,
+          minWidth: 140,
           align: 'right',
           sortable: true
-        },
-        {
-          title: '状态',
-          key: 'status',
-          width: 135,
-          align: 'center',
-          sortable: true,
-          render: (h, params) => {
-            let text = params.row.status
-            let color = 'green'
-            switch (text) {
-              case '已申请':
-                color = 'yellow'
-                break
-              case '已对账':
-                color = 'blue'
-                break
-              case '已通过':
-                color = 'green'
-                break
-              case '未对账':
-                color = '#EF6AFF'
-                break
-              default:
-                color = 'red'
-            }
-            return h('Tag', {
-              props: {
-                color: color,
-                type: 'dot'
-              }
-            }, text)
-          }
         },
         {
           title: '明细',
@@ -281,7 +249,6 @@ export default {
         },
         error => {
           console.log(error)
-          this.$Message.warning(error.toString())
           this.tableLoading = false
         }
       )
