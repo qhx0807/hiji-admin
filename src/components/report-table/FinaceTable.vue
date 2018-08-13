@@ -58,6 +58,10 @@ export default {
         //   desc: '各商户待审核提现（流水）',
         //   routeName: 'Remain'
         // }
+        // https://gw.alipayobjects.com/zos/rmsportal/smwQOoxCjXVbNAKMqvWk.svg
+        // https://gw.alipayobjects.com/zos/rmsportal/VriUmzNjDnjoFoFFZvuh.svg
+        // https://gw.alipayobjects.com/zos/rmsportal/XxqEexmShHOofjMYOCHi.svg
+        // https://gw.alipayobjects.com/zos/rmsportal/JsixxWSViARJnQbAAPkI.svg
       ]
     }
   },
