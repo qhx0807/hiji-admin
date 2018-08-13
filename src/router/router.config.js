@@ -53,6 +53,7 @@ const RealReceive = r => require.ensure([], () => r(require('@/components/report
 const RealReceiveTotal = r => require.ensure([], () => r(require('@/components/report-table/RealReceiveTotal.vue')))
 const RealPay = r => require.ensure([], () => r(require('@/components/report-table/RealPay.vue')))
 const Remain = r => require.ensure([], () => r(require('@/components/report-table/Remain.vue')))
+const WaitReview = r => require.ensure([], () => r(require('@/components/report-table/WaitReview.vue')))
 
 const routes = [
   {
@@ -322,6 +323,11 @@ const routes = [
         path: 'Remain',
         component: Remain,
         name: 'Remain'
+      },
+      {
+        path: 'WaitReview',
+        component: WaitReview,
+        name: 'WaitReview'
       }
     ]
   },
