@@ -1,23 +1,29 @@
 <template>
   <div class="box">
-    <Card :bordered="false" class="mb10">
+    <Card :bordered="false" class="mb10 card-box">
       <div class="tips">
         <h4>商户的停车券</h4>
         <p>设置商户所拥有的停车优惠券</p>
       </div>
+      <div class="search-p">
+        <Icon type="ios-search"></Icon>
+        <input v-model="searchKey" placeholder="在列表中搜索..." type="text">
+      </div>
     </Card>
     <Card :bordered="false">
-      <Table :columns="columns" :data="tableData"></Table>
+      <Table :columns="columns" height="600" :data="filterTable"></Table>
     </Card>
   </div>
 </template>
 <script>
 import serverApi from '../../axios'
+import { arrSearch } from '../../utlis/tools.js'
 export default {
   name: 'AdminParking',
   data () {
     return {
       tableData: [],
+      searchKey: '',
       count: 0,
       currentRow: -1,
       inputNum: 0,
@@ -29,11 +35,13 @@ export default {
         },
         {
           title: '用户',
-          key: 'username'
+          key: 'username',
+          sortable: true
         },
         {
           title: '可用券数量',
           key: 'parkingtickets',
+          sortable: true,
           render: (h, params) => {
             if (this.currentRow == params.row.id) {
               return h('InputNumber',{
@@ -91,6 +99,11 @@ export default {
           }
         }
       ]
+    }
+  },
+  computed: {
+    filterTable () {
+      return arrSearch(this.tableData, this.searchKey)
     }
   },
   created () {
@@ -154,5 +167,22 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-
+.card-box{
+  position: relative;
+}
+.search-p{
+  position: absolute;
+  top: 45px;
+  left: 200px;
+  input{
+    border: none;
+    border-left: 1px solid #eee;
+    outline: none;
+    padding-left: 10px;
+    &::-webkit-input-placeholder{
+      font-size: 12px;
+      color: #ddd;
+    }
+  }
+}
 </style>
