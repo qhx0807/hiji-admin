@@ -1,7 +1,7 @@
 <template>
   <div class="box">
     <Card :bordered="false">
-      <div class="head">
+      <div>
         <Input v-model="searchKey" placeholder="关键字搜索..." style="width: 220px"></Input>
         <!-- <Button type="primary" :loading="tableLoading" style="margin-left:8px" icon="ios-search" @click="onClickSearch">搜索</Button> -->
         <Button type="primary" style="margin-left:8px" @click="goBackFinace" icon="chevron-left">返回</Button>
@@ -12,15 +12,6 @@
       <Table border ref="table" :loading="tableLoading" size="small" height="600" :columns="columns" :data="filterTable">
         <div slot="footer">
           <div class="tablefooter" v-show="filterTable.length > 0">
-            <!-- <Row>
-              <Col span="3"><span></span><span>共{{filterTable.length}}条</span></Col>
-              <Col span="3"><span>微信收款：</span><span>{{wxFee}}元</span></Col>
-              <Col span="3"><span>支付宝收款：</span><span>{{aliFee}}元</span></Col>
-              <Col span="3"><span>合计收款：</span><span>{{totalFee}}元</span></Col>
-              <Col span="3"><span>合计笔数：</span><span>{{totalSum}}条</span></Col>
-              <Col span="3"><span>合计应收：</span><span>{{yingFee}}元</span></Col>
-              <Col span="3"><span>合计优惠：</span><span>{{couFee}}元</span></Col>
-            </Row> -->
             <table class="table">
               <tbody>
                 <tr>

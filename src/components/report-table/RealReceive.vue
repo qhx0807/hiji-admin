@@ -229,14 +229,14 @@ export default {
     },
     wxFee () {
       let fee = 0
-      this.tableData.forEach(item => {
+      this.filterTable.forEach(item => {
         fee += Number(item.wxcash)
       })
       return fee.toFixed(2)
     },
     aliFee () {
       let fee = 0
-      this.tableData.forEach(item => {
+      this.filterTable.forEach(item => {
         fee += Number(item.alicash)
       })
       return fee.toFixed(2)
@@ -246,7 +246,7 @@ export default {
     },
     totalSum () {
       let num = 0
-      this.tableData.forEach(item => {
+      this.filterTable.forEach(item => {
         num += item.num
       })
       return num
