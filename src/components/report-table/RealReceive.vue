@@ -158,7 +158,7 @@ export default {
           sortable: true,
         },
         {
-          title: '收款小计',
+          title: '笔数合计',
           key: 'num',
           minWidth: 120,
           align: 'right',

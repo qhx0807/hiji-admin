@@ -3,7 +3,7 @@
     <Card :bordered="false" class="mb10">
       <div class="tips">
         <h4>发放停车券</h4>
-        <p>给指定的车辆车牌发放停车优惠券。当前可发优惠券数量：
+        <p>给指定的车辆车牌发放停车优惠券。当前可发优惠券金额：
           <a style="color:#f60;font-size:14px">{{ticketsNum}}</a>
           &nbsp;&nbsp;&nbsp;详情请咨询【宏帆Hi集客服】。点击
           <a v-show="action === 'records'" @click="action='send'">去发放优惠券</a>
@@ -32,7 +32,9 @@
                     ></Input>
                 </FormItem>
                 <FormItem label="优惠券面值：">
-                  无门槛立减4元优惠券
+                  <Select v-model="selectValue" style="width:400px">
+                    <Option v-for="(item, index) in cardList" :value="item" :key="item">{{item}}元</Option>
+                  </Select>
                 </FormItem>
                 <FormItem>
                   <Button type="primary" @click="nextStepSend">下一步</Button>
@@ -50,7 +52,7 @@
                   <span class="car-num">{{carNum}}</span>
                 </FormItem>
                 <FormItem label="优惠券面值：">
-                  无门槛立减4元优惠券
+                  无门槛立减{{selectValue}}元优惠券
                 </FormItem>
               </Form>
               <Row class="infoitem">
@@ -71,7 +73,7 @@
                   <span class="car-num">{{carNum}}</span>
                 </FormItem>
                 <FormItem label="优惠券面值：">
-                  无门槛立减4元优惠券
+                  无门槛立减{{selectValue}}元优惠券
                 </FormItem>
               </Form>
               <Row class="infoitem" >
@@ -85,7 +87,7 @@
       </Row>
       <Row v-show="action === 'records'">
         <Col span="24">
-          <Table size="small" :columns="columns" :data="recordsData"></Table>
+          <Table size="small" height="600" :columns="columns" :data="recordsData"></Table>
         </Col>
       </Row>
     </Card>
@@ -101,8 +103,11 @@ export default {
       carNum: '',
       action: 'send',
       submitLoading: false,
+      getReLoading: false,
       ticketsNum: 0,
       recordsData: [],
+      selectValue: '',
+      cardList: [4, 8, 24, 36],
       columns: [
         {
           title: '序号',
@@ -115,26 +120,38 @@ export default {
         },
         {
           title: '卡券',
-          key: 'cost'
+          key: 'cost',
+          sortable: true
         },
         {
           title: '发放者',
-          key: 'username'
+          key: 'username',
+          sortable: true
         },
         {
           title: '发放时间',
-          key: 'createtime'
+          key: 'createtime',
+          sortable: true
         },
         {
           title: '是否使用',
-          key: 'is_check'
+          key: 'is_check',
+          sortable: true,
+          render: (h, params) => {
+            let text = params.row.is_check == '1' ? '已使用' : '未使用'
+            let color = params.row.is_check == '1' ? '#2d8cf0' : '#ff9900'
+            return h('span', {
+              style: {
+                color: color
+              }
+            }, text)
+          }
         }
       ]
     }
   },
   created () {
     this.getTicketsNum()
-    this.getMySendRecords()
   },
   methods: {
     getTicketsNum () {
@@ -152,9 +169,14 @@ export default {
         })
     },
     getMySendRecords () {
+      this.$Message.loading({
+        content: '数据加载中...',
+        duration: 0
+      })
       serverApi('/Merchant/parkingvoucherlist', {},
         response => {
           // console.log(response)
+          this.$Message.destroy()
           if (response.data.code == 0) {
             this.recordsData = response.data.data
           } else {
@@ -162,6 +184,7 @@ export default {
           }
         },
         error => {
+          this.$Message.destroy()
           console.log(error)
         })
     },
@@ -180,7 +203,8 @@ export default {
     confirmSend () {
       this.submitLoading = true
       let d = {
-        carnum: this.carNum
+        carnum: this.carNum,
+        cost: this.selectValue
       }
       serverApi('/Merchant/sendparkingvoucher', d,
         response => {
@@ -208,7 +232,29 @@ export default {
       this.stepNum = 0
     },
     onClickSeeRecords () {
-      this.action = 'records'
+      if (this.getReLoading) return false
+      this.getReLoading = true
+      this.$Message.loading({
+        content: '数据加载中...',
+        duration: 0
+      })
+      serverApi('/Merchant/parkingvoucherlist', {},
+        response => {
+          // console.log(response)
+          this.getReLoading = false
+          this.$Message.destroy()
+          if (response.data.code == 0) {
+            this.recordsData = response.data.data
+            this.action = 'records'
+          } else {
+            this.$Message.warning(response.data.msg)
+          }
+        },
+        error => {
+          this.$Message.destroy()
+          this.getReLoading = false
+          console.log(error)
+        })
     }
   }
 }
