@@ -5,7 +5,7 @@
       <DatePicker :options="dateOptions" type="daterange" placeholder="日期范围" @on-change="onSelectDate" style="width: 220px"></DatePicker>
       <Button type="primary" :loading="tableLoading" style="margin-left:8px" icon="ios-search" @click="onClickSearch">搜索</Button>
       <Button type="primary" style="margin-left:8px" @click="goBackFinace" icon="ios-arrow-back">返回</Button>
-      <Button type="primary" style="margin-left:8px; float:right" @click="exportTable" icon="md-arrow-down">导出数据</Button>
+      <Button type="primary" :loading="exportLoading" style="margin-left:8px; float:right" @click="exportTable" icon="md-arrow-down">导出数据</Button>
     </Card>
     <Card :bordered="false" style="margin-top:10px">
       <Table border ref="table" :loading="tableLoading" size="small" height="600" :columns="columns" :data="tableData"></Table>
@@ -19,13 +19,14 @@
 </template>
 <script>
 import serverApi from '../../axios'
-import { arrSearch } from '../../utlis/tools.js'
+import exportExcel from  '../../utlis/table2excel.js'
 export default {
   name: 'MainTable',
   data () {
     return {
       searchKey: '',
       tableLoading: false,
+      exportLoading: false,
       counts: 0,
       page: 1,
       pageSize: 15,
@@ -178,11 +179,12 @@ export default {
       this.$router.push({name: 'FinaceTable', original: false})
     },
     exportTable () {
-      if (this.filterTable.length < 1) {
+      if (this.tableData.length < 1) {
         this.$Message.info('暂无数据')
         return false
       }
-      this.$refs.table.exportCsv({filename: '结余.csv'})
+      this.exportLoading = true
+      // this.$refs.table.exportCsv({filename: '结余.csv'})
     },
     changePage (e) {
       this.page = e
