@@ -31,7 +31,7 @@
       </p>
       <Table border ref="seeTable" :loading="seeTableLoading" size="small" height="500" :columns="seeColumns" :data="seeTableData"></Table>
       <div slot="footer" style="text-align:center">
-        <Button type="ghost" @click="seeModal = false">关闭</Button>
+        <Button   @click="seeModal = false">关闭</Button>
         <Button type="primary" @click="downLoadData">下载数据</Button>
       </div>
     </Modal>

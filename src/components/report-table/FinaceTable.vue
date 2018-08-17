@@ -52,12 +52,12 @@ export default {
           desc: '商户结算合计',
           routeName: 'Remain'
         },
-        // {
-        //   imgSrc: 'https://gw.alipayobjects.com/zos/rmsportal/VriUmzNjDnjoFoFFZvuh.svg',
-        //   title: '待审核提现',
-        //   desc: '各商户待审核提现（流水）',
-        //   routeName: 'Remain'
-        // }
+        {
+          imgSrc: 'https://gw.alipayobjects.com/zos/rmsportal/VriUmzNjDnjoFoFFZvuh.svg',
+          title: '主表',
+          desc: '申请-审核-对账...',
+          routeName: 'MainTable'
+        }
         // https://gw.alipayobjects.com/zos/rmsportal/smwQOoxCjXVbNAKMqvWk.svg
         // https://gw.alipayobjects.com/zos/rmsportal/VriUmzNjDnjoFoFFZvuh.svg
         // https://gw.alipayobjects.com/zos/rmsportal/XxqEexmShHOofjMYOCHi.svg

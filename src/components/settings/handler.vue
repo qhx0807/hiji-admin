@@ -5,7 +5,7 @@
         <Col span="24" style="padding-bottom:12px">
           <Input v-model="searchKey" placeholder="搜索关键字..." style="width: 200px"></Input>
           <Button type="primary" icon="ios-search" @click="onClickSearch">搜索</Button>
-          <Button type="primary" icon="plus" style="margin-left:8px" @click="onClickAdd">新增</Button>
+          <Button type="primary" icon="md-add" style="margin-left:8px" @click="onClickAdd">新增</Button>
         </Col>
       </Row>
       <Row>
@@ -38,7 +38,7 @@
         </FormItem>
       </Form>
       <div slot="footer">
-        <Button type="ghost"  @click="addModal = false">取消</Button>
+        <Button    @click="addModal = false">取消</Button>
         <Button type="primary" :loading="modal_loading" @click="add">提交</Button>
       </div>
     </Modal>
@@ -60,7 +60,7 @@
         </FormItem>
       </Form>
       <div slot="footer">
-        <Button type="ghost"  @click="editModal = false">取消</Button>
+        <Button    @click="editModal = false">取消</Button>
         <Button type="primary" :loading="modal_loading" @click="edit">保存</Button>
       </div>
     </Modal>

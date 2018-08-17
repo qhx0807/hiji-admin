@@ -4,7 +4,7 @@
       <div class="head">
         <Input v-model="searchKey" placeholder="搜索关键字..." style="width: 200px"></Input>
         <Button type="primary" style="margin-left:8px" icon="ios-search" @click="onClickSearch">搜索</Button>
-        <Button type="primary" style="margin-left:8px" icon="plus" v-if="showAddbtn" @click="onClickAdd">新增</Button>
+        <Button type="primary" style="margin-left:8px" icon="md-add" v-if="showAddbtn" @click="onClickAdd">新增</Button>
       </div>
     </Card>
     <Card :bordered="false" style="margin-top:12px;">
@@ -30,7 +30,7 @@
         </FormItem>
       </Form>
       <div slot="footer">
-        <Button type="ghost"  @click="bindModal = false">取消</Button>
+        <Button    @click="bindModal = false">取消</Button>
         <Button type="primary" :loading="modal_loading" @click="bingAliPay">保存</Button>
       </div>
     </Modal>

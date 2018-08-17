@@ -131,7 +131,7 @@
         <Col span="24">
           <div class="btn-box">
             <Button type="primary" @click="onClickSubmit" :loading="submitLoading">提交数据</Button>
-            <Button type="ghost" @click="backGoodsList" style="margin-left:10px;">返回列表</Button>
+            <Button   @click="backGoodsList" style="margin-left:10px;">返回列表</Button>
           </div>
         </Col>
       </Row>

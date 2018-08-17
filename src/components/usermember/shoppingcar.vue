@@ -4,7 +4,7 @@
       <div class="head">
         <Input v-model="searchKey" placeholder="搜索关键字..." style="width: 200px"></Input>
         <Button type="primary" style="margin-left:8px" icon="ios-search" @click="onClickSearch">搜索</Button>
-        <Button type="primary" style="margin-left:8px" icon="plus">操作</Button>
+        <Button type="primary" style="margin-left:8px" icon="md-add">操作</Button>
       </div>
     </Card>
     <Card :bordered="false" style="margin-top:10px">

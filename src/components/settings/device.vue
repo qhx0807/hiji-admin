@@ -4,7 +4,7 @@
       <div class="head">
         <Input v-model="searchKey" placeholder="搜索关键字..." style="width: 200px"></Input>
         <Button type="primary" style="margin-left:8px" icon="ios-search" @click="onClickSearch">搜索</Button>
-        <Button type="primary" style="margin-left:8px" icon="plus" @click="onClickAdd">新增</Button>
+        <Button type="primary" style="margin-left:8px" icon="md-add" @click="onClickAdd">新增</Button>
       </div>
     </Card>
     <Card :bordered="false" style="margin-top:12px;">
@@ -41,7 +41,7 @@
         </FormItem>
       </Form>
       <div slot="footer">
-        <Button type="ghost"  @click="addModal = false">取消</Button>
+        <Button    @click="addModal = false">取消</Button>
         <Button type="primary" :loading="modal_loading" @click="add">提交</Button>
       </div>
     </Modal>
@@ -76,7 +76,7 @@
         </FormItem>
       </Form>
       <div slot="footer">
-        <Button type="ghost"  @click="editModal = false">取消</Button>
+        <Button    @click="editModal = false">取消</Button>
         <Button type="primary" :loading="modal_loading" @click="edit">保存</Button>
       </div>
     </Modal>
@@ -94,7 +94,7 @@
         <code>{{qrcodeVal}}</code>
       </div>
       <div slot="footer">
-        <Button type="ghost"  @click="qrModal = false">取消</Button>
+        <Button    @click="qrModal = false">取消</Button>
         <Button type="primary" @click="qrModal = false">确定</Button>
       </div>
     </Modal>
@@ -135,7 +135,7 @@
         </table>
       </div>
       <div slot="footer">
-        <Button type="ghost"  @click="bdModal = false">取消</Button>
+        <Button    @click="bdModal = false">取消</Button>
         <Button type="primary" @click="bdModal = false">确定</Button>
       </div>
     </Modal>

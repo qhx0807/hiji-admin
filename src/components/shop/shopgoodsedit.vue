@@ -159,8 +159,8 @@
         <Col span="24">
           <div class="btn-box">
             <Button type="primary" @click="onClickEdit" :loading="submitLoading">提交数据</Button>
-            <Button type="ghost" @click="backGoodsList" style="margin-left:10px;">返回列表</Button>
-            <Button type="ghost" @click="previewEditor" style="margin-left:10px;">预览详情</Button>
+            <Button   @click="backGoodsList" style="margin-left:10px;">返回列表</Button>
+            <Button   @click="previewEditor" style="margin-left:10px;">预览详情</Button>
           </div>
         </Col>
       </Row>
@@ -171,7 +171,7 @@
       </p>
       <div v-html="preContent" class="preview"></div>
       <div slot="footer">
-        <Button type="ghost"  @click="preModal = false">取消</Button>
+        <Button    @click="preModal = false">取消</Button>
         <Button type="primary" @click="preModal = false">确定</Button>
       </div>
     </Modal>

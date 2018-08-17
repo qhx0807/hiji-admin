@@ -9,7 +9,7 @@
           <Option value="2">未使用</Option>
         </Select>
         <Button type="primary" style="margin-left:8px" icon="ios-search" @click="onClickSearch">搜索</Button>
-        <!-- <Button type="primary" style="margin-left:8px" icon="plus">发放</Button> -->
+        <!-- <Button type="primary" style="margin-left:8px" icon="md-add">发放</Button> -->
       </div>
     </Card>
     <Card :bordered="false" style="margin-top:10px">

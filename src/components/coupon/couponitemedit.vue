@@ -112,7 +112,7 @@
                       :show-upload-list="false"
                       :on-success="uploadImgSuccGlary"
                       >
-                      <Button size="small" type="ghost" icon="ios-cloud-upload-outline">Upload files</Button>
+                      <Button size="small"   icon="ios-cloud-upload-outline">Upload files</Button>
                     </Upload>
                   </li>
                 </ul>
@@ -178,7 +178,7 @@
         <div class="preview" v-html="ueContent"></div>
       </div>
       <div slot="footer">
-        <Button type="ghost"  @click="recModal = false">取消</Button>
+        <Button    @click="recModal = false">取消</Button>
         <Button type="primary" @click="recModal = false">确定</Button>
       </div>
     </Modal>

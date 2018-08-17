@@ -26,7 +26,7 @@
         </FormItem>
       </Form>
       <div slot="footer">
-        <Button type="ghost"  @click="coloseModal">取消</Button>
+        <Button    @click="coloseModal">取消</Button>
         <Button type="primary" :loading="modal_loading" @click="saveWin">保存</Button>
       </div>
     </Modal>
@@ -47,7 +47,7 @@
         </Col>
       </Row>
       <div slot="footer">
-        <Button type="ghost"  @click="lastModal = false">取消</Button>
+        <Button    @click="lastModal = false">取消</Button>
         <Button type="primary" :loading="modal_loading" @click="saveLastGame">保存</Button>
       </div>
     </Modal>

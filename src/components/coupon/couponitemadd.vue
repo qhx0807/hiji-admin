@@ -177,7 +177,7 @@
         <div class="preview" v-html="ueContent"></div>
       </div>
       <div slot="footer">
-        <Button type="ghost"  @click="recModal = false">取消</Button>
+        <Button    @click="recModal = false">取消</Button>
         <Button type="primary" @click="recModal = false">确定</Button>
       </div>
     </Modal>

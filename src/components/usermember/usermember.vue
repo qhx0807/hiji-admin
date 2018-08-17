@@ -5,7 +5,7 @@
         <Input v-model="searchKey" placeholder="搜索关键字..." style="width: 200px"></Input>
         <Button type="primary" style="margin-left:8px" icon="ios-search" @click="onClickSearch">搜索</Button>
         <router-link :to="{name: 'UserMemberAdd'}">
-          <Button type="primary" style="margin-left:8px" icon="plus">新增</Button>
+          <Button type="primary" style="margin-left:8px" icon="md-add">新增</Button>
         </router-link>
       </div>
     </Card>

@@ -58,7 +58,7 @@
               <Row class="infoitem">
                 <Col span="13" style="text-align:right">
                   <Button type="primary" @click="confirmSend" :loading="submitLoading">确认</Button>
-                  <Button type="ghost" @click="stepNum = 0" style="margin-left:8px">上一步</Button>
+                  <Button   @click="stepNum = 0" style="margin-left:8px">上一步</Button>
                 </Col>
               </Row>
             </div>
@@ -106,7 +106,7 @@ export default {
       getReLoading: false,
       ticketsNum: 0,
       recordsData: [],
-      selectValue: '',
+      selectValue: 4,
       cardList: [4, 8, 24, 36],
       columns: [
         {

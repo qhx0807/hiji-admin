@@ -37,7 +37,7 @@
         </FormItem>
       </Form>
       <div slot="footer">
-        <Button type="ghost"  @click="checkModal = false">取消</Button>
+        <Button    @click="checkModal = false">取消</Button>
         <Button type="primary" :loading="modal_loading" @click="confirmCheckBill">确认对账</Button>
       </div>
     </Modal>

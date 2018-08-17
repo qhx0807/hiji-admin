@@ -17,9 +17,9 @@
             :columns="columns">
             <template slot="id" slot-scope="scope">
               <div>
-                <!-- <Button icon="plus" size="small" type="text" @click="onClickEdit(scope.row)">添加</Button> -->
-                <Button icon="edit" size="small" type="text" @click="onClickEdit(scope.row)">修改</Button>
-                <Button icon="trash-a" size="small" type="text" @click="remove(scope.row.id)">删除</Button>
+                <!-- <Button icon="md-add" size="small" type="text" @click="onClickEdit(scope.row)">添加</Button> -->
+                <Button  icon="md-create" size="small" type="text" @click="onClickEdit(scope.row)">修改</Button>
+                <Button  icon="ios-trash" size="small" type="text" @click="remove(scope.row.id)">删除</Button>
               </div>
             </template>
             <template slot="icon" slot-scope="scope">
@@ -54,7 +54,7 @@
       </Form>
 
       <div slot="footer">
-        <Button type="ghost"  @click="addModal = false">取消</Button>
+        <Button    @click="addModal = false">取消</Button>
         <Button type="primary" :loading="modal_loading" @click="add">提交</Button>
       </div>
     </Modal>
@@ -79,7 +79,7 @@
         </FormItem>
       </Form>
       <div slot="footer">
-        <Button type="ghost"  @click="editModal = false">取消</Button>
+        <Button    @click="editModal = false">取消</Button>
         <Button type="primary" :loading="modal_loading" @click="edit">保存</Button>
       </div>
     </Modal>

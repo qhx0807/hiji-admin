@@ -4,7 +4,7 @@
       <div>
         <Input v-model="searchKey" placeholder="搜索关键字..." style="width: 200px"></Input>
         <Button type="primary" style="margin-left:8px" icon="ios-search" @click="onClickSearch">搜索</Button>
-        <Button type="primary" style="margin-left:8px" icon="plus" @click="onClickAdd">上传</Button>
+        <Button type="primary" style="margin-left:8px" icon="md-add" @click="onClickAdd">上传</Button>
       </div>
     </Card>
     <Card :bordered="false" style="margin-top:12px">
@@ -24,7 +24,7 @@
       <Form ref="form" :model="form" :rules="rules" :label-width="70">
         <FormItem label="类型名称">
           <Upload :action="uploadApiUrl" :on-success="uploadImgSucc" :on-error="uploadImgErr">
-            <Button type="ghost" icon="ios-cloud-upload-outline">上传图片</Button>
+            <Button   icon="ios-cloud-upload-outline">上传图片</Button>
           </Upload>
         </FormItem>
         <FormItem prop="imgsrc" label="图片地址">
@@ -44,7 +44,7 @@
         </FormItem>
       </Form>
       <div slot="footer">
-        <Button type="ghost"  @click="addModal = false">取消</Button>
+        <Button    @click="addModal = false">取消</Button>
         <Button type="primary" :loading="modal_loading" @click="add">提交</Button>
       </div>
     </Modal>

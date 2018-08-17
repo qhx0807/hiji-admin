@@ -72,7 +72,7 @@
                 <FormItem>
                   <Button v-show="seeOneData.ispass==0" type="primary" @click="nextStepReview">下一步</Button>
                   <Button v-show="seeOneData.ispass==0" type="error" style="margin: 0 8px" @click="refuseApply">驳回提现申请</Button>
-                  <Button type="ghost" @click="reviewBack">返回</Button>
+                  <Button   @click="reviewBack">返回</Button>
                 </FormItem>
               </Form>
               <Form :label-width="180" v-show="stepNum == 1">
@@ -82,7 +82,7 @@
                 <FormItem>
                   <Button v-show="seeOneData.ispass==0" type="primary" :loading="submitLoading" @click="confirmApplyReview">确认打款</Button>
                   <Button v-show="seeOneData.ispass==0" type="error" style="margin: 0 8px" @click="refuseApply">驳回提现申请</Button>
-                  <Button type="ghost" @click="reviewBack">返回</Button>
+                  <Button   @click="reviewBack">返回</Button>
                 </FormItem>
               </Form>
               <div>

@@ -41,7 +41,7 @@
                 </FormItem>
                 <FormItem>
                   <Button type="primary" @click="nextStepApply('formValidate')">下一步</Button>
-                  <!-- <Button type="ghost" @click="handleReset('formValidate')" style="margin-left: 8px">重置</Button> -->
+                  <!-- <Button   @click="handleReset('formValidate')" style="margin-left: 8px">重置</Button> -->
                 </FormItem>
               </Form>
             </div>
@@ -66,7 +66,7 @@
               <Row class="infoitem">
                 <Col span="13" style="text-align:right">
                   <Button type="primary" @click="confirmApply" :loading="submitLoading">确认</Button>
-                  <Button type="ghost" @click="stepNum = 0" style="margin-left:8px">上一步</Button>
+                  <Button   @click="stepNum = 0" style="margin-left:8px">上一步</Button>
                 </Col>
               </Row>
             </div>

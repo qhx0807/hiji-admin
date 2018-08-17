@@ -13,8 +13,8 @@
       <div class="clear-fix"></div>
       <div class="status-box">
         <ButtonGroup>
-          <Button type="ghost">{{orderData.order_status}}</Button>
-          <Button type="ghost">{{orderData.pay_status}}</Button>
+          <Button  >{{orderData.order_status}}</Button>
+          <Button  >{{orderData.pay_status}}</Button>
         </ButtonGroup>
         <div>
           <Row>

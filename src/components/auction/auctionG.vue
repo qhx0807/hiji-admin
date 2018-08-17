@@ -21,8 +21,8 @@
             :columns="columns">
             <template slot="doing" slot-scope="scope">
               <div>
-                <Button icon="edit" size="small" type="text"  @click="edit(scope.row)">修改</Button>
-                <Button icon="trash-a" size="small" type="text" @click="del(scope.row.id)">删除</Button>
+                <Button  icon="md-create" size="small" type="text"  @click="edit(scope.row)">修改</Button>
+                <Button  icon="ios-trash" size="small" type="text" @click="del(scope.row.id)">删除</Button>
               </div>
             </template>
             <template>
@@ -101,7 +101,7 @@
 
       </Form>
       <div slot="footer">
-        <Button type="ghost"  @click="addModal = false">取消</Button>
+        <Button    @click="addModal = false">取消</Button>
         <Button type="primary" :loading="modal_loading" @click="add">提交</Button>
       </div>
     </Modal>
@@ -118,7 +118,7 @@
 
       </Form>
       <div slot="footer">
-        <Button type="ghost"  @click="addModal = false">取消</Button>
+        <Button    @click="addModal = false">取消</Button>
         <Button type="primary" :loading="modal_loading" @click="save">提交</Button>
       </div>
     </Modal>
