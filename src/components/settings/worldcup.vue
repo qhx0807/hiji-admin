@@ -121,7 +121,7 @@ export default {
           key: 'win',
           render: (h, params) => {
             const noresult = h('div',[
-              h('Tag', {props: {color: 'yellow'}}, '暂无结果'),
+              h('Tag', {props: {color: 'warning'}}, '暂无结果'),
               h('Button',{on: {click: ()=>{this.updateWin(params.row)}}},'点击录入')
             ])
             if (params.row.matchid == '27') {

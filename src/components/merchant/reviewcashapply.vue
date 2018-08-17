@@ -205,7 +205,7 @@ export default {
           key: 'isto',
           width: 140,
           render: (h, params) => {
-            const color = params.row.isto === 0 ? 'yellow' : params.row.isto === 1 ? 'green' : 'red'
+            const color = params.row.isto === 0 ? 'warning' : params.row.isto === 1 ? 'success' : 'error'
             const text = params.row.isto === 0 ? '待审核' : params.row.isto === 1 ? '审核通过' : '已拒绝'
             return h('Tag', {
               props: {

@@ -58,7 +58,7 @@
         <Tag type="dot"
           @on-close="onRemoveTag(item)"
           v-for="(item, index) in propData"
-          color="blue" :key="index"
+          color="primary" :key="index"
           closable>
           {{item.attributevalue}}
           </Tag>

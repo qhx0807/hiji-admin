@@ -123,8 +123,8 @@
               <td>{{item.sex == '1' ? '男' : '女'}}</td>
               <td>{{item.openid}}</td>
               <td>
-                <Tag v-if="item.subscribe == 1" type="border" color="green">已关注</Tag>
-                <Tag v-else type="border" color="yellow">未关注</Tag>
+                <Tag v-if="item.subscribe == 1" type="border" color="success">已关注</Tag>
+                <Tag v-else type="border" color="warning">未关注</Tag>
               </td>
               <td><a href="javascript:void(0)" @click="removeBindPeople(item.openid)">移除</a></td>
             </tr>

@@ -104,7 +104,7 @@ export default {
             if (params.row.cardmainstate == 1) {
               return h('Tag', {
                 props: {
-                  color: 'green'
+                  color: 'success'
                 }
               }, '发布')
             }

@@ -148,7 +148,7 @@ export default {
           key: 'isuse',
           width: 120,
           render: (h, params) => {
-            let color = params.row.isuse == 1 ? 'green' : 'yellow'
+            let color = params.row.isuse == 1 ? 'success' : 'warning'
             let text = params.row.isuse == 1 ? '正常' : '未启用'
             return h('Tag', {
               props: {

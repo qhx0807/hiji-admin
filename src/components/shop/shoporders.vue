@@ -71,7 +71,7 @@ export default {
           render: (h, params) => {
             return h('Tag', {
               props: {
-                color: params.row.pay_status == '已支付' ? 'green' : 'default'
+                color: params.row.pay_status == '已支付' ? 'success' : 'default'
               }
             }, params.row.pay_status)
           }

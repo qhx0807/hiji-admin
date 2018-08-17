@@ -1,9 +1,10 @@
 <template>
   <div class="box">
     <Card :bordered="false">
-      <Input v-model="searchKey" placeholder="关键字搜索..." style="width: 220px"></Input>
-      <!-- <Button type="primary" :loading="tableLoading" style="margin-left:8px" icon="ios-search" @click="onClickSearch">搜索</Button> -->
-      <Button type="primary" style="margin-left:8px" @click="goBackFinace" icon="chevron-left">返回</Button>
+      <Input v-model="searchKey" placeholder="关键字搜索..." style="width: 200px"></Input>
+      <DatePicker :options="dateOptions" type="daterange" placeholder="日期范围" @on-change="onSelectDate" style="width: 220px"></DatePicker>
+      <Button type="primary" :loading="tableLoading" style="margin-left:8px" icon="ios-search" @click="onClickSearch">搜索</Button>
+      <Button type="primary" style="margin-left:8px" @click="goBackFinace" icon="ios-arrow-back">返回</Button>
       <Button type="primary" style="margin-left:8px; float:right" @click="exportTable" icon="android-arrow-down">导出数据</Button>
     </Card>
     <Card :bordered="false" style="margin-top:10px">
@@ -38,12 +39,14 @@ export default {
         {
           title: '商户',
           key: 'merchantname',
-          width: 140
+          width: 140,
+          tooltip: true
         },
         {
           title: '设备号',
           key: 'equipmentno',
-          minWidth: 140
+          width: 90,
+          tooltip: true
         },
         {
           title: '订单号',
@@ -54,7 +57,6 @@ export default {
           title: '支付流水',
           key: 'transaction_id',
           minWidth: 140,
-          sortable: true
         },
         {
           title: '支付金额',
@@ -87,7 +89,7 @@ export default {
         {
           title: '订单时间',
           key: 'createtime',
-          minWidth: 140,
+          width: 150,
         },
         {
           title: '对账状态',
@@ -141,9 +143,9 @@ export default {
     this.getTableData()
   },
   computed: {
-    filterTable () {
-      return arrSearch(this.tableData, this.searchKey)
-    }
+    dateOptions () {
+      return this.$store.state.dateOptions
+    },
   },
   methods: {
     onClickSearch () {
