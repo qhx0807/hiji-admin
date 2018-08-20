@@ -2,8 +2,8 @@
     <div style="display:inline-block;padding:0 6px;">
         <Dropdown trigger="click" @on-click="setTheme">
             <a href="javascript:void(0)">
-                <Icon :style="{marginTop: '-2px', verticalAlign: 'middle'}" color="#495060" :size="22" type="ios-partly-sunny"></Icon>
-                <Icon type="md-arrow-dropdown"/>
+                <Icon :style="{marginTop: '-2px', verticalAlign: 'middle'}" color="#495060" :size="22" type="md-color-fill"></Icon>
+                <Icon :style="{marginLeft: '-5px'}" type="md-arrow-dropdown"/>
             </a>
             <DropdownMenu slot="list">
                 <DropdownItem v-for="(item, index) in themeList" :key="index" :name="item.name">

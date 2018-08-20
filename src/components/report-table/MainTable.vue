@@ -8,10 +8,10 @@
       <Button type="primary" :loading="exportLoading" style="margin-left:8px; float:right" @click="exportTable" icon="md-arrow-down">导出数据</Button>
     </Card>
     <Card :bordered="false" style="margin-top:10px">
-      <Table border ref="table" :loading="tableLoading" size="small" height="600" :columns="columns" :data="tableData"></Table>
+      <Table border ref="table" highlight-row :loading="tableLoading" size="small" height="600" :columns="columns" :data="tableData"></Table>
       <div style="margin: 10px;overflow: hidden">
         <div style="float: right;">
-            <Page :total="counts" show-sizer show-total :page-size-opts="pageSizeOpts" :current="page" @on-page-size-change="onChangeSize" @on-change="changePage"></Page>
+            <Page :total="counts" show-sizer show-total :page-size-opts="pageSizeOpts" :page-size="15" :current="page" @on-page-size-change="onChangeSize" @on-change="changePage"></Page>
         </div>
       </div>
     </Card>
@@ -35,7 +35,8 @@ export default {
       columns: [
         {
           type: 'index',
-          width: 60
+          width: 50,
+          align: 'center'
         },
         {
           title: '商户',
@@ -52,7 +53,7 @@ export default {
         {
           title: '订单号',
           key: 'orderno',
-          minWidth: 140
+          width: 151
         },
         {
           title: '支付流水',
@@ -62,70 +63,72 @@ export default {
         {
           title: '支付金额',
           key: 'cash',
-          minWidth: 140,
+          width: 110,
           sortable: true,
           align: 'right'
         },
         {
           title: '订单金额',
           key: 'total',
-          minWidth: 140,
+           width: 110,
           sortable: true,
           align: 'right'
         },
         {
           title: '平台优惠',
           key: 'coupon',
-          minWidth: 140,
+           width: 110,
           sortable: true,
           align: 'right'
         },
         {
           title: '商户优惠',
           key: 'merchantcoupon',
-          minWidth: 140,
+          width: 110,
           sortable: true,
           align: 'right'
         },
         {
           title: '订单时间',
           key: 'createtime',
-          width: 150,
+          width: 140,
         },
         {
           title: '对账状态',
           key: 'ischeck',
-          minWidth: 140,
+          minWidth: 110,
         },
         {
           title: '申请状态',
           key: 'isapply',
-          minWidth: 140,
+          minWidth: 110,
         },
         {
           title: '审核状态',
           key: 'isauditing',
-          minWidth: 140,
+          minWidth: 110,
         },
         {
           title: '打款状态',
           key: 'ispayment',
-          minWidth: 140,
+          minWidth: 110,
         },
         {
           title: '扣点',
           key: 'points',
-          minWidth: 140,
+          minWidth: 110,
         },
         {
           title: '应付',
           key: 'mertotal',
-          minWidth: 140,
+          minWidth: 110,
+          sortable: true,
+          align: 'right'
         },
         {
           title: '付款方式',
           key: 'paymenttype',
-          minWidth: 140,
+          minWidth: 110,
         },
         {
           title: '申请单号',
@@ -135,7 +138,24 @@ export default {
         {
           title: '收款状态',
           key: 'isreceivables',
-          minWidth: 140,
+          minWidth: 110,
+        },
+        {
+          title: '审核',
+          key: 'isreceivables',
+          fixed: 'right',
+          width: 80,
+          align: 'center',
+          render: (h, params) => {
+            let text = '审核'
+            return h('a', {
+              on: {
+                click: () => {
+                  this.onClickReview(params.row)
+                }
+              }
+            }, text)
+          }
         }
       ]
     }
@@ -193,6 +213,10 @@ export default {
     onChangeSize (e) {
       this.pageSize = e
       this.getTableData()
+    },
+    onClickReview (row) {
+      console.log(row)
+      this.$Message.info('建设中...')
     }
   }
 }
