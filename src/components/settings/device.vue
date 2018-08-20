@@ -206,7 +206,7 @@ export default {
                 props: {
                   type: 'text',
                   size: 'small',
-                  icon: 'qr-scanner'
+                  icon: 'md-qr-scanner'
                 },
                 on: {
                   click: () => {
@@ -227,7 +227,7 @@ export default {
                 props: {
                   type: 'text',
                   size: 'small',
-                  icon: 'qr-scanner'
+                  icon: 'md-qr-scanner'
                 },
                 on: {
                   click: () => {
@@ -272,7 +272,7 @@ export default {
                   props: {
                     type: 'text',
                     size: 'small',
-                    icon: 'edit'
+                    icon: 'md-create'
                   },
                   style: {
                     marginRight: '5px'
@@ -287,7 +287,7 @@ export default {
                   props: {
                     type: 'text',
                     size: 'small',
-                    icon: 'trash-a'
+                    icon: 'ios-trash'
                   },
                   on: {
                     click: () => {

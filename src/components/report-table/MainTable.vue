@@ -70,7 +70,7 @@ export default {
         {
           title: '订单金额',
           key: 'total',
-           width: 110,
+          width: 110,
           sortable: true,
           align: 'right'
         },

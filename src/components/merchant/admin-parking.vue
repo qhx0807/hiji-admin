@@ -87,7 +87,7 @@ export default {
               return h('Button', {
                 props: {
                   type: 'text',
-                  icon: 'edit'
+                  icon: 'md-create'
                 },
                 on: {
                   click: () => {

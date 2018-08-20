@@ -139,7 +139,7 @@ export default {
               props: {
                 type: 'text',
                 size: 'small',
-                icon: 'trash-a'
+                icon: 'ios-trash'
               },
               style: {
                 color: '#ed3f14'
@@ -154,7 +154,7 @@ export default {
                 props: {
                   type: 'text',
                   size: 'small',
-                  icon: 'edit'
+                  icon: 'md-create'
                 },
                 style: {
                   marginRight: '5px',
@@ -170,7 +170,7 @@ export default {
               props: {
                 type: 'text',
                 size: 'small',
-                icon: 'social-yen'
+                icon: 'logo-yen'
               },
               on: {
                 click: () => {

@@ -107,7 +107,7 @@ export default {
       ticketsNum: 0,
       recordsData: [],
       selectValue: 4,
-      cardList: [4, 8, 24, 36],
+      cardList: [2, 4, 6, 8, 10, 12, 24, 36],
       columns: [
         {
           title: '序号',
