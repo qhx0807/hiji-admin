@@ -30,6 +30,13 @@
             <FormItem label="移动端价格" prop="mobileprice">
               <InputNumber :max="9999999" style="width:100%" :min="0" v-model="addData.mobileprice"></InputNumber>
             </FormItem>
+            <FormItem label="商品状态">
+              <Select v-model="addData.isonsale">
+                <Option value="0">下架</Option>
+                <Option value="1">正常销售</Option>
+                <Option value="2">存放仓库</Option>
+              </Select>
+            </FormItem>
           </Col>
           <Col span="6">
             <FormItem label="所属商户" prop="goodsname">
@@ -190,7 +197,8 @@ export default {
         keywords: '',
         merchantcode: '',
         typeid: '',
-        attrvalue: ''
+        attrvalue: '',
+        isonsale: '1'
       },
       picArr: ['', '', '', '', '', ''],
       actLi: 0,

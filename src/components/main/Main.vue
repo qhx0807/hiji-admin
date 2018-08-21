@@ -42,7 +42,7 @@
                                 <a href="javascript:void(0)">
                                     <span class="main-user-name">{{ userName }}</span>
                                     <!-- <Icon type="arrow-down-b"></Icon> -->
-                                    <!-- <Icon type="md-arrow-dropdown" /> -->
+                                    <Icon type="md-arrow-dropdown" />
                                 </a>
                                 <DropdownMenu slot="list">
                                     <DropdownItem name="ownSpace">个人中心</DropdownItem>

@@ -31,7 +31,7 @@ export default {
         {
           imgSrc: 'https://gw.alipayobjects.com/zos/rmsportal/pbmKMSFpLurLALLNliUQ.svg',
           title: '实收统计',
-          desc: '商户实收，微信、支付宝收款合计',
+          desc: ' 微信/支付宝收款合计',
           routeName: 'RealReceive'
         },
         {
@@ -57,11 +57,25 @@ export default {
           title: '主表',
           desc: '申请-审核-对账...',
           routeName: 'MainTable'
+        },
+        {
+          imgSrc: 'https://gw.alipayobjects.com/zos/rmsportal/XxqEexmShHOofjMYOCHi.svg',
+          title: '财务审核表',
+          desc: '财务审核表',
+          routeName: 'FinaceReview'
+        },
+        {
+          imgSrc: 'https://gw.alipayobjects.com/zos/rmsportal/smwQOoxCjXVbNAKMqvWk.svg',
+          title: '出纳付款',
+          desc: '出纳付款',
+          routeName: 'CashPay'
+        },
+        {
+          imgSrc: 'https://gw.alipayobjects.com/zos/rmsportal/JsixxWSViARJnQbAAPkI.svg',
+          title: '审核对账总表',
+          desc: '审核对账总表',
+          routeName: 'FinaceTotal'
         }
-        // https://gw.alipayobjects.com/zos/rmsportal/smwQOoxCjXVbNAKMqvWk.svg
-        // https://gw.alipayobjects.com/zos/rmsportal/VriUmzNjDnjoFoFFZvuh.svg
-        // https://gw.alipayobjects.com/zos/rmsportal/XxqEexmShHOofjMYOCHi.svg
-        // https://gw.alipayobjects.com/zos/rmsportal/JsixxWSViARJnQbAAPkI.svg
       ]
     }
   },

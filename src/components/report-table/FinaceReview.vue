@@ -21,17 +21,15 @@
         <span>提示</span>
       </p>
       <div style="">
-        <p style="margin-bottom:10px">对此订单对账？</p>
-        <p>订单号：{{shData.orderno}}</p>
-        <p>流水号：{{shData.transaction_id}}</p>
+        <p style="margin-bottom:10px">对此订单审核？</p>
         <p>订单金额: {{shData.total}} &nbsp;&nbsp;支付金额: {{shData.cash}} &nbsp;&nbsp;平台优惠: {{shData.coupon}}
           &nbsp;&nbsp;商家优惠: {{shData.merchantcoupon}}
         </p>
       </div>
       <div slot="footer">
         <Button @click="shModal = false">取消</Button>
-        <Button type="error" :loading="refuseLoading" @click="onClickSH(0)">不通过</Button>
-        <Button type="primary" :loading="passLoading" @click="onClickSH(1)">确认对账</Button>
+        <Button type="error" :loading="refuseLoading" @click="onClickSH(2)">不通过</Button>
+        <Button type="primary" :loading="passLoading" @click="onClickSH(1)">审核通过</Button>
       </div>
     </Modal>
   </div>
@@ -40,7 +38,7 @@
 import serverApi from '../../axios'
 import exportExcel from  '../../utlis/table2excel.js'
 export default {
-  name: 'MainTable',
+  name: 'FinaceReview',
   data () {
     return {
       searchKey: '',
@@ -68,22 +66,15 @@ export default {
           tooltip: true
         },
         {
-          title: '设备号',
-          key: 'equipmentno',
+          title: '设备号id',
+          key: 'equipmentid',
           width: 90,
           tooltip: true
         },
         {
-          title: '订单号',
-          key: 'orderno',
-          width: 151,
-          tooltip: true
-        },
-        {
-          title: '支付流水',
-          key: 'transaction_id',
-          minWidth: 140,
-          tooltip: true
+          title: '申请单号',
+          key: 'applyno',
+          minWidth: 170,
         },
         {
           title: '支付金额',
@@ -93,7 +84,7 @@ export default {
           align: 'right'
         },
         {
-          title: '订单金额',
+          title: '提现金额',
           key: 'total',
           width: 110,
           sortable: true,
@@ -121,11 +112,6 @@ export default {
           align: 'right'
         },
         {
-          title: '订单时间',
-          key: 'createtime',
-          width: 140,
-        },
-        {
           title: '对账状态',
           key: 'ischeck',
           minWidth: 110,
@@ -151,30 +137,8 @@ export default {
           minWidth: 110,
         },
         {
-          title: '应付',
-          key: 'mertotal',
-          minWidth: 110,
-          sortable: true,
-          align: 'right'
-        },
-        {
-          title: '付款方式',
-          key: 'paymenttype',
-          minWidth: 110,
-        },
-        {
-          title: '申请单号',
-          key: 'applyno',
-          minWidth: 140,
-        },
-        {
-          title: '收款状态',
-          key: 'isreceivables',
-          minWidth: 110,
-        },
-        {
-          title: '对账',
-          key: 'isreceivables',
+          title: '审核',
+          key: 'id',
           fixed: 'right',
           width: 80,
           align: 'center',
@@ -185,22 +149,22 @@ export default {
                   this.onClickReview(params.row)
                 }
               }
-            }, '对账')
+            }, '审核')
             let ysh = h('a', {
               style: {
                 color: '#19be6b'
               }
-            }, '已对账')
+            }, '已审核')
             let refuse = h('a', {
               style: {
                 color: '#ed4014'
               }
             }, '拒绝')
-            if (params.row.ischeck == 0) {
+            if (params.row.isauditing == 0) {
               return sh
-            } else if (params.row.ischeck == 1) {
+            } else if (params.row.isauditing == 1) {
               return ysh
-            } else if (params.row.ischeck == 2) {
+            } else if (params.row.isauditing == 2) {
               return refuse
             } else {
               return null
@@ -227,10 +191,11 @@ export default {
       let d = {
         page: this.page,
         pagesize: this.pageSize,
+        type: 2
       }
-      serverApi('/Finance/orderlist', d,
+      serverApi('/Finance/accountlist', d,
         response => {
-          // console.log(response)
+          console.log(response)
           if (response.data.code === 0){
             this.tableData = response.data.data.result
             this.counts =  response.data.data.counts
@@ -277,16 +242,16 @@ export default {
         this.refuseLoading = true
       }
       let d = {
-        orderno: this.shData.orderno,
-        check: e
+        id: this.shData.id,
+        auditing: e
       }
-      serverApi('/Finance/operation', d,
+      serverApi('/Finance/auditor', d,
         response => {
           console.log(response)
           if (response.data.code === 0){
             this.$Message.warning(response.data.msg)
             this.shModal = false
-            this.shData.ischeck = 1
+            this.getTableData()
           }else{
             this.$Message.warning(response.data.msg)
           }
