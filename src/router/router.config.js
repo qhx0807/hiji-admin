@@ -55,6 +55,9 @@ const RealPay = r => require.ensure([], () => r(require('@/components/report-tab
 const Remain = r => require.ensure([], () => r(require('@/components/report-table/Remain.vue')))
 const WaitReview = r => require.ensure([], () => r(require('@/components/report-table/WaitReview.vue')))
 const MainTable = r => require.ensure([], () => r(require('@/components/report-table/MainTable.vue')))
+const FinaceReview = r => require.ensure([], () => r(require('@/components/report-table/FinaceReview.vue')))
+const CashPay = r => require.ensure([], () => r(require('@/components/report-table/CashPay.vue')))
+const FinaceTotal = r => require.ensure([], () => r(require('@/components/report-table/FinaceTotal.vue')))
 
 const routes = [
   {
@@ -334,6 +337,21 @@ const routes = [
         path: 'MainTable',
         component: MainTable,
         name: 'MainTable'
+      },
+      {
+        path: 'FinaceReview',
+        component: FinaceReview,
+        name: 'FinaceReview'
+      },
+      {
+        path: 'CashPay',
+        component: CashPay,
+        name: 'CashPay'
+      },
+      {
+        path: 'FinaceTotal',
+        component: FinaceTotal,
+        name: 'FinaceTotal'
       }
     ]
   },
