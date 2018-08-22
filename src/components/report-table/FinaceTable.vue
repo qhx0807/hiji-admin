@@ -54,7 +54,7 @@ export default {
         },
         {
           imgSrc: 'https://gw.alipayobjects.com/zos/rmsportal/VriUmzNjDnjoFoFFZvuh.svg',
-          title: '主表',
+          title: '优惠审核表',
           desc: '申请-审核-对账...',
           routeName: 'MainTable'
         },
@@ -96,6 +96,7 @@ export default {
       h5{
         color: #111;
       }
+
     }
     .img-box{
       box-shadow: rgba(47, 84, 235, 0.117647) 0px 6px 12px;
@@ -127,6 +128,9 @@ export default {
   p{
     font-size: 13px;
     color: rgba(0, 0, 0, .45);
+    white-space:nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
   }
 }
 </style>

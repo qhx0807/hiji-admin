@@ -21,7 +21,7 @@
         <span>提示</span>
       </p>
       <div style="">
-        <p style="margin-bottom:10px">对此订单对账？</p>
+        <p style="margin-bottom:10px">对此订单审核？</p>
         <p>订单号：{{shData.orderno}}</p>
         <p>流水号：{{shData.transaction_id}}</p>
         <p>订单金额: {{shData.total}} &nbsp;&nbsp;支付金额: {{shData.cash}} &nbsp;&nbsp;平台优惠: {{shData.coupon}}
@@ -126,25 +126,110 @@ export default {
           width: 140,
         },
         {
-          title: '对账状态',
+          title: '优惠审核',
           key: 'ischeck',
-          minWidth: 110,
+          width: 120,
+          render: (h, params) => {
+            let text = params.row.ischeck == 1 ? '已审核' : '未审核'
+            let color = params.row.ischeck == 1 ? 'success' : 'warning'
+            let el = h('Tag', {
+              props: {
+                type: 'dot',
+                color: color
+              }
+            }, text)
+            return el
+          }
         },
         {
           title: '申请状态',
           key: 'isapply',
-          minWidth: 110,
+          width: 120,
+          render: (h, params) => {
+            let text = params.row.isapply == 1 ? '已申请' : '未申请'
+            let color = params.row.isapply == 1 ? 'success' : 'warning'
+            let el = h('Tag', {
+              props: {
+                type: 'dot',
+                color: color
+              }
+            }, text)
+            return el
+          }
         },
         {
           title: '审核状态',
           key: 'isauditing',
-          minWidth: 110,
+          width: 120,
+          render: (h, params) => {
+            let text = params.row.isauditing == 1 ? '已审核' : '未审核'
+            let color = params.row.isauditing == 1 ? 'success' : 'warning'
+            let el = h('Tag', {
+              props: {
+                type: 'dot',
+                color: color
+              }
+            }, text)
+            return el
+          }
         },
         {
           title: '打款状态',
           key: 'ispayment',
-          minWidth: 110,
+          width: 120,
+          render: (h, params) => {
+            let text = params.row.ispayment == 1 ? '已打款' : '未打款'
+            let color = params.row.ispayment == 1 ? 'success' : 'warning'
+            let el = h('Tag', {
+              props: {
+                type: 'dot',
+                color: color
+              }
+            }, text)
+            return el
+          }
         },
+        {
+          title: '收款状态',
+          key: 'isreceivables',
+          width: 120,
+          render: (h, params) => {
+            let text = params.row.isreceivables == 1 ? '已收款' : '未收款'
+            let color = params.row.isreceivables == 1 ? 'success' : 'warning'
+            let el = h('Tag', {
+              props: {
+                type: 'dot',
+                color: color
+              }
+            }, text)
+            return el
+          }
+        },
+        // {
+        //   title: '优惠审核',
+        //   key: 'ischeck',
+        //   minWidth: 110,
+        // },
+        // {
+        //   title: '申请状态',
+        //   key: 'isapply',
+        //   minWidth: 110,
+        // },
+        // {
+        //   title: '审核状态',
+        //   key: 'isauditing',
+        //   minWidth: 110,
+        // },
+        // {
+        //   title: '打款状态',
+        //   key: 'ispayment',
+        //   minWidth: 110,
+        // },
+        // {
+        //   title: '收款状态',
+        //   key: 'isreceivables',
+        //   minWidth: 110,
+        // },
         {
           title: '扣点',
           key: 'points',
@@ -168,12 +253,7 @@ export default {
           minWidth: 140,
         },
         {
-          title: '收款状态',
-          key: 'isreceivables',
-          minWidth: 110,
-        },
-        {
-          title: '对账',
+          title: '优惠审核',
           key: 'isreceivables',
           fixed: 'right',
           width: 80,
@@ -185,12 +265,12 @@ export default {
                   this.onClickReview(params.row)
                 }
               }
-            }, '对账')
+            }, '审核')
             let ysh = h('a', {
               style: {
                 color: '#19be6b'
               }
-            }, '已对账')
+            }, '已审核')
             let refuse = h('a', {
               style: {
                 color: '#ed4014'

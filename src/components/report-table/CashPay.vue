@@ -98,7 +98,7 @@ export default {
         {
           title: '对账状态',
           key: 'ischeck',
-          minWidth: 110,
+          width: 120,
           render: (h, params) => {
             let text = params.row.ischeck == 1 ? '已对账' : '未对账'
             let color = params.row.ischeck == 1 ? 'success' : 'warning'
@@ -114,22 +114,55 @@ export default {
         {
           title: '申请状态',
           key: 'isapply',
-          minWidth: 110,
+          width: 120,
+          render: (h, params) => {
+            let text = params.row.isapply == 1 ? '已申请' : '未申请'
+            let color = params.row.isapply == 1 ? 'success' : 'warning'
+            let el = h('Tag', {
+              props: {
+                type: 'dot',
+                color: color
+              }
+            }, text)
+            return el
+          }
         },
         {
           title: '审核状态',
           key: 'isauditing',
-          minWidth: 110,
+          width: 120,
+          render: (h, params) => {
+            let text = params.row.isauditing == 1 ? '已审核' : '未审核'
+            let color = params.row.isauditing == 1 ? 'success' : 'warning'
+            let el = h('Tag', {
+              props: {
+                type: 'dot',
+                color: color
+              }
+            }, text)
+            return el
+          }
         },
         {
           title: '打款状态',
           key: 'ispayment',
-          minWidth: 110,
+          width: 120,
+          render: (h, params) => {
+            let text = params.row.ispayment == 1 ? '已打款' : '未打款'
+            let color = params.row.ispayment == 1 ? 'success' : 'warning'
+            let el = h('Tag', {
+              props: {
+                type: 'dot',
+                color: color
+              }
+            }, text)
+            return el
+          }
         },
         {
           title: '扣点',
           key: 'points',
-          minWidth: 110,
+          width: 100,
         },
         {
           title: '审核',

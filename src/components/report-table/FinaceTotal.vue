@@ -211,6 +211,7 @@ export default {
       let d = {
         page: this.page,
         pagesize: this.pageSize,
+        type: 99
       }
       serverApi('/Finance/accountlist', d,
         response => {

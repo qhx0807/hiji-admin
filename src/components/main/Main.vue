@@ -41,7 +41,6 @@
                             <Dropdown transfer trigger="click" @on-click="handleClickUserDropdown">
                                 <a href="javascript:void(0)">
                                     <span class="main-user-name">{{ userName }}</span>
-                                    <!-- <Icon type="arrow-down-b"></Icon> -->
                                     <Icon type="md-arrow-dropdown" />
                                 </a>
                                 <DropdownMenu slot="list">
@@ -49,7 +48,7 @@
                                     <DropdownItem name="loginout" divided>退出登录</DropdownItem>
                                 </DropdownMenu>
                             </Dropdown>
-                            <Avatar style="background: #619fe7;margin-left: 10px;text-align:center" icon="person"></Avatar>
+                            <Avatar style="background: #619fe7;margin-left: 10px;text-align:center" icon="ios-person"></Avatar>
                         </Row>
                     </div>
                 </div>
