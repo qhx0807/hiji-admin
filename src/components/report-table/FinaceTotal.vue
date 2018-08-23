@@ -45,71 +45,71 @@ export default {
         {
           title: '商户',
           key: 'merchantname',
-          width: 140,
+          width: 120,
           tooltip: true
         },
         {
           title: '申请单号',
           key: 'applyno',
-          minWidth: 140,
+          minWidth: 170,
         },
         {
           title: '设备号id',
           key: 'equipmentid',
-          width: 90,
+          width: 80,
           tooltip: true
         },
         {
           title: '支付金额',
           key: 'cash',
-          width: 110,
+          width: 100,
           sortable: true,
           align: 'right'
         },
         {
           title: '总金额',
           key: 'total',
-          width: 110,
+          width: 100,
           sortable: true,
           align: 'right'
         },
         {
           title: '平台优惠',
           key: 'coupon',
-           width: 110,
+           width: 100,
           sortable: true,
           align: 'right'
         },
         {
           title: '商户优惠',
           key: 'merchantcoupon',
-          width: 110,
+          width: 100,
           sortable: true,
           align: 'right'
         },
         {
           title: '订单优惠',
           key: 'subsidy',
-          width: 110,
+          width: 100,
           sortable: true,
           align: 'right'
         },
-        {
-          title: '对账状态',
-          key: 'ischeck',
-          width: 120,
-          render: (h, params) => {
-            let text = params.row.ischeck == 1 ? '已对账' : '未对账'
-            let color = params.row.ischeck == 1 ? 'success' : 'warning'
-            let el = h('Tag', {
-              props: {
-                type: 'dot',
-                color: color
-              }
-            }, text)
-            return el
-          }
-        },
+        // {
+        //   title: '对账状态',
+        //   key: 'ischeck',
+        //   width: 120,
+        //   render: (h, params) => {
+        //     let text = params.row.ischeck == 1 ? '已对账' : '未对账'
+        //     let color = params.row.ischeck == 1 ? 'success' : 'warning'
+        //     let el = h('Tag', {
+        //       props: {
+        //         type: 'dot',
+        //         color: color
+        //       }
+        //     }, text)
+        //     return el
+        //   }
+        // },
         {
           title: '申请状态',
           key: 'isapply',
@@ -215,7 +215,7 @@ export default {
       }
       serverApi('/Finance/accountlist', d,
         response => {
-          console.log(response)
+          // console.log(response)
           if (response.data.code === 0){
             this.tableData = response.data.data.result
             this.counts =  response.data.data.counts

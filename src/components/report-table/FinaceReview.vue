@@ -15,19 +15,27 @@
         </div>
       </div>
     </Card>
-    <Modal v-model="shModal" width="460">
-      <p slot="header" style="color:#f60;">
-        <Icon type="ios-information-circle"></Icon>
-        <span>提示</span>
+    <Modal v-model="shModal" width="1000" :styles="{top: '50px'}">
+      <p slot="header" style="text-align:center">
+        <span>申请单号 {{shData.applyno}}</span>
       </p>
-      <div style="">
-        <p style="margin-bottom:10px">对此订单审核？</p>
-        <p>订单金额: {{shData.total}} &nbsp;&nbsp;支付金额: {{shData.cash}} &nbsp;&nbsp;平台优惠: {{shData.coupon}}
-          &nbsp;&nbsp;商家优惠: {{shData.merchantcoupon}}
-        </p>
+      <div>
+        <Table border ref="tableSh" highlight-row size="small" height="400" :columns="columnsSH" :data="orderData">
+          <div slot="footer">
+            <ul class="sta-li">
+              <li>合计：</li>
+              <li>支付金额：{{shStaData.cash}}元</li>
+              <li>平台优惠：{{shStaData.coupon}}元</li>
+              <li>订单优惠：{{shStaData.subsidy}}元</li>
+              <li>商家优惠：{{shStaData.merchantcoupon}}元</li>
+              <li>合计金额：{{shStaData.total}}元</li>
+            </ul>
+          </div>
+        </Table>
       </div>
       <div slot="footer">
         <Button @click="shModal = false">取消</Button>
+        <Button type="default" @click="downLoadShData">下载数据</Button>
         <Button type="error" :loading="refuseLoading" @click="onClickSH(2)">不通过</Button>
         <Button type="primary" :loading="passLoading" @click="onClickSH(1)">审核通过</Button>
       </div>
@@ -53,6 +61,7 @@ export default {
       pageSizeOpts: [10, 15, 25, 50, 70, 100, 200],
       tableData: [],
       shData: {},
+      orderData: [],
       columns: [
         {
           type: 'index',
@@ -111,32 +120,12 @@ export default {
           sortable: true,
           align: 'right'
         },
-        // {
-        //   title: '对账状态',
-        //   key: 'ischeck',
-        //   minWidth: 110,
-        // },
-        // {
-        //   title: '申请状态',
-        //   key: 'isapply',
-        //   minWidth: 110,
-        // },
-        // {
-        //   title: '审核状态',
-        //   key: 'isauditing',
-        //   minWidth: 110,
-        // },
-        // {
-        //   title: '打款状态',
-        //   key: 'ispayment',
-        //   minWidth: 110,
-        // },
         {
-          title: '对账状态',
-          key: 'ischeck',
+          title: '领导审批',
+          key: 'isapprove',
           width: 120,
           render: (h, params) => {
-            let text = params.row.ischeck == 1 ? '已对账' : '未对账'
+            let text = params.row.ischeck == 1 ? '已审批' : '未审批'
             let color = params.row.ischeck == 1 ? 'success' : 'warning'
             let el = h('Tag', {
               props: {
@@ -235,6 +224,74 @@ export default {
             }
           }
         }
+      ],
+      columnsSH: [
+        {
+          type: 'index',
+          width: 60,
+          align: 'center'
+        },
+        {
+          title: '类型',
+          key: 'type',
+          width: 80,
+        },
+        {
+          title: '设备号',
+          key: 'equipmentno',
+          width: 90,
+          tooltip: true,
+        },
+        {
+          title: '订单号',
+          key: 'orderno',
+          width: 140,
+        },
+        {
+          title: '支付金额',
+          key: 'cash',
+          width: 100,
+          align: 'right',
+          sortable: true
+        },
+        {
+          title: '平台优惠',
+          key: 'coupon',
+          width: 100,
+          align: 'right',
+          sortable: true
+        },
+        {
+          title: '订单优惠',
+          key: 'subsidy',
+          width: 100,
+          align: 'right',
+          sortable: true
+        },
+        {
+          title: '商家优惠',
+          key: 'merchantcoupon',
+          width: 100,
+          align: 'right',
+          sortable: true
+        },
+        {
+          title: '实收',
+          key: 'total',
+          width: 100,
+          align: 'right',
+          sortable: true
+        },
+        {
+          title: '支付方式',
+          key: 'paytypename',
+          width: 80,
+        },
+        {
+          title: '时间',
+          key: 'createtime',
+          width: 140,
+        },
       ]
     }
   },
@@ -245,6 +302,25 @@ export default {
     dateOptions () {
       return this.$store.state.dateOptions
     },
+    shStaData () {
+      let obj = {
+        cash: 0,
+        coupon: 0,
+        subsidy: 0,
+        merchantcoupon: 0,
+        total: 0
+      }
+      if (this.orderData.length > 0) {
+        this.orderData.forEach(item => {
+            obj.cash += Number(item.cash)
+            obj.coupon += Number(item.coupon)
+            obj.subsidy += Number(item.subsidy)
+            obj.merchantcoupon += Number(item.merchantcoupon)
+            obj.total += Number(item.total)
+        })
+      }
+      return obj
+    }
   },
   methods: {
     onClickSearch () {
@@ -286,6 +362,17 @@ export default {
       exportExcel(this.tableData, "data")
       this.exportLoading = false
     },
+    downLoadShData () {
+      if (this.orderData.length < 1) {
+        this.$Message.info('暂无数据')
+        return false
+      }
+      let para = {
+        filename: this.shData.merchantname + '_' + this.shData.applyno,
+        original: false
+      }
+      this.$refs.tableSh.exportCsv(para)
+    },
     changePage (e) {
       this.page = e
       this.getTableData()
@@ -296,8 +383,31 @@ export default {
     },
     onClickReview (row) {
       this.shData = row
-      console.log(row)
-      this.shModal = true
+      this.$Message.loading({
+        content: '数据加载中...',
+        duration: 0
+      })
+      let d = {
+        id: row.id
+      }
+      serverApi('/Finance/auditororderlist', d,
+        response => {
+          // console.log(response)
+          this.$Message.destroy()
+          if (response.data.code === 0){
+            this.orderData = response.data.data
+            this.shModal = true
+          }else{
+            this.$Message.warning(response.data.msg)
+          }
+        },
+        error => {
+          console.log(error)
+          this.$Message.destroy()
+          this.$Message.warning(error.toString())
+        }
+      )
+
     },
     onClickSH (e) {
       if (e === 1) {
@@ -353,5 +463,12 @@ export default {
   width: 100%;
   table-layout: fixed;
   border: none;
+}
+.sta-li{
+  list-style: none;
+  li{
+    float: left;
+    margin-right: 20px;
+  }
 }
 </style>
