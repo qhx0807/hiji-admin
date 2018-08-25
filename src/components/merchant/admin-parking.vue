@@ -39,7 +39,7 @@ export default {
           sortable: true
         },
         {
-          title: '可用券数量',
+          title: '金额',
           key: 'parkingtickets',
           sortable: true,
           render: (h, params) => {

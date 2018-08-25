@@ -15,6 +15,29 @@
         </div>
       </div>
     </Card>
+    <Modal v-model="shModal" width="1000" :styles="{top: '50px'}">
+      <p slot="header" style="text-align:center">
+        <span>申请单号 {{shData.applyno}}</span>
+      </p>
+      <div>
+        <Table border ref="tableSh" highlight-row size="small" height="400" :columns="columnsSH" :data="orderData">
+          <div slot="footer">
+            <ul class="sta-li">
+              <li>合计：</li>
+              <li>支付金额：{{shStaData.cash.toFixed(2)}}元</li>
+              <li>平台优惠：{{shStaData.coupon.toFixed(2)}}元</li>
+              <li>订单优惠：{{shStaData.subsidy.toFixed(2)}}元</li>
+              <li>商家优惠：{{shStaData.merchantcoupon.toFixed(2)}}元</li>
+              <li>合计金额：{{shStaData.total.toFixed(2)}}元</li>
+            </ul>
+          </div>
+        </Table>
+      </div>
+      <div slot="footer">
+        <Button @click="shModal = false">取消</Button>
+        <Button type="default" @click="downLoadShData">下载数据</Button>
+      </div>
+    </Modal>
   </div>
 </template>
 <script>
@@ -36,6 +59,7 @@ export default {
       pageSizeOpts: [10, 15, 25, 50, 70, 100, 200],
       tableData: [],
       shData: {},
+      orderData: [],
       columns: [
         {
           title: '#',
@@ -190,7 +214,92 @@ export default {
           title: '付款方式',
           key: 'paymenttype',
           minWidth: 110,
+        },
+        {
+          title: '查看',
+          key: 'id',
+          fixed: 'right',
+          width: 80,
+          align: 'center',
+          render: (h, params) => {
+            let sh = h('a', {
+              on: {
+                click: () => {
+                  this.onClickReview(params.row)
+                }
+              }
+            }, '查看')
+            return sh
+          }
         }
+      ],
+      columnsSH: [
+        {
+          type: 'index',
+          width: 60,
+          align: 'center'
+        },
+        {
+          title: '类型',
+          key: 'type',
+          width: 80,
+        },
+        {
+          title: '设备号',
+          key: 'equipmentno',
+          width: 90,
+          tooltip: true,
+        },
+        {
+          title: '订单号',
+          key: 'orderno',
+          width: 140,
+        },
+        {
+          title: '支付金额',
+          key: 'cash',
+          width: 100,
+          align: 'right',
+          sortable: true
+        },
+        {
+          title: '平台优惠',
+          key: 'coupon',
+          width: 100,
+          align: 'right',
+          sortable: true
+        },
+        {
+          title: '订单优惠',
+          key: 'subsidy',
+          width: 100,
+          align: 'right',
+          sortable: true
+        },
+        {
+          title: '商家优惠',
+          key: 'merchantcoupon',
+          width: 100,
+          align: 'right',
+          sortable: true
+        },
+        {
+          title: '实收',
+          key: 'total',
+          width: 100,
+          align: 'right',
+          sortable: true
+        },
+        {
+          title: '支付方式',
+          key: 'paytypename',
+          width: 80,
+        },
+        {
+          title: '时间',
+          key: 'createtime',
+          width: 140,
+        },
       ]
     }
   },
@@ -201,6 +310,25 @@ export default {
     dateOptions () {
       return this.$store.state.dateOptions
     },
+    shStaData () {
+      let obj = {
+        cash: 0,
+        coupon: 0,
+        subsidy: 0,
+        merchantcoupon: 0,
+        total: 0
+      }
+      if (this.orderData.length > 0) {
+        this.orderData.forEach(item => {
+            obj.cash += Number(item.cash)
+            obj.coupon += Number(item.coupon)
+            obj.subsidy += Number(item.subsidy)
+            obj.merchantcoupon += Number(item.merchantcoupon)
+            obj.total += Number(item.total)
+        })
+      }
+      return obj
+    }
   },
   methods: {
     onClickSearch () {
@@ -249,7 +377,46 @@ export default {
     onChangeSize (e) {
       this.pageSize = e
       this.getTableData()
-    }
+    },
+    onClickReview (row) {
+      this.shData = row
+      this.$Message.loading({
+        content: '数据加载中...',
+        duration: 0
+      })
+      let d = {
+        id: row.id
+      }
+      serverApi('/Finance/auditororderlist', d,
+        response => {
+          // console.log(response)
+          this.$Message.destroy()
+          if (response.data.code === 0){
+            this.orderData = response.data.data
+            this.shModal = true
+          }else{
+            this.$Message.warning(response.data.msg)
+          }
+        },
+        error => {
+          console.log(error)
+          this.$Message.destroy()
+          this.$Message.warning(error.toString())
+        }
+      )
+
+    },
+    downLoadShData () {
+      if (this.orderData.length < 1) {
+        this.$Message.info('暂无数据')
+        return false
+      }
+      let para = {
+        filename: this.shData.merchantname + '_' + this.shData.applyno,
+        original: false
+      }
+      this.$refs.tableSh.exportCsv(para)
+    },
   }
 }
 </script>
@@ -273,5 +440,12 @@ export default {
   width: 100%;
   table-layout: fixed;
   border: none;
+}
+.sta-li{
+  list-style: none;
+  li{
+    float: left;
+    margin-right: 20px;
+  }
 }
 </style>

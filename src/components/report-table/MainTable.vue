@@ -27,6 +27,29 @@
         <p>订单金额: {{shData.total}} &nbsp;&nbsp;支付金额: {{shData.cash}} &nbsp;&nbsp;平台优惠: {{shData.coupon}}
           &nbsp;&nbsp;商家优惠: {{shData.merchantcoupon}}
         </p>
+        <table class="table" v-show="shOrderList.length>0">
+          <thead>
+            <tr>
+              <th>商品id</th>
+              <th>商品</th>
+              <th>数量</th>
+              <th>市场价</th>
+              <th>会员价</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="(item, index) in shOrderList" :key="index">
+              <td>{{item.goodsid}}</td>
+              <td class="goodsInfo">
+                <img :src="item.goodsimg" alt="">
+                <span>{{item.goodsname}}</span>
+              </td>
+              <td>{{item.goodsnum}}</td>
+              <td>{{item.marketprice}}</td>
+              <td>{{item.memberprice}}</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
       <div slot="footer">
         <Button @click="shModal = false">取消</Button>
@@ -34,6 +57,9 @@
         <Button type="primary" :loading="passLoading" @click="onClickSH(1)">确认对账</Button>
       </div>
     </Modal>
+    <div slot="popTip">
+      123
+    </div>
   </div>
 </template>
 <script>
@@ -55,6 +81,7 @@ export default {
       pageSizeOpts: [10, 15, 25, 50, 70, 100, 200],
       tableData: [],
       shData: {},
+      shOrderList: [],
       columns: [
         {
           type: 'index',
@@ -66,6 +93,29 @@ export default {
           key: 'merchantname',
           width: 140,
           tooltip: true
+        },
+        {
+          title: '类型',
+          key: 'type',
+          width: 90,
+          render: (h, params) => {
+            let text = ''
+            switch (params.row.type) {
+              case 0:
+                text = ''
+                break
+              case 1:
+                text = ''
+                break
+              case 2:
+                text = ''
+                break
+              case 2:
+                text = ''
+                break
+            }
+            return h('span', {}, text)
+          }
         },
         {
           title: '设备号',
@@ -84,6 +134,63 @@ export default {
           key: 'transaction_id',
           minWidth: 140,
           tooltip: true
+        },
+        {
+          title: '商品详情',
+          key: 'orderlist',
+          width: 300,
+          className: 'orderlist',
+          render: (h, params) => {
+            if (params.row.orderlist.length > 0) {
+
+              let list = h('ul', params.row.orderlist.map(item => {
+                let img = h('img', {
+                  style: {
+                    height: '30px',
+                    width: '30px',
+                    borderRadius: '50%',
+                    verticalAlign: 'bottom'
+                  },
+                  attrs: {
+                    src: item.goodsimg
+                  },
+                  directives: [
+                    {
+                      name: 'imgview'
+                    }
+                  ]
+                })
+                let name = h('span', {
+                  style: {
+                    height: '30px',
+                    width: '30px',
+                    verticalAlign: 'bottom',
+                  },
+                }, item.goodsname)
+                return h('li', {
+                  style: {
+                    padding: '0',
+                    width: '100%',
+                    color: '#2d8cf0',
+                    verticalAlign: 'bottom',
+                    cursor: 'pointer',
+                    overflow: 'hidden',
+                    whiteSpace: 'nowrap',
+                    textOverflow: 'ellipsis',
+                    borderBottom: '1px solid #e8eaec'
+                  }
+                }, [item.goodsimg ? img : null, name])
+              }))
+              let a = h('a', {}, '详情>>')
+              let pop = h('div', {
+
+              }, [list])
+              return pop
+
+            } else {
+              return h('span', {}, '')
+            }
+          }
         },
         {
           title: '支付金额',
@@ -205,31 +312,6 @@ export default {
             return el
           }
         },
-        // {
-        //   title: '优惠审核',
-        //   key: 'ischeck',
-        //   minWidth: 110,
-        // },
-        // {
-        //   title: '申请状态',
-        //   key: 'isapply',
-        //   minWidth: 110,
-        // },
-        // {
-        //   title: '审核状态',
-        //   key: 'isauditing',
-        //   minWidth: 110,
-        // },
-        // {
-        //   title: '打款状态',
-        //   key: 'ispayment',
-        //   minWidth: 110,
-        // },
-        // {
-        //   title: '收款状态',
-        //   key: 'isreceivables',
-        //   minWidth: 110,
-        // },
         {
           title: '扣点',
           key: 'points',
@@ -347,6 +429,7 @@ export default {
     },
     onClickReview (row) {
       this.shData = row
+      this.shOrderList = row.orderlist
       console.log(row)
       this.shModal = true
     },
@@ -404,5 +487,24 @@ export default {
   width: 100%;
   table-layout: fixed;
   border: none;
+}
+.orderlist{
+  padding: 0!important;
+  .ivu-table-cell{
+    padding: 0!important;
+  }
+}
+.goodsInfo{
+  white-space:nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  img{
+    height: 30px;
+    width: 30px;
+    vertical-align: bottom;
+  }
+  span{
+    vertical-align: bottom;
+  }
 }
 </style>

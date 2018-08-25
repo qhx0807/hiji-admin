@@ -74,7 +74,7 @@
               <div class="apply-succ">
                 <Icon :size="75" color="#52c41a" type="ios-checkmark"></Icon>
                 <h4 >操作成功</h4>
-                <p>审核通过后预计两小时到账</p>
+                <p>申请已提交</p>
               </div>
               <Row class="infoitem">
                 <Col span="12" style="text-align:right">收款账户：</Col>
