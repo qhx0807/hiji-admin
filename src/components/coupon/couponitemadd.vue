@@ -24,7 +24,9 @@
                 <Option v-for="item in stateData" :value="item.value" :key="item.value">{{ item.name }}</Option>
               </Select>
             </FormItem>
-
+            <FormItem label="扣点" prop="cardname">
+              <InputNumber :max="2" :step="0.1" style="width: 100%" :min="0" v-model="addData.points"></InputNumber>
+            </FormItem>
           </Col>
           <Col span="6">
             <!-- <FormItem label="卡券编码" prop="cardcode">
@@ -225,7 +227,8 @@ export default {
         userule: '',
         userange: '',
         restricts: '0',
-        restrictsvalue: '1'
+        restrictsvalue: '1',
+        points: 0
       },
       id: null,
       rules: {

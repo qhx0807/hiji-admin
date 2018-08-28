@@ -13,10 +13,16 @@
             <FormItem label="关键字"  prop="keywords">
               <Input v-model="addData.keywords"></Input>
             </FormItem>
-            <FormItem label="属性类型">
-              <!-- <Input v-model="addData.attrid"></Input> -->
+            <!-- <FormItem label="属性类型">
               <Select v-model="addData.typeid" @on-change="onSelectSort" filterable>
                 <Option v-for="item in sortData" :value="item.id" :key="item.id">{{ item.typename }}</Option>
+              </Select>
+            </FormItem> -->
+            <FormItem label="商品状态">
+              <Select v-model="addData.isonsale">
+                <Option value="0">下架</Option>
+                <Option value="1">正常销售</Option>
+                <Option value="2">存放仓库</Option>
               </Select>
             </FormItem>
           </Col>
@@ -29,13 +35,6 @@
             </FormItem>
             <FormItem label="移动端价格" prop="mobileprice">
               <InputNumber :max="9999999" style="width:100%" :min="0" v-model="addData.mobileprice"></InputNumber>
-            </FormItem>
-            <FormItem label="商品状态">
-              <Select v-model="addData.isonsale">
-                <Option value="0">下架</Option>
-                <Option value="1">正常销售</Option>
-                <Option value="2">存放仓库</Option>
-              </Select>
             </FormItem>
           </Col>
           <Col span="6">
@@ -63,7 +62,7 @@
             </FormItem>
           </Col>
         </Row>
-        <Row v-if="addData.typeid">
+        <!-- <Row v-if="addData.typeid">
           <Col span="24" v-for="(prop, index) in propsArr" :key="index">
             <div class="propAdd">
               <ul>
@@ -83,6 +82,50 @@
               </div>
               <div class="clear-fix"></div>
             </div>
+          </Col>
+        </Row> -->
+        <Row>
+          <Col span="24">
+            <FormItem label="商品属性">
+              <ul class="types-list">
+                <li v-for="(item, index) in goodsTypesArr" :key="index">
+                  <div class="types-item">
+                    <span>属性名</span>
+                    <Input v-model="item.typename" size="small" style="width:90px"></Input>
+                  </div>
+                  <div class="types-item">
+                    <span>库存</span>
+                    <InputNumber size="small" :max="9999999" style="100px" :min="0" v-model="item.goodsstock"></InputNumber>
+                  </div>
+                  <div class="types-item">
+                    <span>移动端价格</span>
+                    <InputNumber size="small" :max="9999999" style="100px" :min="0" v-model="item.mobileprice"></InputNumber>
+                  </div>
+                  <div class="types-item">
+                    <span>app端价格</span>
+                    <InputNumber size="small" :max="9999999" style="100px" :min="0" v-model="item.appprice"></InputNumber>
+                  </div>
+                  <div class="types-item">
+                    <span>会员价</span>
+                    <InputNumber size="small" :max="9999999" style="100px" :min="0" v-model="item.memberprice"></InputNumber>
+                  </div>
+                  <div class="types-item">
+                    <span>商品价格</span>
+                    <InputNumber size="small" :max="9999999" style="100px" :min="0" v-model="item.goodsprice"></InputNumber>
+                  </div>
+                  <div class="types-item">
+                    <span>市场价</span>
+                    <InputNumber size="small" :max="9999999" style="100px" :min="0" v-model="item.marketprice"></InputNumber>
+                  </div>
+                  <div class="types-item">
+                    <Button type="dashed"size="small" @click="onClickDelTypeItem(index)" icon="ios-trash-outline">删除</Button>
+                  </div>
+                </li>
+                <li>
+                  <Button type="dashed"size="small" @click="onClickAddTypeItem" icon="ios-add">添加项</Button>
+                </li>
+              </ul>
+            </FormItem>
           </Col>
         </Row>
         <Row>
@@ -180,6 +223,15 @@ export default {
         marketprice: [{ required: true, message: '不能为空', trigger: 'blur' }],
         goodsstock: [{ required: true, message: '不能为空', trigger: 'blur' }],
       },
+      goodsAttrs: {
+        typename: '',
+        goodsstock: '',
+        mobileprice: '',
+        appprice: '',
+        goodsprice: '',
+        memberprice: '',
+        marketprice: ''
+      },
       addData: {
         categoryid: '',
         goodsname: '',
@@ -198,8 +250,10 @@ export default {
         merchantcode: '',
         typeid: '',
         attrvalue: '',
-        isonsale: '1'
+        isonsale: '1',
+        goodstype: ''
       },
+      goodsTypesArr: [],
       picArr: ['', '', '', '', '', ''],
       actLi: 0,
       headerImgIndex: -1,
@@ -211,7 +265,7 @@ export default {
   created () {
     this.getMerchantData()
     this.getGoodsType()
-    this.getSortData()
+    // this.getSortData()
   },
   methods: {
     getMerchantData () {
@@ -337,11 +391,12 @@ export default {
       }
     },
     onClickSubmit () {
-      if (this.propsArr.length > 0) {
-        this.addData.attrvalue = JSON.stringify(this.propsArr)
-      } else {
-        this.addData.attrvalue = ''
-      }
+      // if (this.propsArr.length > 0) {
+      //   this.addData.attrvalue = JSON.stringify(this.propsArr)
+      // } else {
+      //   this.addData.attrvalue = ''
+      // }
+      this.addData.goodstype = this.goodsTypesArr.length > 0 ? JSON.stringify(this.this.goodsTypesArr) : ''
       this.$refs.form.validate(valid => {
         if (valid) {
           let arr = []
@@ -399,6 +454,13 @@ export default {
     onClickRemoveArr (index) {
       if (this.propsArr.length == 1) return false
       this.propsArr.splice(index, 1)
+    },
+    onClickAddTypeItem () {
+      let obj = Object.assign({}, this.goodsAttrs)
+      this.goodsTypesArr.push(obj)
+    },
+    onClickDelTypeItem (index) {
+      this.goodsTypesArr.splice(index, 1)
     }
   }
 }
@@ -413,7 +475,7 @@ export default {
     li{
       float: left;
       height: 132px;
-      width: 120px;
+      width: 90px;
       border: 1px solid #e8e8e8;
       margin-right: 12px;
       display: flex;
@@ -477,6 +539,22 @@ export default {
   .addbtn{
     position: absolute;
     right: 10px;
+  }
+}
+.types-list{
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  li{
+    width: 100%;
+    height: 30px;
+    float: left;
+    clear: right;
+    margin-bottom: 8px;
+  }
+  .types-item{
+    float: left;
+    padding-right: 12px;
   }
 }
 </style>

@@ -233,6 +233,22 @@ export default {
           width: 140,
         },
         {
+          title: '对账状态',
+          key: 'ispay',
+          width: 120,
+          render: (h, params) => {
+            let text = params.row.ispay == 1 ? '已对账' : '未对账'
+            let color = params.row.ispay == 1 ? 'success' : 'warning'
+            let el = h('Tag', {
+              props: {
+                type: 'dot',
+                color: color
+              }
+            }, text)
+            return el
+          }
+        },
+        {
           title: '优惠审核',
           key: 'ischeck',
           width: 120,

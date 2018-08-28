@@ -62,6 +62,9 @@
             <FormItem label="关联活动">
              <Input v-model="editData.assignactiveid"></Input>
             </FormItem>
+             <FormItem label="扣点" prop="cardname">
+              <InputNumber :max="2" :step="0.1" style="width: 100%" :min="0" v-model="editData.points"></InputNumber>
+            </FormItem>
           </Col>
           <Col span="6">
             <FormItem label="结束使用时间">

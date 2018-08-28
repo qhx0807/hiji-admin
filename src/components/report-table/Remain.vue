@@ -8,7 +8,7 @@
     </Card>
     <Card :bordered="false" style="margin-top:10px">
       <Table border ref="table" :loading="tableLoading" size="small" height="600" :columns="columns" :data="filterTable">
-        <div slot="footer">
+        <!-- <div slot="footer">
           <div class="tablefooter" v-show="filterTable.length > 0">
             <table class="table">
               <tbody>
@@ -24,7 +24,7 @@
               </tbody>
             </table>
           </div>
-        </div>
+        </div> -->
       </Table>
     </Card>
   </div>
@@ -45,8 +45,8 @@ export default {
           width: 60
         },
         {
-          title: '商户编码',
-          key: 'merchantcode',
+          title: '设备码',
+          key: 'equipmentno',
           minWidth: 140
         },
         {
@@ -57,31 +57,77 @@ export default {
         },
         {
           title: '应结算总额',
-          key: 't_total',
-          minWidth: 140,
-          sortable: true,
-          align: 'right'
+          align: 'center',
+          children: [
+            {
+              title: '收款',
+              key: 'total',
+              align: 'right',
+              sortable: true,
+              minWidth: 100
+            },
+            {
+              title: '优惠',
+              key: 'coupon',
+              align: 'right',
+              sortable: true,
+              minWidth: 100
+            }
+          ]
         },
         {
-          title: '本期结算金额',
-          key: 'bqtotal',
-          minWidth: 140,
-          sortable: true,
-          align: 'right'
+          title: '已算总额 (已审核支付)',
+          align: 'center',
+          children: [
+            {
+              title: '收款',
+              key: 'yjtotal',
+              align: 'right',
+              sortable: true,
+              minWidth: 100
+            },
+            {
+              title: '优惠',
+              key: 'yjcoupon',
+              align: 'right',
+              sortable: true,
+              minWidth: 100
+            }
+          ]
         },
-        {
-          title: '前期结算金额',
-          key: 'qqtotal',
-          minWidth: 140,
-          sortable: true,
-          align: 'right'
-        },
+        // {
+        //   title: '本期结算金额',
+        //   key: 'bqtotal',
+        //   minWidth: 140,
+        //   sortable: true,
+        //   align: 'right'
+        // },
+        // {
+        //   title: '前期结算金额',
+        //   key: 'qqtotal',
+        //   minWidth: 140,
+        //   sortable: true,
+        //   align: 'right'
+        // },
         {
           title: '剩余结算金额',
-          key: 'sltotal',
-          minWidth: 140,
-          sortable: true,
-          align: 'right'
+          align: 'center',
+          children: [
+            {
+              title: '收款',
+              key: 'sstotal',
+              align: 'right',
+              sortable: true,
+              minWidth: 100
+            },
+            {
+              title: '优惠',
+              key: 'sscoupon',
+              align: 'right',
+              sortable: true,
+              minWidth: 100
+            }
+          ]
         }
       ]
     }
@@ -92,35 +138,7 @@ export default {
   computed: {
     filterTable () {
       return arrSearch(this.tableData, this.searchKey)
-    },
-    shouldFee () {
-      let fee = 0
-      this.filterTable.forEach(item => {
-        fee += Number(item.t_total)
-      })
-      return fee.toFixed(2)
-    },
-    bqFee () {
-      let fee = 0
-      this.filterTable.forEach(item => {
-        fee += Number(item.bqtotal)
-      })
-      return fee.toFixed(2)
-    },
-    qqFee () {
-      let fee = 0
-      this.filterTable.forEach(item => {
-        fee += Number(item.qqtotal)
-      })
-      return fee.toFixed(2)
-    },
-    syFee () {
-      let fee = 0
-      this.filterTable.forEach(item => {
-        fee += Number(item.sltotal)
-      })
-      return fee.toFixed(2)
-    },
+    }
   },
   methods: {
     onClickSearch () {
@@ -134,20 +152,7 @@ export default {
           let arr = []
           if (response.data.code === 0){
             let obj = response.data.data
-            let arr = []
-            for (const key in obj) {
-              let arritem = {
-                merchantname: obj[key].merchantname,
-                merchantcode: obj[key].merchantcode,
-                merchantcode: obj[key].merchantcode,
-                t_total: (Number(obj[key].sltotal) + Number(obj[key].bqtotal) + Number(obj[key].qqtotal)).toFixed(2),
-                sltotal: obj[key].sltotal,
-                bqtotal: obj[key].bqtotal,
-                qqtotal: obj[key].qqtotal
-              }
-              arr.push(arritem)
-            }
-            this.tableData = arr
+            this.tableData = obj
           }else{
             this.$Message.warning(response.data.msg)
           }
