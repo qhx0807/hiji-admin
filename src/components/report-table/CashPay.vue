@@ -97,11 +97,11 @@ export default {
         },
         {
           title: '对账状态',
-          key: 'ischeck',
+          key: 'ispay',
           width: 120,
           render: (h, params) => {
-            let text = params.row.ischeck == 1 ? '已对账' : '未对账'
-            let color = params.row.ischeck == 1 ? 'success' : 'warning'
+            let text = '已对账'
+            let color = 'success'
             let el = h('Tag', {
               props: {
                 type: 'dot',

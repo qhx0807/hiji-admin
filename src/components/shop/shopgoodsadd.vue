@@ -396,7 +396,8 @@ export default {
       // } else {
       //   this.addData.attrvalue = ''
       // }
-      this.addData.goodstype = this.goodsTypesArr.length > 0 ? JSON.stringify(this.this.goodsTypesArr) : ''
+      this.addData.goodstype = this.goodsTypesArr.length > 0 ? JSON.stringify(this.goodsTypesArr) : ''
+      console.log(this.addData.goodstype)
       this.$refs.form.validate(valid => {
         if (valid) {
           let arr = []

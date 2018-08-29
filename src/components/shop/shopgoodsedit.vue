@@ -394,7 +394,7 @@ export default {
       this.$store.commit('pageLoading', true)
       serverApi('/goods/goodsinfo', {id: id},
         response => {
-          console.log(response)
+          // console.log(response)
           this.$store.commit('pageLoading', false)
           if (response.data.code == 0) {
             this.editData = response.data.data
@@ -403,6 +403,7 @@ export default {
             let arr1 = arr.concat(this.picArr)
             // this.propsArr = response.data.data.attrvalue || []
             this.goodsTypesArr = response.data.data.goodstype || []
+            console.log(this.goodsTypesArr)
             if (response.data.data.typeid) {
               this.getPropsData(response.data.data.typeid)
             }
@@ -476,7 +477,7 @@ export default {
       } else {
         this.editData.goodstype = ''
       }
-
+      console.log(this.editData)
       let realArr = this.picArr.filter(item => item !== '')
       this.editData.imgdetailed = realArr.toString()
       let content = this.$refs.ue.getUEContent()

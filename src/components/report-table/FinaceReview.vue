@@ -137,6 +137,22 @@ export default {
           }
         },
         {
+          title: '对账状态',
+          key: 'ispay',
+          width: 120,
+          render: (h, params) => {
+            let text = '已对账'
+            let color = 'success'
+            let el = h('Tag', {
+              props: {
+                type: 'dot',
+                color: color
+              }
+            }, text)
+            return el
+          }
+        },
+        {
           title: '申请状态',
           key: 'isapply',
           width: 120,

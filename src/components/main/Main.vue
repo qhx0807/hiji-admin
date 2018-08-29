@@ -40,12 +40,12 @@
                         <Row type="flex" justify="end" align="middle" class="user-dropdown-innercon">
                             <Dropdown transfer trigger="click" @on-click="handleClickUserDropdown">
                                 <a href="javascript:void(0)">
-                                    <span class="main-user-name">{{ userName }}</span>
-                                    <Icon type="md-arrow-dropdown" />
+                                  <span class="main-user-name">{{ userName }}</span>
+                                  <Icon type="md-arrow-dropdown" />
                                 </a>
                                 <DropdownMenu slot="list">
-                                    <DropdownItem name="ownSpace">个人中心</DropdownItem>
-                                    <DropdownItem name="loginout" divided>退出登录</DropdownItem>
+                                  <DropdownItem name="ownSpace">个人中心</DropdownItem>
+                                  <DropdownItem name="loginout" divided>退出登录</DropdownItem>
                                 </DropdownMenu>
                             </Dropdown>
                             <Avatar style="background: #619fe7;margin-left: 10px;text-align:center" icon="ios-person"></Avatar>
