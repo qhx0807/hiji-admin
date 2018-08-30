@@ -177,15 +177,41 @@
           </table>
         </Col>
       </Row>
-      <Row>
-        <Col span="24">
-          <div class="btn-box">
-            <Button type="primary" @click="onClickSubmit" :loading="submitLoading">提交数据</Button>
-            <Button   @click="backGoodsList" style="margin-left:10px;">返回列表</Button>
-          </div>
-        </Col>
-      </Row>
     </Card>
+    <div class="btn-box">
+      <ButtonGroup vertical>
+        <Button type="primary" icon="ios-checkbox-outline" @click="onClickSubmit" :loading="submitLoading">提交数据</Button>
+        <Button type="default" icon="ios-arrow-back" @click="backGoodsList">返回列表</Button>
+        <Button type="warning" icon="md-eye" @click="previewEditor">预览详情</Button>
+      </ButtonGroup>
+    </div>
+    <Modal v-model="preModal" width="500">
+      <p slot="header" style="text-align:center">
+        <span>预览</span>
+      </p>
+      <div class="preview">
+        <div class="swiper">
+          <Carousel autoplay loop radius-dot arrow="never">
+            <CarouselItem v-for="(item, index) in picArr" :key="index">
+              <div class="demo-carousel" >
+                <img :src="item" alt="">
+              </div>
+            </CarouselItem>
+          </Carousel>
+        </div>
+        <div class="goods-title">{{addData.goodsname}}</div>
+        <p class="goods-desc">{{addData.goodsdesc}}</p>
+        <p class="goods-price">
+          <span>￥{{addData.goodsprice}}</span>
+          <del>￥{{addData.marketprice}}</del>
+        </p>
+        <div v-html="preContent" class="preview-box"></div>
+      </div>
+      <div slot="footer">
+        <Button    @click="preModal = false">取消</Button>
+        <Button type="primary" @click="preModal = false">确定</Button>
+      </div>
+    </Modal>
   </div>
 </template>
 <script>
@@ -202,6 +228,8 @@ export default {
       merchantData: [],
       goodsTypeData: [],
       submitLoading: false,
+      preContent: '',
+      preModal: false,
       uploadApiUrl: uploadApiUrl,
       ueConfig: {
         initialFrameWidth: '100%',
@@ -462,6 +490,11 @@ export default {
     },
     onClickDelTypeItem (index) {
       this.goodsTypesArr.splice(index, 1)
+    },
+    previewEditor () {
+      let content = this.$refs.ue.getUEContent()
+      this.preContent = content
+      this.preModal = true
     }
   }
 }
@@ -524,6 +557,54 @@ export default {
 }
 .btn-box{
   text-align: center;
+  position: fixed;
+  z-index: 1000;
+  right: 40px;
+  bottom: 50px;
+  box-shadow: 2px 2px 10px rgba(0,0,0,.4);
+}
+.preview{
+  max-height: 500px;
+  overflow: auto;
+  .swiper{
+    height: 300px;
+    .demo-carousel{
+      height: 300px;
+      width: 100%;
+      text-align: center;
+      img{
+        height: 100%;
+        max-width: 100%;
+        width: auto;
+      }
+    }
+  }
+  .goods-title{
+    padding: 15px 10px;
+    font-size: 16px;
+    color: #333;
+  }
+  .goods-desc{
+    margin: 0px 10px 14px 0;
+    padding-left: 10px;
+    font-size: 14px;
+  }
+  .preview-box{
+    margin-top: 12px;
+  }
+  .goods-price{
+    padding-left: 10px;
+    span{
+      font-size: 16px;
+      color: #f44;
+    }
+    del{
+      font-size: 13px;
+      color: #666;
+      margin-left: 10px;
+      font-weight: 500;
+    }
+  }
 }
 .propAdd{
   padding: 8px 12px;

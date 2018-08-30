@@ -128,12 +128,28 @@ export default {
           }
         },
         {
-          title: '审核状态',
+          title: '财务审核',
           key: 'isauditing',
           width: 120,
           render: (h, params) => {
             let text = params.row.isauditing == 1 ? '已审核' : '未审核'
             let color = params.row.isauditing == 1 ? 'success' : 'warning'
+            let el = h('Tag', {
+              props: {
+                type: 'dot',
+                color: color
+              }
+            }, text)
+            return el
+          }
+        },
+        {
+          title: '领导审批',
+          key: 'isapprove',
+          width: 120,
+          render: (h, params) => {
+            let text = params.row.isapprove == 1 ? '已审批' : '未审批'
+            let color = params.row.isapprove == 1 ? 'success' : 'warning'
             let el = h('Tag', {
               props: {
                 type: 'dot',

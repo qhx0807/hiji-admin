@@ -205,21 +205,39 @@
           </table>
         </Col>
       </Row>
-      <Row>
-        <Col span="24">
-          <div class="btn-box">
-            <Button type="primary" @click="onClickEdit" :loading="submitLoading">提交数据</Button>
-            <Button   @click="backGoodsList" style="margin-left:10px;">返回列表</Button>
-            <Button   @click="previewEditor" style="margin-left:10px;">预览详情</Button>
-          </div>
-        </Col>
-      </Row>
     </Card>
+    <div class="btn-box">
+      <ButtonGroup vertical>
+        <Button type="primary" icon="ios-checkbox-outline" @click="onClickEdit" :loading="submitLoading">提交数据</Button>
+        <Button type="default" icon="ios-arrow-back" @click="backGoodsList">返回列表</Button>
+        <Button type="warning" icon="md-eye" @click="previewEditor">预览详情</Button>
+      </ButtonGroup>
+      <!-- <Button type="primary" @click="onClickEdit" :loading="submitLoading">提交数据</Button>
+      <Button @click="backGoodsList" style="margin-left:10px;">返回列表</Button>
+      <Button @click="previewEditor" style="margin-left:10px;">预览详情</Button> -->
+    </div>
     <Modal v-model="preModal" width="500">
       <p slot="header" style="text-align:center">
         <span>预览</span>
       </p>
-      <div v-html="preContent" class="preview"></div>
+      <div class="preview">
+        <div class="swiper">
+          <Carousel autoplay loop radius-dot arrow="never">
+            <CarouselItem v-for="(item, index) in picArr" :key="index">
+              <div class="demo-carousel" >
+                <img :src="item" alt="">
+              </div>
+            </CarouselItem>
+          </Carousel>
+        </div>
+        <div class="goods-title">{{editData.goodsname}}</div>
+        <p class="goods-desc">{{editData.goodsdesc}}</p>
+        <p class="goods-price">
+          <span>￥{{editData.goodsprice}}</span>
+          <del>￥{{editData.marketprice}}</del>
+        </p>
+        <div v-html="preContent" class="preview-box"></div>
+      </div>
       <div slot="footer">
         <Button    @click="preModal = false">取消</Button>
         <Button type="primary" @click="preModal = false">确定</Button>
@@ -403,12 +421,10 @@ export default {
             let arr1 = arr.concat(this.picArr)
             // this.propsArr = response.data.data.attrvalue || []
             this.goodsTypesArr = response.data.data.goodstype || []
-            console.log(this.goodsTypesArr)
-            if (response.data.data.typeid) {
-              this.getPropsData(response.data.data.typeid)
-            }
+            // console.log(this.goodsTypesArr)
             arr1.length = 5
             this.picArr = arr1
+            console.log(this.picArr)
             this.$refs.ue.setContent(decodeURIComponent(content))
           } else {
             this.$Message.warning(response.data.msg)
@@ -600,6 +616,11 @@ img{
 }
 .btn-box{
   text-align: center;
+  position: fixed;
+  z-index: 1000;
+  right: 40px;
+  bottom: 50px;
+  box-shadow: 2px 2px 10px rgba(0,0,0,.4);
 }
 .shop-img{
   width: 80px;
@@ -619,8 +640,44 @@ img{
 .preview{
   max-height: 500px;
   overflow: auto;
-  img{
-    width: 100%;
+  .swiper{
+    height: 300px;
+    .demo-carousel{
+      height: 300px;
+      width: 100%;
+      text-align: center;
+      img{
+        height: 100%;
+        max-width: 100%;
+        width: auto;
+      }
+    }
+  }
+  .goods-title{
+    padding: 15px 10px;
+    font-size: 16px;
+    color: #333;
+  }
+  .goods-desc{
+    margin: 0px 10px 14px 0;
+    padding-left: 10px;
+    font-size: 14px;
+  }
+  .preview-box{
+    margin-top: 12px;
+  }
+  .goods-price{
+    padding-left: 10px;
+    span{
+      font-size: 16px;
+      color: #f44;
+    }
+    del{
+      font-size: 13px;
+      color: #666;
+      margin-left: 10px;
+      font-weight: 500;
+    }
   }
 }
 .propAdd{
