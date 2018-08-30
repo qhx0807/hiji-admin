@@ -49,6 +49,12 @@ body {
   margin-bottom: 25px;
   margin-top: 6px;
 }
+.preview-box{
+  img{
+    width: 100%;
+    height: auto;
+  }
+}
 #imgViewDom{
   position: fixed;
   top: 0;
