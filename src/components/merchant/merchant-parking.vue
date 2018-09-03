@@ -217,7 +217,7 @@ export default {
               desc: `${d.carnum} 已发放停车优惠券`
             })
             this.getTicketsNum()
-            this.getMySendRecords()
+            // this.getMySendRecords()
           } else {
             this.$Message.warning(response.data.msg)
           }

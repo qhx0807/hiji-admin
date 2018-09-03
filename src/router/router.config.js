@@ -58,6 +58,7 @@ const MainTable = r => require.ensure([], () => r(require('@/components/report-t
 const FinaceReview = r => require.ensure([], () => r(require('@/components/report-table/FinaceReview.vue')))
 const CashPay = r => require.ensure([], () => r(require('@/components/report-table/CashPay.vue')))
 const FinaceTotal = r => require.ensure([], () => r(require('@/components/report-table/FinaceTotal.vue')))
+const ShopGoodsCx = r => require.ensure([], () => r(require('@/components/shop/ShopGoodsCx.vue')))
 
 const routes = [
   {
@@ -352,6 +353,11 @@ const routes = [
         path: 'FinaceTotal',
         component: FinaceTotal,
         name: 'FinaceTotal'
+      },
+      {
+        path: 'ShopGoodsCx',
+        component: ShopGoodsCx,
+        name: 'ShopGoodsCx'
       }
     ]
   },
