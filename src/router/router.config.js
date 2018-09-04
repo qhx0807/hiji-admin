@@ -59,6 +59,9 @@ const FinaceReview = r => require.ensure([], () => r(require('@/components/repor
 const CashPay = r => require.ensure([], () => r(require('@/components/report-table/CashPay.vue')))
 const FinaceTotal = r => require.ensure([], () => r(require('@/components/report-table/FinaceTotal.vue')))
 const ShopGoodsCx = r => require.ensure([], () => r(require('@/components/shop/ShopGoodsCx.vue')))
+const ShopGoodsCxAdd = r => require.ensure([], () => r(require('@/components/shop/ShopGoodsCxAdd.vue')))
+const ShopGoodsXg = r => require.ensure([], () => r(require('@/components/shop/ShopGoodsXg.vue')))
+const ShopGoodsXgAdd = r => require.ensure([], () => r(require('@/components/shop/ShopGoodsXgAdd.vue')))
 
 const routes = [
   {
@@ -358,6 +361,21 @@ const routes = [
         path: 'ShopGoodsCx',
         component: ShopGoodsCx,
         name: 'ShopGoodsCx'
+      },
+      {
+        path: 'ShopGoodsCxAdd',
+        component: ShopGoodsCxAdd,
+        name: 'ShopGoodsCxAdd'
+      },
+      {
+        path: 'ShopGoodsXg',
+        component: ShopGoodsXg,
+        name: 'ShopGoodsXg'
+      },
+      {
+        path: 'ShopGoodsXgAdd',
+        component: ShopGoodsXgAdd,
+        name: 'ShopGoodsXgAdd'
       }
     ]
   },
