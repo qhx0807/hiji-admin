@@ -25,6 +25,7 @@
     "vue-qart": "^2.1.1",
     "vue-router": "^3.0.1",
     "vue-table-with-tree-grid": "^0.2.4",
+    "vue2-countdown": "^1.0.8",
     "vuex": "^3.0.1",
     "xlsx": "^0.13.4"
   },
