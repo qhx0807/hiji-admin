@@ -95,7 +95,7 @@ export default {
       menuTable: [],
       keepAliveName: [],
       // keepAliveName: []
-      keepAliveName: ['UserMember','CouponItem', 'ShopOrders', 'FinaceTable']
+      keepAliveName: ['UserMember','CouponItem', 'ShopOrders', 'FinaceTable', 'ShopGoodsCx', 'ShopGoods', 'ShopGoodsXg']
     }
   },
   computed: {

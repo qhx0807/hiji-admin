@@ -4,7 +4,7 @@
       <div>
         <Input v-model="searchKey" placeholder="搜索关键字..." style="width: 200px"></Input>
         <Button type="primary" style="margin-left:8px" icon="ios-search" @click="onClickSearch">搜索</Button>
-        <router-link :to="{name: 'ShopGoodsAdd'}">
+        <router-link :to="{name: 'ShopGoodsXgAdd'}">
           <Button type="primary" style="margin-left:8px" icon="md-add">新增</Button>
         </router-link>
       </div>
@@ -24,7 +24,7 @@
 <script>
 import serverApi from '../../axios'
 export default {
-  name: 'ShopGoods',
+  name: 'ShopGoodsXg',
   data () {
     return {
       searchKey: '',
@@ -41,11 +41,6 @@ export default {
           key: 'id',
           width: 60
         },
-         {
-          title: '商品编码',
-          key: 'goodssn',
-          width: 90
-        },
         {
           title: '图片',
           key: 'goodsimg',
@@ -58,7 +53,7 @@ export default {
               },
               style: {
                 maxWidth: '60px',
-                maxHeight: '60px'
+                margin: '3px 0'
               },
               directives: [
                 {
@@ -182,10 +177,10 @@ export default {
       this.getTableData()
     },
     onClickAdd () {
-      this.$router.push({name: 'ShopGoodsAdd'})
+      this.$router.push({name: 'ShopGoodsXgAdd'})
     },
     onClickEdit (row) {
-      this.$router.push({name: 'ShopGoodsEdit', params: {id: row.id}})
+      // this.$router.push({name: 'ShopGoodsXgEdit', params: {id: row.id}})
     },
     remove (row) {
       this.$Modal.confirm({

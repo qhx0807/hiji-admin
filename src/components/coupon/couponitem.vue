@@ -9,7 +9,7 @@
     </Card>
     <Card :bordered="false" style="margin-top:12px;">
       <div class="body">
-        <Table :columns="columns" :data="tableData"></Table>
+        <Table size="small" :columns="columns" :data="tableData"></Table>
       </div>
       <div style="float: right; padding-top:12px">
         <Page :total="count" show-total :current="page" @on-change="changePage" show-sizer @on-page-size-change="onChangeSize"></Page>
@@ -60,7 +60,7 @@ export default {
         {
           title: '卡券图',
           key: 'imgmaster',
-          width: 100,
+          width: 66,
           align: 'center',
           render: (h, params) => {
             if (!params.row.imgmaster) return h('div',{},'')
@@ -69,8 +69,7 @@ export default {
                 src: params.row.imgmaster
               },
               style: {
-                maxHeight: '80px',
-                maxWidth: '80px',
+                maxHeight: '60px',
                 margin: '3px 0'
               },
               directives: [

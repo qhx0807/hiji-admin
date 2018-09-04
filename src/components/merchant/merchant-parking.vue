@@ -87,7 +87,11 @@
       </Row>
       <Row v-show="action === 'records'">
         <Col span="24">
-          <Table size="small" height="600" :columns="columns" :data="recordsData"></Table>
+          <Table size="default" :columns="columns" :data="recordsData"></Table>
+          <div style="float: right; padding-top:12px">
+            <Page :total="count" show-total :current="page" @on-change="changePage" show-sizer @on-page-size-change="onChangeSize"></Page>
+          </div>
+          <div style="clear:both"></div>
         </Col>
       </Row>
     </Card>
@@ -102,6 +106,9 @@ export default {
       stepNum: 0,
       carNum: '',
       action: 'send',
+      count: 0,
+      page: 1,
+      pageSize: 10,
       submitLoading: false,
       getReLoading: false,
       ticketsNum: 0,
@@ -110,9 +117,9 @@ export default {
       cardList: [2, 4, 6, 8, 10, 12, 24, 36],
       columns: [
         {
-          title: '序号',
-          type: 'index',
-          width: 80
+          title: '#',
+          key: 'id',
+          width: 60
         },
         {
           title: '车牌号',
@@ -169,16 +176,22 @@ export default {
         })
     },
     getMySendRecords () {
+      let d = {
+        pagesize: this.pageSize,
+        page: this.page,
+        like: ''
+      }
       this.$Message.loading({
         content: '数据加载中...',
         duration: 0
       })
-      serverApi('/Merchant/parkingvoucherlist', {},
+      serverApi('/Merchant/parkingvoucherlist', d,
         response => {
-          // console.log(response)
+          console.log(response)
           this.$Message.destroy()
           if (response.data.code == 0) {
-            this.recordsData = response.data.data
+            // this.recordsData = response.data.data.result
+            // this.count = response.data.counts
           } else {
             this.$Message.warning(response.data.msg)
           }
@@ -233,18 +246,24 @@ export default {
     },
     onClickSeeRecords () {
       if (this.getReLoading) return false
+      let d = {
+        pagesize: this.pageSize,
+        page: this.page,
+        like: ''
+      }
       this.getReLoading = true
       this.$Message.loading({
         content: '数据加载中...',
         duration: 0
       })
-      serverApi('/Merchant/parkingvoucherlist', {},
+      serverApi('/Merchant/parkingvoucherlist', d,
         response => {
           // console.log(response)
           this.getReLoading = false
           this.$Message.destroy()
           if (response.data.code == 0) {
-            this.recordsData = response.data.data
+            this.recordsData = response.data.data.result
+            this.count = response.data.data.counts
             this.action = 'records'
           } else {
             this.$Message.warning(response.data.msg)
@@ -255,7 +274,15 @@ export default {
           this.getReLoading = false
           console.log(error)
         })
-    }
+    },
+    changePage (e) {
+      this.page = e
+      this.onClickSeeRecords()
+    },
+    onChangeSize (e) {
+      this.pageSize = e
+      this.onClickSeeRecords()
+    },
   }
 }
 </script>
