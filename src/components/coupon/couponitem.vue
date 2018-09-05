@@ -119,7 +119,8 @@ export default {
             return h('InputNumber', {
               props: {
                 // min: params.row.remaincount,
-                value: params.row.totalcount
+                value: params.row.totalcount,
+                'active-change': false
               },
               on: {
                 "on-change": (e) => {
