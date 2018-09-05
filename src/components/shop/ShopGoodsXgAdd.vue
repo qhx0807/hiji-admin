@@ -27,7 +27,7 @@
                 v-model="addData.goodsid"
                 :remote-method="onSearchGoods"
                 placeholder="选择商品">
-                <Option v-for="(item, index) in goodsData" :key="item.id" :value="item.id">{{item.goodsname}}</Option>
+                <Option v-for="(item, index) in goodsData" :disabled="item.isbuy == 1" :key="item.id" :value="item.id">{{item.goodsname}}</Option>
               </Select>
             </FormItem>
             <FormItem style="margin-bottom:12px" v-show="selectedGoods.id">
@@ -49,15 +49,15 @@
               </div>
             </FormItem>
             <FormItem label="选择属性" v-if="selectedGoods.goodstype && selectedGoods.goodstype.length > 0">
-              <CheckboxGroup v-model="selectTypes">
-                <Checkbox v-for="(item, index) in selectedGoods.goodstype" :key="index" :label="item.id">{{item.typename}}</Checkbox>
-              </CheckboxGroup>
+              <RadioGroup v-model="addData.typeid">
+                <Radio v-for="(item, index) in selectedGoods.goodstype" :key="index" :label="item.id">{{item.typename}}</Radio>
+              </RadioGroup>
             </FormItem>
             <FormItem label="限购开始时间" prop="starttime">
-              <DatePicker type="datetime" style="width:200px" placeholder="选择时间" v-model="addData.starttime"></DatePicker>
+              <DatePicker type="datetime" style="width:200px" placeholder="选择时间" @on-change="onSelectStartDate"></DatePicker>
             </FormItem>
             <FormItem label="限购结束时间" prop="endtime">
-              <DatePicker type="datetime" style="width:200px" placeholder="选择时间" v-model="addData.endtime"></DatePicker>
+              <DatePicker type="datetime" style="width:200px" placeholder="选择时间"  @on-change="onSelectEndDate"></DatePicker>
             </FormItem>
             <FormItem label="限购数量" prop="buyname">
               <InputNumber :min="0" style="width:200px" v-model="addData.buyname" placeholder="输入数量"></InputNumber>
@@ -94,10 +94,10 @@ export default {
           { required: true, type: 'number', message: '请选择商品', trigger: 'blur' }
         ],
         starttime: [
-          { required: true, type: 'date', message: '请选择开始时间', trigger: 'blur' }
+          { required: true, message: '请选择开始时间', trigger: 'blur' }
         ],
         endtime: [
-          { required: true, type: 'date', message: '请选择结束时间', trigger: 'blur' }
+          { required: true, message: '请选择结束时间', trigger: 'blur' }
         ],
         buyname: [
           { required: true, type: 'number', message: '请输入数量', trigger: 'blur' }
@@ -139,6 +139,27 @@ export default {
             return false
           }
           this.submitLoading = true
+          serverApi('/goods/isbuyadd', this.addData,
+            response => {
+              console.log(response)
+              this.submitLoading = false
+              if (response.data.code === 0){
+                this.$Notice.success({
+                  title: response.data.msg,
+                  desc: '添加限购商品成功！'
+                })
+                this.$refs.from.resetFields()
+                this.getGoodsData(10, '')
+              }else{
+                this.$Message.warning(response.data.msg)
+              }
+            },
+            error => {
+              this.submitLoading = false
+              console.log(error)
+              this.$Message.error('连接失败！')
+            }
+          )
         }
       })
     },
@@ -177,6 +198,12 @@ export default {
         this.selectedGoods = {}
         this.selectTypes.length = 0
       }
+    },
+    onSelectStartDate (e) {
+      this.addData.starttime = e
+    },
+    onSelectEndDate (e) {
+      this.addData.endtime = e
     }
   }
 }

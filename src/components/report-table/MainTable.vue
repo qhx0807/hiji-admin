@@ -15,7 +15,7 @@
         </div>
       </div>
     </Card>
-    <Modal v-model="shModal" width="460">
+    <Modal v-model="shModal" width="960">
       <p slot="header" style="color:#f60;">
         <Icon type="ios-information-circle"></Icon>
         <span>提示</span>
@@ -27,7 +27,7 @@
         <p>订单金额: {{shData.total}} &nbsp;&nbsp;支付金额: {{shData.cash}} &nbsp;&nbsp;平台优惠: {{shData.coupon}}
           &nbsp;&nbsp;商家优惠: {{shData.merchantcoupon}}
         </p>
-        <table class="table" v-show="shOrderList.length>0">
+        <table class="table" style="margin-top:8px;" v-show="shOrderList.length>0">
           <thead>
             <tr>
               <th>商品id</th>
@@ -35,31 +35,33 @@
               <th>数量</th>
               <th>市场价</th>
               <th>会员价</th>
+              <th>审核</th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="(item, index) in shOrderList" :key="index">
               <td>{{item.goodsid}}</td>
               <td class="goodsInfo">
-                <img :src="item.goodsimg" alt="">
+                <img v-if="item.goodsimg" v-imgview :src="item.goodsimg" alt="">
                 <span>{{item.goodsname}}</span>
               </td>
               <td>{{item.goodsnum}}</td>
               <td>{{item.marketprice}}</td>
               <td>{{item.memberprice}}</td>
+              <td>
+                <a v-if="item.ischeck == 0" @click="onClickItemSh(item)">审核</a>
+                <span v-else>已审核</span>
+              </td>
             </tr>
           </tbody>
         </table>
       </div>
-      <div slot="footer">
+      <div slot="footer" v-if="shOrderList.length==0">
         <Button @click="shModal = false">取消</Button>
         <Button type="error" :loading="refuseLoading" @click="onClickSH(0)">不通过</Button>
-        <Button type="primary" :loading="passLoading" @click="onClickSH(1)">确认对账</Button>
+        <Button type="primary" :loading="passLoading" @click="onClickSH(1)">确认审核</Button>
       </div>
     </Modal>
-    <div slot="popTip">
-      123
-    </div>
   </div>
 </template>
 <script>
@@ -479,6 +481,34 @@ export default {
           this.tableLoading = false
         }
       )
+    },
+    onClickItemSh (item) {
+      this.$Message.loading({
+        content: '加载中...',
+        duration: 0
+      })
+      let d = {
+        orderno: this.shData.orderno,
+        check: '1',
+        orderid: item.orderid
+      }
+      serverApi('/Finance/operation', d,
+        response => {
+          console.log(response)
+          this.$Message.destroy()
+          if (response.data.code === 0){
+            item.ischeck = 1
+            this.$Message.success(response.data.msg)
+          }else{
+            this.$Message.warning(response.data.msg)
+          }
+        },
+        error => {
+          this.$Message.destroy()
+          console.log(error)
+          this.$Message.warning(error.toString())
+        }
+      )
     }
   }
 }
@@ -515,8 +545,9 @@ export default {
   text-overflow: ellipsis;
   overflow: hidden;
   img{
-    height: 30px;
-    width: 30px;
+    height: 20px;
+    width: 20px;
+    border-radius: 10px;
     vertical-align: bottom;
   }
   span{

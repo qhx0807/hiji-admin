@@ -39,7 +39,7 @@
             <!-- <FormItem label="收货地址：">{{orderData.address}}</FormItem> -->
           </Col>
           <Col span="16">
-            <FormItem label="收货地址：">{{orderData.address}}</FormItem>
+            <FormItem label="收货地址：">{{addressStr}}</FormItem>
             <!-- <FormItem label="所属城市：">{{orderData.city}}</FormItem> -->
           </Col>
           <!-- <Col span="8">
@@ -150,7 +150,15 @@ export default {
       //   price += Number(item.goodsprice)*Number(item.goodsnum)
       // })
       return price.toFixed(2)
-    }
+    },
+    addressStr () {
+      if (this.orderData.address && this.orderData.address.indexOf('name') > -1) {
+        let obj = JSON.parse(this.orderData.address)
+        return `${obj.name} ${obj.tel} ${obj.address} `
+      } else {
+        return this.orderData.address
+      }
+    },
   },
   methods: {
     getOrderData () {

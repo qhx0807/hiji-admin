@@ -4,7 +4,7 @@
       <div>
         <Input v-model="searchKey" placeholder="搜索关键字..." style="width: 200px"></Input>
         <Button type="primary" style="margin-left:8px" icon="ios-search" @click="onClickSearch">搜索</Button>
-        <router-link :to="{name: 'ShopGoodsCxAdd'}">
+        <router-link :to="{name: 'ShopGoodsXgAdd'}">
           <Button type="primary" style="margin-left:8px" icon="md-add">新增</Button>
         </router-link>
       </div>
@@ -24,14 +24,14 @@
         <span>修改信息</span>
       </p>
       <Form :model="editData" ref="form" :rules="rules" :label-width="100">
-        <FormItem label="促销开始时间" prop="starttime">
-          <DatePicker type="datetime" style="width:100%" placeholder="选择时间" @on-change="onSelectStartDate"  :value="editData.starttime"></DatePicker>
+        <FormItem label="限购开始时间" prop="starttime">
+          <DatePicker type="datetime" style="width:100%" placeholder="选择时间" v-model="editData.starttime"></DatePicker>
         </FormItem>
-        <FormItem label="促销结束时间" prop="endtime">
-          <DatePicker type="datetime" style="width:100%" placeholder="选择时间" @on-change="onSelectEndDate" :value="editData.endtime"></DatePicker>
+        <FormItem label="限购结束时间" prop="endtime">
+          <DatePicker type="datetime" style="width:100%" placeholder="选择时间" v-model="editData.endtime"></DatePicker>
         </FormItem>
-        <FormItem label="促销价格" required>
-          <InputNumber :min="0.01" style="width:100%" v-model="editData.pidprice" placeholder="输入价格"></InputNumber>
+        <FormItem label="限购数量" prop="buyname">
+          <InputNumber :min="0" style="width:100%" v-model="editData.buyname" placeholder="输入数量"></InputNumber>
         </FormItem>
       </Form>
       <div slot="footer">
@@ -45,7 +45,7 @@
 import serverApi from '../../axios'
 import CountDown from 'vue2-countdown'
 export default {
-  name: 'ShopGoodsCx',
+  name: 'ShopGoodsXg',
   components: {
     CountDown
   },
@@ -62,7 +62,7 @@ export default {
       columns: [
         {
           title: '#',
-          type: 'index',
+          key: 'id',
           width: 60
         },
         {
@@ -77,8 +77,7 @@ export default {
               },
               style: {
                 maxWidth: '60px',
-                maxHeight: '60px',
-                margin: '0px 0'
+                margin: '3px 0'
               },
               directives: [
                 {
@@ -94,76 +93,40 @@ export default {
           minWidth: 160
         },
         {
-          title: '商品属性',
-          key: 'typename',
-          width: 100
+          title: '所属商户',
+          key: 'merchantname',
+          width: 120
+        },
+        {
+          title: '类型',
+          key: 'categoryname',
+          width: 120
         },
         {
           title: '库存',
           key: 'goodsstock',
-          width: 90
+          width: 120
         },
         {
           title: '商品价格',
           key: 'goodsprice',
-          width: 100
+          width: 120
         },
         {
-          title: '促销时间',
-          key: 'pidid',
-          width: 160,
-          render: (h, params) => {
-            let text = params.row.starttime + ' - ' + params.row.endtime
-            return h('div', {}, text)
-          }
+          title: '促销',
+          key: 'ispromote',
+          width: 120
         },
         {
-          title: '倒计时',
-          key: 'pidid',
-          width: 230,
-          render: (h, params) => {
-            return h(CountDown, {
-              props: {
-                currentTime: new Date().getTime(),
-                startTime: new Date(params.row.starttime).getTime(),
-                endTime: new Date(params.row.endtime).getTime(),
-                tipText: '离开始',
-                tipTextEnd: '离结束',
-                endText: '已结束',
-                dayTxt: '天',
-                hourTxt: '小时',
-                minutesTxt: '分钟',
-                secondsTxt: '秒'
-              },
-              on: {
-                start_callback: () => {
-
-                },
-                end_callback: () => {
-
-                }
-              }
-            })
-          }
+          title: '状态',
+          key: 'isonsale',
+          width: 80
         },
-        {
-          title: '促销价',
-          key: 'pidprice',
-          width: 120,
-          render: (h, params) => {
-            return h('div', {}, params.row.pidprice)
-          }
-        },
-        // {
-        //   title: '状态',
-        //   key: 'isonsale',
-        //   width: 80
-        // },
         {
           title: '操作',
           key: 'id',
           align: 'center',
-          width: 100,
+          width: 120,
           fixed: 'right',
           render: (h, params) => {
             let edit = h('a', {
@@ -196,11 +159,14 @@ export default {
       editData: {},
       rules: {
         starttime: [
-          { required: true, message: '请选择开始时间', trigger: 'blur' }
+          { required: true, type: 'date', message: '请选择开始时间', trigger: 'blur' }
         ],
         endtime: [
-          { required: true, message: '请选择结束时间', trigger: 'blur' }
-        ]
+          { required: true, type: 'date', message: '请选择结束时间', trigger: 'blur' }
+        ],
+        buyname: [
+          { required: true, type: 'number', message: '请输入数量', trigger: 'blur' }
+        ],
       },
     }
   },
@@ -219,7 +185,7 @@ export default {
         like: this.searchKey
       }
       this.$store.commit('pageLoading', true)
-      serverApi('/goods/ispidindex', d,
+      serverApi('/goods/index', d,
         response => {
           console.log(response)
           if (response.data.code === 0){
@@ -246,17 +212,11 @@ export default {
       this.getTableData()
     },
     onClickAdd () {
-      this.$router.push({name: 'ShopGoodsCxAdd'})
+      this.$router.push({name: 'ShopGoodsXgAdd'})
     },
     onClickEdit (row) {
-      this.editData = Object.assign({}, row)
       this.editModal = true
-    },
-    onSelectStartDate (e) {
-      this.editData.starttime = e
-    },
-    onSelectEndDate (e) {
-      this.editData.endtime = e
+      // this.$router.push({name: 'ShopGoodsXgEdit', params: {id: row.id}})
     },
     onSaveEdit () {
       this.$refs.form.validate((valid) => {
@@ -266,33 +226,15 @@ export default {
             return false
           }
           this.modal_loading = true
-          serverApi('/goods/ispidedit', this.editData,
-            response => {
-              console.log(response)
-              this.modal_loading = false
-              if (response.data.code === 0){
-                this.$Message.success(response.data.msg)
-                this.getTableData()
-                this.editModal = false
-              }else{
-                this.$Message.warning(response.data.msg)
-              }
-            },
-            error => {
-              console.log(error)
-              this.modal_loading = false
-              this.$Message.error(error.toString())
-            }
-          )
         }
       })
     },
     remove (row) {
       this.$Modal.confirm({
         title: '提示',
-        content: '<p>将此商品从促销商品中移除？</p>',
+        content: '<p>确认删除此条信息？</p>',
         onOk: () => {
-          serverApi('/goods/ispiddel', row,
+          serverApi('/goods/goodsdel', {id: row.id},
             response => {
               if (response.data.code == 0) {
                 this.getTableData()

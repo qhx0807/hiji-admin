@@ -119,7 +119,7 @@ export default {
         {
           title: '#',
           key: 'id',
-          width: 60
+          width: 90
         },
         {
           title: '车牌号',
