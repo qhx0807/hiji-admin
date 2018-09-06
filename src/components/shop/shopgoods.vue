@@ -11,7 +11,7 @@
     </Card>
     <Card :bordered="false" style="margin-top:12px;">
       <div class="body">
-        <Table size="small" :columns="columns" :data="tableData"></Table>
+        <Table size="small" @on-sort-change="onSortChange" :columns="columns" :data="tableData"></Table>
       </div>
       <div style="float: right; padding-top:12px">
         <Page :total="count" show-total :current="page" @on-change="changePage" show-sizer @on-page-size-change="onChangeSize"></Page>
@@ -41,11 +41,11 @@ export default {
           key: 'id',
           width: 60
         },
-         {
-          title: '商品编码',
-          key: 'goodssn',
-          width: 90
-        },
+        // {
+        //   title: '商品编码',
+        //   key: 'goodssn',
+        //   width: 90
+        // },
         {
           title: '图片',
           key: 'goodsimg',
@@ -57,8 +57,8 @@ export default {
                 src: params.row.goodsimg
               },
               style: {
-                maxWidth: '60px',
-                maxHeight: '60px'
+                maxWidth: '50px',
+                maxHeight: '55px'
               },
               directives: [
                 {
@@ -71,37 +71,81 @@ export default {
         {
           title: '商品名称',
           key: 'goodsname',
-          minWidth: 160
+          sortable: 'custom',
+          minWidth: 120
         },
         {
           title: '所属商户',
           key: 'merchantname',
+          sortable: 'custom',
           width: 120
         },
         {
           title: '类型',
           key: 'categoryname',
+          sortable: 'custom',
           width: 120
         },
         {
           title: '库存',
           key: 'goodsstock',
+          sortable: 'custom',
           width: 120
         },
         {
           title: '商品价格',
           key: 'goodsprice',
+          sortable: 'custom',
           width: 120
         },
         {
           title: '促销',
           key: 'ispromote',
-          width: 120
+          sortable: 'custom',
+          width: 120,
+          render: (h, params) => {
+            let text = params.row.ispromote == 1 ? '正在促销' : ''
+            let c = h('Tag', {
+              props: {
+                color: 'primary'
+              },
+              style: {
+                fontSize: '10px'
+              }
+            }, '正在促销')
+            return params.row.ispromote == 1 ? c : ''
+          }
         },
         {
           title: '状态',
           key: 'isonsale',
+          sortable: 'custom',
           width: 80
+        },
+        {
+          title: '首页推荐',
+          key: 'isrecommend',
+          width: 110,
+          sortable: 'custom',
+          render: (h, params) => {
+            let text = params.row.isrecommend == 1 ? '推荐商品' : '否'
+            let open = h('span', {slot: 'open'}, '是')
+            let close = h('span', {slot: 'close'}, '否')
+            return h('i-switch', {
+              props: {
+                trueValue: 1,
+                falseValue: 0,
+                size: 'default',
+                loading: params.row.loading,
+                value: params.row.isrecommend
+              },
+              on: {
+                'on-change': (e) => {
+                  this.OnChangeRecommend(e, params.row)
+                }
+              }
+            }, [open, close])
+          }
         },
         {
           title: '操作',
@@ -138,6 +182,7 @@ export default {
       ],
       activtyData: [],
       editData: {},
+      order: 'id desc',
     }
   },
   created () {
@@ -148,11 +193,12 @@ export default {
       this.page = 1
       this.getTableData()
     },
-    getTableData () {
+    getTableData (order) {
       let d = {
         pagesize: this.pageSize,
         page: this.page,
-        like: this.searchKey
+        like: this.searchKey,
+        order: this.order
       }
       this.$store.commit('pageLoading', true)
       serverApi('/goods/index', d,
@@ -206,6 +252,42 @@ export default {
           )
         }
       })
+    },
+    onSortChange (column) {
+      console.log(column)
+      if (column.order != 'normal') {
+        let order = column.key + ' ' + column.order
+        this.order = order
+      } else {
+        this.order = 'id desc'
+      }
+      this.getTableData()
+
+    },
+    OnChangeRecommend (e, row) {
+      this.$Message.loading({
+        content: '加载中...',
+        duration: 0
+      })
+      let d = {
+        id: row.id
+      }
+      serverApi('/goods/recommendedit', d,
+        response => {
+          console.log(response)
+          this.$Message.destroy()
+          if (response.data.code === 0){
+            this.$Message.success(response.data.msg)
+          }else{
+            this.$Message.warning(response.data.msg)
+          }
+        },
+        error => {
+          this.$Message.destroy()
+          console.log(error)
+          this.$Message.error(error.toString())
+        }
+      )
     }
   }
 }

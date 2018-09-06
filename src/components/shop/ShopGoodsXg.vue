@@ -24,14 +24,14 @@
         <span>修改信息</span>
       </p>
       <Form :model="editData" ref="form" :rules="rules" :label-width="100">
-        <FormItem label="促销开始时间" prop="starttime">
+        <FormItem label="限购开始时间" prop="starttime">
           <DatePicker type="datetime" style="width:100%" placeholder="选择时间" @on-change="onSelectStartDate"  :value="editData.starttime"></DatePicker>
         </FormItem>
-        <FormItem label="促销结束时间" prop="endtime">
+        <FormItem label="限购结束时间" prop="endtime">
           <DatePicker type="datetime" style="width:100%" placeholder="选择时间" @on-change="onSelectEndDate" :value="editData.endtime"></DatePicker>
         </FormItem>
-        <FormItem label="促销价格" required>
-          <InputNumber :min="0.01" style="width:100%" v-model="editData.pidprice" placeholder="输入价格"></InputNumber>
+        <FormItem label="限购数量" required>
+          <InputNumber :min="0" style="width:100%" v-model="editData.buynum" placeholder="输入价格"></InputNumber>
         </FormItem>
       </Form>
       <div slot="footer">
@@ -76,8 +76,8 @@ export default {
                 src: params.row.goodsimg
               },
               style: {
-                maxWidth: '60px',
-                maxHeight: '60px',
+                maxWidth: '50px',
+                maxHeight: '55px',
                 margin: '0px 0'
               },
               directives: [
@@ -148,10 +148,10 @@ export default {
         },
         {
           title: '限购数量',
-          key: 'buyname',
+          key: 'buynum',
           width: 120,
           render: (h, params) => {
-            return h('div', {}, params.row.pidprice)
+            return h('div', {}, params.row.buynum)
           }
         },
         // {

@@ -69,7 +69,8 @@ export default {
                 src: params.row.imgmaster
               },
               style: {
-                maxHeight: '60px',
+                maxWidth: '50px',
+                maxHeight: '55px',
                 margin: '3px 0'
               },
               directives: [

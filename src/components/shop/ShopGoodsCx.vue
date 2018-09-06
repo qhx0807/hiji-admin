@@ -76,8 +76,8 @@ export default {
                 src: params.row.goodsimg
               },
               style: {
-                maxWidth: '60px',
-                maxHeight: '60px',
+                maxWidth: '50px',
+                maxHeight: '55px',
                 margin: '0px 0'
               },
               directives: [

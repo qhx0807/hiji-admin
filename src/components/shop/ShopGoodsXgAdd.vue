@@ -5,10 +5,10 @@
         <img src="../../images/order.png" alt="">
       </div>
       <div class="tips">
-        <h4><span style="font-size:14px;font-weight:500">编辑促销商品</span></h4>
+        <h4><span style="font-size:14px;font-weight:500">编辑限购商品</span></h4>
         <p>
           添加限购商品。限购时间，限购数量。
-          <router-link :to="{name: 'ShopGoodsCx'}">返回【促销商品列表】</router-link>
+          <router-link :to="{name: 'ShopGoodsXg'}">返回【限购商品列表】</router-link>
         </p>
       </div>
       <div class="clear-fix"></div>
@@ -59,8 +59,8 @@
             <FormItem label="限购结束时间" prop="endtime">
               <DatePicker type="datetime" style="width:200px" placeholder="选择时间"  @on-change="onSelectEndDate"></DatePicker>
             </FormItem>
-            <FormItem label="限购数量" prop="buyname">
-              <InputNumber :min="0" style="width:200px" v-model="addData.buyname" placeholder="输入数量"></InputNumber>
+            <FormItem label="限购数量" prop="buynum">
+              <InputNumber :min="0" style="width:200px" v-model="addData.buynum" placeholder="输入数量"></InputNumber>
             </FormItem>
             <FormItem>
               <Button type="primary" @click="onClickSubmit" :loading="submitLoading">提交</Button>
@@ -86,7 +86,7 @@ export default {
         typeid: '',
         starttime: '',
         endtime: '',
-        buyname: 0
+        buynum: 0
       },
       selectedGoods: {},
       rules: {
@@ -99,7 +99,7 @@ export default {
         endtime: [
           { required: true, message: '请选择结束时间', trigger: 'blur' }
         ],
-        buyname: [
+        buynum: [
           { required: true, type: 'number', message: '请输入数量', trigger: 'blur' }
         ],
       },
