@@ -1,17 +1,80 @@
 <template>
   <div class="box">
     <Card :bordered="false">
-      <Input v-model="searchKey" placeholder="关键字搜索..." style="width: 200px"></Input>
-      <DatePicker :options="dateOptions" type="daterange" placeholder="日期范围" @on-change="onSelectDate" style="width: 220px"></DatePicker>
+      <!-- <Select v-model="merchantid" filterable clearable placeholder="搜索商户" style="width:200px">
+        <Option v-for="(item, index) in merchantData" :key="index" :value="item.id">{{item.name}}</Option>
+      </Select>
+      <Input v-model="searchKey" clearable placeholder="关键字搜索..." style="width: 200px"></Input>
+      <DatePicker :options="dateOptions" clearable type="daterange" placeholder="日期范围" @on-change="onSelectDate" style="width: 220px"></DatePicker>
+      <Select v-model="type" clearable placeholder="订单类型" style="width:200px">
+        <Option value="0">全部</Option>
+        <Option value="1">扫码支付</Option>
+        <Option value="2">停车缴费</Option>
+        <Option value="3">团购订单</Option>
+        <Option value="4">邮购订单</Option>
+      </Select>
+      <Select v-model="paytype" clearable placeholder="支付方式" style="width:200px">
+        <Option value="0">全部</Option>
+        <Option value="1">微信支付</Option>
+        <Option value="2">支付宝</Option>
+      </Select>
+      <Select v-model="shstatus" clearable placeholder="审核状态" style="width:200px">
+        <Option value="9">全部</Option>
+        <Option value="0">未审核</Option>
+        <Option value="1">已审核</Option>
+      </Select>
       <Button type="primary" :loading="tableLoading" style="margin-left:8px" icon="ios-search" @click="onClickSearch">搜索</Button>
       <Button type="primary" style="margin-left:8px" @click="goBackFinace" icon="ios-arrow-back">返回</Button>
-      <Button type="primary" :loading="exportLoading" style="margin-left:8px; float:right" @click="exportTable" icon="md-arrow-down">导出数据</Button>
+      <Button type="primary" :loading="exportLoading" style="margin-left:8px; float:right" @click="exportTable" icon="md-arrow-down">导出数据</Button> -->
+      <Row :gutter="10">
+        <Col span="4">
+          <Select v-model="merchantid" filterable clearable placeholder="搜索商户">
+            <Option v-for="(item, index) in merchantData" :key="index" :value="item.id">{{item.name}}</Option>
+          </Select>
+        </Col>
+        <Col span="4">
+          <Input v-model="searchKey" clearable placeholder="关键字搜索..."></Input>
+        </Col>
+        <Col span="4">
+          <DatePicker :options="dateOptions" clearable type="daterange" placeholder="日期范围" @on-change="onSelectDate" style="width:100%"></DatePicker>
+        </Col>
+        <Col span="4">
+          <Select v-model="type" clearable placeholder="订单类型" style="width:100%">
+            <Option value="0">全部</Option>
+            <Option value="1">扫码支付</Option>
+            <Option value="2">停车缴费</Option>
+            <Option value="3">团购订单</Option>
+            <Option value="4">邮购订单</Option>
+          </Select>
+        </Col>
+        <Col span="4">
+          <Select v-model="paytype" clearable placeholder="支付方式" style="width:100%">
+            <Option value="0">全部</Option>
+            <Option value="1">微信支付</Option>
+            <Option value="2">支付宝</Option>
+          </Select>
+        </Col>
+        <Col span="4">
+          <Select v-model="shstatus" clearable placeholder="审核状态" style="width:100%">
+            <Option value="9">全部</Option>
+            <Option value="0">未审核</Option>
+            <Option value="1">已审核</Option>
+          </Select>
+        </Col>
+      </Row>
+      <Row>
+        <Col span="24" style="padding-top: 10px">
+          <Button type="primary" :loading="tableLoading" icon="ios-search" @click="onClickSearch">搜索</Button>
+          <Button type="default" style="margin-left:8px" @click="goBackFinace" icon="ios-arrow-back">返回</Button>
+          <Button type="primary" :loading="exportLoading" style="margin-left:8px; float:right" @click="exportTable" icon="md-arrow-down">导出数据</Button>
+        </Col>
+      </Row>
     </Card>
     <Card :bordered="false" style="margin-top:10px">
       <Table border ref="table" highlight-row :loading="tableLoading" size="small" height="600" :columns="columns" :data="tableData"></Table>
       <div style="margin: 10px;overflow: hidden">
         <div style="float: right;">
-            <Page :total="counts" show-sizer show-total :page-size-opts="pageSizeOpts" :page-size="15" :current="page" @on-page-size-change="onChangeSize" @on-change="changePage"></Page>
+          <Page :total="counts" show-sizer show-total :page-size-opts="pageSizeOpts" :page-size="15" :current="page" @on-page-size-change="onChangeSize" @on-change="changePage"></Page>
         </div>
       </div>
     </Card>
@@ -103,17 +166,17 @@ export default {
           render: (h, params) => {
             let text = ''
             switch (params.row.type) {
-              case 0:
-                text = ''
-                break
               case 1:
-                text = ''
+                text = '扫码支付'
                 break
               case 2:
-                text = ''
+                text = '停车缴费'
                 break
-              case 2:
-                text = ''
+              case 3:
+                text = '团购订单'
+                break
+              case 4:
+                text = '邮购订单'
                 break
             }
             return h('span', {}, text)
@@ -387,11 +450,19 @@ export default {
             }
           }
         }
-      ]
+      ],
+      starttime: '',
+      endtime: '',
+      type: '',
+      paytype: '',
+      shstatus: '',
+      merchantData: [],
+      merchantid: null
     }
   },
   created () {
     this.getTableData()
+    this.getMerchant()
   },
   computed: {
     dateOptions () {
@@ -402,12 +473,46 @@ export default {
     onClickSearch () {
       this.getTableData()
     },
+    getMerchant () {
+      let d = {
+        pagesize: 999999,
+        page: 1
+      }
+      this.$store.commit('pageLoading', true)
+      serverApi('/Merchant/index', d,
+        response => {
+          // console.log(response)
+          if (response.data.code === 0){
+            this.merchantData = response.data.data.result
+          }else{
+            this.$Message.warning(response.data.msg)
+          }
+          this.$store.commit('pageLoading', false)
+        },
+        error => {
+          console.log(error)
+          this.$store.commit('pageLoading', false)
+        }
+      )
+    },
+    onSelectDate (e) {
+      this.starttime = e[0]
+      this.endtime = e[1]
+    },
     getTableData () {
       this.tableLoading = true
       let d = {
         page: this.page,
         pagesize: this.pageSize,
+        like: this.searchKey,
+        starttime: this.starttime,
+        endtime: this.endtime,
+        paytype: this.paytype,
+        type: this.type,
+        ischeck: this.shstatus,
+        merchantid: this.merchantid
       }
+      console.log(d)
       serverApi('/Finance/orderlist', d,
         response => {
           // console.log(response)

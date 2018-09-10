@@ -78,7 +78,7 @@ export default {
           minWidth: 170,
         },
         {
-          title: '设备号id',
+          title: '设备id',
           key: 'equipmentid',
           width: 80,
           tooltip: true
@@ -86,7 +86,7 @@ export default {
         {
           title: '支付金额',
           key: 'cash',
-          width: 100,
+          width: 110,
           sortable: true,
           align: 'right'
         },
@@ -100,21 +100,21 @@ export default {
         {
           title: '平台优惠',
           key: 'coupon',
-           width: 100,
+           width: 110,
           sortable: true,
           align: 'right'
         },
         {
           title: '商户优惠',
           key: 'merchantcoupon',
-          width: 100,
+          width: 110,
           sortable: true,
           align: 'right'
         },
         {
           title: '订单优惠',
           key: 'subsidy',
-          width: 100,
+          width: 110,
           sortable: true,
           align: 'right'
         },
@@ -258,7 +258,7 @@ export default {
         {
           title: '类型',
           key: 'type',
-          width: 80,
+          width: 90,
         },
         {
           title: '设备号',
@@ -272,30 +272,35 @@ export default {
           width: 140,
         },
         {
+          title: '流水号',
+          key: 'transaction_id',
+          width: 140,
+        },
+        {
           title: '支付金额',
           key: 'cash',
-          width: 100,
+          width: 110,
           align: 'right',
           sortable: true
         },
         {
           title: '平台优惠',
           key: 'coupon',
-          width: 100,
+          width: 110,
           align: 'right',
           sortable: true
         },
         {
           title: '订单优惠',
           key: 'subsidy',
-          width: 100,
+          width: 110,
           align: 'right',
           sortable: true
         },
         {
           title: '商家优惠',
           key: 'merchantcoupon',
-          width: 100,
+          width: 110,
           align: 'right',
           sortable: true
         },
@@ -307,14 +312,14 @@ export default {
           sortable: true
         },
         {
-          title: '支付方式',
+          title: '支付',
           key: 'paytypename',
-          width: 80,
+          width: 70,
         },
         {
           title: '时间',
           key: 'createtime',
-          width: 140,
+          width: 150,
         },
       ]
     }
