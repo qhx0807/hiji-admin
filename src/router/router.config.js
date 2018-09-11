@@ -64,6 +64,14 @@ const ShopGoodsXg = r => require.ensure([], () => r(require('@/components/shop/S
 const ShopGoodsXgAdd = r => require.ensure([], () => r(require('@/components/shop/ShopGoodsXgAdd.vue')))
 
 const IndexPage = r => require.ensure([], () => r(require('@/components/web/IndexPage.vue')))
+const BannerConfig = r => require.ensure([], () => r(require('@/components/web/BannerConfig.vue')))
+const BannerAdd = r => require.ensure([], () => r(require('@/components/web/BannerAdd.vue')))
+const IconConfig = r => require.ensure([], () => r(require('@/components/web/IconConfig.vue')))
+const IconAdd = r => require.ensure([], () => r(require('@/components/web/IconAdd.vue')))
+const Templates = r => require.ensure([], () => r(require('@/components/web/Templates.vue')))
+const Modules = r => require.ensure([], () => r(require('@/components/web/Modules.vue')))
+const ModulesAdd = r => require.ensure([], () => r(require('@/components/web/ModulesAdd.vue')))
+const TemplatesAdd = r => require.ensure([], () => r(require('@/components/web/TemplatesAdd.vue')))
 
 const routes = [
   {
@@ -383,6 +391,46 @@ const routes = [
         path: 'IndexPage',
         component: IndexPage,
         name: 'IndexPage'
+      },
+      {
+        path: 'BannerConfig',
+        component: BannerConfig,
+        name: 'BannerConfig'
+      },
+      {
+        path: 'BannerAdd',
+        component: BannerAdd,
+        name: 'BannerAdd'
+      },
+      {
+        path: 'IconConfig',
+        component: IconConfig,
+        name: 'IconConfig'
+      },
+      {
+        path: 'IconAdd',
+        component: IconAdd,
+        name: 'IconAdd'
+      },
+      {
+        path: 'Modules',
+        component: Modules,
+        name: 'Modules'
+      },
+      {
+        path: 'Templates',
+        component: Templates,
+        name: 'Templates'
+      },
+      {
+        path: 'TemplatesAdd',
+        component: TemplatesAdd,
+        name: 'TemplatesAdd'
+      },
+      {
+        path: 'ModulesAdd',
+        component: ModulesAdd,
+        name: 'ModulesAdd'
       }
     ]
   },
