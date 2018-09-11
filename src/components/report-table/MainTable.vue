@@ -56,8 +56,8 @@
         </Col>
         <Col span="4">
           <Select v-model="shstatus" clearable placeholder="审核状态" style="width:100%">
-            <Option value="9">全部</Option>
-            <Option value="0">未审核</Option>
+            <Option value="0">全部</Option>
+            <Option value="2">未审核</Option>
             <Option value="1">已审核</Option>
           </Select>
         </Col>
