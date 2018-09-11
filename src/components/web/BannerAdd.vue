@@ -17,7 +17,7 @@
         <Form :model="addData" :label-width="80">
           <FormItem label="选择城市">
             <Select v-model="addData.city">
-              <Option value="99">通用</Option>
+              <Option value="0">通用</Option>
               <Option v-for="(item, index) in cityList" :key="index" :value="item.id">{{item.areaname}}</Option>
            </Select>
           </FormItem>
@@ -76,7 +76,7 @@ export default {
       uploadApiUrl: uploadApiUrl,
       submitLoading: false,
       addData: {
-        city: '',
+        city: '0',
         urltype: '',
         url: '',
         sort: '',
