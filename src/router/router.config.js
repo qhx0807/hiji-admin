@@ -428,7 +428,7 @@ const routes = [
         name: 'TemplatesAdd'
       },
       {
-        path: 'ModulesAdd',
+        path: 'ModulesAdd/:id',
         component: ModulesAdd,
         name: 'ModulesAdd'
       }
