@@ -1,14 +1,68 @@
 <template>
   <div class="box">
     <Card :bordered="false">
-      <Input v-model="searchKey" placeholder="关键字搜索..." style="width: 200px"></Input>
-      <DatePicker :options="dateOptions" type="daterange" placeholder="日期范围" @on-change="onSelectDate" style="width: 220px"></DatePicker>
+      <!-- <Input v-model="searchKey" placeholder="关键字搜索..." style="width: 200px"></Input>
+      <Select v-model="timetype" clearable style="width: 120px; margin-left:15px">
+        <Option v-for="(item, index) in timeTypeList" :key="index" :value="item.value">{{item.name}}</Option>
+      </Select>
+      <DatePicker :options="dateOptions" type="daterange" placeholder="日期范围" @on-change="onSelectDate" style="width: 220px;margin-left:-3px"></DatePicker>
       <Button type="primary" :loading="tableLoading" style="margin-left:8px" icon="ios-search" @click="onClickSearch">搜索</Button>
       <Button type="primary" style="margin-left:8px" @click="goBackFinace" icon="ios-arrow-back">返回</Button>
-      <Button type="primary" :loading="exportLoading" style="margin-left:8px; float:right" @click="exportTable" icon="md-arrow-down">导出数据</Button>
+      <Button type="primary" :loading="exportLoading" style="margin-left:8px; float:right" @click="exportTable" icon="md-arrow-down">导出数据</Button> -->
+      <Row :gutter="10">
+        <Col span="4">
+          <Select v-model="merchantid" filterable clearable placeholder="搜索商户">
+            <Option v-for="(item, index) in merchantData" :key="index" :value="item.id">{{item.name}}</Option>
+          </Select>
+        </Col>
+        <Col span="4">
+          <Input v-model="searchKey" clearable placeholder="关键字搜索..."></Input>
+        </Col>
+        <Col span="4">
+          <Select v-model="isapply" placeholder="申请状态" clearable>
+            <Option value="9">全部</Option>
+            <Option value="1">已申请</Option>
+            <Option value="0">未申请</Option>
+          </Select>
+        </Col>
+        <Col span="4">
+          <Select v-model="isauditing" placeholder="审核状态" clearable>
+            <Option value="9">全部</Option>
+            <Option value="1">已审核</Option>
+            <Option value="0">未审核</Option>
+          </Select>
+        </Col>
+        <Col span="4">
+          <Select v-model="isapprove" clearable placeholder="审批状态">
+            <Option value="9">全部</Option>
+            <Option value="1">已审批</Option>
+            <Option value="0">未审批</Option>
+          </Select>
+        </Col>
+        <Col span="4">
+          <Select v-model="ispayment" clearable placeholder="打款状态">
+            <Option value="9">全部</Option>
+            <Option value="1">已打款</Option>
+            <Option value="0">未打款</Option>
+          </Select>
+        </Col>
+      </Row>
+      <Row style="margin-top:10px">
+        <Col span="8">
+          <Select v-model="timetype" clearable placeholder="选择时间条件" style="width: 120px;">
+            <Option v-for="(item, index) in timeTypeList" :key="index" :value="item.value">{{item.name}}</Option>
+          </Select>
+          <DatePicker :options="dateOptions" type="daterange" placeholder="日期范围" @on-change="onSelectDate" ></DatePicker>
+        </Col>
+        <Col span="16" style="text-align:right">
+          <Button type="primary" :loading="tableLoading" icon="ios-search" @click="onClickSearch">搜索</Button>
+          <Button type="primary" style="margin-left:8px" @click="goBackFinace" icon="ios-arrow-back">返回</Button>
+          <!-- <Button type="primary" :loading="exportLoading" style="margin-left:8px; float:right" @click="exportTable" icon="md-arrow-down">导出数据</Button> -->
+        </Col>
+      </Row>
     </Card>
     <Card :bordered="false" style="margin-top:10px">
-      <Table border ref="table" highlight-row :loading="tableLoading" size="small" height="600" :columns="columns" :data="tableData"></Table>
+      <Table border ref="table" highlight-row :loading="tableLoading" size="small" height="550" :columns="columns" :data="tableData"></Table>
       <div style="margin: 10px;overflow: hidden">
         <div style="float: right;">
             <Page :total="counts" show-sizer show-total :page-size-opts="pageSizeOpts" :page-size="15" :current="page" @on-page-size-change="onChangeSize" @on-change="changePage"></Page>
@@ -60,6 +114,20 @@ export default {
       tableData: [],
       shData: {},
       orderData: [],
+      starttime: '',
+      endtime: '',
+      isapply: '',
+      isauditing: '',
+      isapprove: '',
+      ispayment: '',
+      merchantid: '',
+      timeTypeList: [
+        {value: 'applytime', name: '申请时间'},
+        {value: 'auditingtime', name: '财务审核时间'},
+        {value: 'paymenttime', name: '付款时间'},
+        {value: 'approvetime', name: '审批时间'},
+        {value: 'receivablestime', name: '收款时间'}
+      ],
       columns: [
         {
           title: '#',
@@ -321,11 +389,13 @@ export default {
           key: 'createtime',
           width: 150,
         },
-      ]
+      ],
+      merchantData: []
     }
   },
   created () {
     this.getTableData()
+    this.getMerchant()
   },
   computed: {
     dateOptions () {
@@ -355,12 +425,47 @@ export default {
     onClickSearch () {
       this.getTableData()
     },
+    getMerchant () {
+      let d = {
+        pagesize: 999999,
+        page: 1
+      }
+      this.$store.commit('pageLoading', true)
+      serverApi('/Merchant/index', d,
+        response => {
+          // console.log(response)
+          if (response.data.code === 0){
+            this.merchantData = response.data.data.result
+          }else{
+            this.$Message.warning(response.data.msg)
+          }
+          this.$store.commit('pageLoading', false)
+        },
+        error => {
+          console.log(error)
+          this.$store.commit('pageLoading', false)
+        }
+      )
+    },
+    onSelectDate (e) {
+      this.starttime = e[0]
+      this.endtime = e[1]
+    },
     getTableData () {
       this.tableLoading = true
       let d = {
         page: this.page,
         pagesize: this.pageSize,
-        type: 99
+        type: 99,
+        like: this.searchKey,
+        timetype: this.timetype,
+        starttime: this.starttime,
+        endtime: this.endtime,
+        isapply: this.isapply,
+        isauditing: this.isauditing,
+        isapprove: this.isapprove,
+        ispayment: this.ispayment,
+        merchantid: this.merchantid
       }
       serverApi('/Finance/accountlist', d,
         response => {

@@ -5,63 +5,18 @@
         <img src="http://cdn.cqyyy.cn/PREVIEW.svg" alt="">
       </div>
       <div class="tips">
-        <h4><span style="font-size:14px;font-weight:500">新增板块</span></h4>
-        <p>新增首页板块
+        <h4><span style="font-size:14px;font-weight:500">板块名称</span></h4>
+        <p>编辑首页板块
           <router-link :to="{name: 'Modules'}">返回【首页板块列表】</router-link>
         </p>
       </div>
       <div class="clear-fix"></div>
     </Card>
-    <Card :bordered="false">
-      <div class="from-box">
-        <Form :model="addData" :label-width="80">
-          <FormItem label="选择城市">
-            <Select v-model="addData.city">
-              <Option value="99">通用</Option>
-              <Option v-for="(item, index) in cityList" :key="index" :value="item.id">{{item.areaname}}</Option>
-           </Select>
-          </FormItem>
-          <FormItem label="上传图片">
-            <Upload
-              type="drag"
-              :action="uploadApiUrl"
-              :on-error="uploadImgErr"
-              :on-success="uploadImgSucc"
-              :show-upload-list="true"
-              accept="image/*"
-              >
-              <div slot="tip" style="margin-top:10px;">
-                <Alert closable show-icon>图片大小不要超过300kb, 最佳尺寸为750px*200px(宽*高)</Alert>
-              </div>
-              <div style="padding: 10px 0">
-                <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
-                <p>点击或拖动图片到此处上传</p>
-              </div>
-            </Upload>
-            <div class="img-box">
-              <img v-imgview :src="addData.imgurl" alt="">
-            </div>
-          </FormItem>
-          <FormItem label="跳转类型">
-            <Select v-model="addData.urltype">
-              <Option value="1">商品详情</Option>
-              <Option value="2">卡券详情</Option>
-              <Option value="5">模板页</Option>
-              <Option value="4">外部链接</Option>
-              <Option value="3">内部路由</Option>
-           </Select>
-          </FormItem>
-          <FormItem label="跳转地址">
-            <Input v-model="addData.url" placeholder="请输入" />
-          </FormItem>
-          <FormItem label="排序">
-            <InputNumber :max="99999999" :min="1" v-model="addData.sort"></InputNumber>
-          </FormItem>
-          <FormItem>
-            <Button type="primary" @click="onClickSubmit" :loading="submitLoading">提交</Button>
-            <Button type="default" :to="{name: 'Modules'}" style="margin-left:10px">返回</Button>
-          </FormItem>
-        </Form>
+    <Card :bordered="false" dis-hover>
+      <div class="preview-box">
+        <div class="add-box">
+          <Button type="dashed" @click="onClickAddBlock" long icon="md-add">添加</Button>
+        </div>
       </div>
     </Card>
   </div>
@@ -83,10 +38,13 @@ export default {
         type: '1',
         imgurl: ''
       },
-      cityList: []
+      cityList: [],
+      InfoData: []
     }
   },
   created () {
+    let id = this.$route.params.id
+    this.getModulesInfo(id)
     this.getCityData()
   },
   methods: {
@@ -104,6 +62,27 @@ export default {
         error => {
           console.log(error)
           this.$store.commit('pageLoading', false)
+        }
+      )
+    },
+    getModulesInfo (id) {
+      let d = {
+        id: id,
+        index: 1
+      }
+      serverApi('/web/webareaindex', d,
+        response => {
+          console.log(response)
+          if (response.data.code === 0) {
+            this.InfoData = response.data.data
+          } else {
+            this.$Message.warning(response.data.msg)
+          }
+          console.log(response)
+        },
+        error => {
+          console.log(error)
+          this.$Message.error(error.toString())
         }
       )
     },
@@ -145,6 +124,9 @@ export default {
       //     this.$Message.error(error.toString())
       //   }
       // )
+    },
+    onClickAddBlock () {
+      alert(1)
     }
   }
 }
@@ -168,20 +150,15 @@ export default {
     margin-top: 5px;
   }
 }
-.from-box{
-  max-width: 620px;
-  min-width: 320px;
-  margin: 0 auto;
-}
-.img-box{
-  position: absolute;
-  right: 0;
-  top: 0;
-  transform: translateX(100%);
-  text-align: left;
-  img{
-    max-width: 300px;
-    height: 130px;
+.preview-box{
+  width: 320px;
+  height: 450px;
+  background-color: #fafafa;
+  border: 1px solid #ddd;
+  .add-box{
+    margin-top: 20px;
+    text-align: center;
+    padding: 0 50px;
   }
 }
 </style>

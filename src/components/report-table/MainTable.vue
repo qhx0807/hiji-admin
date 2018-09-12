@@ -66,7 +66,7 @@
         <Col span="24" style="padding-top: 10px">
           <Button type="primary" :loading="tableLoading" icon="ios-search" @click="onClickSearch">搜索</Button>
           <Button type="default" style="margin-left:8px" @click="goBackFinace" icon="ios-arrow-back">返回</Button>
-          <Button type="primary" :loading="exportLoading" style="margin-left:8px; float:right" @click="exportTable" icon="md-arrow-down">导出数据</Button>
+          <!-- <Button type="primary" :loading="exportLoading" style="margin-left:8px; float:right" @click="exportTable" icon="md-arrow-down">导出数据</Button> -->
         </Col>
       </Row>
     </Card>
