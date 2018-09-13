@@ -47,21 +47,21 @@
           </Select>
         </Col>
         <Col span="4">
-          <Select v-model="isauditing" placeholder="审核状态" clearable>
+          <Select v-model="isauditing" placeholder="财务会计审核状态" clearable>
             <Option value="9">全部</Option>
             <Option value="1">已审核</Option>
             <Option value="0">未审核</Option>
           </Select>
         </Col>
         <Col span="4">
-          <Select v-model="isapprove" clearable placeholder="审批状态">
+          <Select v-model="isapprove" clearable placeholder="财务总监审批状态">
             <Option value="9">全部</Option>
             <Option value="1">已审批</Option>
             <Option value="0">未审批</Option>
           </Select>
         </Col>
         <Col span="4">
-          <Select v-model="ispayment" clearable placeholder="打款状态">
+          <Select v-model="ispayment" clearable placeholder="财务出纳打款状态">
             <Option value="9">全部</Option>
             <Option value="1">已打款</Option>
             <Option value="0">未打款</Option>
@@ -208,8 +208,8 @@ export default {
           key: 'isapprove',
           width: 120,
           render: (h, params) => {
-            let text = params.row.ischeck == 1 ? '已审批' : '未审批'
-            let color = params.row.ischeck == 1 ? 'success' : 'warning'
+            let text = params.row.isapprove == 1 ? '已审批' : '未审批'
+            let color = params.row.isapprove == 1 ? 'success' : 'warning'
             let el = h('Tag', {
               props: {
                 type: 'dot',

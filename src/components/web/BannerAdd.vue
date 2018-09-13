@@ -52,6 +52,7 @@
               <Option value="5">模板页</Option>
               <Option value="4">外部链接</Option>
               <Option value="3">内部路由</Option>
+              <Option value="0">不跳转</Option>
            </Select>
           </FormItem>
           <FormItem label="跳转地址">
