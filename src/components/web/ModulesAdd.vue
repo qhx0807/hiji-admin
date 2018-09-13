@@ -39,18 +39,21 @@
           </Poptip>
         </div>
       </div>
-      <div class="edit-box">
+      <div class="edit-box" v-show="draftShow">
         <div class="draft">
           <p class="draft-tip">草稿区，请注意保存</p>
           <p class="draft-title">{{typename}}</p>
           <Row>
             <Col :span="typeSpan" v-for="(item, index) in draftData" :key="index">
-              {{item.url}}
+              <div class="draft-preview" @mouseover="onDraMouseOver(index)" @mouseout="onDraMouseOut(index)">
+                <span class="del" v-show="index == draIndex">删除</span>
+                <img :src="item.imgurl" alt="">
+              </div>
             </Col>
           </Row>
           <Row>
             <Col span="24">
-              <div class="addItem">
+              <div class="addItem" @click="onClickAddItem">
                 <Icon type="ios-add"></Icon>
               </div>
             </Col>
@@ -60,7 +63,7 @@
           <Button type="default" style="width:80px">保存</Button>
         </div>
       </div>
-      <div class="form-box">
+      <div class="form-box" v-show="formShow">
         <Form :model="addData" :label-width="80">
           <FormItem label="选择城市" required>
             <Select v-model="addData.city">
@@ -83,7 +86,7 @@
                 <Alert closable show-icon>图片大小不要超过200kb。选择商品或卡券时不传图片默认为商品/卡券主图。</Alert>
                 <Input v-model="addData.imgurl" placeholder="或者直接输入图片连接地址" />
               </div>
-              <div style="padding: 10px 0">
+              <div style="padding: 5px 0">
                 <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
                 <p>点击或拖动图片到此处上传</p>
               </div>
@@ -125,6 +128,8 @@ export default {
     return {
       uploadApiUrl: uploadApiUrl,
       submitLoading: false,
+      draftShow: false,
+      formShow: false,
       addData: {
         city: '0',
         urltype: '',
@@ -139,7 +144,8 @@ export default {
       typeSpan: 24,
       selectType: 1,
       typename: '',
-      draftData: []
+      draftData: [],
+      draIndex: -1,
     }
   },
   created () {
@@ -226,6 +232,7 @@ export default {
     },
     onSelectBlockItem (e) {
       this.selectType = e
+      this.draftShow = true
       switch (e) {
         case 1:
           this.typeSpan = 24
@@ -244,6 +251,15 @@ export default {
           this.typename = '图文广告区域'
           break
       }
+    },
+    onDraMouseOver (index) {
+      this.draIndex = index
+    },
+    onDraMouseOut () {
+      this.draIndex = -1
+    },
+    onClickAddItem () {
+      this.formShow = true
     },
     onClickAddSon () {
       if (!this.addData.imgurl && !this.addData.url) {
@@ -296,6 +312,7 @@ export default {
   .draft{
     width: 320px;
     height: 450px;
+    box-sizing: border-box;
     background-color: #fff;
     border: 1px solid #ddd;
     overflow: auto;
@@ -307,6 +324,7 @@ export default {
       justify-content: center;
       align-items: center;
       margin: 0 auto;
+      margin-top: 15px;
       cursor: pointer;
       background-color: #fafafa;
       &:hover{
@@ -336,7 +354,32 @@ export default {
       text-align: center;
       height: 25px;
       line-height: 25px;
+      background-color: #fff;
     }
+  }
+}
+.draft-preview{
+  position: relative;
+  box-sizing: border-box;
+  border:solid 1px transparent;
+  font-size: 0;
+  transition: all .2s ease;
+  &:hover{
+    border: 1px dashed #222;
+  }
+  .del{
+    display: block;
+    height: 12px;
+    width: 30px;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    color: red;
+    font-size: 14px;
+    z-index: 1;
+  }
+  img{
+    width: 100%;
   }
 }
 .form-box{

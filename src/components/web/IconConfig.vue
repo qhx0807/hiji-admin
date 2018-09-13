@@ -171,6 +171,7 @@ export default {
       let d = {
         page: 1,
         pagesize: 99999,
+        type: '2'
       }
       serverApi('/web/index', d,
         response => {

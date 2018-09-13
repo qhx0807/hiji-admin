@@ -57,7 +57,7 @@
         <Col span="16" style="text-align:right">
           <Button type="primary" :loading="tableLoading" icon="ios-search" @click="onClickSearch">搜索</Button>
           <Button type="primary" style="margin-left:8px" @click="goBackFinace" icon="ios-arrow-back">返回</Button>
-          <!-- <Button type="primary" :loading="exportLoading" style="margin-left:8px; float:right" @click="exportTable" icon="md-arrow-down">导出数据</Button> -->
+          <Button type="primary" :loading="exportLoading" style="margin-left:8px; float:right" @click="exportTable" icon="md-arrow-down">导出数据</Button>
         </Col>
       </Row>
     </Card>
@@ -493,8 +493,37 @@ export default {
         return false
       }
       this.exportLoading = true
-      exportExcel(this.tableData, "data")
-      this.exportLoading = false
+
+      let d = {
+        page: this.page,
+        pagesize: this.pageSize,
+        type: 99,
+        like: this.searchKey,
+        timetype: this.timetype,
+        starttime: this.starttime,
+        endtime: this.endtime,
+        isapply: this.isapply,
+        isauditing: this.isauditing,
+        isapprove: this.isapprove,
+        ispayment: this.ispayment,
+        merchantid: this.merchantid,
+        exports: 'out'
+      }
+      serverApi('/Finance/accountlist', d,
+        response => {
+          // console.log(response)
+          if (response.data.code === 0){
+            location.href = response.data.data
+          }else{
+            this.$Message.warning(response.data.msg)
+          }
+          this.exportLoading = false
+        },
+        error => {
+          console.log(error)
+          this.exportLoading = false
+        }
+      )
     },
     changePage (e) {
       this.page = e

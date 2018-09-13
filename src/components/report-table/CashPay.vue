@@ -57,7 +57,7 @@
         <Col span="16" style="text-align:right">
           <Button type="primary" :loading="tableLoading" icon="ios-search" @click="onClickSearch">搜索</Button>
           <Button type="primary" style="margin-left:8px" @click="goBackFinace" icon="ios-arrow-back">返回</Button>
-          <!-- <Button type="primary" :loading="exportLoading" style="margin-left:8px; float:right" @click="exportTable" icon="md-arrow-down">导出数据</Button> -->
+          <Button type="primary" :loading="exportLoading" style="margin-left:8px; float:right" @click="exportTable" icon="md-arrow-down">导出数据</Button>
         </Col>
       </Row>
     </Card>
@@ -90,6 +90,7 @@ export default {
       pageSize: 15,
       pageSizeOpts: [10, 15, 25, 50, 70, 100, 200],
       tableData: [],
+      merchantData: [],
       shData: {},
       starttime: '',
       endtime: '',
@@ -280,6 +281,7 @@ export default {
   },
   created () {
     this.getTableData()
+    this.getMerchant()
   },
   computed: {
     dateOptions () {
@@ -289,7 +291,6 @@ export default {
   methods: {
     onClickSearch () {
       this.getTableData()
-      this.getMerchant()
     },
     onSelectDate (e) {
       this.starttime = e[0]
@@ -303,7 +304,7 @@ export default {
       this.$store.commit('pageLoading', true)
       serverApi('/Merchant/index', d,
         response => {
-          // console.log(response)
+          console.log(response)
           if (response.data.code === 0){
             this.merchantData = response.data.data.result
           }else{
@@ -335,7 +336,7 @@ export default {
       }
       serverApi('/Finance/accountlist', d,
         response => {
-          console.log(response)
+          // console.log(response)
           if (response.data.code === 0){
             this.tableData = response.data.data.result
             this.counts =  response.data.data.counts
@@ -359,8 +360,36 @@ export default {
         return false
       }
       this.exportLoading = true
-      exportExcel(this.tableData, "data")
-      this.exportLoading = false
+      let d = {
+        page: this.page,
+        pagesize: this.pageSize,
+        type: 4,
+        like: this.searchKey,
+        timetype: this.timetype,
+        starttime: this.starttime,
+        endtime: this.endtime,
+        isapply: this.isapply,
+        isauditing: this.isauditing,
+        isapprove: this.isapprove,
+        ispayment: this.ispayment,
+        merchantid: this.merchantid,
+        exports: 'out'
+      }
+      serverApi('/Finance/accountlist', d,
+        response => {
+          console.log(response)
+          if (response.data.code === 0){
+            location.href = response.data.data
+          }else{
+            this.$Message.warning(response.data.msg)
+          }
+          this.exportLoading = false
+        },
+        error => {
+          console.log(error)
+          this.exportLoading = false
+        }
+      )
     },
     changePage (e) {
       this.page = e
