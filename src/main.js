@@ -8,6 +8,7 @@ import store from './store'
 import iView from 'iview'
 import _ from 'lodash'
 // import viserVue from 'viser-vue'
+import orderBy from './utlis/filters'
 
 import 'iview/dist/styles/iview.css'
 
@@ -42,6 +43,8 @@ Vue.directive('imgview', {
     el.removeEventListener('click', null)
   }
 })
+
+Vue.filter('orderBy', orderBy)
 
 new Vue({
   el: '#app',

@@ -44,9 +44,9 @@
           <p class="draft-tip">草稿区，请注意保存</p>
           <p class="draft-title">{{typename}}</p>
           <Row>
-            <Col :span="typeSpan" v-for="(item, index) in draftData" :key="index">
-              <div class="draft-preview" @mouseover="onDraMouseOver(index)" @mouseout="onDraMouseOut(index)">
-                <span class="del" v-show="index == draIndex">删除</span>
+            <Col :span="typeSpan" v-for="(item, index) in DraftDataSorted" :key="index">
+              <div class="draft-preview" @click="onClickDraftItem(item)" @mouseover="onDraMouseOver(index)" @mouseout="onDraMouseOut(index)">
+                <span class="del" v-show="index == draIndex" @click="onClickDelDraItem(index)">删除</span>
                 <img :src="item.imgurl" alt="">
               </div>
             </Col>
@@ -60,7 +60,7 @@
           </Row>
         </div>
         <div style="padding-top: 10px; text-align:center">
-          <Button type="default" style="width:80px">保存</Button>
+          <Button type="default" @click="onClockSaveDraft" style="width:80px">保存</Button>
         </div>
       </div>
       <div class="form-box" v-show="formShow">
@@ -109,8 +109,9 @@
             <InputNumber :max="99999999" :min="1" v-model="addData.sort"></InputNumber>
           </FormItem>
           <FormItem>
-            <Button type="primary" @click="onClickAddSon" >添加</Button>
-            <Button type="default" :to="{name: 'BannerConfig'}" style="margin-left:10px">取消</Button>
+            <Button type="primary" @click="onClickAddSon" v-show="!editSonShow">添加</Button>
+            <!-- <Button type="primary" @click="onClickSaveSon" v-show="editSonShow">保存</Button> -->
+            <Button type="default" @click="formShow = false" v-show="!editSonShow" style="margin-left:10px">取消</Button>
           </FormItem>
         </Form>
       </div>
@@ -130,6 +131,7 @@ export default {
       submitLoading: false,
       draftShow: false,
       formShow: false,
+      editSonShow: false,
       addData: {
         city: '0',
         urltype: '',
@@ -146,12 +148,22 @@ export default {
       typename: '',
       draftData: [],
       draIndex: -1,
+      draftName: ''
     }
   },
   created () {
     let id = this.$route.params.id
     this.getModulesInfo(id)
     this.getCityData()
+  },
+  computed: {
+    DraftDataSorted () {
+      let arr = []
+      let compare = (a, b) => {
+        return a.sort - b.sort
+      }
+      return this.draftData.sort(compare)
+    },
   },
   methods: {
     getCityData () {
@@ -259,6 +271,15 @@ export default {
       this.draIndex = -1
     },
     onClickAddItem () {
+      this.editSonShow = false
+      this.addData = {
+        city: '0',
+        urltype: '',
+        url: '',
+        sort: '',
+        type: '1',
+        imgurl: ''
+      }
       this.formShow = true
     },
     onClickAddSon () {
@@ -269,6 +290,50 @@ export default {
       console.log(this.addData)
       let obj = Object.assign({}, this.addData)
       this.draftData.push(obj)
+      setTimeout(() => {
+        this.addData = {
+          city: '0',
+          urltype: '',
+          url: '',
+          sort: '',
+          type: '1',
+          imgurl: ''
+        }
+        this.formShow = false
+      }, 200)
+    },
+    onClickDelDraItem (index) {
+      this.DraftDataSorted.splice(index, 1)
+    },
+    onClickDraftItem (row) {
+      this.addData = row
+      this.editSonShow = true
+      this.formShow = true
+    },
+    onClickSaveSon () {
+      console.log(this.DraftDataSorted)
+    },
+    onClockSaveDraft () {
+      let d = {
+        type: this.selectType,
+        name: '',
+        imgs: JSON.stringify(this.DraftDataSorted),
+        order: '',
+        pid: this.$route.params.id
+      }
+      console.log(d)
+      serverApi('/webwebareasonadd', d,
+        response => {
+          if (response.data.code === 0) {
+            console.log(response)
+          } else {
+            this.$Message(response.data.msg)
+          }
+        },
+        error => {
+          this.$Message(error.toString())
+        }
+      )
     }
   }
 }
@@ -285,6 +350,7 @@ export default {
 }
 .card-wrap{
   position: relative;
+  width: 100%;
 }
 .tips{
   padding-left: 70px;
@@ -301,6 +367,11 @@ export default {
   background-color: #fafafa;
   border: 1px solid #ddd;
   float: left;
+  &::-webkit-scrollbar{
+    width: 0px;
+    height: 0px;
+    background-color: #fff;
+  }
   .add-box{
     margin-top: 20px;
     text-align: center;
@@ -309,6 +380,11 @@ export default {
 .edit-box{
   float: left;
   padding-left: 30px;
+   &::-webkit-scrollbar{
+    width: 0px;
+    height: 0px;
+    background-color: #fff;
+  }
   .draft{
     width: 320px;
     height: 450px;
@@ -316,6 +392,11 @@ export default {
     background-color: #fff;
     border: 1px solid #ddd;
     overflow: auto;
+    &::-webkit-scrollbar{
+      width: 0px;
+      height: 0px;
+      background-color: #fff;
+    }
     .addItem{
       width: 80px;
       height: 40px;
@@ -365,7 +446,7 @@ export default {
   font-size: 0;
   transition: all .2s ease;
   &:hover{
-    border: 1px dashed #222;
+    border: 1px dashed #2d8cf0;
   }
   .del{
     display: block;
@@ -377,6 +458,7 @@ export default {
     color: red;
     font-size: 14px;
     z-index: 1;
+    cursor: pointer;
   }
   img{
     width: 100%;
