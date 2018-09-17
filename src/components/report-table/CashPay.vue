@@ -62,10 +62,14 @@
       </Row>
     </Card>
     <Card :bordered="false" style="margin-top:10px">
-      <Table border ref="table" highlight-row :loading="tableLoading" size="small" height="550" :columns="columns" :data="tableData"></Table>
+      <Table border ref="table" highlight-row :loading="tableLoading" size="small" height="550" :columns="columns" :data="tableData">
+        <div slot="footer">
+          <p style="text-align:center" v-if="tableData.length > 0">当前页提现金额合计：<span style="font-size:16px;color:#f40">￥{{txTotal}}</span></p>
+        </div>
+      </Table>
       <div style="margin: 10px;overflow: hidden">
         <div style="float: right;">
-            <Page :total="counts" show-sizer show-total :page-size-opts="pageSizeOpts" :page-size="15" :current="page" @on-page-size-change="onChangeSize" @on-change="changePage"></Page>
+          <Page :total="counts" show-sizer show-total :page-size-opts="pageSizeOpts" :page-size="100" :current="page" @on-page-size-change="onChangeSize" @on-change="changePage"></Page>
         </div>
       </div>
     </Card>
@@ -87,8 +91,8 @@ export default {
       payLoading: true,
       counts: 0,
       page: 1,
-      pageSize: 15,
-      pageSizeOpts: [10, 15, 25, 50, 70, 100, 200],
+      pageSize: 100,
+      pageSizeOpts: [10, 15, 25, 50, 70, 100, 200, 300],
       tableData: [],
       merchantData: [],
       shData: {},
@@ -287,6 +291,13 @@ export default {
     dateOptions () {
       return this.$store.state.dateOptions
     },
+    txTotal () {
+      let fee = 0
+      this.tableData.forEach(item => {
+        fee += Number(item.total)
+      })
+      return fee.toFixed(2)
+    }
   },
   methods: {
     onClickSearch () {

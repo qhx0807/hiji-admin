@@ -20,9 +20,21 @@
             justify="end"
             @click.native="onClickRomteItem(p)"
             class="content-bordered">
-            <Col style="margin-bottom:10px;" :span="p.type == 2 ? 12 : 24" v-for="(s, i) in p.imgs" :key="i">
+            <span class="del-text" @click.stop="onClickDelSon(p)">删除</span>
+            <Col v-show="p.type != 3" :span="p.type == 2 ? 12 : 24" v-for="(s, i) in p.imgs" :key="i">
               <div class="pre-img">
                 <img :src="s.imgurl" alt="">
+              </div>
+            </Col>
+            <Col span="24" v-show="p.type == 3">
+              <div class="swiper" ref="previeWarper">
+                <div class="sw-content">
+                  <ul>
+                    <li v-for="(s, i) in p.imgs" :key="i">
+                      <img :src="s.imgurl" alt="">
+                    </li>
+                  </ul>
+                </div>
               </div>
             </Col>
           </Row>
@@ -58,14 +70,23 @@
           <p class="draft-title">{{typename}}</p>
           <div class="content">
             <Row>
-              <Col :span="typeSpan" v-for="(item, index) in DraftDataSorted" :key="index">
+              <Col v-show="selectType != 3" :span="selectType == 2 ? 12 : 24" v-for="(item, index) in DraftDataSorted" :key="index">
                 <div class="draft-preview" @click="onClickDraftItem(item)" @mouseover="onDraMouseOver(index)" @mouseout="onDraMouseOut(index)">
                   <span class="del" v-show="index == draIndex" @click="onClickDelDraItem(index)">删除</span>
                   <img :src="item.imgurl" alt="">
                 </div>
               </Col>
-              <Col span="24">
-                <div class="swiper"></div>
+              <Col span="24" v-show="selectType == 3">
+                <div class="swiper" ref="draftWarper">
+                  <div class="sw-content">
+                    <ul>
+                      <li v-for="(item, index) in DraftDataSorted" :key="index">
+                        <span class="sw-text" @click="onClickDelDraItem(index)">删除</span>
+                        <img :src="item.imgurl" alt="">
+                      </li>
+                    </ul>
+                  </div>
+                </div>
               </Col>
             </Row>
           </div>
@@ -163,7 +184,7 @@ export default {
     return {
       uploadApiUrl: uploadApiUrl,
       submitLoading: false,
-      draftShow: false,
+      draftShow: true,
       formShow: false,
       editSonShow: false,
       addData: {
@@ -192,6 +213,24 @@ export default {
     let id = this.$route.params.id
     this.getModulesInfo(id)
     this.getCityData()
+  },
+  mounted () {
+    this.$nextTick(() => {
+      let a = new BScroll(this.$refs.draftWarper, {
+        startX: 0,
+        click: false,
+        scrollX: true,
+        preventDefault: true,
+        eventPassthrough: 'vertical'
+      })
+    })
+    let b = new BScroll(this.$refs.previeWarper, {
+      startX: 0,
+      click: false,
+      scrollX: true,
+      preventDefault: true,
+      eventPassthrough: 'vertical'
+    })
   },
   computed: {
     DraftDataSorted () {
@@ -269,30 +308,6 @@ export default {
         this.addData.imgurl = url
       }
     },
-    onClickSubmit () {
-      if (!this.addData.imgurl) {
-        this.$Message.warning('请上传图片')
-        return false
-      }
-      if (!this.addData.urltype) {
-        this.$Message.warning('请选择链接类型')
-        return false
-      }
-      if (!this.addData.url) {
-        this.$Message.warning('请输入连接地址')
-        return false
-      }
-      this.submitLoading = true
-      // serverApi('/web/webadd', this.addData,
-      //   response => {
-      //     console.log(response)
-      //   },
-      //   error => {
-      //     console.log(error)
-      //     this.$Message.error(error.toString())
-      //   }
-      // )
-    },
     onSelectBlockItem (e) {
       this.selectType = e
       this.draftShow = true
@@ -363,6 +378,7 @@ export default {
     },
     onClickRomteItem (row) {
       this.draftData = row.imgs
+      this.selectType = row.type
       this.formShow = false
       this.draftShow = true
     },
@@ -389,6 +405,26 @@ export default {
           this.$Message.error(error.toString())
         }
       )
+    },
+    onClickDelSon (row) {
+      this.$Modal.confirm({
+        title: '提示',
+        content: '<p>将此模块内容删除？</p>',
+        onOk: () => {
+          serverApi('/web/webareasondel', {id: row.id},
+            response => {
+              if (response.data.code == 0) {
+                this.getModulesInfo(this.$route.params.id)
+              }
+              this.$Message.info(response.data.msg)
+            },
+            error => {
+              console.log(error)
+              this.$Message.error('链接失败！')
+            }
+          )
+        }
+      })
     }
   }
 }
@@ -422,18 +458,71 @@ export default {
   .content{
     width: 320px;
     height: 470px;
-    background-color: #fafafa;
+    background-color: #f9f9f9;
     border: 1px solid #ddd;
     overflow: auto;
-    font-size: 0;
     padding: 0px 5px;
     padding-bottom: 50px;
+    .swiper{
+        height: 120px;
+        width: 320px;
+        user-select: none;
+        overflow-x: auto;
+        &::-webkit-scrollbar{
+          width: 0px;
+          height: 0px;
+          background-color: #fff;
+        }
+        .sw-content{
+          width: 1000px;
+          box-sizing: border-box;
+          ul{
+            padding: 0;
+            margin: 0;
+            list-style: none;
+            li{
+              float: left;
+              height: 120px;
+              box-sizing: border-box;
+              position: relative;
+              img{
+                height: 116px;
+                user-select: none;
+                pointer-events: none;
+                width: auto;
+              }
+            }
+          }
+        }
+      }
     .content-bordered{
       border: 1px dashed #fff;
       transition: all ease .2s;
       cursor: pointer;
+      position: relative;
+      .del-text{
+        color: #f44;
+        position: absolute;
+        right: 3px;
+        top: 3px;
+        height: 20px;
+        width: 30px;
+        font-size: 12px;
+        z-index: 99;
+        cursor: pointer;
+        transition: all ease .2s;
+        display: none;
+        &:hover{
+          font-size: 14px;
+          font-weight: 600;
+          color: red;
+        }
+      }
       &:hover{
         border: 1px dashed #2d8cf0;
+        .del-text{
+          display: block;
+        }
       }
     }
     &::-webkit-scrollbar{
@@ -455,6 +544,7 @@ export default {
   }
   .pre-img{
     width: 100%;
+    font-size: 0;
     img{
       width: 100%;
     }
@@ -486,7 +576,50 @@ export default {
       }
       .swiper{
         height: 120px;
-
+        width: 320px;
+        user-select: none;
+        overflow-x: auto;
+        &::-webkit-scrollbar{
+          width: 0px;
+          height: 0px;
+          background-color: #fff;
+        }
+        .sw-content{
+          width: 1000px;
+          box-sizing: border-box;
+          ul{
+            padding: 0;
+            margin: 0;
+            list-style: none;
+            li{
+              float: left;
+              height: 120px;
+              border: 1px dashed transparent;
+              box-sizing: border-box;
+              position: relative;
+              .sw-text{
+                font-size: 12px;
+                color: #f44;
+                position: absolute;
+                right: 3px;
+                top: 3px;
+                cursor: pointer;
+                display: none;
+              }
+              img{
+                height: 116px;
+                user-select: none;
+                pointer-events: none;
+              }
+              &:hover{
+                border: 1px dashed #2d8cf0;
+                .sw-text{
+                  display: block;
+                }
+              }
+            }
+          }
+        }
       }
     }
     .addItem{

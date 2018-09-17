@@ -423,7 +423,7 @@ const routes = [
         name: 'Templates'
       },
       {
-        path: 'TemplatesAdd',
+        path: 'TemplatesAdd/:id',
         component: TemplatesAdd,
         name: 'TemplatesAdd'
       },

@@ -247,7 +247,7 @@ export default {
         title: '提示',
         content: '<p>将此商品从促销商品中移除？</p>',
         onOk: () => {
-          serverApi('/web/webdel', id,
+          serverApi('/web/webdel', {id: id},
             response => {
               if (response.data.code == 0) {
                 this.getTableData()
