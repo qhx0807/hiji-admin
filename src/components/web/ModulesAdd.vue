@@ -14,10 +14,23 @@
     </Card>
     <Card :bordered="false" dis-hover class="card-wrap">
       <div class="preview-box">
+        <div class="content">
+          <Row v-for="(p, index) in infoData" :key="p.id" :gutter="10"
+            type="flex"
+            justify="end"
+            @click.native="onClickRomteItem(p)"
+            class="content-bordered">
+            <Col style="margin-bottom:10px;" :span="p.type == 2 ? 12 : 24" v-for="(s, i) in p.imgs" :key="i">
+              <div class="pre-img">
+                <img :src="s.imgurl" alt="">
+              </div>
+            </Col>
+          </Row>
+        </div>
         <div class="add-box">
-          <Poptip trigger="click" placement="bottom">
+          <Poptip trigger="click" transfer placement="right">
             <Button type="dashed" style="width: 170px" @click="onClickAddBlock" long icon="md-add">添加</Button>
-            <div slot="title">添加功能块</div>
+            <div slot="title" style="text-align:center">添加功能块</div>
             <div slot="content">
               <Row>
                 <Col span="12" style="padding: 0 3px">
@@ -43,29 +56,47 @@
         <div class="draft">
           <p class="draft-tip">草稿区，请注意保存</p>
           <p class="draft-title">{{typename}}</p>
-          <Row>
-            <Col :span="typeSpan" v-for="(item, index) in DraftDataSorted" :key="index">
-              <div class="draft-preview" @click="onClickDraftItem(item)" @mouseover="onDraMouseOver(index)" @mouseout="onDraMouseOut(index)">
-                <span class="del" v-show="index == draIndex" @click="onClickDelDraItem(index)">删除</span>
-                <img :src="item.imgurl" alt="">
-              </div>
-            </Col>
-          </Row>
-          <Row>
-            <Col span="24">
-              <div class="addItem" @click="onClickAddItem">
-                <Icon type="ios-add"></Icon>
-              </div>
-            </Col>
-          </Row>
+          <div class="content">
+            <Row>
+              <Col :span="typeSpan" v-for="(item, index) in DraftDataSorted" :key="index">
+                <div class="draft-preview" @click="onClickDraftItem(item)" @mouseover="onDraMouseOver(index)" @mouseout="onDraMouseOut(index)">
+                  <span class="del" v-show="index == draIndex" @click="onClickDelDraItem(index)">删除</span>
+                  <img :src="item.imgurl" alt="">
+                </div>
+              </Col>
+              <Col span="24">
+                <div class="swiper"></div>
+              </Col>
+            </Row>
+          </div>
+          <div class="draft-form">
+            <Form :label-width="40">
+              <Row>
+                <Col span="12">
+                  <FormItem label="城市" style="margin-bottom: 0">
+                    <Select v-model="draftCity" transfer style="width:100px" size="small">
+                      <Option value="0">通用</Option>
+                      <Option v-for="(item, index) in cityList" :key="index" :value="item.id">{{item.areaname}}</Option>
+                    </Select>
+                  </FormItem>
+                </Col>
+                <Col span="12">
+                  <FormItem label="排序" style="margin-bottom: 0">
+                    <InputNumber size="small" style="width:100px" :max="99999999" :min="1" v-model="draftSort"></InputNumber>
+                  </FormItem>
+                </Col>
+              </Row>
+            </Form>
+          </div>
         </div>
         <div style="padding-top: 10px; text-align:center">
           <Button type="default" @click="onClockSaveDraft" style="width:80px">保存</Button>
+          <Button type="default" @click="onClickAddItem" icon="ios-add" >添加</Button>
         </div>
       </div>
       <div class="form-box" v-show="formShow">
         <Form :model="addData" :label-width="80">
-          <FormItem label="选择城市" required>
+          <FormItem label="选择城市" v-show="draftCity==0" required>
             <Select v-model="addData.city">
               <Option value="0">通用</Option>
               <Option v-for="(item, index) in cityList" :key="index" :value="item.id">{{item.areaname}}</Option>
@@ -105,6 +136,9 @@
           <FormItem label="跳转地址">
             <Input v-model="addData.url" placeholder="请输入" />
           </FormItem>
+          <FormItem label="描述" v-show="selectType === 4">
+            <Input size="small" type="textarea" v-model="addData.name" placeholder="请输入，图文广告时文字描述" />
+          </FormItem>
           <FormItem label="排序">
             <InputNumber :max="99999999" :min="1" v-model="addData.sort"></InputNumber>
           </FormItem>
@@ -138,17 +172,20 @@ export default {
         url: '',
         sort: '',
         type: '1',
-        imgurl: ''
+        imgurl: '',
+        name: '',
       },
       cityList: [],
       blockData: {},
-      InfoData: [],
+      infoData: [],
       typeSpan: 24,
       selectType: 1,
       typename: '',
       draftData: [],
       draIndex: -1,
-      draftName: ''
+      draftName: '',
+      draftCity: '0',
+      draftSort: 1
     }
   },
   created () {
@@ -189,10 +226,24 @@ export default {
       }
       serverApi('/web/areasonindex', d,
         response => {
-          console.log(response)
+          // console.log(response)
           if (response.data.code === 0) {
+            this.draftData = []
             this.blockData = response.data.data.area
-            this.InfoData = response.data.data.areason
+            let arr = []
+            response.data.data.areason.forEach(item => {
+              let obj ={
+                city: item.city,
+                id: item.id,
+                order: item.order,
+                pid: item.pid,
+                type: item.type,
+                imgs: JSON.parse(item.imgs)
+              }
+              arr.push(obj)
+            })
+            this.infoData = arr
+            // console.log(this.infoData)
           } else {
             this.$Message.warning(response.data.msg)
           }
@@ -310,28 +361,32 @@ export default {
       this.editSonShow = true
       this.formShow = true
     },
-    onClickSaveSon () {
-      console.log(this.DraftDataSorted)
+    onClickRomteItem (row) {
+      this.draftData = row.imgs
+      this.formShow = false
+      this.draftShow = true
     },
     onClockSaveDraft () {
       let d = {
+        city: '',
         type: this.selectType,
-        name: '',
         imgs: JSON.stringify(this.DraftDataSorted),
-        order: '',
-        pid: this.$route.params.id
+        order: this.draftSort,
+        pid: this.$route.params.id,
+        city: this.draftCity
       }
       console.log(d)
-      serverApi('/webwebareasonadd', d,
+      serverApi('/web/webareasonadd', d,
         response => {
           if (response.data.code === 0) {
-            console.log(response)
+            this.getModulesInfo(this.$route.params.id)
+            this.$Message.success(response.data.msg)
           } else {
-            this.$Message(response.data.msg)
+            this.$Message.warning(response.data.msg)
           }
         },
         error => {
-          this.$Message(error.toString())
+          this.$Message.error(error.toString())
         }
       )
     }
@@ -362,19 +417,47 @@ export default {
   }
 }
 .preview-box{
-  width: 320px;
-  height: 450px;
-  background-color: #fafafa;
-  border: 1px solid #ddd;
   float: left;
-  &::-webkit-scrollbar{
-    width: 0px;
-    height: 0px;
-    background-color: #fff;
+  position: relative;
+  .content{
+    width: 320px;
+    height: 470px;
+    background-color: #fafafa;
+    border: 1px solid #ddd;
+    overflow: auto;
+    font-size: 0;
+    padding: 0px 5px;
+    padding-bottom: 50px;
+    .content-bordered{
+      border: 1px dashed #fff;
+      transition: all ease .2s;
+      cursor: pointer;
+      &:hover{
+        border: 1px dashed #2d8cf0;
+      }
+    }
+    &::-webkit-scrollbar{
+      width: 0px;
+      height: 0px;
+      background-color: #fff;
+    }
   }
   .add-box{
     margin-top: 20px;
     text-align: center;
+    position: absolute;
+    bottom: 0px;
+    padding: 10px 0 0 0;
+    border-top: 1px solid #ddd;
+    background-color: #fff;
+    left: 0;
+    right: 0;
+  }
+  .pre-img{
+    width: 100%;
+    img{
+      width: 100%;
+    }
   }
 }
 .edit-box{
@@ -387,15 +470,24 @@ export default {
   }
   .draft{
     width: 320px;
-    height: 450px;
+    position: relative;
     box-sizing: border-box;
     background-color: #fff;
     border: 1px solid #ddd;
     overflow: auto;
-    &::-webkit-scrollbar{
-      width: 0px;
-      height: 0px;
-      background-color: #fff;
+    .content{
+      height: 380px;
+      overflow: auto;
+      padding-bottom: 50px;
+      &::-webkit-scrollbar{
+        width: 0px;
+        height: 0px;
+        background-color: #fff;
+      }
+      .swiper{
+        height: 120px;
+
+      }
     }
     .addItem{
       width: 80px;
@@ -436,6 +528,15 @@ export default {
       height: 25px;
       line-height: 25px;
       background-color: #fff;
+    }
+    &-form{
+      position: absolute;
+      background-color: #fff;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      padding: 5px 0;
+      border-top: 1px solid #dddddd;
     }
   }
 }
