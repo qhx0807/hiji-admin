@@ -173,6 +173,13 @@ export default {
           align: 'right'
         },
         {
+          title: '扣点金额',
+          key: 'point',
+          width: 110,
+          sortable: true,
+          align: 'right'
+        },
+        {
           title: '对账状态',
           key: 'ispay',
           width: 120,
