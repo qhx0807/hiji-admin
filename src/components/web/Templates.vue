@@ -96,7 +96,7 @@ export default {
         },
         {
           title: '城市',
-          key: 'city',
+          key: 'areaname',
           width: 80
         },
         {
@@ -107,6 +107,16 @@ export default {
         {
           title: '状态',
           key: 'show',
+          render: (h, params) => {
+            let text = params.row.show == 1 ? '启用' : '失效'
+            let color = params.row.show == 1 ? 'success' : 'warning'
+            return h('Tag', {
+              props: {
+                color: color,
+                type: 'dot'
+              }
+            }, text)
+          }
         },
         {
           title: '备注',
@@ -162,6 +172,12 @@ export default {
   created () {
     this.getModules()
     this.getCityList()
+    console.log(this.actionTypeArr)
+  },
+  computed: {
+    actionTypeArr () {
+      return this.$store.state.actionTypeArr
+    }
   },
   methods: {
     getModules () {

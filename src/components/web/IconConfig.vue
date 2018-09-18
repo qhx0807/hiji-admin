@@ -35,11 +35,7 @@
         </FormItem>
         <FormItem label="跳转类型" required>
           <Select v-model="editData.urltype">
-            <Option value="1">商品详情</Option>
-            <Option value="2">卡券详情</Option>
-            <Option value="5">模板页</Option>
-            <Option value="4">外部链接</Option>
-            <Option value="3">内部路由</Option>
+            <Option v-for="(item, index) in actionTypeArr" :key="index" :value="item.value">{{item.label}}</Option>
           </Select>
         </FormItem>
         <FormItem label="跳转地址" required>
@@ -112,6 +108,12 @@ export default {
         {
           title: '跳转类型',
           key: 'urltype',
+          render: (h, params) => {
+            let obj = this.actionTypeArr.find((item) => {
+              return item.value == params.row.urltype
+            })
+            return ('div', {}, obj.label)
+          }
         },
         {
           title: '排序',
@@ -161,6 +163,11 @@ export default {
   },
   created () {
     this.getTableData()
+  },
+  computed: {
+    actionTypeArr () {
+      return this.$store.state.actionTypeArr
+    }
   },
   mounted () {
     this.getCityData()

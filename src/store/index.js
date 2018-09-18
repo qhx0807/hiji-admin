@@ -44,6 +44,15 @@ const store = new Vuex.Store({
         }
       ]
     },
+    actionTypeArr: [
+      {value: 1, label: '商品详情'},
+      {value: 2, label: '卡券详情'},
+      {value: 3, label: '内部路由'},
+      {value: 4, label: '外部链接'},
+      {value: 5, label: '模板页'},
+      {value: 6, label: '商户首页'},
+      {value: 0, label: '不跳转'}
+    ]
   },
   getters: {
     isLoading (state) {

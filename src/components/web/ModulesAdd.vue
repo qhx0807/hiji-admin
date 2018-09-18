@@ -206,7 +206,8 @@ export default {
       draIndex: -1,
       draftName: '',
       draftCity: '0',
-      draftSort: 1
+      draftSort: 1,
+      editData: {}
     }
   },
   created () {
@@ -377,14 +378,24 @@ export default {
       this.formShow = true
     },
     onClickRomteItem (row) {
-      this.draftData = row.imgs
-      this.selectType = row.type
+      // this.draftData = row.imgs
+      // this.selectType = row.type
+      // this.formShow = false
+      // this.draftShow = true
+
+      let obj = Object.assign({}, row)
+      let imgs = JSON.parse(JSON.stringify(row.imgs))
+      this.editData = obj
+      this.draftData = imgs
+      this.selectType = obj.type
+      this.draftCity = obj.city
+      this.draftSort = obj.order
       this.formShow = false
       this.draftShow = true
     },
     onClockSaveDraft () {
       let d = {
-        city: '',
+        id: this.editData.id || '',
         type: this.selectType,
         imgs: JSON.stringify(this.DraftDataSorted),
         order: this.draftSort,
@@ -392,7 +403,7 @@ export default {
         city: this.draftCity
       }
       console.log(d)
-      serverApi('/web/webareasonadd', d,
+      serverApi('/web/webareasonedit', d,
         response => {
           if (response.data.code === 0) {
             this.getModulesInfo(this.$route.params.id)

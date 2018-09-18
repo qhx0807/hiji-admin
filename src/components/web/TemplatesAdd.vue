@@ -5,7 +5,7 @@
         <img src="http://cdn.cqyyy.cn/PREVIEW.svg" alt="">
       </div>
       <div class="tips">
-        <h4><span style="font-size:14px;font-weight:500">{{blockData.name}}</span></h4>
+        <h4><span style="font-size:14px;font-weight:500">{{blockData.name}} {{blockData.city}}</span></h4>
         <p>{{blockData.desc}}
           <router-link :to="{name: 'Templates'}">返回【模板页列表】</router-link>
         </p>
@@ -20,18 +20,83 @@
               <p class="tip">效果预览</p>
               <p class="title">{{blockData.name}}</p>
               <img class="phone-title" src="http://cdn.cqyyy.cn/12e73dca6848e7977396a6fa123b9140.png" alt="">
-              <div class="preview"></div>
+              <div class="preview">
+                <Row v-for="(p, index) in infoData" :key="p.id"
+                  type="flex"
+                  justify="end"
+                  @click.native="onClickRomteItem(p)"
+                  class="content-bordered">
+                  <span class="del-text" @click.stop="onClickDelSon(p)">删除</span>
+                  <Col v-show="p.type != 3" :span="p.type == 2 ? 12 : 24" v-for="(s, i) in p.imgs" :key="i">
+                    <div class="pre-img">
+                      <img :src="s.imgurl" alt="">
+                    </div>
+                  </Col>
+                </Row>
+              </div>
             </div>
-            <Button>新增</Button>
           </div>
           <div class="warp-right">
             <div class="content">
               <p class="tip">草稿区，请注意保存</p>
-              <div class="draft">2</div>
+              <div class="draft">
+                <Row>
+                  <Col v-show="selectType != 3" :gutter="selectType == 2 ? 10 : 0" :span="selectType == 2 ? 12 : 24" v-for="(item, index) in DraftDataSorted" :key="index">
+                    <div class="draft-preview" @click="onClickDraftItem(item)">
+                      <span class="del" @click="onClickDelDraItem(index)">删除</span>
+                      <img :src="item.imgurl" alt="">
+                    </div>
+                  </Col>
+                </Row>
+              </div>
+              <div class="bottom-city">
+                <Form :label-width="40">
+                  <Row>
+                    <Col span="12">
+                      <FormItem label="城市" style="margin-bottom: 0">
+                        <Select v-model="draftCity" transfer style="width:100px" size="small">
+                          <Option :value="0">通用</Option>
+                          <Option v-for="(item, index) in cityList" :key="index" :value="item.id">{{item.areaname}}</Option>
+                        </Select>
+                      </FormItem>
+                    </Col>
+                    <Col span="12">
+                      <FormItem label="排序" style="margin-bottom: 0">
+                        <InputNumber size="small" style="width:100px" :max="99999999" :min="1" v-model="draftSort"></InputNumber>
+                      </FormItem>
+                    </Col>
+                  </Row>
+                </Form>
+              </div>
+            </div>
+            <div style="text-align:center;padding-top:8px">
+              <Button @click="onClickSave" :loading="submitLoading">保存</Button>
+              <Poptip trigger="click" transfer placement="top">
+                <Button type="dashed" @click="onClickAddBlock" long icon="md-add">添加</Button>
+                <div slot="title" style="text-align:center">添加功能块</div>
+                <div slot="content">
+                  <Row>
+                    <Col span="12" style="padding: 0 3px">
+                      <Button type="dashed" style="width: 112px" @click="onSelectBlockItem(1)">100%宽度图片</Button>
+                    </Col>
+                    <Col span="12" style="padding: 0 3px">
+                      <Button type="dashed" style="width: 112px" @click="onSelectBlockItem(2)">50%宽度图片</Button>
+                    </Col>
+                  </Row>
+                  <Row style="margin-top:6px">
+                    <Col span="12">
+                      <Button type="dashed" style="width: 112px" @click="onSelectBlockItem(3)">横向滚动区域</Button>
+                    </Col>
+                    <Col span="12">
+                      <Button type="dashed" style="width: 112px" @click="onSelectBlockItem(4)">图文广告区域</Button>
+                    </Col>
+                  </Row>
+                </div>
+              </Poptip>
             </div>
           </div>
         </div>
-        <div class="form-warp">
+        <div v-show="formShow" class="form-warp">
           <div class="form-box">
             <Form :model="addData" :label-width="80">
               <FormItem label="选择城市" v-show="draftCity==0" required>
@@ -110,15 +175,31 @@ export default {
         type: '1',
         imgurl: ''
       },
+      typename: '',
       cityList: [],
       blockData: {},
       draftData: [],
-      infoData: []
+      infoData: [],
+      selectType: 1,
+      draIndex: -1,
+      draftCity: 0,
+      draftSort: 1,
+      formShow: false,
+      editData: {}
     }
   },
   created () {
     this.getModulesInfo()
     this.getCityData()
+  },
+  computed: {
+    DraftDataSorted () {
+      let arr = []
+      let compare = (a, b) => {
+        return a.sort - b.sort
+      }
+      return this.draftData.sort(compare)
+    },
   },
   methods: {
     getModulesInfo () {
@@ -187,6 +268,28 @@ export default {
         this.addData.imgurl = url
       }
     },
+    onSelectBlockItem (e) {
+      this.selectType = e
+      this.formShow = true
+      switch (e) {
+        case 1:
+          this.typeSpan = 24
+          this.typename = '100%宽度区域'
+          break
+        case 2:
+          this.typeSpan = 12
+          this.typename = '50%宽度区域'
+          break
+        case 3:
+          this.typeSpan = 24
+          this.typename = '横向滚动区域'
+          break
+        case 4:
+          this.typeSpan = 24
+          this.typename = '图文广告区域'
+          break
+      }
+    },
     onClickAddSon () {
       if (!this.addData.imgurl && !this.addData.url) {
         this.$Message.warning('请输入信息')
@@ -194,7 +297,74 @@ export default {
       }
       console.log(this.addData)
       let obj = Object.assign({}, this.addData)
+      this.draftData.push(obj)
     },
+    onClickDraftItem (row) {
+      this.addData = row
+      this.editSonShow = true
+      this.formShow = true
+    },
+    onClickRomteItem (row) {
+      let obj = Object.assign({}, row)
+      let imgs = JSON.parse(JSON.stringify(row.imgs))
+      this.editData = obj
+      this.draftData = imgs
+      this.selectType = obj.type
+      this.draftCity = obj.city
+      this.draftSort = obj.order
+      this.formShow = false
+      this.draftShow = true
+    },
+    onClickDelDraItem (index) {
+      this.DraftDataSorted.splice(index, 1)
+    },
+    onClickDelSon (row) {
+      this.$Modal.confirm({
+        title: '提示',
+        content: '<p>将此模块内容删除？</p>',
+        onOk: () => {
+          serverApi('/web/webareasondel', {id: row.id},
+            response => {
+              if (response.data.code == 0) {
+                this.getModulesInfo(this.$route.params.id)
+              }
+              this.$Message.info(response.data.msg)
+            },
+            error => {
+              console.log(error)
+              this.$Message.error('链接失败！')
+            }
+          )
+        }
+      })
+    },
+    onClickSave () {
+      let d = {
+        id: this.editData.id || '',
+        type: this.selectType,
+        imgs: JSON.stringify(this.DraftDataSorted),
+        order: this.draftSort,
+        pid: this.$route.params.id,
+        city: this.draftCity
+      }
+      this.submitLoading = true
+      console.log(d)
+      serverApi('/web/webareasonedit', d,
+        response => {
+          this.submitLoading = false
+          if (response.data.code === 0) {
+            this.getModulesInfo(this.$route.params.id)
+            this.$Message.success(response.data.msg)
+          } else {
+            this.$Message.warning(response.data.msg)
+          }
+        },
+        error => {
+          this.submitLoading = false
+          this.$Message.error(error.toString())
+        }
+      )
+    }
   }
 }
 </script>
@@ -255,6 +425,48 @@ export default {
           height: 400px;
           width: 100%;
           overflow: auto;
+          padding: 0px;
+          &::-webkit-scrollbar{
+            width: 0px;
+            height: 0px;
+            background-color: #fff;
+          }
+          .content-bordered{
+            // border: 1px dashed #fff;
+            transition: all ease .2s;
+            cursor: pointer;
+            position: relative;
+            .pre-img{
+              font-size: 0;
+              img{
+                width: 100%;
+              }
+            }
+            .del-text{
+              color: #f44;
+              position: absolute;
+              right: 3px;
+              top: 3px;
+              height: 20px;
+              width: 30px;
+              font-size: 12px;
+              z-index: 99;
+              cursor: pointer;
+              transition: all ease .2s;
+              display: none;
+              &:hover{
+                font-size: 14px;
+                font-weight: 600;
+                color: red;
+              }
+            }
+            &:hover{
+              border: 1px dashed #2d8cf0;
+              .del-text{
+                display: block;
+              }
+            }
+          }
         }
       }
     }
@@ -273,8 +485,50 @@ export default {
           color: #FFB08F;
         }
         .draft{
-          height: 463px;
+          height: 431px;
           width: 100%;
+          overflow: auto;
+          position: relative;
+          &::-webkit-scrollbar{
+            width: 0px;
+            height: 0px;
+            background-color: #fff;
+          }
+          .draft-preview{
+            position: relative;
+            box-sizing: border-box;
+            // border:solid 1px transparent;
+            font-size: 0;
+            transition: all .2s ease;
+            &:hover{
+              border: 1px dashed #2d8cf0;
+              .del{
+                display: block;
+              }
+            }
+            .del{
+              display: none;
+              height: 12px;
+              width: 30px;
+              position: absolute;
+              right: 10px;
+              top: 10px;
+              color: red;
+              font-size: 14px;
+              z-index: 1;
+              cursor: pointer;
+            }
+            img{
+              width: 100%;
+              font-size: 0;
+            }
+          }
+
+        }
+        .bottom-city{
+          height: 33px;
+          background-color: #fff;
+          border-top: 1px solid #ddd;
         }
       }
     }
