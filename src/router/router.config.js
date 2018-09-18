@@ -62,6 +62,7 @@ const ShopGoodsCx = r => require.ensure([], () => r(require('@/components/shop/S
 const ShopGoodsCxAdd = r => require.ensure([], () => r(require('@/components/shop/ShopGoodsCxAdd.vue')))
 const ShopGoodsXg = r => require.ensure([], () => r(require('@/components/shop/ShopGoodsXg.vue')))
 const ShopGoodsXgAdd = r => require.ensure([], () => r(require('@/components/shop/ShopGoodsXgAdd.vue')))
+const ShopOrderExp = r => require.ensure([], () => r(require('@/components/shop/ShopOrderExp.vue')))
 
 const IndexPage = r => require.ensure([], () => r(require('@/components/web/IndexPage.vue')))
 const BannerConfig = r => require.ensure([], () => r(require('@/components/web/BannerConfig.vue')))
@@ -386,6 +387,11 @@ const routes = [
         path: 'ShopGoodsXgAdd',
         component: ShopGoodsXgAdd,
         name: 'ShopGoodsXgAdd'
+      },
+      {
+        path: 'ShopOrderExp',
+        component: ShopOrderExp,
+        name: 'ShopOrderExp'
       },
       {
         path: 'IndexPage',
