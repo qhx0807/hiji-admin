@@ -7,7 +7,7 @@
       <div class="tips">
         <h4><span style="font-size:14px;font-weight:500">订单：{{orderData.orderno}}</span></h4>
         <p>查看订单详细信息
-          <router-link :to="{name: 'ShopOrders'}">返回【订单列表】</router-link>
+          <a @click="onClickBack">返回【订单列表】</a>
         </p>
       </div>
       <div class="clear-fix"></div>
@@ -183,6 +183,9 @@ export default {
           this.$Message.error('连接失败！')
         }
       )
+    },
+    onClickBack () {
+      this.$router.back()
     }
   }
 }
