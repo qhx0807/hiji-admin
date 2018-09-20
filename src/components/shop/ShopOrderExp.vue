@@ -3,7 +3,7 @@
     <Card :bordered="false">
       <div class="head">
         <Input v-model="searchKey" @on-enter="getTableData" placeholder="订单号搜索..." style="width: 200px"></Input>
-        <Select v-model="ordertype" style="width:200px">
+        <Select v-model="exptype" style="width:200px">
           <Option value="0">全部</Option>
           <Option value="4">已发货</Option>
           <Option value="3">未发货</Option>
@@ -205,6 +205,10 @@ export default {
     onChangeSize (e) {
       this.pageSize = e
       this.getTableData()
+    },
+    onSelectDate (e) {
+      this.starttime = e[0]
+      this.endtime = e[1]
     },
     getTableData () {
       let d = {

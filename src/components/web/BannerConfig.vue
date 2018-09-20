@@ -71,7 +71,7 @@ export default {
       columns: [
         {
           title: '#',
-          key: 'id',
+          key: 'swiperid',
           width: 60
         },
         {
@@ -138,7 +138,7 @@ export default {
               },
               on: {
                 click: () => {
-                  this.onClickEdit(params.row)
+                  this.onClickEdit(params.row.swiperid)
                 }
               }
             }, '编辑')
@@ -251,7 +251,7 @@ export default {
         title: '提示',
         content: '<p>将此商品从促销商品中移除？</p>',
         onOk: () => {
-          serverApi('/web/webdel', {id: id},
+          serverApi('/web/webdel', {swiperid: id},
             response => {
               if (response.data.code == 0) {
                 this.getTableData()

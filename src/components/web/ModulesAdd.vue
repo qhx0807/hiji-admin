@@ -80,7 +80,7 @@
                 <div class="swiper" ref="draftWarper">
                   <div class="sw-content">
                     <ul>
-                      <li v-for="(item, index) in DraftDataSorted" :key="index">
+                      <li v-for="(item, index) in DraftDataSorted" @click="onClickDraftItem(item)" :key="index">
                         <span class="sw-text" @click="onClickDelDraItem(index)">删除</span>
                         <img :src="item.imgurl" alt="">
                       </li>
@@ -373,6 +373,7 @@ export default {
       this.DraftDataSorted.splice(index, 1)
     },
     onClickDraftItem (row) {
+      console.log(row);
       this.addData = row
       this.editSonShow = true
       this.formShow = true

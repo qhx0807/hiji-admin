@@ -73,12 +73,12 @@
             <FormItem label="订单类型：">{{orderData.type}}</FormItem>
             <FormItem label="订单金额：">{{orderData.amount}}</FormItem>
             <FormItem label="支付状态：">{{orderData.pay_status}}</FormItem>
-            <!-- <FormItem label="收货地址：">{{orderData.order_status}}</FormItem> -->
+            <FormItem label="物流单号：">{{orderData.shipping_code}} &nbsp;&nbsp;&nbsp;<a v-if="orderData.shipping_code">物流信息</a></FormItem>
           </Col>
           <Col span="8">
             <FormItem label="创建时间：">{{orderData.createtime}}</FormItem>
             <FormItem label="支付金额：">{{orderData.cash_amount}}</FormItem>
-            <FormItem label="支付方式：">{{orderData.paytype}}</FormItem>
+            <FormItem label="支付方式：">{{orderData.paytype == '1' ? '微信' : '支付宝'}}</FormItem>
             <!-- <FormItem label="支付时间：">{{orderData.paytime}}</FormItem> -->
           </Col>
         </Row>
@@ -101,7 +101,6 @@
           <tr v-for="(item, index) in goodsList" :key="index">
             <td>{{item.goodsid}}</td>
             <td>
-
               {{item.goodsname}}
             </td>
             <td>
