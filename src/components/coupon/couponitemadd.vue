@@ -40,7 +40,13 @@
                 <Option v-for="item in typeData" :value="item.id" :key="item.id">{{ item.typename }}</Option>
               </Select>
             </FormItem>
-
+            <FormItem label="使用范围" v-show="addData.typeid == 6">
+              <Select v-model="addData.dytype">
+                <Option value="0">全部商品</Option>
+                <Option value="1">指定商户</Option>
+                <Option value="2">指定商品</Option>
+              </Select>
+            </FormItem>
           </Col>
           <Col span="6">
             <FormItem label="库存">
@@ -58,6 +64,14 @@
                 </span>
               </Input>
             </FormItem>
+            <FormItem label="适用价格区间" v-show="addData.typeid == 6">
+              <InputNumber :max="99999999999" :min="-1" v-model="addData.dybottom"></InputNumber>
+              -
+              <InputNumber :max="99999999999" :min="-1" v-model="addData.dytop"></InputNumber>
+              <Tooltip max-width="200" content="适用价格区间，不填则适用所有" placement="top">
+                <Icon type="ios-alert" size="20"/>
+              </Tooltip>
+            </FormItem>
           </Col>
           <Col span="6">
             <FormItem label="限制属性">
@@ -70,11 +84,16 @@
             <FormItem label="限制属性值">
               <InputNumber :max="999999" style="width: 100%" :min="1" v-model="addData.restrictvalue"></InputNumber>
             </FormItem>
+            <FormItem label="商户/商品id" v-show="addData.typeid == 6 && addData.dytype != 0">
+              <Tooltip content="请输入商品或商户id,用逗号隔开" placement="top">
+                <Input v-model="addData.dydetails"></Input>
+              </Tooltip>
+            </FormItem>
           </Col>
         </Row>
         <Row>
           <Col span="12">
-            <FormItem label="活动时间">
+            <FormItem label="发放时间">
               <DatePicker type="datetimerange" transfer @on-change="onSelectSendDate" style="width:100%" placeholder="选择时间"></DatePicker>
             </FormItem>
           </Col>
@@ -163,12 +182,18 @@
           </table>
         </Col>
       </Row>
-      <Row>
+      <!-- <Row>
         <Col span="24" style="text-align:center; padding:30px 0">
           <Button :loading="modal_loading" style="width:180px" @click="onClickAdd" type="primary">保存</Button>
-          <!-- <Button style="width:100px; margin-left:10px" @click="previewCoupon" type="info">预览卡券</Button> -->
+          <Button style="width:100px; margin-left:10px" @click="previewCoupon" type="info">预览卡券</Button>
         </Col>
-      </Row>
+      </Row> -->
+      <div class="btn-box">
+        <ButtonGroup vertical>
+          <Button :loading="modal_loading" @click="onClickAdd" type="primary">保存</Button>
+          <Button  @click="goBack" type="info">返回列表</Button>
+        </ButtonGroup>
+      </div>
     </Card>
 
     <Modal v-model="recModal" width="410">
@@ -179,7 +204,7 @@
         <div class="preview" v-html="ueContent"></div>
       </div>
       <div slot="footer">
-        <Button    @click="recModal = false">取消</Button>
+        <Button  @click="recModal = false">取消</Button>
         <Button type="primary" @click="recModal = false">确定</Button>
       </div>
     </Modal>
@@ -228,7 +253,11 @@ export default {
         userange: '',
         restricts: '0',
         restrictsvalue: '1',
-        points: 0
+        points: 0,
+        dytype: '0',
+        dydetails: '',
+        dytop: null,
+        dybottom: 0
       },
       id: null,
       rules: {
@@ -274,6 +303,9 @@ export default {
     this.editor3 = UE.getEditor('editor3', this.ueConfig)
   },
   methods: {
+    goBack () {
+      history.go(-1)
+    },
     getCardType () {
       let d = {
         pagesize: 99999,
@@ -462,6 +494,14 @@ export default {
   to{
     transform: rotateZ(360deg)
   }
+}
+.btn-box{
+  text-align: center;
+  position: fixed;
+  z-index: 1000;
+  right: 40px;
+  bottom: 50px;
+  box-shadow: 2px 2px 10px rgba(0,0,0,.4);
 }
 .loading-icon{
   animation:  loading 1s linear infinite;

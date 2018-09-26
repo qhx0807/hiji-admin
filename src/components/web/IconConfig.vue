@@ -16,22 +16,40 @@
     </Card>
     <div class="phonepreview">
       <!-- <img src="http://cdn.cqyyy.cn/PREVIEW.svg" alt=""> -->
-      ICON oreview
+      <Row>
+        <Col span="6" v-for="(item, index) in tableData" :key="index">
+          <div class="previewImg">
+            <img :src="item.imgurl" alt="">
+            <p>{{item.imgname}}</p>
+          </div>
+        </Col>
+      </Row>
     </div>
 
     <Modal v-model="editModal" width="550">
       <p slot="header" style="text-align:center">
         <span>修改信息</span>
       </p>
-      <Form :model="editData" ref="form" :label-width="100">
+      <Form :model="editData" ref="form" :label-width="80">
         <FormItem label="选择城市" required>
           <Select v-model="editData.city">
-            <Option value="0">通用</Option>
+            <Option :value="0">通用</Option>
             <Option v-for="(item, index) in cityList" :key="index" :value="item.id">{{item.areaname}}</Option>
           </Select>
         </FormItem>
         <FormItem label="图片地址" required>
-          <Input v-model="editData.imgurl" placeholder="图片连接地址"/>
+          <Upload
+            :action="uploadApiUrl"
+            :on-error="uploadImgErr"
+            :on-success="uploadImgSucc"
+            :show-upload-list="false"
+            accept="image/*"
+            >
+            <div slot="tip" style="margin-top:10px;">
+              <Input v-model="editData.imgurl" placeholder="或者直接输入图片连接地址" />
+            </div>
+            <Button icon="ios-cloud-upload-outline">Upload files</Button>
+          </Upload>
         </FormItem>
         <FormItem label="跳转类型" required>
           <Select v-model="editData.urltype">
@@ -57,12 +75,14 @@
 </template>
 <script>
 import serverApi from '../../axios'
+import { uploadApiUrl } from '../../config/'
 export default {
   name: 'IconConfig',
   data () {
     return {
       tableLoading: false,
       modal_loading: false,
+      uploadApiUrl: uploadApiUrl,
       tableData: [],
       columns: [
         {
@@ -212,6 +232,21 @@ export default {
         }
       )
     },
+    uploadImgErr (response, file, fileList) {
+      this.$Message.warning('上传失败！')
+      console.log('err'+response,file,fileList)
+    },
+    uploadImgSucc (response, file) {
+      console.log(response)
+      if (response.code == 0) {
+        this.$Notice.success({
+          title: '上传成功',
+          desc: '图片上传成功！'
+        })
+        let url = response.data.url
+        this.editData.imgurl = url
+      }
+    },
     onClickEdit (row) {
       this.editData = Object.assign({}, row)
       this.editModal = true
@@ -280,9 +315,10 @@ export default {
     right: 10px;
     top: 154px;
     width: 370px;
-    height: 220px;
+    height: 420px;
     border-radius: 3px;
     background-color: #fff;
+    padding: 10px;
     box-shadow: 0 2px 2px 0 rgba(0,0,0,0.16), 0 0 0 1px rgba(0,0,0,0.08);
     .demo-carousel{
       height: 220px;
@@ -297,6 +333,14 @@ export default {
   }
   .table-box{
     padding-right: 375px;
+  }
+  .previewImg{
+    text-align: center;
+    margin-bottom: 10px;
+    img{
+      height: 50px;
+      width: 50px;
+    }
   }
 }
 </style>

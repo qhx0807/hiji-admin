@@ -96,7 +96,7 @@
                 <Col span="12">
                   <FormItem label="城市" style="margin-bottom: 0">
                     <Select v-model="draftCity" transfer style="width:100px" size="small">
-                      <Option value="0">通用</Option>
+                      <Option :value="0">通用</Option>
                       <Option v-for="(item, index) in cityList" :key="index" :value="item.id">{{item.areaname}}</Option>
                     </Select>
                   </FormItem>
@@ -146,12 +146,7 @@
           </FormItem>
           <FormItem label="跳转类型" required>
             <Select v-model="addData.urltype">
-              <Option value="1">商品详情</Option>
-              <Option value="2">卡券详情</Option>
-              <Option value="5">模板页</Option>
-              <Option value="4">外部链接</Option>
-              <Option value="3">内部路由</Option>
-              <Option value="0">不跳转</Option>
+              <Option v-for="(item, index) in jumpAction" :key="index" :value="item.value">{{item.label}}</Option>
            </Select>
           </FormItem>
           <FormItem label="跳转地址">
@@ -205,7 +200,7 @@ export default {
       draftData: [],
       draIndex: -1,
       draftName: '',
-      draftCity: '0',
+      draftCity: 0,
       draftSort: 1,
       editData: {}
     }
@@ -241,6 +236,9 @@ export default {
       }
       return this.draftData.sort(compare)
     },
+    jumpAction () {
+      return this.$store.state.actionTypeArr
+    }
   },
   methods: {
     getCityData () {
@@ -312,6 +310,7 @@ export default {
     onSelectBlockItem (e) {
       this.selectType = e
       this.draftShow = true
+      this.draftData = []
       switch (e) {
         case 1:
           this.typeSpan = 24

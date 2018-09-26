@@ -29,7 +29,7 @@
       <p slot="header" style="text-align:center">
         <span>修改信息</span>
       </p>
-      <Form :model="editData" ref="form" :label-width="100">
+      <Form :model="editData" ref="form" :label-width="80">
         <FormItem label="选择城市" required>
           <Select v-model="editData.city">
             <Option :value="0">通用</Option>
@@ -37,8 +37,22 @@
           </Select>
         </FormItem>
         <FormItem label="图片地址" required>
-          <Input v-model="editData.imgurl" placeholder="图片连接地址" />
+          <Upload
+            :action="uploadApiUrl"
+            :on-error="uploadImgErr"
+            :on-success="uploadImgSucc"
+            :show-upload-list="false"
+            accept="image/*"
+            >
+            <div slot="tip" style="margin-top:10px;">
+              <Input v-model="editData.imgurl" placeholder="或者直接输入图片连接地址" />
+            </div>
+            <Button icon="ios-cloud-upload-outline">Upload files</Button>
+          </Upload>
         </FormItem>
+        <!-- <FormItem label="图片地址" required>
+          <Input v-model="editData.imgurl" placeholder="图片连接地址" />
+        </FormItem> -->
         <FormItem label="跳转类型" required>
           <Select v-model="editData.urltype">
             <Option v-for="(item, index) in actionTypeArr" :key="index" :value="item.value">{{item.label}}</Option>
@@ -60,12 +74,14 @@
 </template>
 <script>
 import serverApi from '../../axios'
+import { uploadApiUrl } from '../../config/'
 export default {
   name: 'BannerConfig',
   data () {
     return {
       tableLoading: false,
       modal_loading: false,
+      uploadApiUrl: uploadApiUrl,
       tableData: [],
       cityList: [],
       columns: [
@@ -138,7 +154,7 @@ export default {
               },
               on: {
                 click: () => {
-                  this.onClickEdit(params.row.swiperid)
+                  this.onClickEdit(params.row)
                 }
               }
             }, '编辑')
@@ -149,7 +165,7 @@ export default {
               },
               on: {
                 click: () => {
-                  this.remove(params.row)
+                  this.remove(params.row.swiperid)
                 }
               }
             }, '删除')
@@ -213,7 +229,23 @@ export default {
         }
       )
     },
+    uploadImgErr (response, file, fileList) {
+      this.$Message.warning('上传失败！')
+      console.log('err'+response,file,fileList)
+    },
+    uploadImgSucc (response, file) {
+      console.log(response)
+      if (response.code == 0) {
+        this.$Notice.success({
+          title: '上传成功',
+          desc: '图片上传成功！'
+        })
+        let url = response.data.url
+        this.editData.imgurl = url
+      }
+    },
     onClickEdit (row) {
+      console.log(row)
       this.editData = Object.assign({}, row)
       this.editModal = true
     },

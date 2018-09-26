@@ -90,7 +90,7 @@
           <tr>
             <th>商品编号</th>
             <th>商品名称</th>
-            <th>商品图</th>
+            <th>属性</th>
             <th>单价</th>
             <th>市场价</th>
             <th>数量</th>
@@ -101,12 +101,10 @@
           <tr v-for="(item, index) in goodsList" :key="index">
             <td>{{item.goodsid}}</td>
             <td>
+              <img :src="item.goodsimg" v-imgview style="height:40px" alt="">
               {{item.goodsname}}
             </td>
-            <td>
-              <!-- {{item.goodssn}} -->
-              <img :src="item.goodsimg" v-imgview style="height:40px" alt="">
-            </td>
+            <td>{{item.goodstypename}}</td>
             <td>{{item.goodsprice}}</td>
             <td>{{item.marketprice}}</td>
             <td>{{item.goodsnum}}</td>

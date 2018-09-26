@@ -35,6 +35,13 @@
                 <Option :value="2">活动期间</Option>
               </Select>
             </FormItem>
+            <FormItem label="使用范围" v-show="editData.typeid == 6">
+              <Select v-model="editData.dytype">
+                <Option value="0">全部商品</Option>
+                <Option value="1">指定商户</Option>
+                <Option value="2">指定商品</Option>
+              </Select>
+            </FormItem>
           </Col>
           <Col span="6">
             <FormItem label="剩余数量">
@@ -48,6 +55,14 @@
             </FormItem>
             <FormItem label="限制属性值">
               <InputNumber :max="999999" :min="1" v-model="editData.restrictsvalue"></InputNumber>
+            </FormItem>
+            <FormItem label="适用价格区间" v-show="editData.typeid == 6">
+              <InputNumber :max="99999999999" :min="-1" v-model="editData.dybottom"></InputNumber>
+              -
+              <InputNumber :max="99999999999" :min="-1" v-model="editData.dytop"></InputNumber>
+              <Tooltip max-width="200" content="适用价格区间，不填则适用所有" placement="top">
+                <Icon type="ios-alert" size="20"/>
+              </Tooltip>
             </FormItem>
           </Col>
           <Col span="6">
@@ -64,6 +79,11 @@
             </FormItem>
              <FormItem label="扣点" prop="cardname">
               <InputNumber :max="2" :step="0.1" style="width: 100%" :min="0" v-model="editData.points"></InputNumber>
+            </FormItem>
+            <FormItem label="商户/商品id" v-show="editData.typeid == 6 && editData.dytype != 0">
+              <Tooltip content="请输入商品或商户id,用逗号隔开" placement="top">
+                <Input v-model="editData.dydetails"></Input>
+              </Tooltip>
             </FormItem>
           </Col>
           <Col span="6">
@@ -115,7 +135,7 @@
                       :show-upload-list="false"
                       :on-success="uploadImgSuccGlary"
                       >
-                      <Button size="small"   icon="ios-cloud-upload-outline">Upload files</Button>
+                      <Button size="small" icon="ios-cloud-upload-outline">Upload files</Button>
                     </Upload>
                   </li>
                 </ul>
@@ -164,13 +184,19 @@
           </table>
         </Col>
       </Row>
-      <Row>
+      <!-- <Row>
         <Col span="24" style="text-align:center; padding:30px 0">
           <Button :loading="modal_loading" style="width:180px" @click="onClickEdit" type="primary">保存</Button>
           <Button style="width:100px; margin-left:10px" @click="goBack" type="info">返回列表</Button>
-          <!-- <Button style="width:100px; margin-left:10px" @click="previewCoupon" type="info">预览卡券</Button> -->
+          <Button style="width:100px; margin-left:10px" @click="previewCoupon" type="info">预览卡券</Button>
         </Col>
-      </Row>
+      </Row> -->
+      <div class="btn-box">
+        <ButtonGroup vertical>
+          <Button :loading="modal_loading"  @click="onClickEdit" type="primary">保存</Button>
+          <Button  @click="goBack" type="info">返回列表</Button>
+        </ButtonGroup>
+      </div>
     </Card>
 
     <Modal v-model="recModal" width="410">
@@ -430,6 +456,14 @@ export default {
     height: 100%;
     width: 100%;
   }
+}
+.btn-box{
+  text-align: center;
+  position: fixed;
+  z-index: 1000;
+  right: 40px;
+  bottom: 50px;
+  box-shadow: 2px 2px 10px rgba(0,0,0,.4);
 }
 .tips{
   padding-left: 100px;

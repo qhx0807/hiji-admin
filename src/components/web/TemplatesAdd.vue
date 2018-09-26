@@ -128,13 +128,7 @@
               </FormItem>
               <FormItem label="跳转类型" required>
                 <Select v-model="addData.urltype">
-                  <Option value="1">商品详情</Option>
-                  <Option value="2">卡券详情</Option>
-                  <Option value="5">模板页</Option>
-                  <Option value="4">外部链接</Option>
-                  <Option value="3">内部路由</Option>
-                  <Option value="6">商户首页</Option>
-                  <Option value="0">不跳转</Option>
+                  <Option v-for="(item, index) in jumpAction" :key="index" :value="item.value">{{item.label}}</Option>
               </Select>
               </FormItem>
               <FormItem label="跳转地址">
@@ -147,7 +141,7 @@
                 <InputNumber :max="99999999" :min="1" v-model="addData.sort"></InputNumber>
               </FormItem>
               <FormItem>
-                <Button type="primary" :loading="submitLoading" @click="onClickAddSon">添加</Button>
+                <Button type="primary" :loading="submitLoading" v-show="!editSonShow" @click="onClickAddSon">添加</Button>
                 <!-- <Button type="primary" @click="onClickSaveSon" v-show="editSonShow">保存</Button> -->
                 <!-- <Button type="default"  style="margin-left:10px">取消</Button> -->
               </FormItem>
@@ -185,6 +179,7 @@ export default {
       draftCity: 0,
       draftSort: 1,
       formShow: false,
+      editSonShow: false,
       editData: {}
     }
   },
@@ -200,6 +195,9 @@ export default {
       }
       return this.draftData.sort(compare)
     },
+    jumpAction () {
+      return this.$store.state.actionTypeArr
+    }
   },
   methods: {
     getModulesInfo () {
@@ -270,6 +268,15 @@ export default {
     },
     onSelectBlockItem (e) {
       this.selectType = e
+      this.editSonShow = false
+      this.addData = {
+        city: 0,
+        urltype: '',
+        url: '',
+        sort: '',
+        type: '1',
+        imgurl: ''
+      }
       this.formShow = true
       switch (e) {
         case 1:
@@ -316,6 +323,7 @@ export default {
       this.draftShow = true
     },
     onClickDelDraItem (index) {
+      this.editSonShow = true
       this.DraftDataSorted.splice(index, 1)
     },
     onClickDelSon (row) {
