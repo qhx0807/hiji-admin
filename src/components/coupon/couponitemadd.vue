@@ -42,9 +42,7 @@
             </FormItem>
             <FormItem label="使用范围" v-show="addData.typeid == 6">
               <Select v-model="addData.dytype">
-                <Option value="0">全部商品</Option>
-                <Option value="1">指定商户</Option>
-                <Option value="2">指定商品</Option>
+                <Option v-for="(item, index) in couponUseRange" :key="index" :value="item.value">{{item.label}}</Option>
               </Select>
             </FormItem>
           </Col>
@@ -84,8 +82,8 @@
             <FormItem label="限制属性值">
               <InputNumber :max="999999" style="width: 100%" :min="1" v-model="addData.restrictvalue"></InputNumber>
             </FormItem>
-            <FormItem label="商户/商品id" v-show="addData.typeid == 6 && addData.dytype != 0">
-              <Tooltip content="请输入商品或商户id,用逗号隔开" placement="top">
+            <FormItem label="商户/商品" v-show="addData.typeid == 6 && addData.dytype != 6 && addData.dytype != 99 && addData.dytype != 4">
+              <Tooltip content="请输入商品/商户或类型id,用逗号隔开" placement="top">
                 <Input v-model="addData.dydetails"></Input>
               </Tooltip>
             </FormItem>
@@ -104,7 +102,7 @@
           </Col>
         </Row>
         <Row>
-          <Col span="24">
+          <Col span="24" v-show="addData.typeid != 6">
             <FormItem label="关联商户">
               <Select transfer filterable multiple v-model="merArr" filterable>
                 <Option v-for="item in merchantData" :value="item.merchantcode" :key="item.id">{{ item.name }}</Option>
@@ -295,6 +293,9 @@ export default {
   computed: {
     cardExtraInfo () {
       return JSON.stringify(this.propsObj)
+    },
+    couponUseRange () {
+      return this.$store.state.couponUseRange
     }
   },
   mounted () {

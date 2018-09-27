@@ -51,7 +51,17 @@ const store = new Vuex.Store({
       {value: 4, label: '外部链接'},
       {value: 5, label: '模板页'},
       {value: 6, label: '商户首页'},
+      {value: 7, label: '领取卡券'},
       {value: 0, label: '不跳转'}
+    ],
+    couponUseRange: [
+      {value: 99, label: '全场通用'},
+      {value: 6, label: '全部商品'},
+      {value: 4, label: '全部团购'},
+      {value: 2, label: '指定商品'},
+      {value: 5, label: '指定团购'},
+      {value: 1, label: '指定商户'},
+      {value: 3, label: '指定商品类型'}
     ]
   },
   getters: {

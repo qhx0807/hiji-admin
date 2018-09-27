@@ -275,7 +275,7 @@ export default {
         title: '提示',
         content: '<p>讲此模块删除？</p>',
         onOk: () => {
-          serverApi('/web/wedareadel', id,
+          serverApi('/web/wedareadel', {id: id},
             response => {
               if (response.data.code == 0) {
                 this.getModules()

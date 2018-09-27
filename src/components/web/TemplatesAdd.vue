@@ -497,6 +497,7 @@ export default {
           width: 100%;
           overflow: auto;
           position: relative;
+          box-sizing: border-box;
           &::-webkit-scrollbar{
             width: 0px;
             height: 0px;
@@ -505,7 +506,7 @@ export default {
           .draft-preview{
             position: relative;
             box-sizing: border-box;
-            // border:solid 1px transparent;
+            border: 1px inset transparent;
             font-size: 0;
             transition: all .2s ease;
             &:hover{

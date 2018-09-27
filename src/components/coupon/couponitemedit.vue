@@ -37,9 +37,9 @@
             </FormItem>
             <FormItem label="使用范围" v-show="editData.typeid == 6">
               <Select v-model="editData.dytype">
-                <Option value="0">全部商品</Option>
-                <Option value="1">指定商户</Option>
-                <Option value="2">指定商品</Option>
+                <Option :value="0">全部商品</Option>
+                <Option :value="1">指定商户</Option>
+                <Option :value="2">指定商品</Option>
               </Select>
             </FormItem>
           </Col>
