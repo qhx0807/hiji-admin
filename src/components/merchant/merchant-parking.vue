@@ -114,7 +114,7 @@ export default {
       ticketsNum: 0,
       recordsData: [],
       selectValue: 4,
-      cardList: [2, 4, 6, 8, 10, 12, 24, 36],
+      cardList: [2, 4, 6, 8, 10, 12, 16, 20, 24, 28, 32, 36],
       columns: [
         {
           title: '#',

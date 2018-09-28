@@ -60,8 +60,11 @@ const store = new Vuex.Store({
       {value: 4, label: '全部团购'},
       {value: 2, label: '指定商品'},
       {value: 5, label: '指定团购'},
-      {value: 1, label: '指定商户'},
-      {value: 3, label: '指定商品类型'}
+      {value: 1, label: '指定商户(商品)'},
+      {value: 3, label: '指定商品类型'},
+      {value: 7, label: '以下商品不可用'},
+      {value: 8, label: '以下团购不可用'}
+
     ]
   },
   getters: {
