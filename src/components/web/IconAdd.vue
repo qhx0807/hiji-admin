@@ -50,13 +50,8 @@
           </FormItem>
           <FormItem label="跳转类型" required>
             <Select v-model="addData.urltype">
-              <Option value="1">商品详情</Option>
-              <Option value="2">卡券详情</Option>
-              <Option value="5">模板页</Option>
-              <Option value="4">外部链接</Option>
-              <Option value="3">内部路由</Option>
-              <Option value="0">不跳转</Option>
-           </Select>
+                <Option v-for="(item, index) in jumpAction" :key="index" :value="item.value">{{item.label}}</Option>
+            </Select>
           </FormItem>
           <FormItem label="跳转地址" required>
             <Input v-model="addData.url" placeholder="请输入" />
@@ -96,6 +91,11 @@ export default {
   },
   created () {
     this.getCityData()
+  },
+  computed: {
+    jumpAction () {
+      return this.$store.state.actionTypeArr
+    }
   },
   methods: {
     getCityData () {

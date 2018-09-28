@@ -37,9 +37,7 @@
             </FormItem>
             <FormItem label="使用范围" v-show="editData.typeid == 6">
               <Select v-model="editData.dytype">
-                <Option :value="0">全部商品</Option>
-                <Option :value="1">指定商户</Option>
-                <Option :value="2">指定商品</Option>
+                <Option v-for="(item, index) in couponUseRange" :key="index" :value="item.value">{{item.label}}</Option>
               </Select>
             </FormItem>
           </Col>
@@ -80,7 +78,7 @@
              <FormItem label="扣点" prop="cardname">
               <InputNumber :max="2" :step="0.1" style="width: 100%" :min="0" v-model="editData.points"></InputNumber>
             </FormItem>
-            <FormItem label="商户/商品id" v-show="editData.typeid == 6 && editData.dytype != 0">
+            <FormItem label="商户/商品id" v-show="editData.typeid == 6 && editData.dytype != 99">
               <Tooltip content="请输入商品或商户id,用逗号隔开" placement="top">
                 <Input v-model="editData.dydetails"></Input>
               </Tooltip>
@@ -279,7 +277,11 @@ export default {
     this.editor2 = UE.getEditor('editor2', this.ueConfig)
     this.editor3 = UE.getEditor('editor3', this.ueConfig)
   },
-  computed: { },
+  computed: {
+    couponUseRange () {
+      return this.$store.state.couponUseRange
+    }
+  },
   methods: {
     getOneById (id) {
       this.$store.commit('pageLoading', true)
