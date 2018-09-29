@@ -92,7 +92,7 @@ export default {
         },
         {
           title: '城市',
-          key: 'city',
+          key: 'cityname',
           width: 80
         },
         {

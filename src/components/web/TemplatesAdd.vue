@@ -32,6 +32,17 @@
                       <img :src="s.imgurl" alt="">
                     </div>
                   </Col>
+                  <Col span="24" v-show="p.type == 3">
+                    <div class="swiper" ref="previeWarper">
+                      <div class="sw-content">
+                        <ul>
+                          <li v-for="(s, i) in p.imgs" :key="i">
+                            <img :src="s.imgurl" alt="">
+                          </li>
+                        </ul>
+                      </div>
+                    </div>
+                  </Col>
                 </Row>
               </div>
             </div>
@@ -45,6 +56,18 @@
                     <div class="draft-preview" @click="onClickDraftItem(item)">
                       <span class="del" @click="onClickDelDraItem(index)">删除</span>
                       <img :src="item.imgurl" alt="">
+                    </div>
+                  </Col>
+                  <Col span="24" v-show="selectType == 3">
+                    <div class="swiper" ref="draftWarper">
+                      <div class="sw-content">
+                        <ul>
+                          <li v-for="(item, index) in DraftDataSorted" @click="onClickDraftItem(item)" :key="index">
+                            <span class="sw-text" @click="onClickDelDraItem(index)">删除</span>
+                            <img :src="item.imgurl" alt="">
+                          </li>
+                        </ul>
+                      </div>
                     </div>
                   </Col>
                 </Row>
@@ -305,6 +328,7 @@ export default {
       console.log(this.addData)
       let obj = Object.assign({}, this.addData)
       this.draftData.push(obj)
+      console.log(this.draftData)
     },
     onClickDraftItem (row) {
       this.addData = row
@@ -478,6 +502,53 @@ export default {
         }
       }
     }
+    .swiper{
+      height: 120px;
+      width: 320px;
+      user-select: none;
+      overflow-x: auto;
+      &::-webkit-scrollbar{
+        width: 0px;
+        height: 0px;
+        background-color: #fff;
+      }
+      .sw-content{
+        width: 1000px;
+        box-sizing: border-box;
+        ul{
+          padding: 0;
+          margin: 0;
+          list-style: none;
+          li{
+            float: left;
+            height: 120px;
+            border: 1px dashed transparent;
+            box-sizing: border-box;
+            position: relative;
+            .sw-text{
+              font-size: 12px;
+              color: #f44;
+              position: absolute;
+              right: 3px;
+              top: 3px;
+              cursor: pointer;
+              display: none;
+            }
+            img{
+              height: 116px;
+              user-select: none;
+              pointer-events: none;
+            }
+            &:hover{
+              border: 1px dashed #2d8cf0;
+              .sw-text{
+                display: block;
+              }
+            }
+          }
+        }
+      }
+    }
     .warp-right{
       float: left;
       margin-left: 20px;
@@ -503,6 +574,7 @@ export default {
             height: 0px;
             background-color: #fff;
           }
+
           .draft-preview{
             position: relative;
             box-sizing: border-box;

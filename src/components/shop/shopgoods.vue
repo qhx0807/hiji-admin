@@ -81,7 +81,7 @@ export default {
           width: 120
         },
         {
-          title: '类型',
+          title: '分类',
           key: 'categoryname',
           sortable: 'custom',
           width: 120

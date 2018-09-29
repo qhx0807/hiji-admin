@@ -32,16 +32,21 @@
               <Input type="textarea" autosize v-model="editData.goodsdesc"></Input>
             </FormItem>
             <FormItem label="关键字"  prop="keywords">
-              <Input autosize v-model="editData.keywords"></Input>
+              <Input v-model="editData.keywords"></Input>
             </FormItem>
             <FormItem label="头图"  prop="keywords">
-              <Input autosize v-model="editData.goodsimg"></Input>
+              <Input v-model="editData.goodsimg"></Input>
             </FormItem>
           </Col>
           <Col span="6">
             <FormItem label="所属目录" prop="goodsname">
-              <Input autosize disabled v-model="editData.categoryname"></Input>
+              <Select v-model="editData.categoryid">
+                <Option v-for="(item, index) in goodsTypeData" :key="index" :value="item.id">{{item.name}}</Option>
+              </Select>
             </FormItem>
+            <!-- <FormItem label="所属目录" prop="goodsname">
+              <Cascader change-on-select @on-change="onSelectDep" :data="goodsTypeData"></Cascader>
+            </FormItem> -->
             <FormItem label="库存数量" prop="goodsname">
               <InputNumber :max="9999999" style="width:100%" :min="0" v-model="editData.goodsstock"></InputNumber>
             </FormItem>
@@ -340,18 +345,19 @@ export default {
           // console.log(response)
           if (response.data.code === 0){
             let cas = response.data.data
-            let getCas = function (arr) {
-              arr.forEach(item => {
-                item.label = item.name,
-                item.value = item.id
-                item.children = item.child
-                if (item.child.length > 0) {
-                  getCas(item.child)
-                }
-              })
-            }
-            getCas(cas)
+            // let getCas = function (arr) {
+            //   arr.forEach(item => {
+            //     item.label = item.name,
+            //     item.value = item.id
+            //     item.children = item.child
+            //     if (item.child.length > 0) {
+            //       getCas(item.child)
+            //     }
+            //   })
+            // }
+            // getCas(cas)
             this.goodsTypeData = cas
+            // console.log(this.goodsTypeData)
           }else{
             this.$Message.warning(response.data.msg)
           }
@@ -405,6 +411,11 @@ export default {
         }
       )
     },
+    onSelectDep (e) {
+      if (e && e.length) {
+        this.editData.categoryid = String(e[e.length-1])
+      }
+    },
     onSelectSort (e) {
       this.getSortProps(e)
     },
@@ -412,7 +423,7 @@ export default {
       this.$store.commit('pageLoading', true)
       serverApi('/goods/goodsinfo', {id: id},
         response => {
-          // console.log(response)
+          console.log(response)
           this.$store.commit('pageLoading', false)
           if (response.data.code == 0) {
             this.editData = response.data.data

@@ -1,6 +1,6 @@
 <template>
   <div class="box">
-    <Card :bordered="false" class="mb10">
+    <!-- <Card :bordered="false" class="mb10">
       <div class="tips">
         <p style="font-size:14px;">
           <img src="http://cdn.cqyyy.cn/PREVIEW.svg" alt="">
@@ -8,10 +8,29 @@
           <a @click="onClickAdd"><Icon size="14" type="md-add" />新建板块</a>
         </p>
       </div>
+    </Card> -->
+    <Card :bordered="false" class="mb10">
+       <Form :label-width="60" inline>
+        <FormItem label="筛选城市" style="margin-bottom:0">
+          <Select v-model="serchObj.city" style="width:200px" placeholder="筛选城市">
+            <Option :value="0">通用</Option>
+            <Option v-for="item in cityList" :value="item.id" :key="item.id">{{ item.areaname }}</Option>
+          </Select>
+        </FormItem>
+        <FormItem label="关键字" style="margin-bottom:0">
+          <Input v-model="serchObj.key" style="width:200px" placeholder="筛选关键字"></Input>
+        </FormItem>
+        <FormItem style="margin-bottom:0">
+          <p style="font-size:14px;">
+            首页板块配置
+            <a @click="onClickAdd"><Icon size="14" type="md-add" />新建板块</a>
+          </p>
+        </FormItem>
+      </Form>
     </Card>
     <Card :bordered="false">
       <div class="table-box">
-        <Table size="small" :loading="tableLoading" :columns="columns" :data="tableData"></Table>
+        <Table size="small" height="550" :loading="tableLoading" :columns="columns" :data="computedTableData"></Table>
       </div>
     </Card>
 
@@ -72,6 +91,7 @@
 </template>
 <script>
 import serverApi from '../../axios'
+import { arrSearch } from '../../utlis/tools.js'
 export default {
   name: 'Modules',
   data () {
@@ -92,7 +112,8 @@ export default {
         {
           title: '#',
           key: 'id',
-          width: 60
+          width: 60,
+          sortable: true
         },
         {
           title: '城市',
@@ -102,11 +123,11 @@ export default {
         {
           title: '模块名称',
           key: 'name',
-          align: 'center',
         },
         {
           title: '排序',
           key: 'order',
+          sortable: true
         },
         {
           title: '状态',
@@ -171,11 +192,28 @@ export default {
       ],
       editData: {},
       editModal: false,
+      serchObj: {
+        city: '',
+        key: ''
+      }
     }
   },
   created () {
     this.getModules()
     this.getCityList()
+  },
+  computed: {
+    computedTableData () {
+      let arr = arrSearch(this.tableData, this.serchObj.key)
+      let arr_city = arr.filter(item => {
+        if (this.serchObj.city) {
+          return item.city == this.serchObj.city
+        } else {
+          return item
+        }
+      })
+      return arr_city
+    }
   },
   methods: {
     getModules () {
@@ -200,6 +238,7 @@ export default {
       serverApi('/area/index', {},
         response => {
           if (response.data.code === 0){
+            // console.log(response)
             this.cityList = response.data.data
           }else{
             this.$Message.warning(response.data.msg)
