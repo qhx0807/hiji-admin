@@ -55,7 +55,6 @@ const store = new Vuex.Store({
       {value: 0, label: '不跳转'}
     ],
     couponUseRange: [
-      {value: 99, label: '全场通用'},
       {value: 6, label: '全部商品'},
       {value: 4, label: '全部团购'},
       {value: 2, label: '指定商品'},
