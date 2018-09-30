@@ -32,9 +32,9 @@
             <!-- <FormItem label="卡券编码" prop="cardcode">
               <Input v-model="addData.cardcode"></Input>
             </FormItem> -->
-            <FormItem label="关联活动">
+            <!-- <FormItem label="关联活动">
               <Input v-model="addData.assignactiveid"></Input>
-            </FormItem>
+            </FormItem> -->
             <FormItem label="卡券类型">
               <Select v-model="addData.typeid" @on-change="onSelectType">
                 <Option v-for="item in typeData" :value="item.id" :key="item.id">{{ item.typename }}</Option>
@@ -44,6 +44,9 @@
               <Select v-model="addData.dytype">
                 <Option v-for="(item, index) in couponUseRange" :key="index" :value="item.value">{{item.label}}</Option>
               </Select>
+            </FormItem>
+            <FormItem label="卡券定价" prop="saleprice">
+              <InputNumber :max="999999999" style="width: 100%" :min="0" v-model="addData.saleprice"></InputNumber>
             </FormItem>
           </Col>
           <Col span="6">
@@ -84,10 +87,46 @@
             </FormItem>
             <FormItem label="商户/商品" v-show="addData.typeid == 6 && addData.dytype != 6 && addData.dytype != 99 && addData.dytype != 4">
               <Tooltip content="请输入商品/商户或类型id,用逗号隔开" placement="top">
-                <Input v-model="addData.dydetails"></Input>
+                <Input style="width: 100%" v-model="addData.dydetails"></Input>
               </Tooltip>
             </FormItem>
           </Col>
+        </Row>
+        <Row>
+          <Col span="6">
+            <FormItem label="市场价" prop="saleprice">
+              <InputNumber :max="999999999" style="width: 100%" :min="0" v-model="addData.marketprice"></InputNumber>
+            </FormItem>
+          </Col>
+          <Col span="6">
+            <FormItem label="抵用金额" required prop="couponfee">
+              <InputNumber :max="999999999" style="width: 100%" :min="0" v-model="addData.couponfee"></InputNumber>
+            </FormItem>
+          </Col>
+          <Col span="6">
+            <FormItem label="平台优惠" prop="coupon">
+              <InputNumber :max="999999999" style="width: 100%" :min="0" v-model="addData.coupon"></InputNumber>
+            </FormItem>
+          </Col>
+          <Col span="6">
+            <FormItem label="商户优惠" prop="merchantcoupon">
+              <InputNumber :max="999999999" style="width: 100%" :min="0" v-model="addData.merchantcoupon"></InputNumber>
+            </FormItem>
+          </Col>
+        </Row>
+        <Row>
+          <Col span="6">
+            <FormItem label="别名" required prop="byname">
+              <Input v-model="addData.byname"></Input>
+            </FormItem>
+          </Col>
+          <Col span="6">
+            <FormItem label="卡券售价">
+              <span style="color: #f60">￥</span>
+              <span class="cardPrice">{{cardPrice}}</span>
+            </FormItem>
+          </Col>
+
         </Row>
         <Row>
           <Col span="12">
@@ -255,7 +294,14 @@ export default {
         dytype: '0',
         dydetails: '',
         dytop: null,
-        dybottom: 0
+        dybottom: 0,
+        saleprice: 0, //定价
+        marketprice: 0, //市场价
+        couponfee: null, // 抵用金额
+        coupon: 0, // 平台优惠，
+        merchantcoupon: 0, //商户优惠
+        byname: '',
+
       },
       id: null,
       rules: {
@@ -296,6 +342,10 @@ export default {
     },
     couponUseRange () {
       return this.$store.state.couponUseRange
+    },
+    cardPrice () {
+      let fee = this.addData.saleprice -  this.addData.coupon -  this.addData.merchantcoupon
+      return fee.toFixed(2)
     }
   },
   mounted () {
@@ -506,6 +556,10 @@ export default {
 }
 .loading-icon{
   animation:  loading 1s linear infinite;
+}
+.cardPrice{
+  font-size: 16px;
+  color: #f60;
 }
 .shopimgs{
   ul{

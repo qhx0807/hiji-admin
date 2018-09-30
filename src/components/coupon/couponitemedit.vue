@@ -43,13 +43,13 @@
           </Col>
           <Col span="6">
             <FormItem label="剩余数量">
-              <Input  v-model="editData.remaincount"></Input>
+              <Input disabled v-model="editData.remaincount"></Input>
             </FormItem>
             <FormItem label="结束发放时间">
               <Input v-model="editData.endsendtime"></Input>
             </FormItem>
             <FormItem label="库存">
-              <Input v-model="editData.totalcount"></Input>
+              <Input  v-model="editData.totalcount"></Input>
             </FormItem>
             <FormItem label="限制属性值">
               <InputNumber :max="999999" :min="1" v-model="editData.restrictsvalue"></InputNumber>
@@ -110,6 +110,44 @@
             </FormItem>
           </Col>
         </Row> -->
+        <Row>
+          <Col span="6">
+            <FormItem label="卡券定价" prop="saleprice">
+              <InputNumber :max="999999999" style="width: 100%" :min="0" v-model="editData.saleprice"></InputNumber>
+            </FormItem>
+          </Col>
+          <Col span="6">
+            <FormItem label="市场价" prop="saleprice">
+              <InputNumber :max="999999999" style="width: 100%" :min="0" v-model="editData.marketprice"></InputNumber>
+            </FormItem>
+          </Col>
+          <Col span="6">
+            <FormItem label="抵用金额" required prop="couponfee">
+              <InputNumber :max="999999999" style="width: 100%" :min="0" v-model="editData.couponfee"></InputNumber>
+            </FormItem>
+          </Col>
+          <Col span="6">
+            <FormItem label="平台优惠" prop="coupon">
+              <InputNumber :max="999999999" style="width: 100%" :min="0" v-model="editData.coupon"></InputNumber>
+            </FormItem>
+          </Col>
+          <Col span="6">
+            <FormItem label="商户优惠" prop="merchantcoupon">
+              <InputNumber :max="999999999" style="width: 100%" :min="0" v-model="editData.merchantcoupon"></InputNumber>
+            </FormItem>
+          </Col>
+          <Col span="6">
+            <FormItem label="别名" required prop="byname">
+              <Input v-model="editData.byname"></Input>
+            </FormItem>
+          </Col>
+          <Col span="6">
+            <FormItem label="卡券售价">
+              <span style="color: #f60">￥</span>
+              <span class="cardPrice">{{cardPrice}}</span>
+            </FormItem>
+          </Col>
+        </Row>
         <Row>
           <Col span="24">
             <FormItem label="关联商户">
@@ -280,6 +318,13 @@ export default {
   computed: {
     couponUseRange () {
       return this.$store.state.couponUseRange
+    },
+    cardPrice () {
+      if (this.editData.saleprice && this.editData.merchantcoupon && this.editData.coupon) {
+        return Number(this.editData.saleprice) - Number(this.editData.merchantcoupon) - Number(this.editData.coupon)
+      } else {
+        return this.editData.price
+      }
     }
   },
   methods: {
@@ -395,7 +440,7 @@ export default {
       this.editData.imgdetailed = this.picArr.length>0 ? this.picArr.toString() : ''
       this.editData.merchantcode = this.merArr.length>0 ? this.merArr.toString() : '0'
       this.editData.cardextrainfo = JSON.stringify(this.extProps)
-      serverApi('/card/couponedit', this.editData,
+      serverApi('/card/couponadd', this.editData,
         response => {
           this.modal_loading = false
           if (response.data.code === 0) {
@@ -472,6 +517,10 @@ export default {
   h4{
     margin-top: 17px;
   }
+}
+.cardPrice{
+  font-size: 16px;
+  color: #f60;
 }
 .imgList{
   list-style: none;
