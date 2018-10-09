@@ -434,7 +434,7 @@ export default {
       this.addData.endusetime = e[1]
     },
     onSelectType (e) {
-      this.getPropsByid(e)
+      // this.getPropsByid(e)
     },
     onClickAdd () {
       let carddesc = this.editor1.getContent()

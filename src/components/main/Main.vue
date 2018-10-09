@@ -97,7 +97,8 @@ export default {
         'UserMember',
         'CouponItem',
         'ShopOrders',
-        'FinaceTable',]
+        'FinaceTable',
+      ]
     }
   },
   computed: {

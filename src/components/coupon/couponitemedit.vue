@@ -346,7 +346,7 @@ export default {
             this.editor1.setContent(this.defaultMsg1)
             this.editor3.setContent(this.defaultMsg2)
             this.editor2.setContent(this.defaultMsg3)
-            this.getPropsByid(this.editData.typeid)
+            // this.getPropsByid(this.editData.typeid)
           } else {
             this.$Message.warning(response.data.msg)
           }
