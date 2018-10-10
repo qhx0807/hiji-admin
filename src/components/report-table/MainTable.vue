@@ -87,8 +87,9 @@
         <p style="margin-bottom:10px">对此订单审核？</p>
         <p>订单号：{{shData.orderno}}</p>
         <p>流水号：{{shData.transaction_id}}</p>
-        <p>订单金额: {{shData.total}} &nbsp;&nbsp;支付金额: {{shData.cash}} &nbsp;&nbsp;平台优惠: {{shData.coupon}}
-          &nbsp;&nbsp;商家优惠: {{shData.merchantcoupon}}
+        <p>订单金额: {{shData.total}} &nbsp;&nbsp;支付金额: {{shData.cash}}
+          <!-- &nbsp;&nbsp;平台优惠: {{shData.coupon}}
+          &nbsp;&nbsp;商家优惠: {{shData.merchantcoupon}} -->
         </p>
         <table class="table" style="margin-top:8px;" v-show="shOrderList.length>0">
           <thead>
@@ -98,6 +99,8 @@
               <th>数量</th>
               <th>市场价</th>
               <th>会员价</th>
+              <th>平台优惠</th>
+              <th>商家优惠</th>
               <th>审核</th>
             </tr>
           </thead>
@@ -111,8 +114,10 @@
               <td>{{item.goodsnum}}</td>
               <td>{{item.marketprice}}</td>
               <td>{{item.memberprice}}</td>
+              <td>{{item.coupon}}</td>
+              <td>{{item.merchantcoupon}}</td>
               <td>
-                <a v-if="item.ischeck == 0" @click="onClickItemSh(item)">审核</a>
+                <a v-if="item.ischeck == 0 && item.order_status == '3'" @click="onClickItemSh(item)">审核</a>
                 <span v-else>已审核</span>
               </td>
             </tr>

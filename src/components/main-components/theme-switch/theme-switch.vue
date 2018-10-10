@@ -65,6 +65,11 @@ export default {
           name: 'light_r',
           menu: '#495060',
           element: '#e43e31'
+        },
+        {
+          name: 'light_p',
+          menu: '#495060',
+          element: '#8D0077'
         }
       ]
     }

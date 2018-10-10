@@ -311,6 +311,16 @@ export default {
       this.selectType = e
       this.draftShow = true
       this.draftData = []
+      this.editData = {}
+      this.addData = {
+        city: '0',
+        urltype: '',
+        url: '',
+        sort: '',
+        type: '1',
+        imgurl: '',
+        name: '',
+      }
       switch (e) {
         case 1:
           this.typeSpan = 24

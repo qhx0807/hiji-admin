@@ -292,6 +292,7 @@ export default {
     onSelectBlockItem (e) {
       this.selectType = e
       this.editSonShow = false
+      this.editData = {}
       this.addData = {
         city: 0,
         urltype: '',

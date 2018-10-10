@@ -145,13 +145,26 @@ export default {
           key: 'is_check',
           sortable: true,
           render: (h, params) => {
-            let text = params.row.is_check == '1' ? '已使用' : '未使用'
-            let color = params.row.is_check == '1' ? '#2d8cf0' : '#ff9900'
-            return h('span', {
-              style: {
-                color: color
-              }
-            }, text)
+            let d = new Date().getTime() / 1000
+            if (params.row.is_check == '1' && d > params.row.expiretime) {
+              return h('span', {
+                style: {
+                  color: '#f60'
+                }
+              }, '已过期')
+            } else if (params.row.is_check == '1' && d < params.row.expiretime) {
+              return h('span', {
+                style: {
+                  color: '#19be6b'
+                }
+              }, '未使用')
+            } else if (params.row.is_check == '0') {
+              return h('span', {
+                style: {
+                  color: '#2d8cf0'
+                }
+              }, '已使用')
+            }
           }
         }
       ]

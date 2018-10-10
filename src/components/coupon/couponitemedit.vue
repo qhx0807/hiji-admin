@@ -117,12 +117,12 @@
             </FormItem>
           </Col>
           <Col span="6">
-            <FormItem label="市场价" prop="saleprice">
+            <FormItem label="市场价" >
               <InputNumber :max="999999999" style="width: 100%" :min="0" v-model="editData.marketprice"></InputNumber>
             </FormItem>
           </Col>
           <Col span="6">
-            <FormItem label="抵用金额" required prop="couponfee">
+            <FormItem label="抵用金额" required >
               <InputNumber :max="999999999" style="width: 100%" :min="0" v-model="editData.couponfee"></InputNumber>
             </FormItem>
           </Col>
@@ -137,7 +137,7 @@
             </FormItem>
           </Col>
           <Col span="6">
-            <FormItem label="别名" required prop="byname">
+            <FormItem label="别名" required>
               <Input v-model="editData.byname"></Input>
             </FormItem>
           </Col>

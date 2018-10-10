@@ -99,7 +99,7 @@
             </FormItem>
           </Col>
           <Col span="6">
-            <FormItem label="抵用金额" required prop="couponfee">
+            <FormItem label="抵用金额" required>
               <InputNumber :max="999999999" style="width: 100%" :min="0" v-model="addData.couponfee"></InputNumber>
             </FormItem>
           </Col>
@@ -116,7 +116,7 @@
         </Row>
         <Row>
           <Col span="6">
-            <FormItem label="别名" required prop="byname">
+            <FormItem label="别名" required >
               <Input v-model="addData.byname"></Input>
             </FormItem>
           </Col>
