@@ -71,7 +71,7 @@
       </Row>
     </Card>
     <Card :bordered="false" style="margin-top:10px">
-      <Table border ref="table" highlight-row :loading="tableLoading" size="small" height="600" :columns="columns" :data="tableData"></Table>
+      <Table border ref="table" highlight-row :loading="tableLoading" size="small" height="520" :columns="columns" :data="tableData"></Table>
       <div style="margin: 10px;overflow: hidden">
         <div style="float: right;">
           <Page :total="counts" show-sizer show-total :page-size-opts="pageSizeOpts" :page-size="15" :current="page" @on-page-size-change="onChangeSize" @on-change="changePage"></Page>
@@ -118,7 +118,8 @@
               <td>{{item.merchantcoupon}}</td>
               <td>
                 <a v-if="item.ischeck == 0 && item.order_status == '3'" @click="onClickItemSh(item)">审核</a>
-                <span v-else>已审核</span>
+                <span v-if="item.ischeck == 1">已审核</span>
+                <span v-if="item.ischeck == 0 && item.order_status != '3'">未核销</span>
               </td>
             </tr>
           </tbody>

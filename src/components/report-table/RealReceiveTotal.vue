@@ -8,7 +8,7 @@
       <Button type="primary" style="margin-left:8px; float:right" @click="exportTable" icon="md-arrow-down">导出数据</Button>
     </Card>
     <Card :bordered="false" style="margin-top:10px">
-      <Table border ref="table" :loading="tableLoading" size="small" height="600" :columns="columns" :data="filterTable">
+      <Table border ref="table" :loading="tableLoading" size="small" height="520" :columns="columns" :data="filterTable">
         <div slot="footer">
           <div class="tablefooter" v-show="filterTable.length > 0">
             <ul class="sta-ul">
