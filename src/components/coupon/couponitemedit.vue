@@ -75,7 +75,7 @@
             <FormItem label="关联活动">
              <Input v-model="editData.assignactiveid"></Input>
             </FormItem>
-             <FormItem label="扣点" prop="cardname">
+             <FormItem label="扣点" required>
               <InputNumber :max="2" :step="0.1" style="width: 100%" :min="0" v-model="editData.points"></InputNumber>
             </FormItem>
             <FormItem label="商户/商品id" v-show="editData.typeid == 6 && editData.dytype != 99">
@@ -88,7 +88,7 @@
             <FormItem label="结束使用时间">
              <Input  v-model="editData.endusetime"></Input>
             </FormItem>
-            <FormItem label="卡券头图" style="margin-bottom:0px;">
+            <FormItem label="卡券头图" required style="margin-bottom:0px;">
              <Input v-model="editData.imgmaster">
                 <span slot="append">
                   <Upload :action="uploadApiUrl"

@@ -24,7 +24,7 @@
                 <Option v-for="item in stateData" :value="item.value" :key="item.value">{{ item.name }}</Option>
               </Select>
             </FormItem>
-            <FormItem label="扣点" prop="cardname">
+            <FormItem label="扣点" required>
               <InputNumber :max="2" :step="0.1" style="width: 100%" :min="0" v-model="addData.points"></InputNumber>
             </FormItem>
           </Col>
@@ -53,7 +53,7 @@
             <FormItem label="库存">
               <Input v-model="addData.totalcount"></Input>
             </FormItem>
-            <FormItem label="卡券头图">
+            <FormItem label="卡券头图" required>
               <Input v-model="addData.imgmaster">
                 <span slot="append">
                   <Upload :action="uploadApiUrl"

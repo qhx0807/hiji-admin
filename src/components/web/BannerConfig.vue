@@ -145,7 +145,7 @@ export default {
           title: '操作',
           key: 'swiperid',
           align: 'center',
-          width: 120,
+          width: 130,
           fixed: 'right',
           render: (h, params) => {
             let edit = h('a', {

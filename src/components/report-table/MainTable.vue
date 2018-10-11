@@ -78,7 +78,7 @@
         </div>
       </div>
     </Card>
-    <Modal v-model="shModal" width="960">
+    <Modal v-model="shModal" :width="shOrderList.length > 0 ? 900 : 500">
       <p slot="header" style="color:#f60;">
         <Icon type="ios-information-circle"></Icon>
         <span>提示</span>
@@ -101,7 +101,7 @@
               <th>会员价</th>
               <th>平台优惠</th>
               <th>商家优惠</th>
-              <th>审核</th>
+              <!-- <th>审核</th> -->
             </tr>
           </thead>
           <tbody>
@@ -116,16 +116,21 @@
               <td>{{item.memberprice}}</td>
               <td>{{item.coupon}}</td>
               <td>{{item.merchantcoupon}}</td>
-              <td>
+              <!-- <td>
                 <a v-if="item.ischeck == 0 && item.order_status == '3'" @click="onClickItemSh(item)">审核</a>
                 <span v-if="item.ischeck == 1">已审核</span>
                 <span v-if="item.ischeck == 0 && item.order_status != '3'">未核销</span>
-              </td>
+              </td> -->
             </tr>
           </tbody>
         </table>
       </div>
       <div slot="footer" v-if="shOrderList.length==0">
+        <Button @click="shModal = false">取消</Button>
+        <Button type="error" :loading="refuseLoading" @click="onClickSH(0)">不通过</Button>
+        <Button type="primary" :loading="passLoading" @click="onClickSH(1)">确认审核</Button>
+      </div>
+      <div slot="footer" v-if="shData.type == 3">
         <Button @click="shModal = false">取消</Button>
         <Button type="error" :loading="refuseLoading" @click="onClickSH(0)">不通过</Button>
         <Button type="primary" :loading="passLoading" @click="onClickSH(1)">确认审核</Button>
@@ -602,9 +607,14 @@ export default {
       } else if (e === 0) {
         this.refuseLoading = true
       }
+      let orderid = ''
+      if (this.shData.orderlist.length == 1 && this.shData.type == '3') {
+        orderid = this.shData.orderlist[0].orderid
+      }
       let d = {
         orderno: this.shData.orderno,
-        check: e
+        check: e,
+        orderid: orderid
       }
       serverApi('/Finance/operation', d,
         response => {
