@@ -76,7 +76,7 @@
              <Input v-model="editData.assignactiveid"></Input>
             </FormItem>
              <FormItem label="扣点" required>
-              <InputNumber :max="100" :step="1" :min="0" v-model="editData.points"></InputNumber>&nbsp;%
+              <InputNumber :max="100" :min="0" v-model="editData.points"></InputNumber>&nbsp;%（0~100）
             </FormItem>
             <FormItem label="商户/商品id" v-show="editData.typeid == 6 && editData.dytype != 99">
               <Tooltip content="请输入商品或商户id,用逗号隔开" placement="top">

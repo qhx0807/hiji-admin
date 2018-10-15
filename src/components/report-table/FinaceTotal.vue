@@ -335,12 +335,12 @@ export default {
           key: 'type',
           width: 90,
         },
-        {
-          title: '设备号',
-          key: 'equipmentno',
-          width: 90,
-          tooltip: true,
-        },
+        // {
+        //   title: '设备号',
+        //   key: 'equipmentno',
+        //   width: 90,
+        //   tooltip: true,
+        // },
         {
           title: '订单号',
           key: 'orderno',
@@ -380,6 +380,13 @@ export default {
           sortable: true
         },
         {
+          title: '扣点',
+          key: 'pointsprice',
+          width: 100,
+          align: 'right',
+          sortable: true
+        },
+        {
           title: '实收',
           key: 'total',
           width: 100,
@@ -389,7 +396,7 @@ export default {
         {
           title: '支付',
           key: 'paytypename',
-          width: 70,
+          width: 80,
         },
         {
           title: '时间',

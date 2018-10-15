@@ -25,7 +25,7 @@
               </Select>
             </FormItem>
             <FormItem label="扣点" required>
-              <InputNumber :max="100" :step="1" :min="0" v-model="addData.points"></InputNumber> &nbsp;%
+              <InputNumber :max="100" :step="1" :min="0" v-model="addData.points"></InputNumber> &nbsp;%（0~100）
             </FormItem>
           </Col>
           <Col span="6">

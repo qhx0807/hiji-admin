@@ -382,6 +382,13 @@ export default {
           sortable: true
         },
         {
+          title: '扣点',
+          key: 'pointsprice',
+          width: 100,
+          align: 'right',
+          sortable: true
+        },
+        {
           title: '实收',
           key: 'total',
           width: 100,

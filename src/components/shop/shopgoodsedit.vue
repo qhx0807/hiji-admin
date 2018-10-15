@@ -78,6 +78,9 @@
             <FormItem label="APP价格" prop="appprice">
               <InputNumber :max="9999999" style="width:100%" :min="0" v-model="editData.appprice"></InputNumber>
             </FormItem>
+            <FormItem label="扣点" required>
+              <InputNumber :max="100" :step="1" :min="0" v-model="editData.points"></InputNumber> &nbsp;%（0~100）
+            </FormItem>
           </Col>
           <Col span="6">
             <FormItem label="自定义编码">

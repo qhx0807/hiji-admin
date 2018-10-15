@@ -36,6 +36,9 @@
             <FormItem label="移动端价格" prop="mobileprice">
               <InputNumber :max="9999999" style="width:100%" :min="0" v-model="addData.mobileprice"></InputNumber>
             </FormItem>
+            <FormItem label="扣点" required>
+              <InputNumber :max="100" :step="1" :min="0" v-model="addData.points"></InputNumber> &nbsp;%（0~100）
+            </FormItem>
           </Col>
           <Col span="6">
             <FormItem label="所属商户" prop="goodsname">
@@ -279,7 +282,8 @@ export default {
         typeid: '',
         attrvalue: '',
         isonsale: '1',
-        goodstype: ''
+        goodstype: '',
+        points: 0
       },
       goodsTypesArr: [],
       picArr: ['', '', '', '', '', ''],
