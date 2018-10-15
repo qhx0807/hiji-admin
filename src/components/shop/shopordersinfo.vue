@@ -65,21 +65,24 @@
         <Row>
           <Col span="8">
             <FormItem label="订单编号：">{{orderData.orderno ? orderData.orderno : ''}}</FormItem>
-            <FormItem label="订单类型：">{{orderData.type}}</FormItem>
             <FormItem label="订单状态：">{{orderData.order_status}}</FormItem>
             <FormItem label="流水号：">{{orderData.pay_no}}</FormItem>
+            <FormItem label="卡券id：">{{orderData.cardmainid}} &nbsp;&nbsp;<a v-if="orderData.cardmainid" @click="onClickCoupon(orderData.cardmainid)">查看卡券</a></FormItem>
+            <FormItem label="平台优惠：">{{orderData.coupon}}</FormItem>
           </Col>
           <Col span="8">
             <FormItem label="订单类型：">{{orderData.type}}</FormItem>
             <FormItem label="订单金额：">{{orderData.amount}}</FormItem>
             <FormItem label="支付状态：">{{orderData.pay_status}}</FormItem>
             <FormItem label="物流单号：">{{orderData.shipping_code}} &nbsp;&nbsp;&nbsp;<a v-if="orderData.shipping_code">物流信息</a></FormItem>
+            <FormItem label="商户优惠：">{{orderData.merchantcoupon}}</FormItem>
           </Col>
           <Col span="8">
             <FormItem label="创建时间：">{{orderData.createtime}}</FormItem>
             <FormItem label="支付金额：">{{orderData.cash_amount}}</FormItem>
             <FormItem label="支付方式：">{{orderData.paytype == '1' ? '微信' : '支付宝'}}</FormItem>
-            <!-- <FormItem label="支付时间：">{{orderData.paytime}}</FormItem> -->
+            <FormItem label="支付时间：">{{orderData.paytime}}</FormItem>
+            <FormItem label="扣点金额：">{{orderData.pointsprice}}</FormItem>
           </Col>
         </Row>
       </Form>
@@ -109,6 +112,11 @@
             <td>{{item.marketprice}}</td>
             <td>{{item.goodsnum}}</td>
             <td>{{item.memberprice}}</td>
+          </tr>
+          <tr>
+            <td colspan="5"></td>
+            <td>运费：</td>
+            <td style="color:#f40">+ {{orderData.shippingamout}}</td>
           </tr>
           <tr class="total">
             <td colspan="5">总计</td>
@@ -183,6 +191,10 @@ export default {
     },
     onClickBack () {
       this.$router.back()
+    },
+    onClickCoupon (id) {
+      // this.$Message.info('暂未开放~~')
+      this.$router.push({name: 'CouponItemEdit', params: {id: id}})
     }
   }
 }

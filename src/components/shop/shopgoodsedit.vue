@@ -37,6 +37,9 @@
             <FormItem label="头图"  prop="keywords">
               <Input v-model="editData.goodsimg"></Input>
             </FormItem>
+            <FormItem label="平台优惠" required>
+              <InputNumber :max="999999999" style="width:100%" :min="0" v-model="editData.coupon"></InputNumber>
+            </FormItem>
           </Col>
           <Col span="6">
             <FormItem label="所属目录" prop="goodsname">
@@ -64,6 +67,9 @@
                 <Option :value="1">正常销售</Option>
                 <Option :value="2">存放仓库</Option>
               </Select>
+            </FormItem>
+            <FormItem label="商户优惠" required>
+              <InputNumber :max="999999999" style="width:100%" :min="0" v-model="editData.merchantcoupon"></InputNumber>
             </FormItem>
           </Col>
           <Col span="6">

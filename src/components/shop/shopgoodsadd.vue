@@ -52,6 +52,9 @@
             <FormItem label="APP价格" prop="appprice">
               <InputNumber :max="9999999" style="width:100%" :min="0" v-model="addData.appprice"></InputNumber>
             </FormItem>
+            <FormItem label="商户优惠" required>
+              <InputNumber :max="999999999" style="width:100%" :min="0" v-model="addData.merchantcoupon"></InputNumber>
+            </FormItem>
           </Col>
           <Col span="6">
             <FormItem label="自定义编码">
@@ -62,6 +65,9 @@
             </FormItem>
             <FormItem label="会员价" prop="memberprice">
               <InputNumber :max="9999999" style="width:100%" :min="0" v-model="addData.memberprice"></InputNumber>
+            </FormItem>
+            <FormItem label="平台优惠" required>
+              <InputNumber :max="999999999" style="width:100%" :min="0" v-model="addData.coupon"></InputNumber>
             </FormItem>
           </Col>
         </Row>
@@ -283,7 +289,9 @@ export default {
         attrvalue: '',
         isonsale: '1',
         goodstype: '',
-        points: 0
+        points: 0,
+        merchantcoupon: 0,
+        coupon: 0
       },
       goodsTypesArr: [],
       picArr: ['', '', '', '', '', ''],
