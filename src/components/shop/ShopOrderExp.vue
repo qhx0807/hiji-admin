@@ -84,7 +84,7 @@ export default {
         {
           title: '商户',
           key: 'merchantname',
-          width: 140
+          width: 120
         },
         {
           title: '订单状态',
@@ -112,8 +112,8 @@ export default {
         {
           title: '收货地址',
           key: 'address',
-          ellipsis: true,
-          minWidth: 100,
+          // ellipsis: true,
+          minWidth: 180,
           render: (h, params) => {
             let text = ''
             if (params.row.address.indexOf('name') > -1) {
@@ -215,6 +215,7 @@ export default {
         pagesize: this.pageSize,
         page: this.page,
         like: this.searchKey,
+        ispay: 1,
         ordertype: 4
       }
       this.$store.commit('pageLoading', true)

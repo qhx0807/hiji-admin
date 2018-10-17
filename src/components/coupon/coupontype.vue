@@ -50,7 +50,7 @@
         </FormItem>
       </Form>
       <div slot="footer">
-        <Button    @click="editModal = false">取消</Button>
+        <Button @click="editModal = false">取消</Button>
         <Button type="primary" :loading="modal_loading" @click="edit">保存</Button>
       </div>
     </Modal>
@@ -80,14 +80,9 @@ export default {
       pageSize: 10,
       columns: [
         {
-          title: '序号',
-          type: 'index',
-          width: 80
-        },
-        {
-          title: 'ID',
+          title: '#',
           key: 'id',
-          minWidth: 130
+          minWidth: 80
         },
         {
           title: '类型名称',
@@ -103,7 +98,7 @@ export default {
           title: '操作',
           key: 'id',
           align: 'center',
-          width: 220,
+          width: 150,
           fixed: 'right',
           render: (h, params) => {
             return h('div', [

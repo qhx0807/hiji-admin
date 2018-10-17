@@ -79,7 +79,7 @@
           </Col>
           <Col span="8">
             <FormItem label="创建时间：">{{orderData.createtime}}</FormItem>
-            <FormItem label="支付金额：">{{orderData.cash_amount}}</FormItem>
+            <FormItem label="实际支付：">{{orderData.cash_amount}}</FormItem>
             <FormItem label="支付方式：">{{orderData.paytype == '1' ? '微信' : '支付宝'}}</FormItem>
             <FormItem label="支付时间：">{{orderData.paytime}}</FormItem>
             <FormItem label="扣点金额：">{{orderData.pointsprice}}</FormItem>
@@ -97,31 +97,41 @@
             <th>单价</th>
             <th>市场价</th>
             <th>数量</th>
-            <th>会员价</th>
+            <th>价格</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="(item, index) in goodsList" :key="index">
             <td>{{item.goodsid}}</td>
-            <td>
-              <img :src="item.goodsimg" v-imgview style="height:40px" alt="">
-              {{item.goodsname}}
+            <td class="">
+              <!-- <img :src="item.goodsimg" v-imgview style="height:20px" alt=""> -->
+              <span>{{item.goodsname}}</span>
             </td>
             <td>{{item.goodstypename}}</td>
             <td>{{item.goodsprice}}</td>
             <td>{{item.marketprice}}</td>
             <td>{{item.goodsnum}}</td>
-            <td>{{item.memberprice}}</td>
+            <td>{{Number(item.goodsprice)*Number(item.goodsnum)}}</td>
           </tr>
           <tr>
             <td colspan="5"></td>
             <td>运费：</td>
             <td style="color:#f40">+ {{orderData.shippingamout}}</td>
           </tr>
+          <tr>
+            <td colspan="5"></td>
+            <td>平台优惠：</td>
+            <td style="color:#f40">- {{orderData.coupon}}</td>
+          </tr>
+          <tr>
+            <td colspan="5"></td>
+            <td>商户优惠：</td>
+            <td style="color:#f40">- {{orderData.merchantcoupon}}</td>
+          </tr>
           <tr class="total">
             <td colspan="5">总计</td>
             <td>{{shopNUm}}</td>
-            <td>{{orderData.amount}}</td>
+            <td><span>{{orderData.cash_amount}}</span></td>
           </tr>
         </tbody>
       </table>
@@ -239,6 +249,10 @@ export default {
     font-weight: 600;
     td{
       border-bottom: 1px solid #ddd;
+      span{
+        color: #f40;
+        font-size: 16px;
+      }
     }
   }
   .bm{

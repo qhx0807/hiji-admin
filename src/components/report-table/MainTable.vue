@@ -78,7 +78,7 @@
         </div>
       </div>
     </Card>
-    <Modal v-model="shModal" :width="shOrderList.length > 0 ? 900 : 500">
+    <Modal v-model="shModal" :width="shOrderList.length > 0 ? 800 : 500">
       <p slot="header" style="color:#f60;">
         <Icon type="ios-information-circle"></Icon>
         <span>提示</span>
@@ -94,33 +94,35 @@
         <table class="table" style="margin-top:8px;" v-show="shOrderList.length>0">
           <thead>
             <tr>
-              <th>商品id</th>
+              <th>订单ID</th>
+              <th>商品ID</th>
               <th>商品</th>
+              <th>属性</th>
               <th>数量</th>
-              <th>市场价</th>
-              <th>会员价</th>
+              <th>单价</th>
               <th>平台优惠</th>
               <th>商家优惠</th>
-              <!-- <th>审核</th> -->
+              <th v-if="shData.type==4">审核</th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="(item, index) in shOrderList" :key="index">
+              <td>{{item.orderid}}</td>
               <td>{{item.goodsid}}</td>
               <td class="goodsInfo">
                 <img v-if="item.goodsimg" v-imgview :src="item.goodsimg" alt="">
                 <span>{{item.goodsname}}</span>
               </td>
+              <td>{{item.goodstypename}}</td>
               <td>{{item.goodsnum}}</td>
-              <td>{{item.marketprice}}</td>
-              <td>{{item.memberprice}}</td>
+              <td>{{item.goodsprice}}</td>
               <td>{{item.coupon}}</td>
               <td>{{item.merchantcoupon}}</td>
-              <!-- <td>
-                <a v-if="item.ischeck == 0 && item.order_status == '3'" @click="onClickItemSh(item)">审核</a>
+              <td v-if="shData.type==4">
+                <a v-if="item.ischeck == 0 && item.order_status == '3'" @click="onClickSHGoods(item)">审核</a>
                 <span v-if="item.ischeck == 1">已审核</span>
-                <span v-if="item.ischeck == 0 && item.order_status != '3'">未核销</span>
-              </td> -->
+                <!-- <span v-if="item.ischeck == 0 && item.order_status != '3'">未核销</span> -->
+              </td>
             </tr>
           </tbody>
         </table>
@@ -305,7 +307,7 @@ export default {
         },
         {
           title: '扣点金额',
-          key: 'point',
+          key: 'points',
           width: 110,
           sortable: true,
           align: 'right'
@@ -634,6 +636,29 @@ export default {
           this.$Message.warning(error.toString())
           this.refuseLoading = false
           this.tableLoading = false
+        }
+      )
+    },
+    onClickSHGoods (row) {
+      let d = {
+        orderno: this.shData.orderno,
+        check: 1,
+        orderid: row.orderid
+      }
+      serverApi('/Finance/operation', d,
+        response => {
+          console.log(response)
+          if (response.data.code === 0){
+            this.$Message.success(response.data.msg)
+            this.shModal = false
+            row.ischeck = 1
+          }else{
+            this.$Message.warning(response.data.msg)
+          }
+        },
+        error => {
+          console.log(error)
+          this.$Message.warning(error.toString())
         }
       )
     },
