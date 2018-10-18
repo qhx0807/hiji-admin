@@ -78,12 +78,13 @@
         <Col span="16" style="text-align:right">
           <Button type="primary" :loading="tableLoading" icon="ios-search" @click="onClickSearch">搜索</Button>
           <Button type="primary" style="margin-left:8px" @click="goBackFinace" icon="ios-arrow-back">返回</Button>
-          <Button type="primary" :loading="exportLoading" style="margin-left:8px; float:right" @click="exportTable" icon="md-arrow-down">导出数据</Button>
+          <Button type="primary" :loading="exportLoading" style="margin-left:8px" @click="exportTable" icon="md-arrow-down">导出数据</Button>
+          <Button type="error"  :loading="passLoading" style="margin-left:8px" :disabled="selectTableItem.length<1" @click="onClickNotAllow" icon="ios-information-circle-outline">批量审核(不通过)</Button>
         </Col>
       </Row>
     </Card>
     <Card :bordered="false" style="margin-top:10px">
-      <Table border ref="table" highlight-row :loading="tableLoading" size="small" height="550" :columns="columns" :data="tableData"></Table>
+      <Table border ref="table" highlight-row @on-selection-change="onSelectTableItem" :loading="tableLoading" size="small" height="550" :columns="columns" :data="tableData"></Table>
       <div style="margin: 10px;overflow: hidden">
         <div style="float: right;">
           <Page :total="counts" show-sizer show-total :page-size-opts="pageSizeOpts" :page-size="15" :current="page" @on-page-size-change="onChangeSize" @on-change="changePage"></Page>
@@ -140,7 +141,7 @@ export default {
       orderData: [],
       columns: [
         {
-          type: 'index',
+          type: 'selection',
           width: 50,
           align: 'center'
         },
@@ -420,7 +421,8 @@ export default {
       isapprove: '',
       ispayment: '',
       merchantid: '',
-      merchantData: []
+      merchantData: [],
+      selectTableItem: []
     }
   },
   created () {
@@ -632,6 +634,51 @@ export default {
     onSelectDate (e) {
       this.starttime = e[0]
       this.endtime = e[1]
+    },
+    onClickNotAllow () {
+      this.passLoading = true
+      this.$Modal.confirm({
+        title: '提示',
+        content: '<p>选中的申请将会<b style="color: #f44">不通过</b style="color: #f44">！！未选中的将会通过！</p>',
+        onOk: () => {
+          let arr = []
+          this.selectTableItem.forEach(item => {
+            arr.push(item.id)
+          })
+          let d = {
+            ids: arr.toString(),
+            auditing: '1',
+            starttime: this.starttime,
+            endtime: this.endtime
+          }
+          serverApi('/Finance/auditor', d,
+            response => {
+              console.log(response)
+              if (response.data.code === 0){
+                this.$Message.success(response.data.msg)
+                this.getTableData()
+              }else{
+                this.$Message.warning(response.data.msg)
+              }
+              this.passLoading = false
+              this.refuseLoading = false
+            },
+            error => {
+              this.passLoading = false
+              console.log(error)
+              this.$Message.warning(error.toString())
+              this.refuseLoading = false
+              this.tableLoading = false
+            }
+          )
+        },
+        onCancel: () => {
+          this.passLoading = false
+        }
+      })
+    },
+    onSelectTableItem (e) {
+      this.selectTableItem = e
     }
   }
 }
