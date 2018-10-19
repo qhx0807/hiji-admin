@@ -79,6 +79,7 @@
           <Button type="primary" :loading="tableLoading" icon="ios-search" @click="onClickSearch">搜索</Button>
           <Button type="primary" style="margin-left:8px" @click="goBackFinace" icon="ios-arrow-back">返回</Button>
           <Button type="primary" :loading="exportLoading" style="margin-left:8px" @click="exportTable" icon="md-arrow-down">导出数据</Button>
+          <Button type="primary" :loading="exportLoading" style="margin-left:8px" @click="exportTableDetail" icon="ios-cloud-download-outline">导出详细数据</Button>
           <Button type="error"  :loading="passLoading" style="margin-left:8px" :disabled="selectTableItem.length<1" @click="onClickNotAllow" icon="ios-information-circle-outline">批量审核(不通过)</Button>
         </Col>
       </Row>
@@ -536,6 +537,44 @@ export default {
         ispayment: this.ispayment,
         merchantid: this.merchantid,
         exports: 'out'
+      }
+      serverApi('/Finance/accountlist', d,
+        response => {
+          console.log(response)
+          if (response.data.code === 0){
+            location.href = response.data.data
+          }else{
+            this.$Message.warning(response.data.msg)
+          }
+          this.exportLoading = false
+        },
+        error => {
+          console.log(error)
+          this.exportLoading = false
+        }
+      )
+    },
+    exportTableDetail () {
+      if (this.tableData.length < 1) {
+        this.$Message.info('暂无数据')
+        return false
+      }
+      this.exportLoading = true
+      let d = {
+        page: this.page,
+        pagesize: this.pageSize,
+        type: 2,
+        like: this.searchKey,
+        timetype: this.timetype,
+        starttime: this.starttime,
+        endtime: this.endtime,
+        isapply: this.isapply,
+        isauditing: this.isauditing,
+        isapprove: this.isapprove,
+        ispayment: this.ispayment,
+        merchantid: this.merchantid,
+        exports: 'out',
+        isdetail: 'out'
       }
       serverApi('/Finance/accountlist', d,
         response => {

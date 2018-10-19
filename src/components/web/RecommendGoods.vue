@@ -48,8 +48,8 @@
     <Row>
       <Col span="24" class="hot-content">
         <Spin fix size="large" v-show="spinShow"></Spin>
+        <TimerCountDown></TimerCountDown>
       </Col>
-
     </Row>
 
     <Modal v-model="addModal" width="750">
@@ -71,8 +71,12 @@
 </template>
 <script>
 import serverApi from '../../axios'
+import TimerCountDown from '../common/TimerCountDown'
 export default {
   name: 'RecommendGoods',
+  components: {
+    TimerCountDown
+  },
   data () {
     return {
       searchKeys: '',
