@@ -114,6 +114,11 @@
                       <Button type="dashed" style="width: 112px" @click="onSelectBlockItem(4)">图文广告区域</Button>
                     </Col>
                   </Row>
+                  <!-- <Row style="margin-top:6px">
+                    <Col span="12">
+                      <Button type="dashed" style="width: 112px" @click="onSelectBlockItem(5)">导入商品/分类ID</Button>
+                    </Col>
+                  </Row> -->
                 </div>
               </Poptip>
             </div>
@@ -372,7 +377,12 @@ export default {
       })
     },
     onClickSave () {
+      if (this.draftData.length === 0) {
+        this.$Message.warning('请添加内容！')
+        return false
+      }
       let d = {
+        ptype: this.blockData.type,
         id: this.editData.id || '',
         type: this.selectType,
         imgs: JSON.stringify(this.DraftDataSorted),

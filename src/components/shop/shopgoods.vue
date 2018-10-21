@@ -133,11 +133,11 @@ export default {
             let close = h('span', {slot: 'close'}, '否')
             return h('i-switch', {
               props: {
-                trueValue: 1,
-                falseValue: 0,
+                // trueValue: 1,
+                // falseValue: 0,
                 size: 'default',
                 loading: params.row.loading,
-                value: params.row.isrecommend
+                value: params.row.isrecommend > 0
               },
               on: {
                 'on-change': (e) => {
@@ -270,11 +270,13 @@ export default {
         duration: 0
       })
       let d = {
-        id: row.id
+        goodsids: row.id,
+        type: '1',
+        isrecommend: row.isrecommend > 0 ? 0 : '255'
       }
       serverApi('/goods/recommendedit', d,
         response => {
-          console.log(response)
+          // console.log(response)
           this.$Message.destroy()
           if (response.data.code === 0){
             this.$Message.success(response.data.msg)

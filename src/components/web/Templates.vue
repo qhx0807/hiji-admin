@@ -20,10 +20,16 @@
         <span>新增页面</span>
       </p>
       <Form :model="addData" ref="form" :label-width="80">
-        <FormItem label="选择城市" required>
+        <!-- <FormItem label="选择城市" required>
           <Select v-model="addData.city">
             <Option value="0">通用</Option>
             <Option v-for="(item, index) in cityList" :key="index" :value="item.id">{{item.areaname}}</Option>
+          </Select>
+        </FormItem> -->
+        <FormItem label="选择类型" required>
+          <Select v-model="addData.type">
+            <Option value="2">自定义内容</Option>
+            <Option value="3">商品列表（只需维护商品ID）</Option>
           </Select>
         </FormItem>
         <FormItem label="页面标题" required>
@@ -105,6 +111,15 @@ export default {
           align: 'center',
         },
         {
+          title: '类型',
+          key: 'type',
+          align: 'center',
+          render: (h, params) => {
+            let text = params.row.type == 2 ? '自定义内容' : '商品类表（只需商品id）'
+            return h('span', null, text)
+          }
+        },
+        {
           title: '状态',
           key: 'show',
           render: (h, params) => {
@@ -172,7 +187,6 @@ export default {
   created () {
     this.getModules()
     this.getCityList()
-    console.log(this.actionTypeArr)
   },
   computed: {
     actionTypeArr () {
@@ -182,7 +196,7 @@ export default {
   methods: {
     getModules () {
       this.tableLoading = true
-      serverApi('/web/webareaindex', {type: '2'},
+      serverApi('/web/webareaindex', {type: '2,3'},
         response => {
           console.log(response)
           this.tableLoading = false
@@ -266,7 +280,11 @@ export default {
       )
     },
     onClickEdit (row) {
-      this.$router.push({name: 'TemplatesAdd', params: {id: row.id}})
+      if (row.type == 2) {
+        this.$router.push({name: 'TemplatesAdd', params: {id: row.id}})
+      } else if (row.type == 3) {
+        this.$router.push({name: 'TemplatesGoods', params: {id: row.id}})
+      }
     },
     onClickMod (row) {
       this.editData = Object.assign({}, row)

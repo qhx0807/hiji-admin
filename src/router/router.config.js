@@ -74,6 +74,7 @@ const Modules = r => require.ensure([], () => r(require('@/components/web/Module
 const ModulesAdd = r => require.ensure([], () => r(require('@/components/web/ModulesAdd.vue')))
 const TemplatesAdd = r => require.ensure([], () => r(require('@/components/web/TemplatesAdd.vue')))
 const RecommendGoods = r => require.ensure([], () => r(require('@/components/web/RecommendGoods.vue')))
+const TemplatesGoods = r => require.ensure([], () => r(require('@/components/web/TemplatesGoods.vue')))
 
 const routes = [
   {
@@ -443,8 +444,12 @@ const routes = [
         path: 'RecommendGoods',
         component: RecommendGoods,
         name: 'RecommendGoods'
+      },
+      {
+        path: 'TemplatesGoods/:id',
+        component: TemplatesGoods,
+        name: 'TemplatesGoods'
       }
-
     ]
   },
   {
