@@ -446,7 +446,7 @@ const routes = [
         name: 'RecommendGoods'
       },
       {
-        path: 'TemplatesGoods/:id',
+        path: 'TemplatesGoods/:id/:type',
         component: TemplatesGoods,
         name: 'TemplatesGoods'
       }

@@ -24,7 +24,7 @@
           <Button style="margin-left:12px" :loading="addLoading" @click="onClickSaveAdd">添加到页面</Button>
         </Col>
         <Col span="8"  style="padding-left:20px;">
-          <Input v-model="topimg" placeholder="上传页面顶部图片，没有则不显示" />
+          <Input v-model="blockData.topimg" placeholder="上传页面顶部图片，没有则不显示" />
         </Col>
         <Col span="4"  style="padding-left:12px;">
           <Upload
@@ -42,7 +42,7 @@
       <Row>
         <Col span="12">
           <Input prefix="ios-search" v-model="searchKeys" style="width: 300px" placeholder="搜索..."></Input>
-          <Button style="margin-left:12px" type="primary" :loading="submitLoading" :disabled="disabledBtn" @click="onClickSavePx">保存修改</Button>
+          <!-- <Button style="margin-left:12px" type="primary" :loading="submitLoading" :disabled="disabledBtn" @click="onClickSavePx">保存修改</Button> -->
         </Col>
       </Row>
     </Card>
@@ -50,9 +50,22 @@
       <Col span="24">
         <div class="hot-content">
           <Spin fix size="large" v-show="spinShow"></Spin>
-          <draggable element="ul" v-model="list">
-            <li v-for="item in list">{{item}}</li>
-          </draggable>
+          <transition-group name="fade">
+            <div class="goods-item" v-for="(item, index) in sortedList" :key="item.id">
+              <img :src="item.goodsimg" alt="">
+              <p class="goods-name">{{item.goodsname}}</p>
+              <p style="margin-top:6px;padding-left:5px;">
+                <del class="market-price">￥{{item.goodsprice}}</del>
+                <span class="goods-price">￥{{item.goodsprice}}</span>
+              </p>
+              <span class="goods-buy">立即购买</span>
+              <div class="mask">
+                <button @click="onClickRemoveItem(item.id)">移除推荐</button>
+                <button @click="onClickOrderItem(item.id, item.isrecommend)">更改排序</button>
+                <p>商品ID：{{item.id}} &nbsp;&nbsp;排序：{{item.isrecommend}}</p>
+              </div>
+            </div>
+          </transition-group>
         </div>
       </Col>
     </Row>
@@ -60,13 +73,10 @@
 </template>
 <script>
 import serverApi from '../../axios'
-import draggable from 'vuedraggable'
 import { uploadApiUrl } from '../../config/'
+import { arrSearch } from '../../utlis/tools.js'
 export default {
   name: 'TemplatesGoods',
-  components: {
-    draggable
-  },
   data () {
     return {
       uploadApiUrl: uploadApiUrl,
@@ -90,18 +100,22 @@ export default {
     placeholder () {
       return this.selectType == '1' ? '输入商品ID,以逗号分隔' : '商品分类ID，单个id'
     },
+    sortedList () {
+      return arrSearch(this.goodsData, this.searchKeys)
+    }
   },
   methods: {
     getModulesInfo () {
       let d = {
-        id: this.$route.params.id
+        id: this.$route.params.id,
+        type: this.$route.params.type
       }
       serverApi('/web/areasonindex', d,
         response => {
           console.log(response)
           if (response.data.code === 0) {
             this.blockData = response.data.data.area
-            this.goodsData = response.data.data.areason[0]
+            this.goodsData = response.data.data.areason
           } else {
             this.$Message.warning(response.data.msg)
           }
@@ -133,19 +147,13 @@ export default {
         this.$Message.warning('输入的id格式不正确，请检查')
         return false
       }
-      let imgs = {
-        topimg: this.topimg,
-        ids: this.goodsids
-      }
       let d = {
-        addtype: this.selectType,
-        ptype: this.blockData.type,
-        id: '',
-        imgs: JSON.stringify(imgs),
-        pid: this.$route.params.id
+        type: this.selectType,
+        goodsids: this.goodsids,
+        id: this.$route.params.id
       }
       this.addLoading = true
-      serverApi('/web/webareasonedit', d,
+      serverApi('/web/webgoodsadd', d,
         response => {
           this.addLoading = false
           if (response.data.code === 0) {
@@ -161,8 +169,71 @@ export default {
         }
       )
     },
-    onClickSavePx () {
-
+    hotGoodsEdit (id, order) {
+      this.$Message.loading({
+        content: '加载中...',
+        duration: 0
+      })
+      let d = {
+        id: id,
+        webareasort: order
+      }
+      serverApi('/goods/webgoodsedit', d,
+        response => {
+          this.$Message.destroy()
+          if (response.data.code === 0){
+            this.getModulesInfo()
+            this.$Message.success(response.data.msg)
+          }else{
+            this.$Message.warning(response.data.msg)
+          }
+        },
+        error => {
+          this.$Message.destroy()
+          console.log(error)
+          this.$Message.error(error.toString())
+        }
+      )
+    },
+    onClickRemoveItem (id) {
+      this.hotGoodsEdit(id, '0')
+    },
+    onClickOrderItem (id, num) {
+      let editOrer = num
+      this.$Modal.confirm({
+        render: (h) => {
+          let title = h('h4', {
+            style: {
+              textAlign: 'center',
+              marginBottom: '20px'
+            }
+          }, '更改排序')
+          let tip = h('Alert', {
+            props: {
+              showIcon: true
+            }
+          }, '请输入推荐商品排序，范围：1-255')
+          let inputNum = h('InputNumber', {
+            props: {
+              max: 255,
+              min: 1,
+              value: num
+            },
+            style: {
+              width: '100%'
+            },
+            on: {
+              input: (val) => {
+                editOrer = val
+              }
+            }
+          })
+          return h('div', {}, [title, tip, inputNum])
+        },
+        onOk: () => {
+          this.hotGoodsEdit(id, editOrer)
+        }
+      })
     }
   }
 }

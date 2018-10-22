@@ -85,22 +85,22 @@ export default {
         {
           title: '编码',
           key: 'merchantcode',
-          minWidth: 160
+          width: 100
         },
         {
           title: '联系人',
           key: 'contact',
-          minWidth: 120
+          width: 100
         },
         {
           title: '电话',
           key: 'mobile',
-          minWidth: 140
+          width: 140
         },
         {
           title: '收款账户',
           key: 'alipay',
-          minWidth: 130,
+          minWidth: 180,
           render: (h, params) => {
             if (params.row.realname && params.row.aliphone) {
               return h('div', [
@@ -115,7 +115,7 @@ export default {
         {
           title: '商户地址',
           key: 'addres',
-          minWidth: 180
+          minWidth: 130
         },
         {
           title: '商户信息',
@@ -125,7 +125,7 @@ export default {
         {
           title: '创建时间',
           key: 'createtime',
-          minWidth: 150
+          width: 150
         },
         {
           title: '操作',

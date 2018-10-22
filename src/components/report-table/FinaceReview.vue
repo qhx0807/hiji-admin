@@ -391,7 +391,7 @@ export default {
           sortable: true
         },
         {
-          title: '实收',
+          title: '应收',
           key: 'total',
           width: 100,
           align: 'right',

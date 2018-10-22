@@ -283,7 +283,7 @@ export default {
       if (row.type == 2) {
         this.$router.push({name: 'TemplatesAdd', params: {id: row.id}})
       } else if (row.type == 3) {
-        this.$router.push({name: 'TemplatesGoods', params: {id: row.id}})
+        this.$router.push({name: 'TemplatesGoods', params: {id: row.id, type: row.type}})
       }
     },
     onClickMod (row) {
