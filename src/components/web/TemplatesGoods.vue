@@ -23,8 +23,11 @@
         <Col span="4">
           <Button style="margin-left:12px" :loading="addLoading" @click="onClickSaveAdd">添加到页面</Button>
         </Col>
-        <Col span="8"  style="padding-left:20px;">
+        <Col span="7"  style="padding-left:20px;">
           <Input v-model="blockData.topimg" placeholder="上传页面顶部图片，没有则不显示" />
+        </Col>
+        <Col span="1"  style="padding-left:20px;">
+          <img class="topimg-head" v-imgview :src="blockData.topimg" alt="">
         </Col>
         <Col span="4"  style="padding-left:12px;">
           <Upload
@@ -41,8 +44,9 @@
     <Card :bordered="false">
       <Row>
         <Col span="12">
+
           <Input prefix="ios-search" v-model="searchKeys" style="width: 300px" placeholder="搜索..."></Input>
-          <!-- <Button style="margin-left:12px" type="primary" :loading="submitLoading" :disabled="disabledBtn" @click="onClickSavePx">保存修改</Button> -->
+          <Button style="margin-left:12px" type="primary" :disabled="disabledBtn" @click="onClickSavePreView">预览页面效果</Button>
         </Col>
       </Row>
     </Card>
@@ -55,20 +59,46 @@
               <img :src="item.goodsimg" alt="">
               <p class="goods-name">{{item.goodsname}}</p>
               <p style="margin-top:6px;padding-left:5px;">
-                <del class="market-price">￥{{item.goodsprice}}</del>
+                <del class="market-price">￥{{item.marketprice}}</del>
                 <span class="goods-price">￥{{item.goodsprice}}</span>
               </p>
               <span class="goods-buy">立即购买</span>
               <div class="mask">
-                <button @click="onClickRemoveItem(item.id)">移除推荐</button>
-                <button @click="onClickOrderItem(item.id, item.isrecommend)">更改排序</button>
-                <p>商品ID：{{item.id}} &nbsp;&nbsp;排序：{{item.isrecommend}}</p>
+                <button @click="onClickRemoveItem(item.sonid)">移除推荐</button>
+                <button @click="onClickOrderItem(item.sonid, item.webareasort)">更改排序</button>
+                <p>商品ID：{{item.id}} &nbsp;&nbsp;排序：{{item.webareasort}}</p>
               </div>
             </div>
           </transition-group>
         </div>
       </Col>
     </Row>
+    <Modal v-model="previewModal"  width="350">
+      <p slot="header" style="text-align:center">
+        <span>预览</span>
+      </p>
+        <div class="preview-page">
+          <img class="phone-title" src="http://cdn.cqyyy.cn/12e73dca6848e7977396a6fa123b9140.png" alt="">
+          <p class="title">{{blockData.name}}</p>
+          <div class="content">
+            <img class="topimg" :src="blockData.topimg" alt="">
+            <Row>
+              <Col span="12" class="goods-item" v-for="(item, index) in sortedList" :key="index">
+                <img :src="item.goodsimg" alt="">
+                <p class="goods-name">{{item.goodsname}}</p>
+                <p style="margin-top:6px; padding-left:5px;">
+                  <del class="market-price">￥{{item.marketprice}}</del>
+                  <span class="goods-price">￥{{item.goodsprice}}</span>
+                </p>
+                <span class="goods-buy">立即购买</span>
+              </Col>
+            </Row>
+          </div>
+        </div>
+      <div slot="footer">
+        <Button @click="previewModal = false">关闭</Button>
+      </div>
+    </Modal>
   </div>
 </template>
 <script>
@@ -90,7 +120,8 @@ export default {
       selectType: '1',
       goodsids: '',
       topimg: '',
-      list: [2,3,45,5,67,8]
+      list: [2,3,45,5,67,8],
+      previewModal: false
     }
   },
   created () {
@@ -133,12 +164,24 @@ export default {
     uploadImgSucc (response, file) {
       console.log(response)
       if (response.code == 0) {
-        this.$Notice.success({
-          title: '上传成功',
-          desc: '图片上传成功！'
-        })
         let url = response.data.url
-        this.topimg = url
+        this.blockData.topimg = url
+        serverApi('/web/webareaedit', this.blockData,
+          response => {
+            if (response.data.code === 0){
+              this.$Notice.success({
+                title: '上传成功',
+                desc: '专题图片上传成功！'
+              })
+              console.log(response)
+            }else{
+              this.$Message.warning(response.data.msg)
+            }
+          },
+          error => {
+            console.log(error)
+          }
+        )
       }
     },
     onClickSaveAdd () {
@@ -157,6 +200,7 @@ export default {
         response => {
           this.addLoading = false
           if (response.data.code === 0) {
+            this.goodsids = ''
             this.getModulesInfo(this.$route.params.id)
             this.$Message.success(response.data.msg)
           } else {
@@ -178,7 +222,7 @@ export default {
         id: id,
         webareasort: order
       }
-      serverApi('/goods/webgoodsedit', d,
+      serverApi('/web/webgoodsedit', d,
         response => {
           this.$Message.destroy()
           if (response.data.code === 0){
@@ -234,6 +278,9 @@ export default {
           this.hotGoodsEdit(id, editOrer)
         }
       })
+    },
+    onClickSavePreView () {
+      this.previewModal = true
     }
   }
 }
@@ -326,4 +373,84 @@ export default {
     }
   }
 }
+.topimg-head{
+  height: 30px;
+}
+.preview-page{
+  width: 320px;
+  height: 528px;
+  margin: 0 auto;
+  position: relative;
+  border: 1px solid #f5f5f5;
+  box-sizing: border-box;
+  overflow: auto;
+  .phone-title{
+    width: 100%;
+  }
+  .title{
+    position: absolute;
+    top: 35px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    color: #fff;
+    font-size: 14px;
+  }
+  .content{
+    width: 100%;
+    font-size: 0;
+    background-color: #eee;
+    .topimg{
+      width: 100%;
+    }
+    .goods-item{
+      box-sizing: border-box;
+      height: 230px;
+      // width: 150px;
+      position: relative;
+      overflow: hidden;
+      background-color: #fff;
+      float: left;
+      // margin-right: 10px;
+      margin-bottom: 12px;
+      img{
+        width: 100%;
+        height: 150px;
+      }
+      .goods-name{
+        line-height: 18px;
+        height: 36px;
+        width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        -webkit-line-clamp: 2;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        padding: 0 5px;
+        font-size: 12px;
+      }
+      .goods-price{
+        color: #f44;
+        font-size: 12px;
+      }
+      .market-price{
+        font-size: 12px;
+      }
+      .goods-buy{
+        display: block;
+        position: absolute;
+        right: 5px;
+        background-color: #F46F71;
+        color: #fff;
+        padding: 0px 5px;
+        height: 17px;
+        line-height: 17px;
+        border-radius: 3px;
+        bottom: 5px;
+        font-size: 12px;
+      }
+    }
+  }
+}
+
 </style>

@@ -65,9 +65,9 @@
         <FormItem label="备注信息">
           <Input v-model="editData.desc" placeholder="请输入" />
         </FormItem>
-        <!-- <FormItem label="排序">
-          <InputNumber :max="99999999" :min="1" v-model="editData.order"></InputNumber>
-        </FormItem> -->
+        <FormItem label="专题图" v-if="editData.type == 3">
+          <Input v-model="editData.topimg" placeholder="请输入" />
+        </FormItem>
       </Form>
       <div slot="footer">
         <Button @click="editModal = false">取消</Button>

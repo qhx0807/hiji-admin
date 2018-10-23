@@ -98,29 +98,39 @@ export default {
           sortable: 'custom',
           width: 120
         },
-        {
-          title: '促销',
-          key: 'ispromote',
-          sortable: 'custom',
-          width: 120,
-          render: (h, params) => {
-            let text = params.row.ispromote == 1 ? '正在促销' : ''
-            let c = h('Tag', {
-              props: {
-                color: 'primary'
-              },
-              style: {
-                fontSize: '10px'
-              }
-            }, '正在促销')
-            return params.row.ispromote == 1 ? c : ''
-          }
-        },
+        // {
+        //   title: '促销',
+        //   key: 'ispromote',
+        //   sortable: 'custom',
+        //   width: 120,
+        //   render: (h, params) => {
+        //     let text = params.row.ispromote == 1 ? '正在促销' : ''
+        //     let c = h('Tag', {
+        //       props: {
+        //         color: 'primary'
+        //       },
+        //       style: {
+        //         fontSize: '10px'
+        //       }
+        //     }, '正在促销')
+        //     return params.row.ispromote == 1 ? c : ''
+        //   }
+        // },
         {
           title: '状态',
           key: 'isonsale',
           sortable: 'custom',
-          width: 80
+          width: 120,
+          render: (h, params) => {
+            let text = params.row.isonsale == 1 ? '上架' : '下架'
+            let color = params.row.isonsale == 1 ? 'success' : 'warning'
+            return h('Tag', {
+              props: {
+                type: 'dot',
+                color: color
+              }
+            }, text)
+          }
         },
         {
           title: '首页推荐',
