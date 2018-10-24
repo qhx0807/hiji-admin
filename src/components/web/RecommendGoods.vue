@@ -46,7 +46,7 @@
             <img :src="item.goodsimg" alt="">
             <p class="goods-name">{{item.goodsname}}</p>
             <p style="margin-top:6px;padding-left:5px;">
-              <del class="market-price">￥{{item.goodsprice}}</del>
+              <del class="market-price">￥{{item.marketprice}}</del>
               <span class="goods-price">￥{{item.goodsprice}}</span>
             </p>
             <span class="goods-buy">立即购买</span>
