@@ -394,6 +394,27 @@ export default {
           sortable: true
         },
         {
+          title: '邮费定价',
+          key: 'postagefee',
+          width: 100,
+          align: 'right',
+          sortable: true
+        },
+        {
+          title: '邮费扣率',
+          key: 'postageponit',
+          width: 100,
+          align: 'right',
+          sortable: true
+        },
+        {
+          title: '邮费结算',
+          key: 'settlementpostagefee',
+          width: 100,
+          align: 'right',
+          sortable: true
+        },
+        {
           title: '支付',
           key: 'paytypename',
           width: 80,
