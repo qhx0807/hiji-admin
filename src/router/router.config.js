@@ -75,6 +75,9 @@ const ModulesAdd = r => require.ensure([], () => r(require('@/components/web/Mod
 const TemplatesAdd = r => require.ensure([], () => r(require('@/components/web/TemplatesAdd.vue')))
 const RecommendGoods = r => require.ensure([], () => r(require('@/components/web/RecommendGoods.vue')))
 const TemplatesGoods = r => require.ensure([], () => r(require('@/components/web/TemplatesGoods.vue')))
+const CutDownPrice = r => require.ensure([], () => r(require('@/components/activity/CutDownPrice.vue')))
+const CutDownPriceAdd = r => require.ensure([], () => r(require('@/components/activity/CutDownPriceAdd.vue')))
+const CutDownPriceEdit = r => require.ensure([], () => r(require('@/components/activity/CutDownPriceEdit.vue')))
 
 const routes = [
   {
@@ -449,6 +452,21 @@ const routes = [
         path: 'TemplatesGoods/:id/:type',
         component: TemplatesGoods,
         name: 'TemplatesGoods'
+      },
+      {
+        path: 'CutDownPrice',
+        component: CutDownPrice,
+        name: 'CutDownPrice'
+      },
+      {
+        path: 'CutDownPriceAdd',
+        component: CutDownPriceAdd,
+        name: 'CutDownPriceAdd'
+      },
+      {
+        path: 'CutDownPrice/:id',
+        component: CutDownPriceEdit,
+        name: 'CutDownPriceEdit'
       }
     ]
   },

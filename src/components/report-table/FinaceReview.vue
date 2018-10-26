@@ -356,7 +356,7 @@ export default {
           width: 140,
         },
         {
-          title: '支付金额',
+          title: '顾客实付',
           key: 'cash',
           width: 100,
           align: 'right',
@@ -391,7 +391,7 @@ export default {
           sortable: true
         },
         {
-          title: '应收',
+          title: '商家应收',
           key: 'total',
           width: 100,
           align: 'right',
@@ -422,6 +422,16 @@ export default {
           title: '支付方式',
           key: 'paytypename',
           width: 80,
+        },
+        {
+          title: '提现总额',
+          key: 'orderno',
+          width: 100,
+          align: 'right',
+          render: (h, params) => {
+            let text = (Number(params.row.total) + Number(params.row.settlementpostagefee)).toFixed(2)
+            return h('div', {}, text)
+          }
         },
         {
           title: '时间',
