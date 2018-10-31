@@ -34,7 +34,12 @@
               </Select>
             </FormItem>
             <FormItem label="有效时间(秒)" required>
-              <InputNumber :max="999999999" style="width:100%" :min="1" v-model="addData.bargintime"></InputNumber>
+              <Poptip trigger="focus" word-wrap width="220"  content="提示：活动有效时间以秒(s)为单位">
+                <InputNumber :max="999999999" style="width:100%" :min="1" v-model="addData.bargintime"></InputNumber>
+              </Poptip>
+              <Tooltip placement="top" max-width="240" content="用户分享出去的有效砍价时间，以秒(s)为单位。 如：1天=24小时x60分x60秒 = 86400秒">
+                <Icon type="ios-alert" size="20"/>
+              </Tooltip>
             </FormItem>
           </Col>
           <Col span="6">
@@ -67,12 +72,12 @@
         <Row>
           <Col span="6">
             <FormItem label="分享标题"  prop="title">
-              <Input v-model="addData.title"></Input>
+              <Input v-model="addData.sharetitle"></Input>
             </FormItem>
           </Col>
           <Col span="6">
             <FormItem label="分享描述"  prop="desc">
-              <Input v-model="addData.desc"></Input>
+              <Input v-model="addData.sharedesc"></Input>
             </FormItem>
           </Col>
           <Col span="6">
@@ -171,8 +176,8 @@ export default {
         ison: 0,
         rule: '',
         shareimg: '',
-        title: '',
-        desc: '',
+        sharetitle: '',
+        sharedesc: '',
         cutrules: ''
       },
       ruleValidate: {

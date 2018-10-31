@@ -17,28 +17,36 @@
       <Form :model="editData" ref="form" :rules="ruleValidate" :label-width="80">
         <Row>
           <Col span="6">
-            <FormItem label="商品名称" prop="goodsid">
+            <FormItem label="商品名称" required prop="goodsid">
               <Input v-model="editData.goodsname" disabled></Input>
             </FormItem>
-            <FormItem label="活动时间">
+            <FormItem label="开始时间">
               <Input v-model="editData.starttime"></Input>
               <!-- <DatePicker type="datetimerange" @on-change="onSelectDateTime" style="width:100%" placeholder="选择起始日期"></DatePicker> -->
             </FormItem>
+
           </Col>
           <Col span="6">
             <FormItem label="商品属性" prop="goodstypeid">
               <Input v-model="editData.goodstypename" disabled></Input>
             </FormItem>
-            <FormItem label="有效时间(秒)" required>
-              <InputNumber :max="999999999" style="width:100%" :min="1" v-model="editData.bargintime"></InputNumber>
+            <FormItem label="结束时间">
+              <Input v-model="editData.endtime"></Input>
+              <!-- <DatePicker type="datetimerange" @on-change="onSelectDateTime" style="width:100%" placeholder="选择起始日期"></DatePicker> -->
             </FormItem>
           </Col>
           <Col span="6">
-            <FormItem label="商品价格"  prop="goodsprice">
-              <Input v-model="editData.goodsprice" disabled></Input>
+            <FormItem label="商品价格" required prop="goodsprice">
+              <Input v-model="editData.goodsprice" ></Input>
             </FormItem>
-            <FormItem label="砍价目标(元)"  prop="lowerprice">
-              <InputNumber :max="999999999" style="width:100%" :min="1" v-model="editData.lowerprice"></InputNumber>
+
+            <FormItem label="有效时间(秒)" required>
+              <Poptip trigger="focus" word-wrap width="220"  content="提示：有效时间以秒(s)为单位">
+                <InputNumber :max="999999999" style="width:140px" :min="1" v-model="editData.bargintime"></InputNumber>
+              </Poptip>
+              <Tooltip placement="top" max-width="240" content="用户分享出去的有效砍价时间，以秒(s)为单位。 如：1天=24小时x60分x60秒 = 86400秒">
+                <Icon type="ios-alert" size="20"/>
+              </Tooltip>
             </FormItem>
           </Col>
           <Col span="6">
@@ -48,12 +56,19 @@
                 <Option :value="0">暂不发布</Option>
               </Select>
             </FormItem>
-            <FormItem label="每次砍价最高金额"  prop="topprice">
-              <InputNumber :max="999999999" style="width:100%" :min="1" v-model="editData.topprice"></InputNumber>
-            </FormItem>
           </Col>
         </Row>
         <Row>
+          <Col span="6">
+            <FormItem label="砍价目标(元)" required  prop="lowerprice">
+              <InputNumber :max="999999999" style="width:100%" :min="1" v-model="editData.lowerprice"></InputNumber>
+            </FormItem>
+          </Col>
+          <Col span="6">
+            <FormItem label="每次砍价最高金额" required prop="topprice">
+              <InputNumber :max="999999999" style="width:100%" :min="1" v-model="editData.topprice"></InputNumber>
+            </FormItem>
+          </Col>
           <Col span="12">
             <FormItem label="活动描述"  prop="rule">
               <Input type="textarea" :rows="1" v-model="editData.rule"></Input>
@@ -62,17 +77,17 @@
         </Row>
         <Row>
           <Col span="6">
-            <FormItem label="分享标题"  prop="title">
-              <Input v-model="editData.title"></Input>
+            <FormItem label="分享标题" required  prop="sharetitle">
+              <Input v-model="editData.sharetitle"></Input>
             </FormItem>
           </Col>
           <Col span="6">
-            <FormItem label="分享描述"  prop="desc">
-              <Input v-model="editData.desc"></Input>
+            <FormItem label="分享描述" required  prop="sharedesc">
+              <Input v-model="editData.sharedesc"></Input>
             </FormItem>
           </Col>
           <Col span="6">
-            <FormItem label="分享图片"  prop="shareimg">
+            <FormItem label="分享图片" required  prop="shareimg">
               <Input v-model="editData.shareimg"></Input>
             </FormItem>
           </Col>
@@ -150,35 +165,9 @@ export default {
     return {
       editData: {},
       cutRules: [],
+      submitLoading: false,
       msgcontent: [],
       ruleValidate: {
-        starttime: [
-          { required: true, message: '请选择开始时间', trigger: 'blur' }
-        ],
-        endtime: [
-          { required: true, message: '请选择结束时间', trigger: 'blur' }
-        ],
-        goodsid: [
-          { required: true, message: '请选择商品', type: 'number', trigger: 'blur' }
-        ],
-        goodsprice: [
-          { required: true, message: '请选择商品', trigger: 'blur' }
-        ],
-        lowerprice: [
-          { required: true, message: '请输入', type: 'number', trigger: 'blur' }
-        ],
-        topprice: [
-          { required: true, message: '请输入', type: 'number', trigger: 'blur' }
-        ],
-        title: [
-          { required: true, message: '请输入分享标题', trigger: 'blur' }
-        ],
-        desc: [
-          { required: true, message: '请输入分享描述', trigger: 'blur' }
-        ],
-        shareimg: [
-          { required: true, message: '分享图片', trigger: 'blur' }
-        ],
       },
     }
   },
@@ -224,6 +213,34 @@ export default {
       } else {
         this.$Message.error('上传失败')
       }
+    },
+    onClickBack () {
+      this.$router.back()
+    },
+    onSubmitData () {
+      this.$refs.form.validate(valid => {
+        if (valid) {
+          this.submitLoading = true
+          this.editData.msgcontent = JSON.stringify(this.msgcontent)
+          this.editData.cutrules = JSON.stringify(this.cutRules)
+          serverApi('/activity/activityedit', this.editData,
+            response => {
+              if (response.data.code === 0) {
+                this.$Message.success(response.data.msg)
+              } else {
+                this.$Message.warning(response.data.msg)
+              }
+              this.submitLoading = false
+            },
+            error => {
+              this.submitLoading = false
+              console.log(error)
+              this.$Message.error(error.toString())
+            }
+          )
+        }
+      })
+
     },
   }
 }
