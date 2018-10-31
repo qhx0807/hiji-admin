@@ -137,10 +137,10 @@ export default {
         this.$Message.warning('请上传图片')
         return false
       }
-      if (!this.addData.urltype) {
-        this.$Message.warning('请选择链接类型')
-        return false
-      }
+      // if (!this.addData.urltype) {
+      //   this.$Message.warning('请选择链接类型')
+      //   return false
+      // }
       this.submitLoading = true
       serverApi('/web/webadd', this.addData,
         response => {

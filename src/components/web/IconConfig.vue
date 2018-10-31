@@ -256,10 +256,10 @@ export default {
         this.$Message.warning('图片连接不能为空')
         return false
       }
-      if (!this.editData.urltype) {
-        this.$Message.warning('请选择链接类型')
-        return false
-      }
+      // if (!this.editData.urltype) {
+      //   this.$Message.warning('请选择链接类型')
+      //   return false
+      // }
       if (!this.editData.url) {
         this.$Message.warning('请输入连接地址')
         return false
