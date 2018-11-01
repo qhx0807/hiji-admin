@@ -71,12 +71,12 @@
         </Row>
         <Row>
           <Col span="6">
-            <FormItem label="分享标题"  prop="title">
+            <FormItem label="分享标题"  prop="sharetitle">
               <Input v-model="addData.sharetitle"></Input>
             </FormItem>
           </Col>
           <Col span="6">
-            <FormItem label="分享描述"  prop="desc">
+            <FormItem label="分享描述"  prop="sharedesc">
               <Input v-model="addData.sharedesc"></Input>
             </FormItem>
           </Col>
