@@ -240,7 +240,20 @@ export default {
           )
         }
       })
-
+    },
+    onClickAddRules () {
+      let obj = {rank: null, maxprice: null}
+      this.cutRules.push(obj)
+    },
+    onCLickDelRules (index) {
+      this.cutRules.splice(index, 1)
+    },
+    onClickAddMsgs () {
+      let obj = {percent: null, msg: '初出茅庐，小试牛刀'}
+      this.msgcontent.push(obj)
+    },
+    onCLickDelMsgs (index) {
+      this.msgcontent.splice(index, 1)
     },
   }
 }
