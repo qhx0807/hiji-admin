@@ -78,6 +78,9 @@ const TemplatesGoods = r => require.ensure([], () => r(require('@/components/web
 const CutDownPrice = r => require.ensure([], () => r(require('@/components/activity/CutDownPrice.vue')))
 const CutDownPriceAdd = r => require.ensure([], () => r(require('@/components/activity/CutDownPriceAdd.vue')))
 const CutDownPriceEdit = r => require.ensure([], () => r(require('@/components/activity/CutDownPriceEdit.vue')))
+const CollageBuy = r => require.ensure([], () => r(require('@/components/activity/CollageBuy.vue')))
+const CollageBuyAdd = r => require.ensure([], () => r(require('@/components/activity/CollageBuyAdd.vue')))
+const CollageBuyEdit = r => require.ensure([], () => r(require('@/components/activity/CollageBuyEdit.vue')))
 
 const routes = [
   {
@@ -467,6 +470,21 @@ const routes = [
         path: 'CutDownPrice/:id',
         component: CutDownPriceEdit,
         name: 'CutDownPriceEdit'
+      },
+      {
+        path: 'CollageBuy',
+        component: CollageBuy,
+        name: 'CollageBuy'
+      },
+      {
+        path: 'CollageBuyAdd',
+        component: CollageBuyAdd,
+        name: 'CollageBuyAdd'
+      },
+      {
+        path: 'CollageBuy/:id',
+        component: CollageBuyEdit,
+        name: 'CollageBuyEdit'
       }
     ]
   },
