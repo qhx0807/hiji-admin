@@ -1,5 +1,5 @@
 <template>
-  <div class="box">
+  <div class="timer-count">
     <slot></slot>
     <span>
       <span class="tcd-num" v-text="renderObj.day"></span>
@@ -38,11 +38,15 @@ export default {
     },
     startTime: {
       type: Number,
-      default: new Date().valueOf()
+      default: 0
     },
     endTime: {
       type: Number,
       default: 0
+    },
+    cerrenttime: {
+      type: Number,
+      default: new Date().valueOf()
     }
   },
   data () {
