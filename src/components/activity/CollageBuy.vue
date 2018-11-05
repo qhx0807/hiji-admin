@@ -2,7 +2,7 @@
   <div class="box">
     <Card :bordered="false" class="mb10">
       <div class="shop-img">
-        <img src="http://cdn.cqyyy.cn/PREVIEW.svg" alt="">
+        <img src="http://cdn.cqyyy.cn/collage.png" alt="">
       </div>
       <div class="tips">
         <h4><span style="font-size:14px;font-weight:500">拼团购买</span></h4>

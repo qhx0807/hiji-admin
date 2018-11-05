@@ -37,7 +37,18 @@ export default {
       if (response.code == 0) {
         this.$Notice.success({
           title: '上传成功',
-          desc: '图片上传成功！'
+          desc: '图片上传成功！',
+          render: (h, params) => {
+            return h('img', {
+              attrs: {
+                src: response.data.url
+              },
+              style: {
+                width: 'auto',
+                maxHeight: '80px'
+              }
+            })
+          }
         })
         let url = response.data.url
         this.$emit("uploadSucc", url)
