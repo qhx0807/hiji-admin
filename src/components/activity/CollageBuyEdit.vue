@@ -14,13 +14,12 @@
       <Form :model="editData" ref="form" :rules="ruleValidate" :label-width="80">
         <Row>
           <Col span="6">
-            <FormItem label="选择商品" prop="goodsid">
-              <Select v-model="editData.goodsid" clearable filterable remote @on-change="onSelectGoods" :loading="selectLoading" :remote-method="getGoodsList">
-                <Option v-for="item in goodsList" :value="item.id" :key="item.id">{{ item.goodsname }}</Option>
-              </Select>
+            <FormItem label="选择商品" prop="goodsname">
+              <Input v-model="editData.goodsname" disabled></Input>
             </FormItem>
-            <FormItem label="活动时间" required>
-              <DatePicker type="datetimerange" @on-change="onSelectDateTime" style="width:100%" placeholder="选择起始日期"></DatePicker>
+            <FormItem label="开始时间" required>
+              <Input v-model="editData.starttime" ></Input>
+              <!-- <DatePicker type="datetimerange" @on-change="onSelectDateTime" style="width:100%" placeholder="选择起始日期"></DatePicker> -->
             </FormItem>
             <FormItem label="拼团类型" prop="type">
               <Select v-model="editData.type">
@@ -28,12 +27,27 @@
                 <Option :value="2">新客专享拼团</Option>
               </Select>
             </FormItem>
+            <FormItem label="分享图片">
+              <Input v-model="editData.shareimg"></Input>
+            </FormItem>
           </Col>
           <Col span="6">
             <FormItem label="商品属性" prop="goodstypeid">
-              <Select v-model="editData.goodstypeid" :disabled="goodsTypeData.length<1"  @on-change="onSelectGoodsType">
-                <Option v-for="item in goodsTypeData" :value="item.id" :key="item.id">{{ item.typename }}</Option>
-              </Select>
+              <Input v-model="editData.goodstypeid" disabled></Input>
+            </FormItem>
+            <FormItem label="结束时间" required>
+              <Input v-model="editData.endtime" ></Input>
+            </FormItem>
+            <FormItem label="分享标题"  prop="sharetitle">
+              <Input v-model="editData.sharetitle"></Input>
+            </FormItem>
+            <FormItem>
+              <UploadFile @uploadSucc="onUploadSucc"></UploadFile>
+            </FormItem>
+          </Col>
+          <Col span="6">
+            <FormItem label="商品价格"  prop="goodsprice">
+              <Input v-model="editData.goodsprice" ></Input>
             </FormItem>
             <FormItem label="有效时间" required>
               <Poptip trigger="focus" word-wrap width="220"  content="提示：活动有效时间以秒(s)为单位">
@@ -43,33 +57,22 @@
                 <Icon type="ios-alert" size="20"/>
               </Tooltip>
             </FormItem>
-            <FormItem label="分享标题"  prop="sharetitle">
-              <Input v-model="editData.sharetitle"></Input>
-            </FormItem>
-          </Col>
-          <Col span="6">
-            <FormItem label="商品价格"  prop="goodsprice">
-              <Input v-model="editData.goodsprice" disabled></Input>
-            </FormItem>
-            <FormItem label="团购价格"  prop="groupprice">
-              <InputNumber :max="999999999" style="width:100%" :min="0" v-model="editData.groupprice"></InputNumber>
-            </FormItem>
              <FormItem label="分享内容"  prop="sharedesc">
               <Input v-model="editData.sharedesc"></Input>
             </FormItem>
           </Col>
           <Col span="6">
-            <FormItem label="立即生效" prop="ison">
+            <FormItem label="活动状态" prop="ison">
               <Select v-model="editData.ison">
-                <Option :value="1">立即发布</Option>
-                <Option :value="0">暂不发布</Option>
+                <Option :value="1">发布</Option>
+                <Option :value="0">停止</Option>
               </Select>
+            </FormItem>
+            <FormItem label="团购价格"  prop="groupprice">
+              <InputNumber :max="999999999" style="width:100%" :min="0" v-model="editData.groupprice"></InputNumber>
             </FormItem>
             <FormItem label="成团人数"  prop="peoplenum">
               <InputNumber :max="999999999" style="width:100%" :min="1" v-model="editData.peoplenum"></InputNumber>
-            </FormItem>
-            <FormItem label="分享图片">
-              <UploadFile @uploadSucc="onUploadSucc"></UploadFile>
             </FormItem>
           </Col>
         </Row>
@@ -119,9 +122,6 @@ export default {
         ],
         type: [
           { required: true, message: '请输入', type: 'number', trigger: 'blur' }
-        ],
-        groupprice: [
-          { required: true, message: '请输入拼团价', type: 'number', trigger: 'blur' }
         ],
         sharetitle: [
           { required: true, message: '请输入分享标题', trigger: 'blur' }
@@ -178,8 +178,10 @@ export default {
               } else {
                 this.$Message.warning(response.data.msg)
               }
+               this.submitLoading = false
             },
             error => {
+              this.submitLoading = false
               console.log(error);
               this.$Message.error(error.toString())
             }

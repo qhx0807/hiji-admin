@@ -73,14 +73,14 @@ export default {
           width: 100
         },
         {
-          title: '砍价目标',
-          key: 'lowerprice',
+          title: '拼团价格',
+          key: 'groupprice',
           width: 100
         },
         {
-          title: '最高砍价金额',
-          key: 'topprice',
-          width: 110
+          title: '成团人数',
+          key: 'peoplenum',
+          width: 100
         },
         {
           title: '活动时间',
@@ -90,7 +90,7 @@ export default {
             return h(CountDown, {
               props: {
                 currentTime: new Date().getTime(),
-                startTime: new Date(params.row.starttime).getTime(),
+                startTime: new Date().getTime(),
                 endTime: new Date(params.row.endtime).getTime(),
                 tipText: '离开始',
                 tipTextEnd: '离结束',

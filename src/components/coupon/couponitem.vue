@@ -220,6 +220,11 @@ export default {
       stateData: ['编制', '发布', '有效', '停止', '无效', '过期'],
       recordsColumns: [
         {
+          title: '#',
+          key: 'id',
+          width: 100
+        },
+        {
           title: '用户',
           key: 'username',
           width: 100

@@ -28,6 +28,9 @@
                 <Option :value="2">新客专享拼团</Option>
               </Select>
             </FormItem>
+            <FormItem label="分享图片">
+              <Input v-model="addData.shareimg"></Input>
+            </FormItem>
           </Col>
           <Col span="6">
             <FormItem label="商品属性" prop="goodstypeid">
@@ -45,6 +48,9 @@
             </FormItem>
             <FormItem label="分享标题"  prop="sharetitle">
               <Input v-model="addData.sharetitle"></Input>
+            </FormItem>
+            <FormItem>
+              <UploadFile @uploadSucc="onUploadSucc"></UploadFile>
             </FormItem>
           </Col>
           <Col span="6">
@@ -68,9 +74,7 @@
             <FormItem label="成团人数"  prop="peoplenum">
               <InputNumber :max="999999999" style="width:100%" :min="1" v-model="addData.peoplenum"></InputNumber>
             </FormItem>
-            <FormItem label="分享图片">
-              <UploadFile @uploadSucc="onUploadSucc"></UploadFile>
-            </FormItem>
+
           </Col>
         </Row>
         <Row>
@@ -225,6 +229,7 @@ export default {
           this.submitLoading = true
           serverApi('/activity/collageadd', this.addData,
             response => {
+              this.submitLoading = false
               if (response.data.code === 0) {
                 this.$Message.success('保存成功！')
                 this.$router.push({name: 'CollageBuy'})
@@ -234,6 +239,7 @@ export default {
             },
             error => {
               console.log(error);
+              this.submitLoading = false
               this.$Message.error(error.toString())
             }
           )
