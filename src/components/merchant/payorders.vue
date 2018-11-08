@@ -13,7 +13,7 @@
            <Tooltip transfer :delay="1000" always content="请点击搜索按钮查看流水~~" placement="top">
             <Button type="primary" style="margin-left:8px" icon="ios-search" @click="onClickSearch">搜索</Button>
           </Tooltip>
-          <Button type="primary" style="margin-left:8px" v-if="isAdmin" icon="checkmark" @click="onClickCheckBill">对账</Button>
+          <!-- <Button type="primary" style="margin-left:8px" v-if="isAdmin" icon="checkmark" @click="onClickCheckBill">对账</Button> -->
         </Col>
       </Row>
     </Card>
@@ -45,7 +45,6 @@
 </template>
 
 <script>
-import moment from 'moment'
 import serverApi from '../../axios'
 export default {
   name: 'PayOrders',
@@ -261,31 +260,31 @@ export default {
       this.checkModal = true
     },
     confirmCheckBill () {
-      if (!this.selectCheckDate) {
-        this.$Message.warning('请选择日期！')
-        return false
-      }
-      this.modal_loading = true
-      let date = moment(this.selectCheckDate).format('YYYYMMDD')
-      serverApi('/equipment/download', {date: date},
-        response => {
-          console.log(response)
-          this.modal_loading = false
-          if (response.data.code === 0){
-            this.$Message.info(response.data.msg)
-            this.getTableData(this.page, this.pageSize)
-          }else{
-            this.$Message.warning(response.data.msg)
-          }
-          this.checkModal = false
-        },
-        error => {
-          console.log(error)
-          this.checkModal = false
-          this.modal_loading = false
-          this.$Message.error('网络错误，请重试！')
-        }
-      )
+      // if (!this.selectCheckDate) {
+      //   this.$Message.warning('请选择日期！')
+      //   return false
+      // }
+      // this.modal_loading = true
+      // let date = moment(this.selectCheckDate).format('YYYYMMDD')
+      // serverApi('/equipment/download', {date: date},
+      //   response => {
+      //     console.log(response)
+      //     this.modal_loading = false
+      //     if (response.data.code === 0){
+      //       this.$Message.info(response.data.msg)
+      //       this.getTableData(this.page, this.pageSize)
+      //     }else{
+      //       this.$Message.warning(response.data.msg)
+      //     }
+      //     this.checkModal = false
+      //   },
+      //   error => {
+      //     console.log(error)
+      //     this.checkModal = false
+      //     this.modal_loading = false
+      //     this.$Message.error('网络错误，请重试！')
+      //   }
+      // )
     }
   }
 }
