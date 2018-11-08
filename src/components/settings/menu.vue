@@ -168,8 +168,8 @@ export default {
         response => {
           // console.log(response)
           if (response.data.code === 0){
-            let cas = this._.cloneDeep(response.data.data)
             this.tableData = response.data.data
+            let cas = response.data.data
             let getCas = function (arr) {
               arr.forEach(item => {
                 item.label = item.name,
