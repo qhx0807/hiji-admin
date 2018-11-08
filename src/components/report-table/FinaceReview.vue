@@ -132,7 +132,6 @@
 </template>
 <script>
 import serverApi from '../../axios'
-import exportExcel from  '../../utlis/table2excel.js'
 export default {
   name: 'FinaceReview',
   data () {

@@ -281,13 +281,6 @@ export default {
         }
       })
     },
-    exportTable () {
-      if (this.searchData.length > 0) {
-        exportExcel(this.searchData, 'Api表格导出')
-      } else {
-        this.$Message.info('无数据！！')
-      }
-    },
     changePage (e) {
       this.page = e
       this.getTableData(e, this.pageSize, this.searchKey)
