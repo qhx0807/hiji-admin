@@ -38,7 +38,6 @@
 </template>
 
 <script>
-import Cookies from 'js-cookie'
 import serverApi from '../../axios/index.js'
 export default {
   data () {
@@ -57,7 +56,7 @@ export default {
     }
   },
   created () {
-    Cookies.set('locking', '0')
+    localStorage.setItem('locking', '0')
     sessionStorage.clear()
   },
   methods: {

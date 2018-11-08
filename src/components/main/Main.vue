@@ -74,7 +74,6 @@ import themeSwitch from '../main-components/theme-switch/theme-switch.vue'
 import messageTip from '../main-components/message-tip/message-tip.vue'
 import serverApi from '../../axios'
 import { formatJsonTree } from '../../utlis/tools.js'
-import Cookies from 'js-cookie'
 export default {
   components: {
     shrinkableMenu,
@@ -192,7 +191,7 @@ export default {
       )
     },
     isLocking () {
-      let lock = Cookies.get('locking')
+      let lock = localStorage.locking
       let token = sessionStorage.getItem('token')
       if (lock==1 && token) {
         this.$router.push({name: 'Lock'})

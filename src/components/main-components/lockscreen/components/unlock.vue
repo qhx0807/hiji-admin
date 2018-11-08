@@ -27,7 +27,6 @@
 </template>
 
 <script>
-import Cookies from 'js-cookie'
 export default {
   name: 'Unlock',
   data () {
@@ -68,7 +67,7 @@ export default {
         this.avatorLeft = '0px'
         this.inputLeft = '400px'
         this.password = ''
-        Cookies.set('locking', '0')
+        localStorage.setItem('locking', '0')
         this.$emit('on-unlock')
       } else {
         this.$Message.error('密码错误,请重新输入。')
