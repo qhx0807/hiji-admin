@@ -50,10 +50,10 @@
               <Input v-model="editData.goodsprice" ></Input>
             </FormItem>
             <FormItem label="有效时间" required>
-              <Poptip trigger="focus" word-wrap width="220"  content="提示：活动有效时间以秒(s)为单位">
-                <InputNumber :max="999999999" style="width:100%" :min="1" v-model="editData.bargintime"></InputNumber>
+              <Poptip trigger="focus" word-wrap width="220"  content="提示：活动有效时间以小时(h)为单位">
+                <InputNumber :max="999999999" style="width:100%" :min="0" v-model="bargintime"></InputNumber>
               </Poptip>
-              <Tooltip placement="top" max-width="240" content="用户发起拼团后的有效时间，以秒(s)为单位。 如：1天=24小时x60分x60秒 = 86400秒">
+              <Tooltip placement="top" max-width="240" content="用户发起拼团后的有效时间，以小时(h)为单位。 如：30分钟=0.5小时">
                 <Icon type="ios-alert" size="20"/>
               </Tooltip>
             </FormItem>
@@ -106,6 +106,7 @@ export default {
   },
   data () {
     return {
+      bargintime: 0,
       editData: {},
       ruleValidate: {
         starttime: [
@@ -155,6 +156,7 @@ export default {
         response => {
           if (response.data.code === 0) {
             console.log(response)
+            this.bargintime = response.data.data.bargintime / 3600
             this.editData = response.data.data
           } else {
             this.$Message.warning(response.data.msg)
@@ -170,6 +172,7 @@ export default {
       this.editData.shareimg = path
     },
     onClickSubmit () {
+      this.editData.bargintime = this.bargintime * 3600
       this.$refs.form.validate(valid => {
         if (valid) {
           this.submitLoading = true
