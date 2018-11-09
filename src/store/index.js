@@ -52,6 +52,7 @@ const store = new Vuex.Store({
       {value: 5, label: '模板页'},
       {value: 6, label: '商户首页'},
       {value: 7, label: '领取卡券'},
+      {value: 8, label: '拼团商品(单个)'},
       {value: 0, label: '不跳转'}
     ],
     couponUseRange: [
