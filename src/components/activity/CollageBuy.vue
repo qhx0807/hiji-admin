@@ -70,17 +70,22 @@ export default {
         {
           title: '商品价格',
           key: 'goodsprice',
-          width: 100
+          width: 110
         },
         {
           title: '拼团价格',
           key: 'groupprice',
-          width: 100
+          width: 110
         },
         {
           title: '成团人数',
           key: 'peoplenum',
-          width: 100
+          width: 110
+        },
+        {
+          title: '已拼人数',
+          key: 'countnum',
+          width: 110
         },
         {
           title: '活动时间',
@@ -128,9 +133,20 @@ export default {
                 }
               }
             }, '编辑')
+            let del = h('a', {
+              style: {
+                marginRight: '10px',
+                color: '#ff9900'
+              },
+              on: {
+                click: () => {
+                  this.onClickRemove(params.row)
+                }
+              }
+            }, '删除')
             let info = h('a', {
               style: {
-                color: '#f90',
+                color: '#19be6b',
                 marginRight: '10px'
               },
               on: {
@@ -138,9 +154,9 @@ export default {
                   this.seeActivity(params.row)
                 }
               }
-            }, '查看活动进度')
+            }, '查看进度')
 
-            return h('div', [edit, info])
+            return h('div', [edit, del, info])
           }
         }
       ]
@@ -182,6 +198,26 @@ export default {
     },
     onClickEdit (row) {
       this.$router.push({name: 'CollageBuyEdit', params: {id: row.id}})
+    },
+    onClickRemove (row) {
+      this.$Modal.confirm({
+        title: '提示',
+        content: '<p>确认删除此团购商品？</p>',
+        onOk: () => {
+          serverApi('/activity/collagedel', {id: row.id},
+            response => {
+              if (response.data.code == 0) {
+                this.getTableData()
+              }
+              this.$Message.info(response.data.msg)
+            },
+            error => {
+              console.log(error)
+              this.$Message.error('链接失败！')
+            }
+          )
+        }
+      })
     }
   }
 }

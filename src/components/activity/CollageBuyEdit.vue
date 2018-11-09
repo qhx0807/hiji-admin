@@ -60,6 +60,9 @@
              <FormItem label="分享内容"  prop="sharedesc">
               <Input v-model="editData.sharedesc"></Input>
             </FormItem>
+            <FormItem label="已拼人数"  prop="countnum">
+              <InputNumber v-model="editData.countnum" :min="0" ></InputNumber>
+            </FormItem>
           </Col>
           <Col span="6">
             <FormItem label="活动状态" prop="ison">

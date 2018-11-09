@@ -74,7 +74,9 @@
             <FormItem label="成团人数"  prop="peoplenum">
               <InputNumber :max="999999999" style="width:100%" :min="1" v-model="addData.peoplenum"></InputNumber>
             </FormItem>
-
+            <FormItem label="已拼人数"  prop="countnum">
+              <InputNumber :max="999999999" style="width:100%" :min="0" v-model="addData.countnum"></InputNumber>
+            </FormItem>
           </Col>
         </Row>
         <Row>
@@ -109,7 +111,7 @@ export default {
         endtime: '',
         bargintime: '',
         peoplenum: '',
-        countnum: '',
+        countnum: 0,
         groupprice: '',
         goodsprice: '',
         goodsid: '',
