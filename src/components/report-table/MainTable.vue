@@ -78,7 +78,7 @@
         </div>
       </div>
     </Card>
-    <Modal v-model="shModal" :width="shOrderList.length > 0 ? 800 : 500">
+    <Modal v-model="shModal" :width="shOrderList.length > 0 ? 1000 : 500">
       <p slot="header" style="color:#f60;">
         <Icon type="ios-information-circle"></Icon>
         <span>提示</span>
@@ -96,6 +96,7 @@
             <tr>
               <th>订单ID</th>
               <th>商品ID</th>
+              <th>商户</th>
               <th>商品</th>
               <th>属性</th>
               <th>数量</th>
@@ -107,18 +108,19 @@
           </thead>
           <tbody>
             <tr v-for="(item, index) in shOrderList" :key="index">
-              <td>{{item.orderid}}</td>
+              <td :rowspan="item.orderidspan" :class="{'hidden':item.orderiddis}">{{item.orderid}}</td>
               <td>{{item.goodsid}}</td>
+              <td :rowspan="item.merchantnamespan" :class="{'hidden':item.merchantnamedis}">{{item.merchantname}}</td>
               <td class="goodsInfo">
                 <img v-if="item.goodsimg" v-imgview :src="item.goodsimg" alt="">
                 <span>{{item.goodsname}}</span>
               </td>
               <td>{{item.goodstypename}}</td>
-              <td>{{item.goodsnum}}</td>
+              <td :rowspan="item.goodsnumspan" :class="{'hidden':item.goodsnumdis}">{{item.goodsnum}}</td>
               <td>{{item.goodsprice}}</td>
-              <td>{{item.coupon}}</td>
-              <td>{{item.merchantcoupon}}</td>
-              <td v-if="shData.type==4">
+              <td :rowspan="item.couponspan" :class="{'hidden':item.coupondis}">{{item.coupon}}</td>
+              <td :rowspan="item.merchantcouponspan" :class="{'hidden':item.merchantcoupondis}">{{item.merchantcoupon}}</td>
+              <td :rowspan="item.ischeckspan" :class="{'hidden':item.ischeckdis}" v-if="shData.type==4">
                 <a v-if="item.ischeck == 0 && item.order_status == '3'" @click="onClickSHGoods(item)">审核</a>
                 <span v-if="item.ischeck == 1">已审核</span>
                 <!-- <span v-if="item.ischeck == 0 && item.order_status != '3'">未核销</span> -->
@@ -142,6 +144,7 @@
 </template>
 <script>
 import serverApi from '../../axios'
+import { combineCell } from '../../utlis/tools.js'
 export default {
   name: 'MainTable',
   data () {
@@ -254,7 +257,6 @@ export default {
                     overflow: 'hidden',
                     whiteSpace: 'nowrap',
                     textOverflow: 'ellipsis',
-                    borderBottom: '1px solid #e8eaec'
                   }
                 }, [item.goodsimg ? img : null, name])
               }))
@@ -599,8 +601,8 @@ export default {
     },
     onClickReview (row) {
       this.shData = row
-      this.shOrderList = row.orderlist
-      console.log(row)
+      this.shOrderList = combineCell(row.orderlist)
+      console.log(this.shOrderList)
       this.shModal = true
     },
     onClickSH (e) {
@@ -640,6 +642,10 @@ export default {
       )
     },
     onClickSHGoods (row) {
+      this.$Message.loading({
+        content: 'Loading...',
+        duration: 0
+      })
       let d = {
         orderno: this.shData.orderno,
         check: 1,
@@ -648,15 +654,18 @@ export default {
       serverApi('/Finance/operation', d,
         response => {
           console.log(response)
+          this.$Message.destroy()
           if (response.data.code === 0){
             this.$Message.success(response.data.msg)
             this.shModal = false
             row.ischeck = 1
+            this.getTableData()
           }else{
             this.$Message.warning(response.data.msg)
           }
         },
         error => {
+          this.$Message.destroy()
           console.log(error)
           this.$Message.warning(error.toString())
         }
@@ -689,7 +698,8 @@ export default {
           this.$Message.warning(error.toString())
         }
       )
-    }
+    },
+
   }
 }
 </script>
