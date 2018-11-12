@@ -23,4 +23,26 @@ const formatJsonTree = (arr, childrenName) => {
   return res
 }
 
-export { arrSearch, formatJsonTree }
+const combineCell = (list) => {
+  for (let field in list[0]) {
+    var k = 0
+    while (k < list.length) {
+      list[k][field + 'span'] = 1
+      list[k][field + 'dis'] = false
+      for (var i = k + 1; i <= list.length - 1; i++) {
+        if (list[k][field] === list[i][field] && list[k][field] !== '') {
+          list[k][field + 'span']++
+          list[k][field + 'dis'] = false
+          list[i][field + 'span'] = 1
+          list[i][field + 'dis'] = true
+        } else {
+          break
+        }
+      }
+      k = i
+    }
+  }
+  return list
+}
+
+export { arrSearch, formatJsonTree, combineCell }
