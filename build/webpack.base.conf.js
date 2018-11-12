@@ -3,6 +3,9 @@ const path = require('path')
 const utils = require('./utils')
 const config = require('../config')
 const vueLoaderConfig = require('./vue-loader.conf')
+const HappyPack = require('happypack')
+const os = require('os')
+const happyThreadPool = HappyPack.ThreadPool({ size: os.cpus().length })
 
 function resolve (dir) {
   return path.join(__dirname, '..', dir)
@@ -27,7 +30,8 @@ module.exports = {
   externals: {
     'vue': 'Vue',
     'vue-router': 'VueRouter',
-    'vuex': 'Vuex'
+    'vuex': 'Vuex',
+    'babel-polyfill': 'window'
   },
   output: {
     path: config.build.assetsRoot,
@@ -48,12 +52,12 @@ module.exports = {
       ...(config.dev.useEslint ? [createLintingRule()] : []),
       {
         test: /\.vue$/,
-        loader: 'vue-loader',
-        options: vueLoaderConfig
+        loader: 'happypack/loader?id=vue',
+        // options: vueLoaderConfig
       },
       {
         test: /\.js$/,
-        loader: 'babel-loader',
+        loader: 'happypack/loader?id=js',
         include: [resolve('src'), resolve('test'), resolve('node_modules/webpack-dev-server/client')]
       },
       {
@@ -82,6 +86,25 @@ module.exports = {
       }
     ]
   },
+  plugins: [
+    new HappyPack({
+      id:'vue',
+      threads: happyThreadPool,
+      cache: true,
+      loaders: [{
+        loader:'vue-loader',
+        options: vueLoaderConfig
+      }]
+    }),
+    new HappyPack({
+      id: 'js',
+      cache: true,
+      threads: happyThreadPool,
+      loaders: [{
+        loader:'bable-loader',
+      }]
+    }),
+  ],
   node: {
     // prevent webpack from injecting useless setImmediate polyfill because Vue
     // source contains it (although only uses it if it's native).
