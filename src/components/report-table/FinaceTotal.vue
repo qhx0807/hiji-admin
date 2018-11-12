@@ -65,7 +65,7 @@
       <Table border ref="table" highlight-row :loading="tableLoading" size="small" height="550" :columns="columns" :data="tableData"></Table>
       <div style="margin: 10px;overflow: hidden">
         <div style="float: right;">
-            <Page :total="counts" show-sizer show-total :page-size-opts="pageSizeOpts" :page-size="15" :current="page" @on-page-size-change="onChangeSize" @on-change="changePage"></Page>
+            <Page :total="counts" show-sizer show-total :page-size-opts="pageSizeOpts" :page-size="15" :current.sync="page" @on-page-size-change="onChangeSize" @on-change="changePage"></Page>
         </div>
       </div>
     </Card>
@@ -457,6 +457,7 @@ export default {
   },
   methods: {
     onClickSearch () {
+      this.page = 1
       this.getTableData()
     },
     getMerchant () {
