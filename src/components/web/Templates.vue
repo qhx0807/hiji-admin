@@ -6,12 +6,13 @@
           <img src="http://cdn.cqyyy.cn/PREVIEW.svg" alt="">
           模板页配置。
           <a @click="onClickAdd"><Icon size="14" type="md-add" />新建模板页</a>
+          <input class="search" v-model="searchKey" placeholder="搜索..." type="text">
         </p>
       </div>
     </Card>
     <Card :bordered="false">
       <div class="table-box">
-        <Table size="small" :loading="tableLoading" :columns="columns" :data="tableData"></Table>
+        <Table size="small" height="550" :loading="tableLoading" :columns="columns" :data="computedTable"></Table>
       </div>
     </Card>
 
@@ -78,6 +79,7 @@
 </template>
 <script>
 import serverApi from '../../axios'
+import { arrSearch } from '../../utlis/tools.js'
 export default {
   name: 'Templates',
   data () {
@@ -85,6 +87,7 @@ export default {
       tableLoading: false,
       addModal: false,
       modal_loading: false,
+      searchKey: '',
       cityList: [],
       addData: {
         name: '',
@@ -191,6 +194,13 @@ export default {
   computed: {
     actionTypeArr () {
       return this.$store.state.actionTypeArr
+    },
+    computedTable () {
+      if (this.searchKey) {
+        return arrSearch(this.tableData, this.searchKey)
+      } else {
+        return this.tableData
+      }
     }
   },
   methods: {
@@ -318,6 +328,24 @@ export default {
     p{
       img{
         vertical-align: bottom;
+      }
+    }
+    position: relative;
+    .search{
+      border: none;
+      border-bottom: 1px solid #ddd;
+      outline: none;
+      position: absolute;
+      top: 5px;
+      left: 240px;
+      font-size: 12px;
+      color: #666;
+      padding: 4px 5px;
+      width: 180px;
+      transition: width .2s ease;
+      &:hover{
+        width: 200px;
+        border-bottom: 1px solid #2d8cf0;
       }
     }
   }
