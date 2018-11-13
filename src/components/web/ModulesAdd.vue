@@ -129,7 +129,7 @@
               :action="uploadApiUrl"
               :on-error="uploadImgErr"
               :on-success="uploadImgSucc"
-              :show-upload-list="true"
+              :show-upload-list="false"
               accept="image/*"
               :on-progress="onUploadProgress"
               :on-preview="onClickListItem"
@@ -152,6 +152,11 @@
           <FormItem label="跳转地址">
             <Input v-model="addData.url" placeholder="请输入" />
           </FormItem>
+          <!-- <FormItem label="选择商品">
+            <Select v-model="addData.url" @on-change="onSelectGoods" @on-clear="onClear" filterable clearable remote :remote-method="searchGoods">
+              <Option v-for="item in goodsList" :value="item.id" :key="item.id">{{ item.goodsname }}</Option>
+            </Select>
+          </FormItem> -->
           <FormItem label="描述" v-show="selectType === 4">
             <Input size="small" type="textarea" v-model="addData.name" placeholder="请输入，图文广告时文字描述" />
           </FormItem>
@@ -190,6 +195,7 @@ export default {
         type: '1',
         imgurl: '',
         name: '',
+        price: '',
       },
       cityList: [],
       blockData: {},
@@ -202,7 +208,8 @@ export default {
       draftName: '',
       draftCity: 0,
       draftSort: 1,
-      editData: {}
+      editData: {},
+      goodsList: []
     }
   },
   created () {
@@ -320,6 +327,7 @@ export default {
         type: '1',
         imgurl: '',
         name: '',
+        price: '',
       }
       switch (e) {
         case 1:
@@ -354,13 +362,52 @@ export default {
         url: '',
         sort: '',
         type: '1',
-        imgurl: ''
+        imgurl: '',
+        name: '',
+        price: ''
       }
       this.formShow = true
     },
     onClickAddSon () {
-      if (!this.addData.imgurl && !this.addData.url) {
+      if (!this.addData.url) {
         this.$Message.warning('请输入信息')
+        return false
+      }
+      if (this.addData.urltype == 1 && !this.addData.imgurl) {
+        let d = {
+          id: this.addData.url
+        }
+        serverApi('/web/goodslist', d,
+          response => {
+            if (response.data.code === 0 && response.data.data.id) {
+              this.addData.url = response.data.data.id
+              this.addData.imgurl = response.data.data.homeimg
+              this.addData.name = response.data.data.goodsname
+              this.addData.price = response.data.data.goodsprice
+              console.log(this.addData)
+              let obj = Object.assign({}, this.addData)
+              this.draftData.push(obj)
+              setTimeout(() => {
+                this.addData = {
+                  city: '0',
+                  urltype: '',
+                  url: '',
+                  sort: '',
+                  type: '1',
+                  imgurl: '',
+                  name: '',
+                  price: ''
+                }
+                this.formShow = false
+              }, 200)
+            } else {
+              this.$Message.warning('未找到此商品！')
+            }
+          },
+          error => {
+            console.log(error)
+          }
+        )
         return false
       }
       console.log(this.addData)
@@ -373,7 +420,9 @@ export default {
           url: '',
           sort: '',
           type: '1',
-          imgurl: ''
+          imgurl: '',
+          name: '',
+          price: ''
         }
         this.formShow = false
       }, 200)
@@ -446,7 +495,7 @@ export default {
           )
         }
       })
-    }
+    },
   }
 }
 </script>

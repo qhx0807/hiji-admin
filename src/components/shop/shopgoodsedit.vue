@@ -84,6 +84,9 @@
             <FormItem label="APP价格" prop="appprice">
               <InputNumber :max="9999999" style="width:100%" :min="0" v-model="editData.appprice"></InputNumber>
             </FormItem>
+            <FormItem label="homeImg">
+              <Input v-model="editData.homeimg"></Input>
+            </FormItem>
             <FormItem label="扣点" required>
               <InputNumber :max="100" :step="1" :min="0" v-model="editData.points"></InputNumber> &nbsp;%（0~100）
             </FormItem>
@@ -97,6 +100,9 @@
             </FormItem>
             <FormItem label="会员价" prop="memberprice">
               <InputNumber :max="9999999" style="width:100%" :min="0" v-model="editData.memberprice"></InputNumber>
+            </FormItem>
+            <FormItem>
+              <UploadFile @uploadSucc="upLoadHomeImg"></UploadFile>
             </FormItem>
           </Col>
         </Row>
@@ -263,10 +269,12 @@
 import serverApi from '../../axios'
 import TextEdit from '../common/text-editor'
 import { uploadApiUrl } from '../../config'
+import UploadFile from '../common/UploadFile'
 export default {
   name: 'ShopGoodsEdit',
   components: {
-    TextEdit
+    TextEdit,
+    UploadFile
   },
   data () {
     return {
@@ -377,6 +385,9 @@ export default {
           this.$store.commit('pageLoading', false)
         }
       )
+    },
+    upLoadHomeImg (e) {
+      this.editData.homeimg = e
     },
     getSortData () {
       let d = {

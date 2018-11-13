@@ -71,6 +71,18 @@
             </FormItem>
           </Col>
         </Row>
+        <Row>
+          <Col span="6">
+            <FormItem label="homeImg">
+              <Input v-model="addData.homeimg"></Input>
+            </FormItem>
+          </Col>
+          <Col span="6">
+            <FormItem>
+              <UploadFile @uploadSucc="upLoadHomeImg"></UploadFile>
+            </FormItem>
+          </Col>
+        </Row>
         <!-- <Row v-if="addData.typeid">
           <Col span="24" v-for="(prop, index) in propsArr" :key="index">
             <div class="propAdd">
@@ -217,7 +229,7 @@
         <div v-html="preContent" class="preview-box"></div>
       </div>
       <div slot="footer">
-        <Button    @click="preModal = false">取消</Button>
+        <Button  @click="preModal = false">取消</Button>
         <Button type="primary" @click="preModal = false">确定</Button>
       </div>
     </Modal>
@@ -227,10 +239,12 @@
 import serverApi from '../../axios'
 import TextEdit from '../common/text-editor'
 import { uploadApiUrl } from '../../config/'
+import UploadFile from '../common/UploadFile'
 export default {
   name: 'ShopGoodsAdd',
   components: {
-    TextEdit
+    TextEdit,
+    UploadFile
   },
   data () {
     return {
@@ -291,7 +305,8 @@ export default {
         goodstype: '',
         points: 0,
         merchantcoupon: 0,
-        coupon: 0
+        coupon: 0,
+        homeimg: ''
       },
       goodsTypesArr: [],
       picArr: ['', '', '', '', '', ''],
@@ -379,6 +394,9 @@ export default {
     },
     onSelectSort (e) {
       this.getSortProps(e)
+    },
+    upLoadHomeImg (e) {
+      this.addData.homeimg = e
     },
     getGoodsType () {
       this.$store.commit('pageLoading', true)
