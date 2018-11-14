@@ -87,6 +87,7 @@
                 <DropdownItem name="" divided>导出数据</DropdownItem>
                 <DropdownItem name="out" divided>导出详细数据</DropdownItem>
                 <DropdownItem name="pdf" divided>下载PDF</DropdownItem>
+                <DropdownItem name="xlsx" divided>下载Excel</DropdownItem>
             </DropdownMenu>
           </Dropdown>
           <!-- <Button type="primary" :loading="exportLoading" style="margin-left:8px" @click="exportTable" icon="md-arrow-down">导出数据</Button> -->
@@ -132,6 +133,7 @@
 </template>
 <script>
 import serverApi from '../../axios'
+import { downloadFile } from '../../utlis/tools.js'
 export default {
   name: 'FinaceReview',
   data () {
@@ -583,7 +585,9 @@ export default {
         response => {
           console.log(response)
           if (response.data.code === 0){
-            location.href = response.data.data
+            if (typeof(response.data.data) === 'string') {
+              downloadFile(response.data.data)
+            }
           }else{
             this.$Message.warning(response.data.msg)
           }
@@ -621,7 +625,9 @@ export default {
         response => {
           console.log(response)
           if (response.data.code === 0){
-            location.href = response.data.data
+            if (typeof(response.data.data) === 'string') {
+              downloadFile(response.data.data)
+            }
           }else{
             this.$Message.warning(response.data.msg)
           }
@@ -786,7 +792,9 @@ export default {
         response => {
           console.log(response)
           if (response.data.code === 0){
-            location.href = response.data.data
+            if (typeof(response.data.data) === 'string') {
+              downloadFile(response.data.data)
+            }
           }else{
             this.$Message.warning(response.data.msg)
           }

@@ -144,7 +144,7 @@
 </template>
 <script>
 import serverApi from '../../axios'
-import { combineCell } from '../../utlis/tools.js'
+import { combineCell, downloadFile } from '../../utlis/tools.js'
 export default {
   name: 'MainTable',
   data () {
@@ -574,12 +574,15 @@ export default {
         merchantid: this.merchantid,
         exports: 'out'
       }
-      console.log(d)
       serverApi('/Finance/orderlist', d,
         response => {
-          // console.log(response)
+          console.log(response)
           if (response.data.code === 0){
-            location.href = response.data.data
+            // location.href = response.data.data
+            console.log(typeof(response.data.data))
+            if (typeof(response.data.data) === 'string') {
+              downloadFile(response.data.data)
+            }
           }else{
             this.$Message.warning(response.data.msg)
           }
