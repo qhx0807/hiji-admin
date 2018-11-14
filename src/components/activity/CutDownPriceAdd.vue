@@ -261,6 +261,7 @@ export default {
         this.goodsTypeData = row.goodstype
         this.addData.goodsid = e
         this.addData.goodsprice = row.goodsprice
+        this.addData.shareimg = row.goodsimg
 
       } else {
         this.getGoodsList('')
