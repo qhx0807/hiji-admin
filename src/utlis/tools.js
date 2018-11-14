@@ -45,4 +45,11 @@ const combineCell = (list) => {
   return list
 }
 
-export { arrSearch, formatJsonTree, combineCell }
+const downloadFile = (path) => {
+  if (!path) return false
+  let aTag = document.createElement('a')
+  aTag.download = path
+  aTag.href = path
+  aTag.click()
+}
+export { arrSearch, formatJsonTree, combineCell, downloadFile }
