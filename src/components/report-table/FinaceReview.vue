@@ -700,7 +700,7 @@ export default {
         response => {
           console.log(response)
           if (response.data.code === 0){
-            this.$Message.warning(response.data.msg)
+            this.$Message.success(response.data.msg)
             this.shModal = false
             this.getTableData()
           }else{

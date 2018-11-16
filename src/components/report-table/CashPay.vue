@@ -433,6 +433,7 @@ export default {
             response => {
               console.log(response)
               if (response.data.code === 0){
+                this.getTableData()
                 this.$Notice.success({
                   title: '打款成功',
                   desc: `到款到${row.merchantname}, 金额：￥${row.total}， 已打款！`

@@ -8,8 +8,9 @@
           <Option value="4">邮寄类商品订单</Option>
           <Option value="3">购买卡券订单</Option>
         </Select>
+        <DatePicker :options="dateOptions" type="daterange" placeholder="日期范围" @on-change="onSelectDate" style="width: 220px;"></DatePicker>
         <Button type="primary" style="margin-left:8px" icon="ios-search" @click="onClickSearch">搜索</Button>
-        <!-- <Button type="primary" style="margin-left:8px" icon="md-add">操作</Button> -->
+        <Button type="primary" :loading="expLoading" style="margin-left:8px" icon="md-arrow-down" @click="onClickExport">导出订单</Button>
       </div>
     </Card>
     <Card :bordered="false" style="margin-top:10px">
@@ -23,6 +24,7 @@
 </template>
 <script>
 import serverApi from '../../axios'
+import { downloadFile } from '../../utlis/tools.js'
 export default {
   name: 'ShopOrders',
   data () {
@@ -30,8 +32,11 @@ export default {
       searchKey: '',
       ordertype: '0',
       pageSize: 10,
+      expLoading: false,
       page: 1,
       count: 0,
+      starttime: '',
+      endtime: '',
       tableData: [],
       columns: [
         {
@@ -57,21 +62,21 @@ export default {
         {
           title: '商户',
           key: 'merchantname',
-          width: 200
+          width: 180
         },
         {
           title: '订单状态',
           key: 'order_status',
-          width: 120
+          width: 90
         },
         {
           title: '支付',
           key: 'pay_status',
-          width: 120,
+          width: 100,
           render: (h, params) => {
             return h('Tag', {
               props: {
-                color: params.row.pay_status == '已支付' ? 'success' : 'default'
+                color: params.row.pay_status == '已支付' ? 'success' : 'warning'
               }
             }, params.row.pay_status)
           }
@@ -111,6 +116,11 @@ export default {
   created () {
     this.getTableData()
   },
+  computed: {
+    dateOptions () {
+      return this.$store.state.dateOptions
+    },
+  },
   methods: {
     onClickSearch () {
       this.page = 1
@@ -129,7 +139,9 @@ export default {
         pagesize: this.pageSize,
         page: this.page,
         like: this.searchKey,
-        ordertype: this.ordertype
+        ordertype: this.ordertype,
+        starttime: this.starttime,
+        endtime: this.endtime
       }
       this.$store.commit('pageLoading', true)
       serverApi('/order/orderlist', d,
@@ -152,7 +164,47 @@ export default {
     },
     onClickSeeInfo (row) {
       this.$router.push({name: 'ShopOrdersInfo', params: {id: row.orderid}})
-    }
+    },
+    onSelectDate (e) {
+      this.starttime = e[0]
+      this.endtime = e[1]
+    },
+    onClickExport () {
+      this.expLoading = true
+      this.$Message.loading({
+        duration: 0,
+        content: '数据加载中...'
+      })
+      let d = {
+        userid: sessionStorage.userid,
+        like: this.searchKey,
+        ordertype: this.ordertype,
+        starttime: this.starttime,
+        endtime: this.endtime
+      }
+      serverApi('/order/orderout', d,
+        response => {
+          console.log(response)
+          this.$Message.destroy()
+          if (response.data.code === 0) {
+            if (typeof(response.data.data) === 'string') {
+              downloadFile(response.data.data)
+            } else {
+              this.$Message.warning('返回数据格式不正确！')
+            }
+          } else {
+            this.$Message.warning(response.data.msg)
+          }
+          this.expLoading = false
+        },
+        error => {
+          this.$Message.destroy()
+          console.log(error)
+          this.expLoading = false
+          this.$Message.warning('连接失败！')
+        }
+      )
+    },
   }
 }
 </script>
