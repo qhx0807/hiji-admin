@@ -112,7 +112,7 @@ th {
   border-collapse: collapse;
 }
 .table td, .table th{
-  padding: 8px;
+  padding: 6px;
   border: 1px solid #ddd;
   line-height: 1;
 }

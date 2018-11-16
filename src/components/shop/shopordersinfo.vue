@@ -111,22 +111,20 @@
             <td>{{item.goodsprice}}</td>
             <td>{{item.marketprice}}</td>
             <td>{{item.goodsnum}}</td>
-            <td>{{Number(item.goodsprice)*Number(item.goodsnum)}}</td>
+            <td style="font-size:14px">{{Number(item.goodsprice)*Number(item.goodsnum)}}</td>
           </tr>
           <tr>
-            <td colspan="5"></td>
+            <td colspan="5" rowspan="3"></td>
             <td>运费：</td>
-            <td style="color:#f40">+ {{orderData.shippingamout}}</td>
+            <td style="color:#f40;font-size:14px">+ {{orderData.shippingamout}}</td>
           </tr>
           <tr>
-            <td colspan="5"></td>
             <td>平台优惠：</td>
-            <td style="color:#f40">- {{orderData.coupon}}</td>
+            <td style="color:#f40;font-size:14px">- {{orderData.coupon}}</td>
           </tr>
           <tr>
-            <td colspan="5"></td>
             <td>商户优惠：</td>
-            <td style="color:#f40">- {{orderData.merchantcoupon}}</td>
+            <td style="color:#f40;font-size:14px">- {{orderData.merchantcoupon}}</td>
           </tr>
           <tr class="total">
             <td colspan="5">总计</td>
@@ -242,7 +240,7 @@ export default {
   }
   td{
     font-size: 12px;
-    padding: 12px;
+    padding: 10px;
   }
   .total{
     font-size: 14px;
