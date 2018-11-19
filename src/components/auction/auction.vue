@@ -94,8 +94,12 @@
 
 <script>
 import axios from 'axios'
+import ZkTable from 'vue-table-with-tree-grid'
 export default {
   name: 'auction',
+  components: {
+    ZkTable
+  },
   data() {
     return {
       loading: false,
@@ -162,7 +166,7 @@ export default {
     getData () {
       this.$store.commit('pageLoading', true)
       axios
-        .post('http://192.168.1.200/index.php/activity/manage/index', {})
+        .post('http://server.cqyyy.cn/index.php/activity/manage/index', {})
         .then(res => {
           if (res.data.code == 0) {
             // console.log(res.data.data)
@@ -188,7 +192,7 @@ export default {
       this.modal_loading = true
       axios
         .post(
-          'http://192.168.1.200/index.php/activity/manage/edituser',
+          'http://server.cqyyy.cn/index.php/activity/manage/edituser',
           this.editData
         )
         .then(res => {
@@ -211,7 +215,7 @@ export default {
           console.log(this.form)
           axios
             .post(
-              'http://192.168.1.200/index.php/activity/manage/adduser',
+              'http://server.cqyyy.cn/index.php/activity/manage/adduser',
               this.form
             )
             .then(res => {
@@ -236,7 +240,7 @@ export default {
           content: '<p>确认删除此条信息？</p>',
           onOk: () => {
             axios
-              .post('http://192.168.1.200/index.php/activity/manage/deluser', {
+              .post('http://server.cqyyy.cn/index.php/activity/manage/deluser', {
                 id: id
               })
               .then(res => {

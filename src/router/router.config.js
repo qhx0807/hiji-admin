@@ -6,6 +6,7 @@ const Department = r => require.ensure([], () => r(require('@/components/setting
 const Menu = r => require.ensure([], () => r(require('@/components/settings/menu.vue')))
 const Api = r => require.ensure([], () => r(require('@/components/settings/api.vue')))
 const Auction = r => require.ensure([], () => r(require('@/components/auction/auction.vue')))
+const AuctionG = r => require.ensure([], () => r(require('@/components/auction/auctionG.vue')))
 const Log = r => require.ensure([], () => r(require('@/components/settings/log.vue')))
 const Home = r => require.ensure([], () => r(require('@/components/home/home.vue')))
 const Account = r => require.ensure([], () => r(require('@/components/settings/account.vue')))
@@ -120,6 +121,11 @@ const routes = [
         path: 'Auction',
         component: Auction,
         name: 'Auction'
+      },
+      {
+        path: 'AuctionG',
+        component: AuctionG,
+        name: 'AuctionG'
       },
       {
         path: 'Log',

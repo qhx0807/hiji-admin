@@ -10,9 +10,9 @@
  <div class="head">
       <Button type="primary" @click="onClickAdd">新增</Button>
  </div>
-    <!-- <Row>
+    <Row>
       <Col span="24">
-        <div class="tableBox">
+        <zk-table class="tableBox"
             :data="tableData"
             show-index
             :tree-type="false"
@@ -29,9 +29,8 @@
               <img :src="scope.pic" alt="">
             </template>
           </zk-table>
-        </div>
       </Col>
-    </Row> -->
+    </Row>
 
     <!-- add -->
     <Modal v-model="addModal" width="460">
@@ -128,7 +127,7 @@
 <script>
 import axios from 'axios'
 export default {
-  name: 'auction',
+  name: 'auctiong',
   data() {
     return {
       loading: false,
@@ -218,7 +217,7 @@ export default {
   methods: {
     getData: function() {
       axios
-        .post('http://192.168.1.200/index.php/activity/manage/index', {})
+        .post('http://server.cqyyy.cn/index.php/activity/manage/index', {url: '123'})
         .then(res => {
           console.log(res)
           if (res.data.code == 0) {
@@ -242,7 +241,7 @@ export default {
       this.modal_loading = true
       axios
         .post(
-          'http://192.168.1.200/index.php/activity/manage/edituser',
+          'http://server.cqyyy.cn/index.php/activity/manage/edituser',
           this.editData
         )
         .then(res => {
@@ -265,7 +264,7 @@ export default {
           console.log(this.form)
           axios
             .post(
-              'http://192.168.1.200/index.php/activity/manage/adduser',
+              'http://server.cqyyy.cn/index.php/activity/manage/adduser',
               this.form
             )
             .then(res => {
@@ -290,7 +289,7 @@ export default {
           content: '<p>确认删除此条信息？</p>',
           onOk: () => {
             axios
-              .post('http://192.168.1.200/index.php/activity/manage/deluser', {
+              .post('http://server.cqyyy.cn/index.php/activity/manage/deluser', {
                 id: id
               })
               .then(res => {
@@ -324,9 +323,7 @@ export default {
       this.$Notice.warning({
         title: 'The file format is incorrect',
         desc:
-          'File format of ' +
-          file.name +
-          ' is incorrect, please select jpg or png.'
+          'File format of ' + file.name + ' is incorrect, please select jpg or png.'
       })
     },
     handleMaxSize(file) {
