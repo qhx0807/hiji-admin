@@ -7,6 +7,13 @@
           <Option value="0">全部</Option>
           <Option value="4">邮寄类商品订单</Option>
           <Option value="3">购买卡券订单</Option>
+          <Option value="5">砍价订单</Option>
+          <Option value="6">拼团订单</Option>
+        </Select>
+        <Select v-model="ispay" style="width:190px">
+          <Option value="">全部</Option>
+          <Option value="1">已支付</Option>
+          <Option value="0">未支付</Option>
         </Select>
         <DatePicker :options="dateOptions" type="daterange" placeholder="日期范围" @on-change="onSelectDate" style="width: 220px;"></DatePicker>
         <Button type="primary" style="margin-left:8px" icon="ios-search" @click="onClickSearch">搜索</Button>
@@ -37,6 +44,7 @@ export default {
       count: 0,
       starttime: '',
       endtime: '',
+      ispay: '',
       tableData: [],
       columns: [
         {
@@ -141,7 +149,8 @@ export default {
         like: this.searchKey,
         ordertype: this.ordertype,
         starttime: this.starttime,
-        endtime: this.endtime
+        endtime: this.endtime,
+        ispay: this.ispay
       }
       this.$store.commit('pageLoading', true)
       serverApi('/order/orderlist', d,
@@ -173,14 +182,15 @@ export default {
       this.expLoading = true
       this.$Message.loading({
         duration: 0,
-        content: '数据加载中...'
+        content: '正在生成Excel...'
       })
       let d = {
         userid: sessionStorage.userid,
         like: this.searchKey,
         ordertype: this.ordertype,
         starttime: this.starttime,
-        endtime: this.endtime
+        endtime: this.endtime,
+        ispay: this.ispay
       }
       serverApi('/order/orderout', d,
         response => {

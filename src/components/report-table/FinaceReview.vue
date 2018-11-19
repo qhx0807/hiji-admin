@@ -92,7 +92,7 @@
           </Dropdown>
           <!-- <Button type="primary" :loading="exportLoading" style="margin-left:8px" @click="exportTable" icon="md-arrow-down">导出数据</Button> -->
           <!-- <Button type="primary" :loading="exportLoading" style="margin-left:8px" @click="exportTableDetail" icon="ios-cloud-download-outline">导出详细数据</Button> -->
-          <Button type="error"  :loading="passLoading" style="margin-left:8px" @click="onClickNotAllow" icon="ios-information-circle-outline">批量审核(不通过)</Button>
+          <Button type="error"  :loading="passLoading" style="margin-left:8px" @click="onClickNotAllow" icon="ios-information-circle-outline">批量审核</Button>
         </Col>
       </Row>
     </Card>
