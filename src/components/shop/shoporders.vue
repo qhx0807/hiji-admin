@@ -16,6 +16,10 @@
           <Option value="0">未支付</Option>
         </Select>
         <DatePicker :options="dateOptions" type="daterange" placeholder="日期范围" @on-change="onSelectDate" style="width: 220px;"></DatePicker>
+        <Select v-if="merchantShow" v-model="merchantcode" filterable clearable @on-clear="onCLickClear" style="width:200px" placeholder="选择商户">
+          <Option value="">全部商户</Option>
+          <Option v-for="(item, index) in merchantData" :key="index" :value="item.merchantcode">{{item.name}}</Option>
+        </Select>
         <Button type="primary" style="margin-left:8px" icon="ios-search" @click="onClickSearch">搜索</Button>
         <Button type="primary" :loading="expLoading" style="margin-left:8px" icon="md-arrow-down" @click="onClickExport">导出订单</Button>
       </div>
@@ -45,7 +49,9 @@ export default {
       starttime: '',
       endtime: '',
       ispay: '',
+      merchantcode: '',
       tableData: [],
+      merchantData: [],
       columns: [
         {
           title: '订单编号',
@@ -75,6 +81,11 @@ export default {
         {
           title: '订单状态',
           key: 'order_status',
+          width: 90
+        },
+        {
+          title: '物流状态',
+          key: 'shipping_status',
           width: 90
         },
         {
@@ -123,13 +134,44 @@ export default {
   },
   created () {
     this.getTableData()
+    this.getMerchant()
   },
   computed: {
     dateOptions () {
       return this.$store.state.dateOptions
     },
+    merchantShow () {
+      let role = sessionStorage.roleid
+      if (role == 6 || role == 10) {
+        return false
+      } else {
+        return true
+      }
+    }
   },
   methods: {
+    getMerchant () {
+      let d = {
+        pagesize: 999999,
+        page: 1
+      }
+      this.$store.commit('pageLoading', true)
+      serverApi('/Merchant/index', d,
+        response => {
+          // console.log(response)
+          if (response.data.code === 0){
+            this.merchantData = response.data.data.result
+          }else{
+            this.$Message.warning(response.data.msg)
+          }
+          this.$store.commit('pageLoading', false)
+        },
+        error => {
+          console.log(error)
+          this.$store.commit('pageLoading', false)
+        }
+      )
+    },
     onClickSearch () {
       this.page = 1
       this.getTableData()
@@ -137,6 +179,9 @@ export default {
     changePage (e) {
       this.page = e
       this.getTableData()
+    },
+    onCLickClear () {
+      this.merchantcode = ''
     },
     onChangeSize (e) {
       this.pageSize = e
@@ -150,7 +195,8 @@ export default {
         ordertype: this.ordertype,
         starttime: this.starttime,
         endtime: this.endtime,
-        ispay: this.ispay
+        ispay: this.ispay,
+        merchantcode: this.merchantcode || ''
       }
       this.$store.commit('pageLoading', true)
       serverApi('/order/orderlist', d,

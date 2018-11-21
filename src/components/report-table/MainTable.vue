@@ -67,6 +67,7 @@
           <Button type="primary" :loading="tableLoading" icon="ios-search" @click="onClickSearch">搜索</Button>
           <Button type="default" style="margin-left:8px" @click="goBackFinace" icon="ios-arrow-back">返回</Button>
           <Button type="primary" :loading="exportLoading" style="margin-left:8px; float:right" @click="exportTable" icon="md-arrow-down">导出数据</Button>
+          <Button type="warning" :loading="plshLoading" style="margin-left:8px; float:right" @click="onClickPlsh" icon="md-checkmark">批量审核</Button>
         </Col>
       </Row>
     </Card>
@@ -155,6 +156,7 @@ export default {
       shModal: false,
       passLoading: false,
       refuseLoading: false,
+      plshLoading: false,
       counts: 0,
       page: 1,
       pageSize: 15,
@@ -475,7 +477,7 @@ export default {
       starttime: '',
       endtime: '',
       type: '',
-      paytype: '',
+      paytype: '0',
       shstatus: '',
       merchantData: [],
       merchantid: null
@@ -702,7 +704,56 @@ export default {
         }
       )
     },
-
+    onClickPlsh () {
+      if (!this.type) {
+        this.$Message.warning('请选择具体的订单类型！')
+        return false
+      }
+      this.$Modal.confirm({
+        title: '提示',
+        content: '批量审核通过所筛选的订单！',
+        loading: true,
+        onOk: () => {
+          this.plshLoading = true
+          let d = {
+            like: this.searchKey,
+            starttime: this.starttime,
+            endtime: this.endtime,
+            paytype: this.paytype,
+            type: this.type,
+            ischeck: this.shstatus,
+            merchantid: this.merchantid,
+            isbatch: 1,
+            check: 1
+          }
+          this.$Message.loading({
+            content: 'Loading...',
+            duration: 0
+          })
+          serverApi('/finance/operation', d,
+            response => {
+              console.log(response)
+              this.$Message.destroy()
+              if (response.data.code === 0){
+                this.$Message.success(response.data.msg)
+                this.getTableData()
+              }else{
+                this.$Message.warning(response.data.msg)
+              }
+              this.plshLoading = false
+              this.$Modal.remove()
+            },
+            error => {
+              this.$Modal.remove()
+              this.$Message.destroy()
+              console.log(error)
+              this.plshLoading = false
+              this.$Message.warning(error.toString())
+            }
+          )
+        }
+      })
+    }
   }
 }
 </script>
