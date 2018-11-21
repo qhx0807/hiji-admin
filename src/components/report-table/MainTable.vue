@@ -711,7 +711,7 @@ export default {
       }
       this.$Modal.confirm({
         title: '提示',
-        content: '批量审核通过所筛选的订单！',
+        content: '批量审核将会通过所有在筛选条件下的订单！',
         loading: true,
         onOk: () => {
           this.plshLoading = true

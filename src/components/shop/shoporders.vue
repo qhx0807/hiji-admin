@@ -236,7 +236,8 @@ export default {
         ordertype: this.ordertype,
         starttime: this.starttime,
         endtime: this.endtime,
-        ispay: this.ispay
+        ispay: this.ispay,
+        merchantcode: this.merchantcode || ''
       }
       serverApi('/order/orderout', d,
         response => {
