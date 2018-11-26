@@ -83,6 +83,8 @@ const CollageBuy = r => require.ensure([], () => r(require('@/components/activit
 const CollageBuyAdd = r => require.ensure([], () => r(require('@/components/activity/CollageBuyAdd.vue')))
 const CollageBuyEdit = r => require.ensure([], () => r(require('@/components/activity/CollageBuyEdit.vue')))
 
+const AcuLog = r => require.ensure([], () => r(require('@/components/auction/AcuLog.vue')))
+
 const routes = [
   {
     path: '*',
@@ -92,6 +94,11 @@ const routes = [
     path: '/',
     name: 'Login',
     component: Login
+  },
+  {
+    path: '/AcuLog',
+    name: 'AcuLog',
+    component: AcuLog
   },
   {
     path: '/Main',
