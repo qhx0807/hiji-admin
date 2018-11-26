@@ -104,7 +104,7 @@
               <th>单价</th>
               <th>平台优惠</th>
               <th>商家优惠</th>
-              <th v-if="shData.type==4">审核</th>
+              <th style="width:60px;text-align:center" v-if="shData.type==4">审核</th>
             </tr>
           </thead>
           <tbody>
@@ -121,7 +121,7 @@
               <td>{{item.goodsprice}}</td>
               <td :rowspan="item.couponspan" :class="{'hidden':item.coupondis}">{{item.coupon}}</td>
               <td :rowspan="item.merchantcouponspan" :class="{'hidden':item.merchantcoupondis}">{{item.merchantcoupon}}</td>
-              <td :rowspan="item.ischeckspan" :class="{'hidden':item.ischeckdis}" v-if="shData.type==4">
+              <td style="width:60px;text-align:center" :rowspan="item.ischeckspan" :class="{'hidden':item.ischeckdis}" v-if="shData.type==4">
                 <a v-if="item.ischeck == 0 && item.order_status == '3'" @click="onClickSHGoods(item)">审核</a>
                 <span v-if="item.ischeck == 1">已审核</span>
                 <!-- <span v-if="item.ischeck == 0 && item.order_status != '3'">未核销</span> -->
@@ -543,6 +543,9 @@ export default {
           // console.log(response)
           if (response.data.code === 0){
             this.tableData = response.data.data.result
+            this.tableData.map(item => {
+              item._disabled = item.ischeck == 1
+            })
             this.counts =  response.data.data.counts
           }else{
             this.$Message.warning(response.data.msg)
@@ -706,10 +709,10 @@ export default {
       )
     },
     onClickPlsh () {
-      if (!this.type) {
-        this.$Message.warning('请选择具体的订单类型！')
-        return false
-      }
+      // if (!this.type) {
+      //   this.$Message.warning('请选择具体的订单类型！')
+      //   return false
+      // }
       let arr = []
       if (this.checkedList.length > 0) {
         this.checkedList.forEach(item => {
@@ -718,7 +721,7 @@ export default {
       }
       this.$Modal.confirm({
         title: '提示',
-        content: '批量审核将会通过所有在筛选条件下的订单！',
+        content: '通过所勾选的订单，若未勾选则会通过所有在筛选条件下的订单！',
         loading: true,
         onOk: () => {
           this.plshLoading = true
@@ -796,9 +799,10 @@ export default {
   }
 }
 .goodsInfo{
-  white-space:nowrap;
+  white-space: wrap;
   text-overflow: ellipsis;
   overflow: hidden;
+  max-width: 450px;
   img{
     height: 20px;
     width: 20px;
