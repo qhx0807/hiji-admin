@@ -72,7 +72,7 @@
       </Row>
     </Card>
     <Card :bordered="false" style="margin-top:10px">
-      <Table border ref="table" highlight-row :loading="tableLoading" size="small" height="520" :columns="columns" :data="tableData"></Table>
+      <Table border @on-selection-change="onSelectTable" ref="table" highlight-row :loading="tableLoading" size="small" height="520" :columns="columns" :data="tableData"></Table>
       <div style="margin: 10px;overflow: hidden">
         <div style="float: right;">
           <Page :total="counts" show-sizer show-total :page-size-opts="pageSizeOpts" :page-size="15" :current.sync="page" @on-page-size-change="onChangeSize" @on-change="changePage"></Page>
@@ -166,8 +166,8 @@ export default {
       shOrderList: [],
       columns: [
         {
-          type: 'index',
-          width: 50,
+          type: 'selection',
+          width: 60,
           align: 'center'
         },
         {
@@ -480,7 +480,8 @@ export default {
       paytype: '0',
       shstatus: '',
       merchantData: [],
-      merchantid: null
+      merchantid: null,
+      checkedList: []
     }
   },
   created () {
@@ -709,6 +710,12 @@ export default {
         this.$Message.warning('请选择具体的订单类型！')
         return false
       }
+      let arr = []
+      if (this.checkedList.length > 0) {
+        this.checkedList.forEach(item => {
+          arr.push(item.orderno)
+        })
+      }
       this.$Modal.confirm({
         title: '提示',
         content: '批量审核将会通过所有在筛选条件下的订单！',
@@ -724,7 +731,8 @@ export default {
             ischeck: this.shstatus,
             merchantid: this.merchantid,
             isbatch: 1,
-            check: 1
+            check: 1,
+            chenckedlist: arr.toString()
           }
           this.$Message.loading({
             content: 'Loading...',
@@ -753,6 +761,9 @@ export default {
           )
         }
       })
+    },
+    onSelectTable (e) {
+      this.checkedList = e
     }
   }
 }
