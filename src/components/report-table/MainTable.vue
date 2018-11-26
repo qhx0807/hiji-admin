@@ -716,7 +716,10 @@ export default {
       let arr = []
       if (this.checkedList.length > 0) {
         this.checkedList.forEach(item => {
-          arr.push(item.orderno)
+          arr.push({
+            orderno: item.orderno,
+            orderid: item.orderid
+          })
         })
       }
       this.$Modal.confirm({
