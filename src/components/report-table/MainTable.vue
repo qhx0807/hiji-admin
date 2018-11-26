@@ -117,11 +117,11 @@
                 <span>{{item.goodsname}}</span>
               </td>
               <td>{{item.goodstypename}}</td>
-              <td :rowspan="item.goodsnumspan" :class="{'hidden':item.goodsnumdis}">{{item.goodsnum}}</td>
+              <td>{{item.goodsnum}}</td>
               <td>{{item.goodsprice}}</td>
               <td :rowspan="item.couponspan" :class="{'hidden':item.coupondis}">{{item.coupon}}</td>
               <td :rowspan="item.merchantcouponspan" :class="{'hidden':item.merchantcoupondis}">{{item.merchantcoupon}}</td>
-              <td style="width:60px;text-align:center" :rowspan="item.ischeckspan" :class="{'hidden':item.ischeckdis}" v-if="shData.type==4">
+              <td style="width:60px;text-align:center" :rowspan="item.orderidspan" :class="{'hidden':item.ischeckdis}" v-if="shData.type==4">
                 <a v-if="item.ischeck == 0 && item.order_status == '3'" @click="onClickSHGoods(item)">审核</a>
                 <span v-if="item.ischeck == 1">已审核</span>
                 <!-- <span v-if="item.ischeck == 0 && item.order_status != '3'">未核销</span> -->
@@ -802,7 +802,7 @@ export default {
   white-space: wrap;
   text-overflow: ellipsis;
   overflow: hidden;
-  max-width: 450px;
+  max-width: 400px;
   img{
     height: 20px;
     width: 20px;
