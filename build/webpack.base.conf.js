@@ -4,9 +4,9 @@ const utils = require('./utils')
 const config = require('../config')
 const vueLoaderConfig = require('./vue-loader.conf')
 const HappyPack = require('happypack')
-const os = require('os')
+// const os = require('os')
 // const happyThreadPool = HappyPack.ThreadPool({ size: os.cpus().length })
-const happyThreadPool = os.cpus().length
+// const happyThreadPool = os.cpus().length
 
 function resolve (dir) {
   return path.join(__dirname, '..', dir)
@@ -90,7 +90,7 @@ module.exports = {
   plugins: [
     new HappyPack({
       id: 'vue',
-      threads: happyThreadPool,
+      threads: 4,
       loaders: [{
         loader: 'vue-loader',
         options: vueLoaderConfig
@@ -98,7 +98,7 @@ module.exports = {
     }),
     new HappyPack({
       id: 'js',
-      threads: happyThreadPool,
+      threads: 4,
       loaders: [{
         loader: 'babel-loader',
       }]
