@@ -38,7 +38,13 @@ export default {
       columns: [
         {
           title: '姓名',
-          key: 'contacts'
+          key: 'contacts',
+          render: (h, params) => {
+            let arr = params.row.contacts.split('')
+            console.log(arr);
+            arr[1] = 'X'
+            return arr.join('')
+          }
         },
         {
           title: '加价',
@@ -54,11 +60,17 @@ export default {
         },
         {
           title: '电话',
-          key: 'tel'
+          key: 'tel',
+          render: (h, params) => {
+            return params.row.tel.replace(/^(\d{3})\d{4}(\d+)/,"$1XXXX$2")
+          }
         },
         {
           title: '身份证号',
-          key: 'idnum'
+          key: 'idnum',
+          render: (h, params) => {
+            return params.row.idnum.replace(/^(\d{3})\d{10}(\d+)/,"$1XXXXXXXXXX$2")
+          }
         },
         {
           title: '出价',
@@ -133,6 +145,9 @@ export default {
         return item.id == e
       })
       this.currname = obj
+    },
+    formartTel () {
+      return str.replace(/^(\d{4})\d{4}(\d+)/,"$1****$2")
     }
   },
 }
@@ -140,6 +155,9 @@ export default {
 <style lang="less" scoped>
 .box{
   position: relative;
+  padding-bottom: 30px;
+  height: 100%;
+  overflow: auto;
   .head-img{
     height: 200px;
   }
