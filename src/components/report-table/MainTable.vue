@@ -738,7 +738,7 @@ export default {
             merchantid: this.merchantid,
             isbatch: 1,
             check: 1,
-            chenckedlist: arr.toString()
+            chenckedlist: JSON.stringify(arr)
           }
           this.$Message.loading({
             content: 'Loading...',
