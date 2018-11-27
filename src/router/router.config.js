@@ -16,6 +16,8 @@ const Role = r => require.ensure([], () => r(require('@/components/settings/role
 const Merchant = r => require.ensure([], () => r(require('@/components/merchant/merchant.vue')))
 const MerchantDetail = r => require.ensure([], () => r(require('@/components/merchant/merchantdetail.vue')))
 const MerchantAdd = r => require.ensure([], () => r(require('@/components/merchant/merchantadd.vue')))
+const MerchantSort = r => require.ensure([], () => r(require('@/components/merchant/MerchantSort.vue')))
+
 const PayOrders = r => require.ensure([], () => r(require('@/components/merchant/payorders.vue')))
 const Handler = r => require.ensure([], () => r(require('@/components/settings/handler.vue')))
 const ApplyCashBill = r => require.ensure([], () => r(require('@/components/merchant/applyCashBill.vue')))
@@ -163,6 +165,11 @@ const routes = [
         path: 'MerchantAdd',
         component: MerchantAdd,
         name: 'MerchantAdd'
+      },
+      {
+        path: 'MerchantSort',
+        component: MerchantSort,
+        name: 'MerchantSort'
       },
       {
         path: 'PayOrders',
