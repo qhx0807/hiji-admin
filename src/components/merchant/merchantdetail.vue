@@ -44,6 +44,11 @@
             <FormItem label="营业时间">
               <Input v-model="merchantData.businesstime"></Input>
             </FormItem>
+            <FormItem label="所属分类" prop="categroryid">
+              <Select v-model="merchantData.categroryid">
+                <Option v-for="item in sortData" :value="item.id" :key="item.id">{{ item.name }}</Option>
+              </Select>
+            </FormItem>
           </Col>
           <Col span="6">
             <FormItem style="margin-bottom: 0" label="商户缩略图">
@@ -126,7 +131,8 @@ export default {
       isShowProgress: false,
       activeImgIndex: -1,
       viewImgSrc: '',
-      visibleImg: false
+      visibleImg: false,
+      sortData: []
     }
   },
   created () {
@@ -134,6 +140,7 @@ export default {
       this.merchantID = this.$route.params.id
       this.getMerchangById(this.$route.params.id)
     }
+    this.getSortData()
   },
   mounted () {
     let height = document.body.offsetHeight - 380
@@ -215,6 +222,34 @@ export default {
     },
     handleRemove (index) {
       this.photos.splice(index, 1)
+    },
+    getSortData () {
+      serverApi('/merchant/cateindex', null,
+        response => {
+          // console.log(response)
+          if (response.data.code === 0){
+            this.sortData = this.flatanArr(response.data.data)
+          }else{
+            this.$Message.warning(response.data.msg)
+          }
+        },
+        error => {
+          console.log(error)
+        }
+      )
+    },
+    flatanArr (arr) {
+      let arr1 = []
+      let fun = (a) => {
+        a.forEach(item => {
+          arr1.push(item)
+          if (item.child.length > 0) {
+            fun(item.child)
+          }
+        })
+      }
+      fun(arr)
+      return arr1
     }
   }
 }

@@ -98,36 +98,7 @@ export default {
                 ])
               ])
             },
-          children: [
-            {
-              title: 'child 1-1',
-              expand: true,
-              children: [
-                {
-                  title: 'leaf 1-1-1',
-                  expand: true
-                },
-                {
-                  title: 'leaf 1-1-2',
-                  expand: true
-                }
-              ]
-            },
-            {
-              title: 'child 1-2',
-              expand: true,
-              children: [
-                {
-                  title: 'leaf 1-2-1',
-                  expand: true
-                },
-                {
-                  title: 'leaf 1-2-1',
-                  expand: true
-                }
-              ]
-            }
-          ]
+          children: []
       }
       ],
       buttonProps: {
@@ -146,16 +117,15 @@ export default {
         item.children = item.child
         item.expand = true
         if (item.child.length > 0) {
-          getCas(item.child)
+          this.getCas(item.child)
         }
       })
     },
     getTableData () {
       this.$store.commit('pageLoading', true)
-      let userid = sessionStorage.userid
       serverApi('/merchant/cateindex', null,
         response => {
-          console.log(response)
+          // console.log(response)
           if (response.data.code === 0){
             this.tableData = response.data.data
             let cas = response.data.data
@@ -223,13 +193,65 @@ export default {
     },
     addTreeNode (data) {
       console.log(data)
+      if (!data.id) {
+        this.addData.updid = 0
+      } else {
+        this.addData.updid = data.id
+      }
       this.addData.name = ''
       this.addData.sort = 1
       this.fatherName = data.title
       this.addModal = true
     },
     delTreeNode (root, node, data) {
-      this.$Message.warning('del')
+      this.$Modal.confirm({
+        title: '提示',
+        content: '确认删除此分类？',
+        loading: true,
+        onOk: () => {
+          serverApi('/merchant/catedel', {id: data.id},
+            response => {
+              if (response.data.code === 0) {
+                this.getTableData()
+                this.$Message.success(response.data.msg)
+              } else {
+                this.$Message.warning(response.data.msg)
+              }
+              this.$Modal.remove()
+            },
+            error => {
+              this.$Modal.remove()
+              console.log(error)
+              this.$Message.error(error.toString())
+            }
+          )
+        }
+      })
+    },
+    add () {
+      console.log(this.addData)
+      if (!this.addData.name) {
+        this.$Message.warning('请输入分类名称！')
+        return false
+      }
+      this.modal_loading = true
+      serverApi('/merchant/cateadd', this.addData,
+        response => {
+          if (response.data.code === 0) {
+            this.getTableData()
+            this.addModal = false
+            this.$Message.success(response.data.msg)
+          } else {
+            this.$Message.warning(response.data.msg)
+          }
+          this.modal_loading = false
+        },
+        error => {
+          this.modal_loading = false
+          console.log(error)
+          this.$Message.error(error.toString())
+        }
+      )
     }
   }
 }
