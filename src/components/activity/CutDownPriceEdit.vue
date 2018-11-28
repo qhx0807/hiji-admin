@@ -18,7 +18,7 @@
         <Row>
           <Col span="6">
             <FormItem label="商品名称" required prop="goodsid">
-              <Input v-model="editData.goodsname" disabled></Input>
+              <Input v-model="editData.goodsname"></Input>
             </FormItem>
             <FormItem label="开始时间">
               <Input v-model="editData.starttime"></Input>
@@ -61,7 +61,7 @@
         <Row>
           <Col span="6">
             <FormItem label="砍价目标(元)" required  prop="lowerprice">
-              <InputNumber :max="999999999" style="width:100%" :min="1" v-model="editData.lowerprice"></InputNumber>
+              <InputNumber :max="999999999" style="width:100%" :min="0" v-model="editData.lowerprice"></InputNumber>
             </FormItem>
           </Col>
           <Col span="6">
@@ -103,6 +103,18 @@
           </Col>
           <Col span="3">
             <img v-imgview :src="editData.shareimg" class="share-img" alt="">
+          </Col>
+        </Row>
+        <Row>
+          <!-- <Col span="6">
+            <FormItem label="活动页图"  prop="headimg">
+              <Input v-model="addData.headimg"></Input>
+            </FormItem>
+          </Col> -->
+           <Col span="6">
+            <FormItem label="活动页图" >
+              <UploadFile @uploadSucc="uploadHeadImg"></UploadFile>
+            </FormItem>
           </Col>
         </Row>
         <Divider />
@@ -159,8 +171,12 @@
 </template>
 <script>
 import serverApi from '../../axios'
+import UploadFile from '../common/UploadFile'
 export default {
   name: 'CutDownPriceEdit',
+  components: {
+    UploadFile
+  },
   data () {
     return {
       editData: {},
@@ -255,6 +271,9 @@ export default {
     onCLickDelMsgs (index) {
       this.msgcontent.splice(index, 1)
     },
+    uploadHeadImg (url) {
+
+    }
   }
 }
 </script>

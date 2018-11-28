@@ -112,6 +112,21 @@ export default {
           }
         },
         {
+          title: '状态',
+          key: 'ison',
+          width: 130,
+          render: (h, params) => {
+            let text = params.row.ison == 1 ? '发布' : '下线'
+            let color = params.row.ison == 1 ? 'success' : 'warning'
+            return h('Tag', {
+              props: {
+                type: 'dot',
+                color: color
+              }
+            }, text)
+          }
+        },
+        {
           title: '操作',
           key: 'id',
           align: 'center',

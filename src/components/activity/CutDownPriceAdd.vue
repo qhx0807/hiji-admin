@@ -47,7 +47,7 @@
               <Input v-model="addData.goodsprice" disabled></Input>
             </FormItem>
             <FormItem label="砍价目标(元)"  prop="lowerprice">
-              <InputNumber :max="999999999" style="width:100%" :min="1" v-model="addData.lowerprice"></InputNumber>
+              <InputNumber :max="999999999" style="width:100%" :min="0" v-model="addData.lowerprice"></InputNumber>
             </FormItem>
           </Col>
           <Col span="6">
@@ -97,6 +97,18 @@
           </Col>
           <Col span="3">
             <img v-imgview :src="addData.shareimg" class="share-img" alt="">
+          </Col>
+        </Row>
+        <Row>
+          <!-- <Col span="6">
+            <FormItem label="活动页图"  prop="headimg">
+              <Input v-model="addData.headimg"></Input>
+            </FormItem>
+          </Col> -->
+           <Col span="6">
+            <FormItem label="活动页图" >
+              <UploadFile @uploadSucc="uploadHeadImg"></UploadFile>
+            </FormItem>
           </Col>
         </Row>
         <Divider />
@@ -154,8 +166,12 @@
 <script>
 import serverApi from '../../axios'
 import { uploadApiUrl } from '../../config/'
+import UploadFile from '../common/UploadFile'
 export default {
   name: 'CutDownPriceAdd',
+  components: {
+    UploadFile
+  },
   data () {
     return {
       uploadApiUrl: uploadApiUrl,
@@ -171,6 +187,8 @@ export default {
         goodsid: '',
         goodstypeid: '',
         goodsprice: '',
+        goodsname: '',
+        headimg: '',
         msgcontent: '',
         lastmsg: '大刀阔斧，一招定乾坤，完成最后一刀！',
         ison: 0,
@@ -222,7 +240,8 @@ export default {
         {percent: 50, msg: '一刀砍过半边天'},
         {percent: 70, msg: '家传刀法，盖世神功'},
         {percent: 90, msg: '刀法如神，犹如庖丁解牛'}
-      ]
+      ],
+      headImgArr: []
     }
   },
   created () {
@@ -345,6 +364,9 @@ export default {
     },
     onClickBack () {
       this.$router.back()
+    },
+    uploadHeadImg (path) {
+      this.headImgArr.push(path)
     }
   }
 }
