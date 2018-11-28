@@ -83,6 +83,11 @@ export default {
           minWidth: 160
         },
         {
+          title: '分类',
+          key: 'sortname',
+          width: 120
+        },
+        {
           title: '编码',
           key: 'merchantcode',
           width: 100

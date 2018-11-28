@@ -48,6 +48,12 @@
             <FormItem label="卡券定价" prop="saleprice">
               <InputNumber :max="999999999" style="width: 100%" :min="0" v-model="addData.saleprice"></InputNumber>
             </FormItem>
+            <FormItem label="是否显示">
+              <Select v-model="addData.show" @on-change="onSelectType">
+                <Option value="0">显示</Option>
+                <Option value="1">不显示</Option>
+              </Select>
+            </FormItem>
           </Col>
           <Col span="6">
             <FormItem label="库存">
@@ -272,6 +278,7 @@ export default {
         ]
       },
       addData: {
+        show: '0',
         cardname: '',
         startsendtime: '',
         endsendtime: '',

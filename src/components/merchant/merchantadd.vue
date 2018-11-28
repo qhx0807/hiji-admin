@@ -133,7 +133,6 @@ export default {
         info: [{ required: true, message: '不能为空', trigger: 'blur' }],
         merchantcode: [{ required: true, message: '不能为空', trigger: 'blur' }],
         businesstime: [{ required: true, message: '不能为空', trigger: 'blur' }],
-        categroryid: [{ required: true, message: '不能为空', trigger: 'blur' }]
       },
       uploadApiUrl: uploadApiUrl,
       modal_loading: false,

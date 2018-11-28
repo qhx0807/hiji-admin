@@ -381,7 +381,7 @@ export default {
           response => {
             if (response.data.code === 0 && response.data.data.id) {
               this.addData.url = response.data.data.id
-              this.addData.imgurl = response.data.data.homeimg
+              this.addData.imgurl = response.data.data.goodsimg
               this.addData.name = response.data.data.goodsname
               this.addData.price = response.data.data.goodsprice
               console.log(this.addData)

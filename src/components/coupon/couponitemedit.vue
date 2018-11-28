@@ -147,6 +147,14 @@
               <span class="cardPrice">{{cardPrice}}</span>
             </FormItem>
           </Col>
+          <Col span="6">
+            <FormItem label="是否显示">
+              <Select v-model="editData.show">
+                <Option value="0">显示</Option>
+                <Option value="1">不显示</Option>
+              </Select>
+            </FormItem>
+          </Col>
         </Row>
         <Row>
           <Col span="24">
