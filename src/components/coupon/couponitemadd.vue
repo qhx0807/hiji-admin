@@ -49,7 +49,7 @@
               <InputNumber :max="999999999" style="width: 100%" :min="0" v-model="addData.saleprice"></InputNumber>
             </FormItem>
             <FormItem label="是否显示">
-              <Select v-model="addData.show" @on-change="onSelectType">
+              <Select v-model="addData.isshow" @on-change="onSelectType">
                 <Option value="0">显示</Option>
                 <Option value="1">不显示</Option>
               </Select>
@@ -278,7 +278,7 @@ export default {
         ]
       },
       addData: {
-        show: '0',
+        isshow: '0',
         cardname: '',
         startsendtime: '',
         endsendtime: '',
