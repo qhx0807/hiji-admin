@@ -33,6 +33,28 @@
       </div>
     </Modal>
 
+    <!-- edIt -->
+    <Modal v-model="editModal" width="460">
+      <p slot="header" style="text-align:center">
+        <span>修改分类名称</span>
+      </p>
+      <Form ref="form" :model="editData" :rules="rules" :label-width="70">
+        <!-- <FormItem label="上级名称">
+          <Input readonly v-model="fatherName"></Input>
+        </FormItem> -->
+        <FormItem prop="name" label="分类名称">
+          <Input v-model="editData.name" placeholder="请输入分类名称"></Input>
+        </FormItem>
+        <FormItem required label="排序">
+          <InputNumber style="width:100%" v-model="editData.sort" :max="255" :min="1"></InputNumber>
+        </FormItem>
+      </Form>
+
+      <div slot="footer">
+        <Button @click="editModal = false">取消</Button>
+        <Button type="primary" :loading="modal_loading" @click="edit">提交</Button>
+      </div>
+    </Modal>
   </div>
 </template>
 <script>
@@ -43,6 +65,7 @@ export default {
     return {
       addModal: false,
       modal_loading: false,
+      editModal: false,
       addData: {
         name: '',
         updid: '',
@@ -89,7 +112,7 @@ export default {
                       type: 'primary'
                     }),
                     style: {
-                      width: '64px'
+                      width: '100px'
                     },
                     on: {
                       click: () => { this.addTreeNode(data) }
@@ -104,7 +127,8 @@ export default {
       buttonProps: {
         type: 'default',
         size: 'small',
-      }
+      },
+      editData: {}
     }
   },
   created () {
@@ -182,6 +206,17 @@ export default {
               }),
               h('Button', {
                 props: Object.assign({}, this.buttonProps, {
+                  icon: 'ios-build-outline'
+                }),
+                style: {
+                  marginRight: '8px'
+                },
+                on: {
+                  click: () => { this.editTreeNode(data) }
+                }
+              }),
+              h('Button', {
+                props: Object.assign({}, this.buttonProps, {
                     icon: 'ios-remove'
                 }),
                 on: {
@@ -240,6 +275,35 @@ export default {
           if (response.data.code === 0) {
             this.getTableData()
             this.addModal = false
+            this.$Message.success(response.data.msg)
+          } else {
+            this.$Message.warning(response.data.msg)
+          }
+          this.modal_loading = false
+        },
+        error => {
+          this.modal_loading = false
+          console.log(error)
+          this.$Message.error(error.toString())
+        }
+      )
+    },
+    editTreeNode (data) {
+      console.log(data)
+      this.editData = data
+      this.editModal = true
+    },
+    edit () {
+      if (!this.editData.name) {
+        this.$Message.warning('请输入分类名称！')
+        return false
+      }
+      this.modal_loading = true
+      serverApi('/merchant/cateadd', this.editData,
+        response => {
+          if (response.data.code === 0) {
+            this.getTableData()
+            this.editModal = false
             this.$Message.success(response.data.msg)
           } else {
             this.$Message.warning(response.data.msg)
