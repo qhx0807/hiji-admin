@@ -61,12 +61,12 @@ export default {
         {
           title: '支付时间',
           key: 'paytime',
-          minWidth: 140
+          minWidth: 120
         },
         {
           title: '支付方式',
           key: 'paytype',
-          minWidth: 90
+          minWidth: 70
         },
         {
           title: '应收',
@@ -89,7 +89,10 @@ export default {
         {
           title: '流水号',
           key: 'transaction_id',
-          minWidth: 150
+          minWidth: 220,
+          // render: (h, params) => {
+          //   return h('span', {}, 'NO:'+params.row.transaction_id)
+          // }
         }
       ],
       columns: [
@@ -308,6 +311,9 @@ export default {
           // console.log(response)
           if (response.data.code === 0){
             this.seeTableData = response.data.data
+            this.seeTableData.forEach(item => {
+              if (item.transaction_id) item.transaction_id = 'NO:'+item.transaction_id
+            })
             this.seeModal = true
           }else{
             this.$Message.warning(response.data.msg)
