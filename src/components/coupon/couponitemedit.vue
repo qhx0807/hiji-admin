@@ -150,8 +150,8 @@
           <Col span="6">
             <FormItem label="是否显示">
               <Select v-model="editData.isshow">
-                <Option value="0">显示</Option>
-                <Option value="1">不显示</Option>
+                <Option :value="0">显示</Option>
+                <Option :value="1">不显示</Option>
               </Select>
             </FormItem>
           </Col>
