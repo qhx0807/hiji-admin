@@ -88,6 +88,21 @@ export default {
           width: 110
         },
         {
+          title: '活动状态',
+          key: 'ison',
+          width: 130,
+          render: (h, params) => {
+            let text = params.row.ison == 1 ? '发布' : '下线'
+            let color = params.row.ison == 1 ? 'success' : 'warning'
+            return h('Tag', {
+              props: {
+                type: 'dot',
+                color: color
+              }
+            }, text)
+          }
+        },
+        {
           title: '活动时间',
           key: 'goodsprice',
           width: 230,
