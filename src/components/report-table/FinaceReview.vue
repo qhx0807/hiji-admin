@@ -113,11 +113,11 @@
           <div slot="footer">
             <ul class="sta-li">
               <li>合计：</li>
-              <li>支付金额：{{shStaData.cash}}元</li>
-              <li>平台优惠：{{shStaData.coupon}}元</li>
-              <li>订单优惠：{{shStaData.subsidy}}元</li>
-              <li>商家优惠：{{shStaData.merchantcoupon}}元</li>
-              <li>合计金额：{{shStaData.total}}元</li>
+              <li>支付金额：{{shStaData.cash.toFixed(2)}}元</li>
+              <li>平台优惠：{{shStaData.coupon.toFixed(2)}}元</li>
+              <li>订单优惠：{{shStaData.subsidy.toFixed(2)}}元</li>
+              <li>商家优惠：{{shStaData.merchantcoupon.toFixed(2)}}元</li>
+              <li>合计金额：{{shStaData.total.toFixed(2)}}元</li>
             </ul>
           </div>
         </Table>
