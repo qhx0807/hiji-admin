@@ -84,12 +84,10 @@
             <FormItem label="APP价格" prop="appprice">
               <InputNumber :max="9999999" style="width:100%" :min="0" v-model="editData.appprice"></InputNumber>
             </FormItem>
-            <FormItem label="homeImg">
-              <Input v-model="editData.homeimg"></Input>
-            </FormItem>
             <FormItem label="扣点" required>
               <InputNumber :max="100" :step="1" :min="0" v-model="editData.points"></InputNumber> &nbsp;%（0~100）
             </FormItem>
+
           </Col>
           <Col span="6">
             <FormItem label="自定义编码">
@@ -101,8 +99,14 @@
             <FormItem label="会员价" prop="memberprice">
               <InputNumber :max="9999999" style="width:100%" :min="0" v-model="editData.memberprice"></InputNumber>
             </FormItem>
-            <FormItem>
-              <UploadFile @uploadSucc="upLoadHomeImg"></UploadFile>
+            <FormItem label="积分兑换">
+              <i-switch size="large" :true-value="1" :false-value="0" v-model="editData.intergraluse">
+                <span slot="open">开启</span>
+                <span slot="close">关闭</span>
+              </i-switch>
+            </FormItem>
+            <FormItem label="所需积分" v-show="editData.intergraluse==1">
+              <InputNumber :max="999999999" style="width:100%" :min="0" v-model="editData.intergral"></InputNumber>
             </FormItem>
           </Col>
         </Row>

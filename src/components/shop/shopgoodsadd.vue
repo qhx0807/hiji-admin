@@ -73,13 +73,16 @@
         </Row>
         <Row>
           <Col span="6">
-            <FormItem label="homeImg">
-              <Input v-model="addData.homeimg"></Input>
+            <FormItem label="积分兑换">
+              <i-switch size="large" :true-value="1" :false-value="0" v-model="addData.intergraluse">
+                <span slot="open">开启</span>
+                <span slot="close">关闭</span>
+              </i-switch>
             </FormItem>
           </Col>
-          <Col span="6">
-            <FormItem>
-              <UploadFile @uploadSucc="upLoadHomeImg"></UploadFile>
+          <Col span="6" v-show="addData.intergraluse==1">
+            <FormItem label="所需积分">
+              <InputNumber :max="999999999" style="width:100%" :min="0" v-model="addData.intergral"></InputNumber>
             </FormItem>
           </Col>
         </Row>
@@ -306,7 +309,8 @@ export default {
         points: 0,
         merchantcoupon: 0,
         coupon: 0,
-        homeimg: ''
+        intergraluse: 0,
+        intergral: 0,
       },
       goodsTypesArr: [],
       picArr: ['', '', '', '', '', ''],
