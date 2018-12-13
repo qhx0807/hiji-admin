@@ -673,6 +673,9 @@ export default {
           this.$Message.destroy()
           if (response.data.code === 0){
             this.orderData = response.data.data
+            this.orderData.forEach(item => {
+              item.total = (Number(item.total) + Number(item.settlementpostagefee)).toFixed(2)
+            })
             this.shModal = true
           }else{
             this.$Message.warning(response.data.msg)
