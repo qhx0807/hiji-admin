@@ -64,7 +64,17 @@ const store = new Vuex.Store({
       {value: 3, label: '指定商品类型'},
       {value: 7, label: '以下商品不可用'},
       {value: 8, label: '以下团购不可用'}
-
+    ],
+    orderTypeConst: [
+      {value: 0, label: '全部'},
+      {value: 1, label: '扫码支付'},
+      {value: 2, label: '停车缴费'},
+      {value: 3, label: '团购订单'},
+      {value: 4, label: '邮购订单'},
+      {value: 5, label: '砍价订单'},
+      {value: 6, label: '拼团订单'},
+      {value: 7, label: '积分兑换商品订单'},
+      {value: 8, label: '积分兑换卡券订单'},
     ]
   },
   getters: {

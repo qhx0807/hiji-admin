@@ -40,11 +40,7 @@
         </Col>
         <Col span="4">
           <Select v-model="type" clearable placeholder="订单类型" style="width:100%">
-            <Option value="0">全部</Option>
-            <Option value="1">扫码支付</Option>
-            <Option value="2">停车缴费</Option>
-            <Option value="3">团购订单</Option>
-            <Option value="4">邮购订单</Option>
+            <Option v-for="(item, index) in orderTypeArr" :key="index" :value="item.value">{{item.label}}</Option>
           </Select>
         </Col>
         <Col span="4">
@@ -492,6 +488,9 @@ export default {
     dateOptions () {
       return this.$store.state.dateOptions
     },
+    orderTypeArr () {
+      return this.$store.state.orderTypeConst
+    }
   },
   methods: {
     onClickSearch () {
