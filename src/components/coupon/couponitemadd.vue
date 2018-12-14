@@ -132,7 +132,21 @@
               <span class="cardPrice">{{cardPrice}}</span>
             </FormItem>
           </Col>
-
+        </Row>
+        <Row>
+          <Col span="6">
+            <FormItem label="积分兑换">
+              <i-switch size="large" :true-value="1" :false-value="0" v-model="addData.intergraluse">
+                <span slot="open">开启</span>
+                <span slot="close">关闭</span>
+              </i-switch>
+            </FormItem>
+          </Col>
+          <Col span="6" v-show="addData.intergraluse==1">
+            <FormItem label="所需积分">
+              <InputNumber :max="999999999" style="width:100%" :min="0" v-model="addData.intergral"></InputNumber>
+            </FormItem>
+          </Col>
         </Row>
         <Row>
           <Col span="12">
@@ -308,7 +322,8 @@ export default {
         coupon: 0, // 平台优惠，
         merchantcoupon: 0, //商户优惠
         byname: '',
-
+        intergraluse: 0,
+        intergral: 0,
       },
       id: null,
       rules: {

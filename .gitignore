@@ -13,3 +13,4 @@ UE/
 *.ntvs*
 *.njsproj
 *.sln
+src/config/index.js
