@@ -4,11 +4,7 @@
       <div class="head">
         <Input v-model="searchKey" @on-enter="getTableData" placeholder="搜索..." style="width: 200px"></Input>
         <Select v-model="ordertype" style="width:210px">
-          <Option value="0">全部</Option>
-          <Option value="4">邮寄类商品订单</Option>
-          <Option value="3">购买卡券订单</Option>
-          <Option value="5">砍价订单</Option>
-          <Option value="6">拼团订单</Option>
+          <Option v-for="(item, index) in orderTypeArr" :key="index" :value="item.value">{{item.label}}</Option>
         </Select>
         <Select v-model="ispay" style="width:190px">
           <Option value="">全部</Option>
@@ -41,7 +37,7 @@ export default {
   data () {
     return {
       searchKey: '',
-      ordertype: '0',
+      ordertype: 0,
       pageSize: 10,
       expLoading: false,
       page: 1,
@@ -139,6 +135,9 @@ export default {
   computed: {
     dateOptions () {
       return this.$store.state.dateOptions
+    },
+    orderTypeArr () {
+      return this.$store.state.orderTypeConst
     },
     merchantShow () {
       let role = sessionStorage.roleid

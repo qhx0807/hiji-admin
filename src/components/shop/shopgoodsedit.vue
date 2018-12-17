@@ -144,6 +144,10 @@
                     <InputNumber size="small" :max="9999999" style="100px" :min="0" v-model="item.marketprice"></InputNumber>
                   </div>
                   <div class="types-item">
+                    <span>积分</span>
+                    <InputNumber size="small" :max="9999999" style="100px" :min="0" v-model="item.intergral"></InputNumber>
+                  </div>
+                  <div class="types-item">
                     <Button type="dashed"size="small" @click="onClickDelTypeItem(index)" icon="ios-trash-outline">删除</Button>
                   </div>
                 </li>
@@ -321,7 +325,8 @@ export default {
         appprice: null,
         goodsprice: null,
         memberprice: null,
-        marketprice: null
+        marketprice: null,
+        intergral: null
       },
     }
   },
