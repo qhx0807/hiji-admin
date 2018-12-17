@@ -177,22 +177,11 @@ export default {
           key: 'type',
           width: 90,
           render: (h, params) => {
-            let text = ''
-            switch (params.row.type) {
-              case 1:
-                text = '扫码支付'
-                break
-              case 2:
-                text = '停车缴费'
-                break
-              case 3:
-                text = '团购订单'
-                break
-              case 4:
-                text = '邮购订单'
-                break
-            }
-            return h('span', {}, text)
+            let val = params.row.type
+            let obj = this.orderTypeArr.find(item => {
+              return item.value == val
+            })
+            return h('span', {}, obj.label || '')
           }
         },
         {
