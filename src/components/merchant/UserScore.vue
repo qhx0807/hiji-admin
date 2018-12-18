@@ -146,30 +146,37 @@ export default {
         busno: this.busno,
         money: this.money
       }
-      this.submitLoading = true
-      serverApi('/cxchange/deskintegral', d,
-        response => {
-          if (response.data.code == 0) {
-            this.$Notice.success({
-              title: response.data.msg
-            })
-            this.phone = ''
-            this.busno = '01'
-            this.userData = {}
-            this.money = 0
-          } else {
-            this.$Notice.warning({
-              title: response.data.msg
-            })
-          }
-          this.submitLoading = false
-        },
-        error => {
-          this.submitLoading = false
-          console.log(error)
-          this.$Message.error(error.toString())
+
+      this.$Modal.confirm({
+        title: '提示',
+        content: `确认积分到 ${this.phone}`,
+        onOk: () => {
+          this.submitLoading = true
+          serverApi('/cxchange/deskintegral', d,
+            response => {
+              if (response.data.code == 0) {
+                this.$Notice.success({
+                  title: response.data.msg
+                })
+                this.phone = ''
+                this.busno = '01'
+                this.userData = {}
+                this.money = 0
+              } else {
+                this.$Notice.warning({
+                  title: response.data.msg
+                })
+              }
+              this.submitLoading = false
+            },
+            error => {
+              this.submitLoading = false
+              console.log(error)
+              this.$Message.error(error.toString())
+            }
+          )
         }
-      )
+      })
     }
   }
 }
