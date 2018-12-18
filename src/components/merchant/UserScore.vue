@@ -5,7 +5,7 @@
       <Row>
         <Col span="24">
           <FormItem label="会员查询">
-            <Input type="text" style="width: 350px" v-model="phone" placeholder="手机号码..."></Input>
+            <Input type="text" size="large" style="width: 350px" v-model="phone" placeholder="手机号码..."></Input>
             <Button type="primary" style="margin-left:12px" :loading="serLoading" @click="onClickQuery">查询</Button>
           </FormItem>
 
@@ -24,7 +24,17 @@
                 <Cell title="拥有积分" :extra="userData.intergral" >拥有积分</Cell>
                 <Cell title="昵称" :extra="userData.nickname" >昵称</Cell>
                 <Cell title="注册时间" :extra="userData.create_time" >注册时间</Cell>
-            </CellGroup>
+              </CellGroup>
+            </div>
+            <div class="int-tips">
+              <Alert type="warning" show-icon>
+                业态兑换代码
+                <span slot="desc">
+                  01，兑换比例1元积1分，<br>
+                  02，兑换比例20元积1分，<br>
+                  03，兑换比例50元积1分。20和50的比例，金额不满整数，去零积整。
+                </span>
+              </Alert>
             </div>
           </FormItem>
         </Col>
@@ -144,39 +154,56 @@ export default {
       let d = {
         userids: this.userData.user_id,
         busno: this.busno,
-        money: this.money
+        money: this.money,
+        phone: this.phone
       }
-
-      this.$Modal.confirm({
-        title: '提示',
-        content: `确认积分到 ${this.phone}`,
-        onOk: () => {
-          this.submitLoading = true
-          serverApi('/cxchange/deskintegral', d,
-            response => {
-              if (response.data.code == 0) {
-                this.$Notice.success({
-                  title: response.data.msg
-                })
-                this.phone = ''
-                this.busno = '01'
-                this.userData = {}
-                this.money = 0
-              } else {
-                this.$Notice.warning({
-                  title: response.data.msg
-                })
+      this.submitLoading = true
+      serverApi('/cxchange/integralindex', d,
+        res => {
+          if (res.data.code === 0) {
+            this.$Modal.confirm({
+              title: '提示',
+              loading: true,
+              content: `请确认本次添加积分<b>${res.data.data}</b> 到 ${this.phone} 用户账号里。工作人员务必核对好顾客小票上的信息和手机号后再点击确认。`,
+              onOk: () => {
+                serverApi('/cxchange/deskintegral', d,
+                  response => {
+                    if (response.data.code === 0) {
+                      this.$Notice.success({
+                        title: response.data.msg
+                      })
+                      this.phone = ''
+                      this.busno = '01'
+                      this.userData = {}
+                      this.money = 0
+                    } else {
+                      this.$Notice.warning({
+                        title: response.data.msg
+                      })
+                    }
+                    this.submitLoading = false
+                    this.$Modal.remove()
+                  },
+                  error => {
+                    this.$Modal.remove()
+                    this.submitLoading = false
+                    console.log(error)
+                    this.$Message.error(error.toString())
+                  }
+                )
               }
-              this.submitLoading = false
-            },
-            error => {
-              this.submitLoading = false
-              console.log(error)
-              this.$Message.error(error.toString())
-            }
-          )
+            })
+          } else {
+            this.submitLoading = false
+            this.$Message.warning(response.data.msg)
+          }
+        },
+        error => {
+          this.submitLoading = false
+          console.log(error)
+          this.$Message.error(error.toString())
         }
-      })
+      )
     }
   }
 }
@@ -184,7 +211,12 @@ export default {
 <style lang="less" scoped>
 .user-box{
   width: 250px;
-  min-height: 100px;
+  min-height: 140px;
   background-color: #f8f8f8;
+}
+.int-tips{
+  position: absolute;
+  left: 300px;
+  top: 12px;
 }
 </style>
