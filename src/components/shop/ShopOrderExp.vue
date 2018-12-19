@@ -4,9 +4,9 @@
       <div class="head">
         <Input v-model="searchKey" @on-enter="getTableData" placeholder="订单号搜索..." style="width: 200px"></Input>
         <Select v-model="exptype" style="width:200px">
-          <Option value="0">全部</Option>
-          <Option value="4">已发货</Option>
-          <Option value="3">未发货</Option>
+          <Option value="5">全部</Option>
+          <Option value="1">已发货</Option>
+          <Option value="0">未发货</Option>
         </Select>
         <DatePicker :options="dateOptions" type="daterange" placeholder="日期范围" @on-change="onSelectDate" style="width: 220px;"></DatePicker>
         <Button type="primary" style="margin-left:8px" icon="ios-search" @click="onClickSearch">搜索</Button>
@@ -55,6 +55,7 @@ export default {
       tableData: [],
       starttime: '',
       endtime: '',
+      exptype: '5',
       columns: [
         {
           title: '#',
@@ -216,7 +217,8 @@ export default {
         page: this.page,
         like: this.searchKey,
         ispay: 1,
-        ordertype: 4
+        ordertype: 4,
+        shipping: this.exptype
       }
       this.$store.commit('pageLoading', true)
       serverApi('/order/orderlist', d,

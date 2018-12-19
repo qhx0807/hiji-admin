@@ -155,16 +155,17 @@ export default {
         userids: this.userData.user_id,
         busno: this.busno,
         money: this.money,
-        phone: this.phone
+        phone: this.userData.phone
       }
       this.submitLoading = true
       serverApi('/cxchange/integralindex', d,
         res => {
+          this.submitLoading = false
           if (res.data.code === 0) {
             this.$Modal.confirm({
               title: '提示',
               loading: true,
-              content: `请确认本次添加积分<b>${res.data.data}</b> 到 ${this.phone} 用户账号里。工作人员务必核对好顾客小票上的信息和手机号后再点击确认。`,
+              content: `请确认本次添加积分<b>${res.data.data}</b> 到 ${this.userData.phone} 用户账号里。工作人员务必核对好顾客小票上的信息和手机号后再点击确认。`,
               onOk: () => {
                 serverApi('/cxchange/deskintegral', d,
                   response => {
@@ -194,7 +195,6 @@ export default {
               }
             })
           } else {
-            this.submitLoading = false
             this.$Message.warning(response.data.msg)
           }
         },

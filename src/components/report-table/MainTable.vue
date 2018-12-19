@@ -131,7 +131,7 @@
         <Button type="error" :loading="refuseLoading" @click="onClickSH(0)">不通过</Button>
         <Button type="primary" :loading="passLoading" @click="onClickSH(1)">确认审核</Button>
       </div>
-      <div slot="footer" v-if="shData.type == 3">
+      <div slot="footer" v-if="shData.type != 1 || shData.type != 2">
         <Button @click="shModal = false">取消</Button>
         <Button type="error" :loading="refuseLoading" @click="onClickSH(0)">不通过</Button>
         <Button type="primary" :loading="passLoading" @click="onClickSH(1)">确认审核</Button>
