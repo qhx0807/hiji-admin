@@ -117,7 +117,7 @@
               <td>{{item.goodsprice}}</td>
               <td :rowspan="item.couponspan" :class="{'hidden':item.coupondis}">{{item.coupon}}</td>
               <td :rowspan="item.merchantcouponspan" :class="{'hidden':item.merchantcoupondis}">{{item.merchantcoupon}}</td>
-              <td style="width:60px;text-align:center" :rowspan="item.orderidspan" :class="{'hidden':item.ischeckdis}" v-if="shData.type==4">
+              <td style="width:60px;text-align:center" :rowspan="item.orderidspan" :class="{'hidden':item.ischeckdis}" v-if="shData.type!=1 || shData.type!=2">
                 <a v-if="item.ischeck == 0 && item.order_status == '3'" @click="onClickSHGoods(item)">审核</a>
                 <span v-if="item.ischeck == 1">已审核</span>
                 <!-- <span v-if="item.ischeck == 0 && item.order_status != '3'">未核销</span> -->
@@ -131,7 +131,7 @@
         <Button type="error" :loading="refuseLoading" @click="onClickSH(0)">不通过</Button>
         <Button type="primary" :loading="passLoading" @click="onClickSH(1)">确认审核</Button>
       </div>
-      <div slot="footer" v-if="shData.type != 1 || shData.type != 2">
+      <div slot="footer" v-if="shData.type == 1 || shData.type == 2">
         <Button @click="shModal = false">取消</Button>
         <Button type="error" :loading="refuseLoading" @click="onClickSH(0)">不通过</Button>
         <Button type="primary" :loading="passLoading" @click="onClickSH(1)">确认审核</Button>

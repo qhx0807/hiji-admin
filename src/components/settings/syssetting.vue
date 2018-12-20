@@ -14,6 +14,7 @@
       </div>
       <div style="clear:both"></div>
     </Card>
+
     <Modal v-model="editModal" width="550">
       <p slot="header" style="text-align:center">
         <span>修改</span>
@@ -25,6 +26,37 @@
       </Form>
       <div slot="footer">
         <Button    @click="editModal = false">取消</Button>
+        <Button type="primary" :loading="modal_loading" @click="onSaveEDit">保存</Button>
+      </div>
+    </Modal>
+
+    <Modal v-model="intModal" width="550">
+      <p slot="header" style="text-align:center">
+        <span>修改信息</span>
+      </p>
+      <Form ref="form" :model="editData" :label-width="70">
+        <FormItem label="开始时间">
+          <Input v-model="editData.paramvalue.starttime" placeholder="请输入"></Input>
+        </FormItem>
+        <FormItem label="结束时间">
+          <Input v-model="editData.paramvalue.endtime" placeholder="请输入"></Input>
+        </FormItem>
+        <FormItem label="兑换次数">
+          <InputNumber :max="999999999" style="width: 100%" :min="0" v-model="editData.paramvalue.times"></InputNumber>
+        </FormItem>
+        <FormItem label="限制规则">
+          <Select v-model="editData.paramvalue.status">
+            <Option value="0">不限制</Option>
+            <Option value="1">每天</Option>
+            <Option value="2">活动期间</Option>
+          </Select>
+        </FormItem>
+        <FormItem label="备注信息">
+          <Input type="textarea" autosize v-model="editData.remark" placeholder="请输入"></Input>
+        </FormItem>
+      </Form>
+      <div slot="footer">
+        <Button    @click="intModal = false">取消</Button>
         <Button type="primary" :loading="modal_loading" @click="onSaveEDit">保存</Button>
       </div>
     </Modal>
@@ -43,16 +75,17 @@ export default {
       page: 1,
       count: 0,
       tableData: [],
-      editData: {},
+      editData: {paramvalue:{}},
       columns: [
         {
           title: 'ID',
           key: 'id',
-          width: 90
+          width: 60
         },
         {
           title: '参数编码',
-          key: 'paramcode'
+          key: 'paramcode',
+          width: 140
         },
         {
           title: '值',
@@ -63,20 +96,39 @@ export default {
           key: 'remark'
         },
         {
-          title: '是否可用',
-          key: 'isuse'
+          title: '修改',
+          key: 'isallowmodi',
+          width: 130,
+          render: (h, params) => {
+            let text = params.row.isallowmodi == 1 ? '允许' : '禁止'
+            let color = params.row.isallowmodi == 1 ? 'success' : 'warning'
+            return h('Tag', {
+              props: {
+                type: 'dot',
+                color: color
+              }
+            }, text)
+          }
         },
-        // {
-        //   title: '修改',
-        //   key: 'isallowmodi'
-        // },
-        // {
-        //   title: '删除',
-        //   key: 'isallowdel'
-        // },
+        {
+          title: '删除',
+          key: 'isallowdel',
+          width: 130,
+          render: (h, params) => {
+            let text = params.row.isallowdel == 1 ? '允许' : '禁止'
+            let color = params.row.isallowdel == 1 ? 'success' : 'warning'
+            return h('Tag', {
+              props: {
+                type: 'dot',
+                color: color
+              }
+            }, text)
+          }
+        },
         {
           title: '创建时间',
-          key: 'createtime'
+          key: 'createtime',
+          width: 160
         },
         {
           title: '操作',
@@ -106,7 +158,8 @@ export default {
             return h('div', [params.row.isallowmodi == 1 ? edit : null, params.row.isallowdel == 1 ? del : null])
           }
         }
-      ]
+      ],
+      intModal: false
     }
   },
   created () {
@@ -150,10 +203,19 @@ export default {
       )
     },
     onClickEdit (row) {
-      this.editData = Object.assign({}, row)
-      this.editModal = true
+      if (row.paramcode == 'weinanintergralexchange') {
+        this.editData = Object.assign({}, row)
+        this.editData.paramvalue = JSON.parse(row.paramvalue)
+        this.intModal = true
+      } else {
+        this.editData = Object.assign({}, row)
+        this.editModal = true
+      }
     },
     onSaveEDit () {
+      if (this.editData.paramcode == 'weinanintergralexchange') {
+        this.editData.paramvalue = JSON.stringify(this.editData.paramvalue)
+      }
       if (!this.editData.paramvalue) {
         this.$Message.info('请输入值')
         return false
@@ -167,6 +229,7 @@ export default {
             this.$Message.success(response.data.msg)
             this.getTableData()
             this.editModal = false
+            this.intModal = false
           }else{
             this.$Message.warning(response.data.msg)
           }
