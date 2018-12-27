@@ -10,6 +10,8 @@
         </Select>
         <DatePicker :options="dateOptions" type="daterange" placeholder="日期范围" @on-change="onSelectDate" style="width: 220px;"></DatePicker>
         <Button type="primary" style="margin-left:8px" icon="ios-search" @click="onClickSearch">搜索</Button>
+        <Button type="primary" style="margin-left:8px" icon="md-download" :loading="loading1" @click="onClickDownLoad">下载物流模板</Button>
+        <Button type="primary" style="margin-left:8px" icon="ios-cloud-upload" @click="onClickUpLoad">上传订单物流表</Button>
       </div>
     </Card>
     <Card :bordered="false" style="margin-top:10px">
@@ -37,17 +39,51 @@
         <Button type="primary" :loading="modal_loading" @click="onSaveEdit">保存</Button>
       </div>
     </Modal>
+
+    <Modal v-model="uploadModal" width="520">
+      <p slot="header" style="text-align:center">
+        <span>上传订单物流表</span>
+      </p>
+      <div>
+        <Upload
+          type="drag"
+          ref="upload"
+          accept=".xlsx,.xls,.csv"
+          :max-size="5120"
+          :format="['xlsx','xls','csv']"
+          :on-success="onUploadTableSuccess"
+          :on-error="onUploadTableErr"
+          :action="uploadOrderFileUrl">
+          <div style="padding: 20px 0">
+            <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
+            <p>点击或拖拽到此处上传，限 .xlsx,.xls,.csv 文件，大小5M以下</p>
+          </div>
+        </Upload>
+        <Alert v-show="!loading2" type="info">结果：成功 {{successCount}}条， 失败 {{errCount}}条。以下为导入失败的数据。</Alert>
+        <Table v-show="errOrderData.length>0" height="210" ref="errTable" :row-class-name="rowClassName" :columns="errColumns" size="small" :data="errOrderData"></Table>
+      </div>
+      <div slot="footer">
+        <Button @click="uploadModal = false">关闭</Button>
+        <Button v-show="errOrderData.length>0" type="primary" @click="downErrData">下载失败数据</Button>
+      </div>
+    </Modal>
   </div>
 </template>
 <script>
 import serverApi from '../../axios'
+import { downloadFile } from '../../utlis/tools.js'
+import { uploadOrderFileUrl } from '../../config'
 export default {
   name: 'ShopOrderExp',
   data () {
     return {
+      uploadOrderFileUrl: uploadOrderFileUrl,
       searchKey: '',
       ordertype: '0',
       pageSize: 10,
+      loading1: false,
+      uploadModal: false,
+      loading2: true,
       editModal: false,
       modal_loading: false,
       page: 1,
@@ -183,7 +219,25 @@ export default {
           }
         },
       ],
-      editData: {}
+      editData: {},
+      errOrderData: [],
+      errColumns: [
+        {
+          title: '订单id',
+          key: 'orderid',
+          width: 100
+        },
+        {
+          title: '订单号',
+          key: 'orderno',
+        },
+        {
+          title: '物流单号',
+          key: 'shipping_code',
+        },
+      ],
+      successCount: 0,
+      errCount: 0
     }
   },
   created () {
@@ -273,10 +327,64 @@ export default {
           this.$Message.warning('连接失败！')
         }
       )
+    },
+    onClickDownLoad () {
+      this.loading1 = true
+      serverApi('/order/ordershippingout', null,
+        response => {
+          if (response.data.code === 0){
+            downloadFile(response.data.data)
+          }else{
+            this.$Message.warning(response.data.msg)
+          }
+          this.loading1 = false
+        },
+        error => {
+          console.log(error)
+          this.$Message.warning('连接失败！')
+          this.loading1 = false
+        }
+      )
+    },
+    onClickUpLoad () {
+      this.$refs.upload.clearFiles()
+      this.errOrderData = []
+      this.loading2 = true
+      this.uploadModal = true
+    },
+    onUploadTableSuccess (response) {
+      if (response.data.code === 0) {
+        this.errOrderData = response.data.data.orderdefault
+        this.successCount = response.data.data.countsuccess
+        this.errCount = response.data.data.countdefault
+        this.$Notice.success({
+          title: '导入成功',
+          desc: response.data.msg
+        })
+        this.loading2 = false
+      } else {
+        this.$Notice.warning({
+          title: '导入订单物流失败',
+          desc: response.data.msg
+        })
+      }
+    },
+    onUploadTableErr (error) {
+      console.log(error)
+      this.$Message.warning('上传失败！')
+    },
+    rowClassName () {
+      return 'err-tr-bg'
+    },
+    downErrData () {
+      this.$refs.errTable.exportCsv({filename: '导入失败的订单'})
     }
   }
 }
 </script>
-<style lang="less" scoped>
-
+<style lang="less">
+.ivu-table .err-tr-bg td {
+  background-color: #fff6e5;
+  height: 30px;
+}
 </style>

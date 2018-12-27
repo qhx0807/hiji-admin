@@ -58,11 +58,12 @@ export default {
     this.getTableData(1, 10)
   },
   methods: {
-    getTableData (page, size) {
+    getTableData () {
       this.$store.commit('pageLoading', true)
       let d = {
-        pagesize: size,
-        page: page
+        pagesize: this.pageSize,
+        page: this.page,
+        like: this.searchKey
       }
       serverApi('/log/index', d,
         response => {
@@ -94,27 +95,7 @@ export default {
       this.endtime = e[1]
     },
     onClickSearch () {
-      let d = {
-        starttime: this.starttime,
-        endtime: this.endtime,
-        like: this.searchKey
-      }
-      this.$store.commit('pageLoading', true)
-      serverApi('/log/index', d,
-        response => {
-          if (response.data.code === 0){
-            this.tableData = response.data.data.result
-            this.count = response.data.data.counts
-          }else{
-            this.$Message.warning(response.data.msg)
-          }
-          this.$store.commit('pageLoading', false)
-        },
-        error => {
-          console.log(error)
-          this.$store.commit('pageLoading', false)
-        }
-      )
+      this.getTableData()
     }
   }
 }
