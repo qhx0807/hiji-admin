@@ -40,7 +40,7 @@
       </div>
     </Modal>
 
-    <Modal v-model="uploadModal" width="520">
+    <Modal v-model="uploadModal" width="550">
       <p slot="header" style="text-align:center">
         <span>上传订单物流表</span>
       </p>
@@ -64,7 +64,7 @@
       </div>
       <div slot="footer">
         <Button @click="uploadModal = false">关闭</Button>
-        <Button v-show="errOrderData.length>0" type="primary" @click="downErrData">下载失败数据</Button>
+        <!-- <Button v-show="errOrderData.length>0" type="primary" @click="downErrData">下载失败数据</Button> -->
       </div>
     </Modal>
   </div>
@@ -223,7 +223,7 @@ export default {
       errOrderData: [],
       errColumns: [
         {
-          title: '订单id',
+          title: '订单序号',
           key: 'orderid',
           width: 100
         },
@@ -234,6 +234,10 @@ export default {
         {
           title: '物流单号',
           key: 'shipping_code',
+        },
+        {
+          title: '失败原因',
+          key: 'errmsg',
         },
       ],
       successCount: 0,
@@ -353,19 +357,20 @@ export default {
       this.uploadModal = true
     },
     onUploadTableSuccess (response) {
-      if (response.data.code === 0) {
-        this.errOrderData = response.data.data.orderdefault
-        this.successCount = response.data.data.countsuccess
-        this.errCount = response.data.data.countdefault
+      console.log(response)
+      if (response.code === 0) {
+        this.errOrderData = response.data.orderdefault
+        this.successCount = response.data.countsuccess
+        this.errCount = response.data.countdefault
         this.$Notice.success({
           title: '导入成功',
-          desc: response.data.msg
+          desc: response.msg
         })
         this.loading2 = false
       } else {
         this.$Notice.warning({
           title: '导入订单物流失败',
-          desc: response.data.msg
+          desc: response.msg
         })
       }
     },

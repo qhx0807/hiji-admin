@@ -87,6 +87,7 @@ const CollageBuyEdit = r => require.ensure([], () => r(require('@/components/act
 
 const AcuLog = r => require.ensure([], () => r(require('@/components/auction/AcuLog.vue')))
 const UserScore = r => require.ensure([], () => r(require('@/components/merchant/UserScore.vue')))
+const ParkingReport = r => require.ensure([], () => r(require('@/components/parking/ParkingReport.vue')))
 
 const routes = [
   {
@@ -511,6 +512,11 @@ const routes = [
         path: 'UserScore',
         component: UserScore,
         name: 'UserScore'
+      },
+      {
+        path: 'ParkingReport',
+        component: ParkingReport,
+        name: 'ParkingReport'
       }
     ]
   },
