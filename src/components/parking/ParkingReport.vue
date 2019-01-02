@@ -18,7 +18,7 @@
           </Col>
           <Col span="4">
             <FormItem label="付款状态">
-              <Select v-model="searchObj.paymentstatus">
+              <Select v-model="searchObj.paymentstatus" clearable>
                 <Option value="0">未支付</Option>
                 <Option value="1">已支付</Option>
               </Select>
@@ -26,18 +26,16 @@
           </Col>
           <Col span="4">
             <FormItem label="收费方式">
-              <Select v-model="searchObj.paymentmethod">
-                <Option value="0">未支付</Option>
-                <Option value="1">已支付</Option>
-              </Select>
+              <Cascader :data="payMethodsArr" @on-change="onSelectMethods" clearable></Cascader>
+              <!-- <Select v-model="searchObj.paymentmethod">
+                <Option v-for="(item, index) in payMethodsArr" :key="index" :value="item">{{item}}</Option>
+              </Select> -->
             </FormItem>
           </Col>
           <Col span="4">
             <FormItem label="支付方式">
-              <Select v-model="searchObj.payment">
-                <Option value="0">全部</Option>
-                <Option value="1">微信</Option>
-                <Option value="2">支付宝</Option>
+              <Select v-model="searchObj.payment" clearable>
+                <Option v-for="(item, index) in payTypeArr" :key="index" :value="item">{{item}}</Option>
               </Select>
             </FormItem>
           </Col>
@@ -46,9 +44,7 @@
           <Col span="4">
             <FormItem label="用户类型" style="margin-bottom:0">
               <Select v-model="searchObj.usertype">
-                <Option value="0">全部</Option>
-                <Option value="1">微信</Option>
-                <Option value="2">支付宝</Option>
+                <Option v-for="(item, index) in userTypeArr" :key="index" :value="index">{{item}}</Option>
               </Select>
             </FormItem>
           </Col>
@@ -56,16 +52,14 @@
             <FormItem label="显示字段" style="margin-bottom:0">
               <Dropdown>
                 <a href="javascript:void(0)">点击选择条目</a>
-                <DropdownMenu slot="list">
+                <DropdownMenu slot="list" style="width:250px">
                   <div style="margin:10px">
-                    <CheckboxGroup v-model="disabledGroup">
-                      <Checkbox label="香蕉"></Checkbox>
-                      <Checkbox label="苹果"></Checkbox>
-                      <Checkbox label="西瓜"></Checkbox>
-                      <Checkbox label="西瓜"></Checkbox>
-                      <Checkbox label="西瓜"></Checkbox>
-                      <Checkbox label="西瓜"></Checkbox>
-                      <Checkbox label="西瓜"></Checkbox>
+                    <CheckboxGroup v-model="selectTitleArr">
+                      <Row>
+                        <Col span="12" v-for="(item, index) in titlesArr">
+                          <Checkbox  :key="index" :label="item.key">{{item.title}}</Checkbox>
+                        </Col>
+                      </Row>
                   </CheckboxGroup>
                   </div>
                 </DropdownMenu>
@@ -85,7 +79,7 @@
           <Col span="6">
             <FormItem style="margin-bottom:0">
               <Button :loading="tableLoading" @click="onClickFetchData" type="primary">查询</Button>
-              <Button style="margin-left:10px">导出</Button>
+              <Button style="margin-left:10px" :loading="expLoading" @click="onClickExport">导出</Button>
             </FormItem>
           </Col>
         </Row>
@@ -103,11 +97,13 @@
 </template>
 <script>
 import serverApi from '../../axios'
+import { downloadFile } from '../../utlis/tools.js'
 export default {
   name: 'ParkingReport',
   data () {
     return {
       tableLoading: false,
+      expLoading: false,
       tableData: [],
       counts: 0,
       pageSizeOpts: [10, 15, 25, 50, 70, 100, 200, 300],
@@ -117,7 +113,7 @@ export default {
         endtime: '',
         paymentstatus: '',
         paymentmethod: '',
-        payment: '',
+        payment: '0',
         usertype: '',
         carnum: '',
         delfield: '',
@@ -171,12 +167,16 @@ export default {
           title: '第三方应付'
         },
         {
-          key: 'total_cost',
+          key: 'cash',
           title: '第三方实付'
         },
         {
           key: 'paytype',
           title: '第三方支付方式'
+        },
+        {
+          key: 'preferentialprice',
+          title: '优惠金额'
         },
         {
           key: 'payment_status',
@@ -198,13 +198,18 @@ export default {
           key: 'pay_finish_time',
           title: '支付完成时间'
         },
-      ]
+      ],
+      payMethodsArr: [],
+      payTypeArr: [],
+      titlesArr: [],
+      userTypeArr: [],
+      orginColunsArr: [],
+      selectTitleArr: []
     }
   },
   created () {
     this.getTableData()
-    // this.getFiltersParams()
-    this.getMenusList()
+    this.getFiltersParams()
   },
   computed: {
     dateOptions () {
@@ -233,9 +238,6 @@ export default {
         }
       )
     },
-    onClickFetchData () {
-      this.getTableData()
-    },
     changePage (e) {
       this.searchObj.page = e
       this.getTableData()
@@ -251,13 +253,20 @@ export default {
       this.searchObj.endtime = e
     },
     getFiltersParams () {
-      let d = {
-        city: '',
-        type: 'usertype'
-      }
-      serverApi('/parking/typelist', d,
+      serverApi('/parking/typelist', null,
         response => {
-          console.log(response)
+          if (response.data.code === 0) {
+            this.payMethodsArr = response.data.data.paymentmethodinfo
+            this.payTypeArr = response.data.data.paymenttype
+            this.titlesArr = response.data.data.allfield
+            this.orginColunsArr = response.data.data.allfield
+            this.userTypeArr = response.data.data.usertype
+            this.titlesArr.forEach(item => {
+              this.selectTitleArr.push(item.key)
+            })
+          } else {
+            this.$Message.warning(response.data.msg)
+          }
         },
         error => {
           console.log(error)
@@ -265,14 +274,44 @@ export default {
         }
       )
     },
-    getMenusList () {
-      let d = {}
-      serverApi('/parking/seemenu', d,
+    onClickFetchData () {
+      let tableColumns = this.orginColunsArr.filter(item => {
+        return this.selectTitleArr.includes(item.key)
+      })
+      this.columns = tableColumns
+      let arr = this.orginColunsArr.filter(item => {
+        return !this.selectTitleArr.includes(item.key)
+      })
+      let str = []
+      arr.forEach(item => {
+        str.push(item.key)
+      })
+      this.searchObj.delfield = str.join(',')
+      this.getTableData()
+    },
+    onSelectMethods (e) {
+      if (e.length === 2) {
+        this.searchObj.paymentmethod = e[0]
+        this.searchObj.payment = e[1]
+      }
+    },
+    onClickExport () {
+      this.expLoading = true
+      let d = Object.assign({}, this.searchObj)
+      d.exports = 'out'
+      serverApi('/parking/online', d,
         response => {
           console.log(response)
+          if (response.data.code === 0){
+            downloadFile(response.data.data)
+          }else{
+            this.$Message.warning(response.data.msg)
+          }
+          this.expLoading = false
         },
         error => {
           console.log(error)
+          this.expLoading = false
           this.$Message.error(error.toString())
         }
       )
