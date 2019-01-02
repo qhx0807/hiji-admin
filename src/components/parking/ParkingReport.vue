@@ -13,7 +13,7 @@
           </Col>
           <Col span="4">
             <FormItem label="车牌号">
-              <Input v-model="searchObj.carnum" placeholder="车牌号搜索..."></Input>
+              <Input v-model="searchObj.carnum" clearable placeholder="车牌号搜索..."></Input>
             </FormItem>
           </Col>
           <Col span="4">
@@ -25,7 +25,7 @@
             </FormItem>
           </Col>
           <Col span="4">
-            <FormItem label="收费方式">
+            <FormItem label="支付方式">
               <Cascader :data="payMethodsArr" @on-change="onSelectMethods" clearable></Cascader>
               <!-- <Select v-model="searchObj.paymentmethod">
                 <Option v-for="(item, index) in payMethodsArr" :key="index" :value="item">{{item}}</Option>
@@ -33,7 +33,7 @@
             </FormItem>
           </Col>
           <Col span="4">
-            <FormItem label="支付方式">
+            <FormItem label="支付类型">
               <Select v-model="searchObj.payment" clearable>
                 <Option v-for="(item, index) in payTypeArr" :key="index" :value="item">{{item}}</Option>
               </Select>
@@ -43,7 +43,7 @@
         <Row :gutter="10">
           <Col span="4">
             <FormItem label="用户类型" style="margin-bottom:0">
-              <Select v-model="searchObj.usertype">
+              <Select v-model="searchObj.usertype" clearable>
                 <Option v-for="(item, index) in userTypeArr" :key="index" :value="index">{{item}}</Option>
               </Select>
             </FormItem>
@@ -67,13 +67,13 @@
             </FormItem>
           </Col>
           <Col span="4">
-            <FormItem label="开始时间" style="margin-bottom:0">
-              <DatePicker @on-change="selectStartDateTime" type="datetime"></DatePicker>
+            <FormItem label="进场时间" style="margin-bottom:0" >
+              <DatePicker @on-change="selectStartDateTime" clearable type="datetime"></DatePicker>
             </FormItem>
           </Col>
           <Col span="4">
-            <FormItem label="结束时间" style="margin-bottom:0">
-              <DatePicker @on-change="selectEndDateTime" type="datetime"></DatePicker>
+            <FormItem label="出场时间" style="margin-bottom:0">
+              <DatePicker @on-change="selectEndDateTime" clearable type="datetime"></DatePicker>
             </FormItem>
           </Col>
           <Col span="6">
@@ -121,84 +121,7 @@ export default {
         page: 1,
         pagesize: 15,
       },
-      columns: [
-        {
-          key: 'car_num',
-          title: '车牌号'
-        },
-        {
-          key: 'user_type',
-          title: '用户类型'
-        },
-        {
-          key: 'building_name',
-          title: '建筑'
-        },
-        {
-          key: 'park_name',
-          title: '停车场'
-        },
-        {
-          key: 'total_cost',
-          title: '停车总费用'
-        },
-        {
-          key: 'cash_cost',
-          title: '现金支付费用'
-        },
-        {
-          key: 'online_cost',
-          title: '网上支付费用'
-        },
-        {
-          key: 'coupon',
-          title: '优惠券'
-        },
-        {
-          key: 'payment_type',
-          title: '支付类型'
-        },
-        {
-          key: 'payment_method',
-          title: '支付方式'
-        },
-        {
-          key: 'total',
-          title: '第三方应付'
-        },
-        {
-          key: 'cash',
-          title: '第三方实付'
-        },
-        {
-          key: 'paytype',
-          title: '第三方支付方式'
-        },
-        {
-          key: 'preferentialprice',
-          title: '优惠金额'
-        },
-        {
-          key: 'payment_status',
-          title: '支付状态'
-        },
-        {
-          key: 'in_time',
-          title: '进场时间'
-        },
-        {
-          key: 'out_time',
-          title: '出场时间'
-        },
-        // {
-        //   key: 'parking_record_id',
-        //   title: '支付id'
-        // },
-        {
-          key: 'pay_finish_time',
-          title: '支付完成时间'
-        },
-      ],
+      columns: [],
       payMethodsArr: [],
       payTypeArr: [],
       titlesArr: [],
@@ -259,10 +182,13 @@ export default {
             this.payMethodsArr = response.data.data.paymentmethodinfo
             this.payTypeArr = response.data.data.paymenttype
             this.titlesArr = response.data.data.allfield
+            this.columns = response.data.data.allfield.filter(item => item.key != 'parking_record_id')
             this.orginColunsArr = response.data.data.allfield
             this.userTypeArr = response.data.data.usertype
             this.titlesArr.forEach(item => {
-              this.selectTitleArr.push(item.key)
+              if (item.key != 'parking_record_id') {
+                this.selectTitleArr.push(item.key)
+              }
             })
           } else {
             this.$Message.warning(response.data.msg)
@@ -293,6 +219,9 @@ export default {
       if (e.length === 2) {
         this.searchObj.paymentmethod = e[0]
         this.searchObj.payment = e[1]
+      } else {
+        this.searchObj.paymentmethod = e[0]
+        this.searchObj.payment = '0'
       }
     },
     onClickExport () {
@@ -301,7 +230,6 @@ export default {
       d.exports = 'out'
       serverApi('/parking/online', d,
         response => {
-          console.log(response)
           if (response.data.code === 0){
             downloadFile(response.data.data)
           }else{

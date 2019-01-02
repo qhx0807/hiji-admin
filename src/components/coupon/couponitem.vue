@@ -17,13 +17,13 @@
       <div style="clear:both"></div>
     </Card>
 
-    <Modal v-model="recModal" width="950":styles="{top: '20px'}">
+    <Modal v-model="recModal" width="1000":styles="{top: '20px'}">
       <p slot="header" style="text-align:center">
         <span>卡券领取记录</span>
       </p>
       <div>
         <div class="body">
-          <Table :columns="recordsColumns" :data="recordsData"></Table>
+          <Table :loading="recLoading" :columns="recordsColumns" size="small" :data="recordsData"></Table>
         </div>
         <div style="float: right; padding-top:12px">
           <Page :total="recordsCount" show-total :current="recpage" @on-change="recCchangePage"></Page>
@@ -31,8 +31,8 @@
         <div style="clear:both"></div>
       </div>
       <div slot="footer">
-        <Button    @click="recModal = false">取消</Button>
-        <Button type="primary" @click="recModal = false">确定</Button>
+        <!-- <Button @click="recModal = false">取消</Button>
+        <Button type="primary" @click="recModal = false">确定</Button> -->
       </div>
     </Modal>
   </div>
@@ -47,6 +47,7 @@ export default {
       tableData: [],
       addModal: false,
       modal_loading: false,
+      recLoading: false,
       recModal: false,
       count: 0,
       page: 1,
@@ -222,22 +223,22 @@ export default {
         {
           title: '#',
           key: 'id',
-          width: 100
+          width: 80
         },
         {
           title: '用户',
           key: 'username',
-          width: 100
+          width: 90
         },
-        {
-          title: '发放时间',
-          key: 'cardsendtime',
-          width: 150
-        },
+        // {
+        //   title: '发放时间',
+        //   key: 'cardsendtime',
+        //   width: 140
+        // },
         {
           title: '领取时间',
           key: 'carddrawtime',
-          width: 150
+          width: 140
         },
         {
           title: '卡券名称',
@@ -247,29 +248,83 @@ export default {
         {
           title: '卡券类型',
           key: 'typename',
-          minWidth: 120
+          width: 90
         },
-        // {
-        //   title: '卡券编码',
-        //   key: 'cardItemcode',
-        //   minWidth: 120
-        // },
+        {
+          title: '领取来源',
+          key: 'orderno',
+          minWidth: 100
+        },
         {
           title: '使用时间',
           key: 'usetime',
-          width: 150
+          width: 100
         },
         {
           title: '状态',
           key: 'carditemstate',
-          width: 120
+          width: 80,
+          render: (h, params) => {
+            let text = ''
+            let color = ''
+            switch (params.row.carditemstate) {
+              case 0:
+                text = '未使用'
+                color = 'success'
+                break
+              case 1:
+                text = '已使用'
+                color = 'warning'
+                break
+              case 2:
+                text = '过期'
+                color = 'warning'
+                break
+              case 3:
+                text = '无效'
+                color = 'error'
+                break
+              default:
+                color = 'primary'
+                text = params.row.carditemstate
+            }
+            return h('Tag', {
+              props: {
+                color: color,
+                type: 'border'
+              }
+            }, text)
+          }
+        },
+        {
+          title: '操作',
+          key: 'id',
+          width: 80,
+          align: 'center',
+          fixed: 'right',
+          render: (h, params) => {
+            if (params.row.carditemstate == 0 || params.row.carditemstate == 1) {
+              return h('Button', {
+                props: {
+                  type: 'info',
+                  size: 'small'
+                },
+                on: {
+                  click: () => {
+                    this.onCLickRemoveCardItem(params.row.id)
+                  }
+                }
+              }, '作废卡券')
+            }
+          }
         }
       ],
       recordsData: [],
       recordsCount: 0,
       recpage: 1,
       recId: null,
-      bool: true
+      bool: true,
+      voidResain: ''
     }
   },
   created () {
@@ -349,7 +404,9 @@ export default {
     },
     seeRecords (row) {
       this.recId = row.id
+      this.voidResain = ''
       this.getRecData(this.recId)
+      this.recordsData = []
       this.recModal = true
     },
     getRecData (id) {
@@ -357,9 +414,10 @@ export default {
         page: this.recpage,
         id: id
       }
+      this.recLoading = true
       serverApi('/card/cardall', d,
         response => {
-          console.log(response)
+          this.recLoading = false
           if (response.data.code === 0){
             this.recordsData = response.data.data.result
             this.recordsCount = response.data.data.counts
@@ -368,7 +426,8 @@ export default {
           }
         },
         error => {
-          console.log(error)
+          this.recLoading = false
+          this.$Message.error(error.toString())
         }
       )
     },
@@ -399,6 +458,78 @@ export default {
           this.$Message.error('修改失败！')
         }
       )
+    },
+    onCLickRemoveCardItem (id) {
+      this.voidResain = ''
+      this.$Modal.confirm({
+        title: '作废此卡券？',
+        render: (h) => {
+          return h('Input', {
+            props: {
+              type: 'textarea',
+              value: this.voidResain,
+              autofocus: true,
+              placeholder: '请输入作废原因...',
+              rows: 5
+            },
+            on: {
+              input: (val) => {
+                this.voidResain = val
+              }
+            }
+          })
+        },
+        loading: true,
+        onOk: () => {
+          let d = {
+            id: id,
+            dsexplain: this.voidResain,
+            confirm: 'cancel'
+          }
+          serverApi('/card/cancelcard', d,
+            response => {
+              if (response.data.code === 0) {
+                this.$Message.success(response.data.msg)
+                this.getRecData(this.recId)
+              } else if (response.data.code === 2) {
+                this.$Modal.confirm({
+                  title: '提示',
+                  content: response.data.msg,
+                  onOk: () => {
+                    let sd = {
+                      id: id,
+                      dsexplain: this.voidResain,
+                      confirm: 'cancel',
+                      drawmoneyid: response.data.data.drawmoneyid
+                    }
+                    serverApi('/card/cancelcard', sd,
+                      res => {
+                        if (res.data.code === 0) {
+                          this.$Message.success(resizeBy.data.msg)
+                          this.getRecData(this.recId)
+                        } else {
+                          this.$Message.warning(res.data.msg)
+                        }
+                      },
+                      err => {
+                        this.$Message.error(err.toString())
+                      }
+                    )
+                  }
+                })
+              } else {
+                this.$Message.warning(response.data.msg)
+              }
+              this.voidResain = ''
+              this.$Modal.remove()
+            },
+            error => {
+              this.$Modal.remove()
+              this.$Message.error(error.toString())
+            }
+          )
+        }
+      })
     }
   }
 }
