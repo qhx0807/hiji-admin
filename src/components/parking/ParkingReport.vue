@@ -6,8 +6,7 @@
           <Col span="4">
             <FormItem label="建筑名称">
               <Select v-model="searchObj.city">
-                <Option value="3">宣汉停车场</Option>
-                <Option value="4">邻水停车场</Option>
+                <Option v-for="(item, index) in buildingsList" :key="index" :value="item.value">{{item.label}}</Option>
               </Select>
             </FormItem>
           </Col>
@@ -86,7 +85,25 @@
       </Form>
     </Card>
     <Card :bordered="false">
-      <Table border :data="tableData" highlight-row :loading="tableLoading" size="small" height="550" :columns="columns"></Table>
+      <Table border :data="tableData" highlight-row :loading="tableLoading" size="small" height="550" :columns="columns">
+        <div slot="footer" class="parking-table-footer">
+          <span>合计：</span>
+          <span class="item">网上支付：{{collectData.cash}}</span>
+          <Divider type="vertical" />
+          <span class="item">现金支付费用：{{collectData.cash_cost}}</span>
+          <!-- <Divider type="vertical" />
+          <span class="item">优惠券：{{collectData.coupon}}</span> -->
+          <Divider type="vertical" />
+          <!-- <span class="item">网上支付费用：{{collectData.online_cost}}</span>
+          <Divider type="vertical" /> -->
+          <span class="item">优惠金额总和：{{collectData.preferentialprice}} （核销优惠券：{{collectData.coupon}}）</span>
+          <Divider type="vertical" />
+          <!-- <span class="item">第三方应付：{{collectData.total}}</span>
+          <Divider type="vertical" /> -->
+          <span class="item">停车总费用：{{collectData.total_cost}}</span>
+          <Divider type="vertical" />
+        </div>
+      </Table>
       <div style="margin: 10px;overflow: hidden">
         <div style="float: right;">
           <Page :total="counts" show-sizer show-total :page-size-opts="pageSizeOpts" :page-size="15" :current.sync="searchObj.page" @on-page-size-change="onChangeSize" @on-change="changePage"></Page>
@@ -108,7 +125,7 @@ export default {
       counts: 0,
       pageSizeOpts: [10, 15, 25, 50, 70, 100, 200, 300],
       searchObj: {
-        city: '3',
+        city: '',
         startime: '',
         endtime: '',
         paymentstatus: '',
@@ -127,12 +144,13 @@ export default {
       titlesArr: [],
       userTypeArr: [],
       orginColunsArr: [],
-      selectTitleArr: []
+      selectTitleArr: [],
+      collectData: {},
+      buildingsList: []
     }
   },
   created () {
-    this.getTableData()
-    this.getFiltersParams()
+    this.getBUildings()
   },
   computed: {
     dateOptions () {
@@ -145,14 +163,39 @@ export default {
       this.tableLoading = true
       serverApi('/parking/online', d,
         response => {
-          console.log(response)
+          // console.log(response)
           if (response.data.code === 0){
-            this.tableData = response.data.data.result
-            this.counts =  response.data.data.counts
+            this.tableData = response.data.data.detail.result
+            this.counts =  response.data.data.detail.counts
+            this.collectData = response.data.data.collect
           }else{
             this.$Message.warning(response.data.msg)
           }
           this.tableLoading = false
+        },
+        error => {
+          console.log(error)
+          this.tableLoading = false
+          this.$Message.error(error.toString())
+        }
+      )
+    },
+    getBUildings () {
+      serverApi('/parking/buildinglist', null,
+        response => {
+          console.log(response)
+          if (response.data.code === 0){
+            this.buildingsList = response.data.data
+            if (this.buildingsList.length > 0) {
+              this.searchObj.city = this.buildingsList[0].value
+              this.getTableData()
+              this.getFiltersParams()
+            } else {
+              this.$Message.warning('无权限访问！')
+            }
+          }else{
+            this.$Message.warning(response.data.msg)
+          }
         },
         error => {
           console.log(error)
@@ -248,5 +291,10 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-
+.parking-table-footer{
+  padding: 0 8px;
+  .item{
+    margin-left: 12px;
+  }
+}
 </style>
