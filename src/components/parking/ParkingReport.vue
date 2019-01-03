@@ -55,7 +55,7 @@
                   <div style="margin:10px">
                     <CheckboxGroup v-model="selectTitleArr">
                       <Row>
-                        <Col span="12" v-for="(item, index) in titlesArr">
+                        <Col span="12" v-for="(item, index) in titlesArr" :key="index">
                           <Checkbox  :key="index" :label="item.key">{{item.title}}</Checkbox>
                         </Col>
                       </Row>
