@@ -89,6 +89,8 @@ const AcuLog = r => require.ensure([], () => r(require('@/components/auction/Acu
 const UserScore = r => require.ensure([], () => r(require('@/components/merchant/UserScore.vue')))
 const ParkingReport = r => require.ensure([], () => r(require('@/components/parking/ParkingReport.vue')))
 const InvitePrize = r => require.ensure([], () => r(require('@/components/activity/InvitePrize.vue')))
+const InvitePrizeEdit = r => require.ensure([], () => r(require('@/components/activity/InvitePrizeEdit.vue')))
+const InvitePrizeAdd = r => require.ensure([], () => r(require('@/components/activity/InvitePrizeAdd.vue')))
 
 const routes = [
   {
@@ -523,6 +525,16 @@ const routes = [
         path: 'InvitePrize',
         component: InvitePrize,
         name: 'InvitePrize'
+      },
+      {
+        path: 'InvitePrizeAdd',
+        component: InvitePrizeAdd,
+        name: 'InvitePrizeAdd'
+      },
+      {
+        path: 'InvitePrize/:id',
+        component: InvitePrizeEdit,
+        name: 'InvitePrizeEdit'
       }
     ]
   },
