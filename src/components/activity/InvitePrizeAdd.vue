@@ -39,8 +39,8 @@
             </FormItem>
             <FormItem label="奖励对象" prop="invitetype">
               <Select v-model="addData.invitetype" placeholder="请选择">
-                <Option :value="1">发起人</Option>
-                <Option :value="0">受邀请人</Option>
+                <Option :value="1">邀请人</Option>
+                <Option :value="2">被邀请人</Option>
               </Select>
             </FormItem>
             <FormItem label="邮费" v-show="addData.isshipping == 1" prop="shippingamout">
@@ -166,11 +166,8 @@ export default {
         let obj = {
           "type": this.addData.type,
           "num":  this.addData.num,
-          "cardmainid": this.addData.prizeid,
-          "goodsid": this.addData.prizeid,
-          "goodstypeid": this.addData.prizeid,
-          "gameid": this.addData.prizeid,
-          "intergral": this.addData.prizeid,
+          "prizeid": this.addData.prizeid,
+          "goodstypeid": this.addData.goodstypeid,
           "isshipping": this.addData.isshipping,
           "shippingamout": this.addData.shippingamout,
           "invitenum": this.addData.invitenum,

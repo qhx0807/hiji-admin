@@ -1,14 +1,15 @@
 <template>
   <div class="box">
     <Card :bordered="false">
-      <div>
-
         <Input v-model="searchKey" placeholder="搜索关键字..." style="width: 200px"></Input>
+        <Select v-model="merchantcode" filterable clearable @on-clear="onCLickClear" style="width:220px" placeholder="选择商户">
+          <Option value="">全部商户</Option>
+          <Option v-for="(item, index) in merchantData" :key="index" :value="item.merchantcode">{{item.name}}</Option>
+        </Select>
         <Button type="primary" style="margin-left:8px" icon="ios-search" @click="onClickSearch">搜索</Button>
         <router-link :to="{name: 'ShopGoodsAdd'}">
           <Button type="primary" style="margin-left:8px" icon="md-add">新增</Button>
         </router-link>
-      </div>
     </Card>
     <Card :bordered="false" style="margin-top:12px;">
       <div class="body">
@@ -194,10 +195,13 @@ export default {
       activtyData: [],
       editData: {},
       order: 'id desc',
+      merchantData: [],
+      merchantcode: ''
     }
   },
   created () {
     this.getTableData()
+    this.getMerchant()
   },
   methods: {
     onClickSearch () {
@@ -209,7 +213,8 @@ export default {
         pagesize: this.pageSize,
         page: this.page,
         like: this.searchKey,
-        order: this.order
+        order: this.order,
+        merchantcode: this.merchantcode
       }
       this.$store.commit('pageLoading', true)
       serverApi('/goods/index', d,
@@ -229,6 +234,31 @@ export default {
           this.$Message.error('连接失败！')
         }
       )
+    },
+    getMerchant () {
+      let d = {
+        pagesize: 999999,
+        page: 1
+      }
+      this.$store.commit('pageLoading', true)
+      serverApi('/Merchant/index', d,
+        response => {
+          // console.log(response)
+          if (response.data.code === 0){
+            this.merchantData = response.data.data.result
+          }else{
+            this.$Message.warning(response.data.msg)
+          }
+          this.$store.commit('pageLoading', false)
+        },
+        error => {
+          console.log(error)
+          this.$store.commit('pageLoading', false)
+        }
+      )
+    },
+    onCLickClear () {
+      this.merchantcode = ''
     },
     changePage (e) {
       this.page = e

@@ -24,6 +24,14 @@
               <Input v-model="editData.endtime"></Input>
             </FormItem>
           </Col>
+          <Col span="8">
+            <FormItem label="状态" prop="ison">
+              <Select v-model="editData.ison" placeholder="请选择">
+                <Option :value="1">启用</Option>
+                <Option :value="0">关闭</Option>
+              </Select>
+            </FormItem>
+          </Col>
         </Row>
       </Form>
       <div slot="footer">
@@ -120,18 +128,20 @@ export default {
         // },
         {
           title: '开始时间',
-          key: 'starttime'
+          key: 'starttime',
+          minWidth: 140
         },
         {
           title: '结束时间',
-          key: 'endtime'
+          key: 'endtime',
+          minWidth: 140
         },
         {
           title: '状态',
           key: 'ison',
           width: 110,
           render: (h, params) => {
-            let text = params.row.ison == 1 ? '开启' : '关闭'
+            let text = params.row.ison == 1 ? '启用' : '关闭'
             let color = params.row.ison == 1 ? 'success' : 'warning'
             return h('Tag', {
               props: {
@@ -170,7 +180,7 @@ export default {
               }
             }, '删除')
 
-            return h('div', [edit, del])
+            return h('div', [edit])
           }
         },
       ],
@@ -231,7 +241,30 @@ export default {
       )
     },
     remove (row) {
-
+      this.$Modal.confirm({
+        title: '提示',
+        content: '确定删除此条规则？',
+        loading: true,
+        onOk: () => {
+          row.isuse = 0
+          row.invitemsg = JSON.stringify(row.invitemsg)
+          serverApi('/activity/inviteadd', row,
+            response => {
+              if (response.data.code === 0) {
+                this.$Message.success(response.data.msg)
+                this.getTableData()
+              } else {
+                this.$Message.warning(response.data.msg)
+              }
+              this.$Modal.remove()
+            },
+            error => {
+              this.$Modal.remove()
+              this.$Message.error(error.toString())
+            }
+          )
+        }
+      })
     },
     onClickAdd () {
       this.$router.push({name: 'InvitePrizeAdd'})
