@@ -8,15 +8,26 @@
       <Table :loading="tableLoading" :columns="columns" height="560" :data="tableData"></Table>
     </Card>
 
-    <Modal v-model="addModal" width="850">
+    <Modal v-model="editModal" width="850">
       <p slot="header" style="text-align:center">
-        <span>添加规则</span>
+        <span>编辑规则</span>
       </p>
-      <Form :model="addData" ref="form" :rules="rules" :label-width="100">
-
+      <Form :model="editData" ref="form" :rules="rules" :label-width="70">
+        <Row>
+          <Col span="8">
+            <FormItem label="开始时间" prop="starttime">
+              <Input v-model="editData.starttime"></Input>
+            </FormItem>
+          </Col>
+          <Col span="8">
+            <FormItem label="结束时间" prop="endtime">
+              <Input v-model="editData.endtime"></Input>
+            </FormItem>
+          </Col>
+        </Row>
       </Form>
       <div slot="footer">
-        <Button @click="addModal = false">取消</Button>
+        <Button @click="editModal = false">取消</Button>
         <Button type="primary" :loading="modal_loading" @click="onSaveEdit">保存</Button>
       </div>
     </Modal>
@@ -30,21 +41,24 @@ export default {
     return {
       searchKey: '',
       tableLoading: false,
-      addModal: false,
+      editModal: false,
       modal_loading: false,
       tableData: [],
       columns: [
         {
           title: '#',
-          key: 'id'
+          key: 'id',
+          width: 80,
         },
         {
           title: '城市',
-          key: 'cityid'
+          key: 'cityid',
+          width: 100,
         },
         {
           title: '邀请人数',
           key: 'invitemsg',
+          width: 100,
           render: (h, params) => {
             return h('span', {}, params.row.invitemsg.invitenum)
           }
@@ -52,6 +66,7 @@ export default {
         {
           title: '奖励对象',
           key: 'invitemsg',
+          width: 100,
           render: (h, params) => {
             return h('span', {}, params.row.invitemsg.invitetype)
           }
@@ -59,6 +74,7 @@ export default {
         {
           title: '奖励类型',
           key: 'invitemsg',
+          width: 80,
           render: (h, params) => {
             return h('span', {}, params.row.invitemsg.type)
           }
@@ -66,6 +82,7 @@ export default {
         {
           title: '奖励内容',
           key: 'invitemsg',
+          width: 80,
           render: (h, params) => {
             return h('span', {}, params.row.invitemsg.prizeid)
           }
@@ -73,6 +90,7 @@ export default {
         {
           title: '奖励数量',
           key: 'invitemsg',
+          width: 80,
           render: (h, params) => {
             return h('span', {}, params.row.invitemsg.num)
           }
@@ -80,6 +98,7 @@ export default {
         {
           title: '收取运费',
           key: 'invitemsg',
+          width: 100,
           render: (h, params) => {
             return h('span', {}, params.row.invitemsg.isshipping)
           }
@@ -87,20 +106,21 @@ export default {
         {
           title: '运费',
           key: 'invitemsg',
+          width: 100,
           render: (h, params) => {
             return h('span', {}, params.row.invitemsg.shippingamout)
           }
         },
+        // {
+        //   title: '开始时间',
+        //   key: 'starttime',
+        //   render: (h, params) => {
+        //     return h('span', {}, params.row.invitemsg.shippingamout)
+        //   }
+        // },
         {
           title: '开始时间',
-          key: 'starttime',
-          render: (h, params) => {
-            return h('span', {}, params.row.invitemsg.shippingamout)
-          }
-        },
-        {
-          title: '结束时间',
-          key: 'endtime'
+          key: 'starttime'
         },
         {
           title: '结束时间',
@@ -154,7 +174,7 @@ export default {
           }
         },
       ],
-      addData: {},
+      editData: {},
       rules: []
     }
   },
@@ -188,7 +208,27 @@ export default {
       )
     },
     onClickEdit (row) {
-      this.$router.push({name: 'InvitePrizeEdit', params: {id: row.id}})
+      this.$Message.loading({
+        content: 'Loading...',
+        duration: 0
+      })
+      serverApi('/activity/inviteinfo', {id: row.id},
+        response => {
+          this.$Message.destroy()
+          if (response.data.code === 0) {
+            console.log(response)
+            this.editData = response.data.data
+            this.editModal = true
+          } else {
+            this.$Message.warning(response.data.msg)
+          }
+        },
+        error => {
+          this.$Message.destroy()
+          this.$Message.error(error.toString())
+          console.log(error)
+        }
+      )
     },
     remove (row) {
 

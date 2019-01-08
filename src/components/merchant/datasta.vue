@@ -209,7 +209,7 @@ export default {
   },
   created () {
     this.getStaData()
-    this.getDailyCount()
+    // this.getDailyCount()
   },
   computed: {
     userName () {
@@ -244,7 +244,7 @@ export default {
         },
         error => {
           console.log(error)
-          this.$Message.error('连接失败！')
+          this.$Message.error(error.toString())
         }
       )
     },
@@ -254,7 +254,7 @@ export default {
         this.selectDateRange = e.join('至')
         console.log(e)
         this.getStaData(e[0], e[1])
-        this.getDailyCount(e[0], e[1])
+        // this.getDailyCount(e[0], e[1])
       }
     },
     clickOpenDate () {
@@ -263,7 +263,7 @@ export default {
     handleClear () {
       if (this.selectDateRange) {
         this.getStaData()
-        this.getDailyCount()
+        // this.getDailyCount()
       }
       this.selectDateRange = ''
       this.openDate = false
@@ -287,7 +287,7 @@ export default {
         },
         error => {
           console.log(error)
-          this.$Message.error('连接失败！')
+          this.$Message.error(error.toString())
         }
       )
     }

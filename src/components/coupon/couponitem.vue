@@ -403,6 +403,7 @@ export default {
       this.form.endusetime = e[1]
     },
     seeRecords (row) {
+      this.recpage = 1
       this.recId = row.id
       this.voidResain = ''
       this.getRecData(this.recId)

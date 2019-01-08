@@ -35,7 +35,7 @@
           </Col>
           <Col span="6">
             <FormItem label="开始时间" prop="starttime">
-              <DatePicker type="datetime" placeholder="选择时间" style="width:100%" v-model="addData.starttime"></DatePicker>
+              <DatePicker type="datetime" placeholder="选择时间" style="width:100%" @on-change="onSelectStartTime"></DatePicker>
             </FormItem>
             <FormItem label="奖励对象" prop="invitetype">
               <Select v-model="addData.invitetype" placeholder="请选择">
@@ -50,7 +50,7 @@
           </Col>
           <Col span="6">
             <FormItem label="结束时间" prop="endtime">
-              <DatePicker type="datetime" placeholder="选择时间" style="width:100%" v-model="addData.endtime"></DatePicker>
+              <DatePicker type="datetime" placeholder="选择时间" style="width:100%" @on-change="onSelectEndTime"></DatePicker>
             </FormItem>
             <FormItem label="奖励类型" prop="invitetype">
               <Select v-model="addData.type" placeholder="请选择">
@@ -81,7 +81,7 @@
         <Row>
           <Col span="24">
             <FormItem >
-              <Button type="primary" @click="onSubmit">提交</Button>
+              <Button type="primary" :loading="loading" @click="onSubmit">提交</Button>
               <Button style="margin-left: 12px" @click="$router.back()">返回</Button>
             </FormItem>
           </Col>
@@ -107,22 +107,23 @@ export default {
         type: null,
         num: 1,
         isshipping: 0,
-        shippingamout: '',
+        shippingamout: '0',
         invitenum: 1,
         invitetype: 1,
       },
       areaData: [],
       rules: {
         cityid: { required: true, type: 'number', message: '不能为空', trigger: 'blur' },
-        starttime: { required: true, type: 'date', message: '不能为空', trigger: 'blur' },
-        endtime: { required: true, type: 'date', message: '不能为空', trigger: 'blur' },
+        starttime: { required: true, message: '不能为空', trigger: 'blur' },
+        endtime: { required: true, message: '不能为空', trigger: 'blur' },
         ison: { required: true, type: 'number', message: '不能为空', trigger: 'blur' },
         prizeid: { required: true, message: '不能为空', trigger: 'blur' },
         type: { required: true, type: 'number', message: '不能为空', trigger: 'blur' },
         invitetype: { required: true, type: 'number', message: '不能为空', trigger: 'blur' },
         num: { required: true, type: 'number', message: '不能为空', trigger: 'blur' },
         invitenum: { required: true, type: 'number', message: '不能为空', trigger: 'blur' },
-      }
+      },
+      loading: false
     }
   },
   created () {
@@ -151,22 +152,47 @@ export default {
         }
       )
     },
+    onSelectStartTime (e) {
+      this.addData.starttime = e
+    },
+    onSelectEndTime (e) {
+      this.addData.endtime = e
+    },
     onSubmit () {
+      console.log(this.addData)
       this.$refs.form.validate(val => {
         if (!val) return false
+        this.loading = true
         let obj = {
-          "type": "4",
-          "num": "1",
-          "cardmainid": "1",
-          "goodsid": "",
-          "goodstypeid": "",
-          "gameid": "",
-          "intergral": "",
-          "isshipping": "1",
-          "shippingamout": "2",
-          "invitenum": "1",
-          "invitetype": "1"
+          "type": this.addData.type,
+          "num":  this.addData.num,
+          "cardmainid": this.addData.prizeid,
+          "goodsid": this.addData.prizeid,
+          "goodstypeid": this.addData.prizeid,
+          "gameid": this.addData.prizeid,
+          "intergral": this.addData.prizeid,
+          "isshipping": this.addData.isshipping,
+          "shippingamout": this.addData.shippingamout,
+          "invitenum": this.addData.invitenum,
+          "invitetype": this.addData.invitetype
         }
+        this.addData.invitemsg = JSON.stringify(obj)
+        serverApi('/activity/inviteadd', this.addData,
+          response => {
+            if (response.data.code === 0) {
+              this.$Message.success(response.data.msg)
+              this.$router.push({name: 'InvitePrize'})
+            } else {
+              this.$Message.warning(response.data.msg)
+            }
+            this.loading = false
+          },
+          error => {
+            this.loading = false
+            this.$Message.error(error.toString())
+            console.log(error)
+          }
+        )
       })
     }
   }
