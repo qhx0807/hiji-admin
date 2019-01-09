@@ -297,6 +297,13 @@ export default {
           }
         },
         {
+          title: '作废原因',
+          key: 'dsexplain',
+          maxWidth: 100,
+          ellipsis: true,
+          tooltip: true
+        },
+        {
           title: '操作',
           key: 'id',
           width: 80,
