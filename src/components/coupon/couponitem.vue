@@ -256,6 +256,13 @@ export default {
           minWidth: 100
         },
         {
+          title: '备注',
+          key: 'cardmsg',
+          width: 100,
+          ellipsis: true,
+          tooltip: true
+        },
+        {
           title: '使用时间',
           key: 'usetime',
           width: 100
@@ -299,7 +306,7 @@ export default {
         {
           title: '作废原因',
           key: 'dsexplain',
-          maxWidth: 100,
+          width: 100,
           ellipsis: true,
           tooltip: true
         },
@@ -410,12 +417,13 @@ export default {
       this.form.endusetime = e[1]
     },
     seeRecords (row) {
-      this.recpage = 1
-      this.recId = row.id
-      this.voidResain = ''
-      this.getRecData(this.recId)
-      this.recordsData = []
-      this.recModal = true
+      // this.recpage = 1
+      // this.recId = row.id
+      // this.voidResain = ''
+      // this.getRecData(this.recId)
+      // this.recordsData = []
+      // this.recModal = true
+      this.$router.push({name: 'CouponDrawRecord', params: {id: row.id}})
     },
     getRecData (id) {
       let d = {
