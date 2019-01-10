@@ -57,6 +57,12 @@
                 <a>上传图片</a>
               </Upload>
             </FormItem>
+            <FormItem label="打款方式" prop="billtype">
+              <Select v-model="merchantData.billtype">
+                <Option value="0">线上打款</Option>
+                <Option value="1">线下打款</Option>
+              </Select>
+            </FormItem>
           </Col>
           <Col span="12">
             <FormItem label="商户简介" prop="info">
@@ -122,7 +128,8 @@ export default {
         merchantcode: '',
         businesstime: '',
         photos: null,
-        categroryid: ''
+        categroryid: '',
+        billtype: '0'
       },
       rules: {
         name: [{ required: true, message: '不能为空', trigger: 'blur' }],

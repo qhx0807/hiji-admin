@@ -85,7 +85,7 @@ export default {
         {
           title: '分类',
           key: 'sortname',
-          width: 120
+          width: 100
         },
         {
           title: '编码',
@@ -115,6 +115,15 @@ export default {
             } else {
               return h('div', {}, '未绑定')
             }
+          }
+        },
+        {
+          title: '打款方式',
+          key: 'billtype',
+          width: 90,
+          render: (h, params) => {
+            let text = params.row.billtype == 0 ? '线上打款' : '线下打款'
+            return h('span', {}, text)
           }
         },
         {

@@ -180,7 +180,7 @@ export default {
               }
             }, '删除')
 
-            return h('div', [edit])
+            return h('div', [del])
           }
         },
       ],

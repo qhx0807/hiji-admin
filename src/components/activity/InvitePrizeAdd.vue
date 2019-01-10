@@ -26,11 +26,11 @@
             <FormItem label="邀请人数" prop="invitenum">
               <InputNumber :max="999999" :min="1" style="width:100%" v-model="addData.invitenum"></InputNumber>
             </FormItem>
-            <FormItem label="是否需邮费" v-show="addData.type==2" prop="isshipping">
-               <i-switch v-model="addData.isshipping" :true-value="1" :false-value="0" size="large">
-                  <span slot="open">是</span>
-                  <span slot="close">否</span>
-                </i-switch>
+            <FormItem label="奖励名称" prop="goodsname">
+              <Input v-model="addData.goodsname"></Input>
+            </FormItem>
+            <FormItem label="缩略图" prop="goodsname">
+              <FileUpload @uploadSucc="uploadimg"></FileUpload>
             </FormItem>
           </Col>
           <Col span="6">
@@ -42,6 +42,12 @@
                 <Option :value="1">邀请人</Option>
                 <Option :value="2">被邀请人</Option>
               </Select>
+            </FormItem>
+            <FormItem label="是否需邮费" v-show="addData.type==2" prop="isshipping">
+               <i-switch v-model="addData.isshipping" :true-value="1" :false-value="0" size="large">
+                  <span slot="open">是</span>
+                  <span slot="close">否</span>
+                </i-switch>
             </FormItem>
             <FormItem label="邮费" v-show="addData.isshipping == 1" prop="shippingamout">
               <!-- <Input v-model="addData.shippingamout"></Input> -->
@@ -60,7 +66,6 @@
             <FormItem label="属性id" v-show="addData.type==1 || addData.type==2" prop="goodstypeid">
               <Input v-model="addData.goodstypeid"></Input>
             </FormItem>
-
           </Col>
           <Col span="6">
             <FormItem label="状态" prop="ison">
@@ -92,8 +97,12 @@
 </template>
 <script>
 import serverApi from '../../axios'
+import FileUpload from '../common/UploadFile'
 export default {
   name: 'InvitePrizeAdd',
+  components: {
+    FileUpload
+  },
   data () {
     return {
       addData: {
@@ -110,6 +119,8 @@ export default {
         shippingamout: '0',
         invitenum: 1,
         invitetype: 1,
+        goodsname: '',
+        goodsimg: '',
       },
       areaData: [],
       rules: {
@@ -122,6 +133,8 @@ export default {
         invitetype: { required: true, type: 'number', message: '不能为空', trigger: 'blur' },
         num: { required: true, type: 'number', message: '不能为空', trigger: 'blur' },
         invitenum: { required: true, type: 'number', message: '不能为空', trigger: 'blur' },
+        goodsname: { required: true, message: '不能为空', trigger: 'blur' },
+        goodsimg: { required: true, message: '不能为空', trigger: 'blur' },
       },
       loading: false
     }
@@ -158,6 +171,9 @@ export default {
     onSelectEndTime (e) {
       this.addData.endtime = e
     },
+    uploadimg (e) {
+      this.addData.goodsimg = e
+    },
     onSubmit () {
       console.log(this.addData)
       this.$refs.form.validate(val => {
@@ -171,7 +187,9 @@ export default {
           "isshipping": this.addData.isshipping,
           "shippingamout": this.addData.shippingamout,
           "invitenum": this.addData.invitenum,
-          "invitetype": this.addData.invitetype
+          "invitetype": this.addData.invitetype,
+          "goodsname": this.addData.goodsname,
+          "goodsimg": this.addData.goodsimg,
         }
         this.addData.invitemsg = JSON.stringify(obj)
         serverApi('/activity/inviteadd', this.addData,
