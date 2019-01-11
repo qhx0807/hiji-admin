@@ -18,10 +18,16 @@
             <FormItem label="开始时间" prop="starttime">
               <Input v-model="editData.starttime"></Input>
             </FormItem>
+            <FormItem label="奖励名称" >
+              <Input v-model="editData.goodsname"></Input>
+            </FormItem>
           </Col>
           <Col span="8">
             <FormItem label="结束时间" prop="endtime">
               <Input v-model="editData.endtime"></Input>
+            </FormItem>
+            <FormItem label="邀请人数" >
+              <Input v-model="editData.invitenum"></Input>
             </FormItem>
           </Col>
           <Col span="8">
@@ -30,6 +36,9 @@
                 <Option :value="1">启用</Option>
                 <Option :value="0">关闭</Option>
               </Select>
+            </FormItem>
+            <FormItem label="奖品ID" >
+              <Input v-model="editData.prizeid"></Input>
             </FormItem>
           </Col>
         </Row>
@@ -65,59 +74,62 @@ export default {
         },
         {
           title: '邀请人数',
-          key: 'invitemsg',
-          width: 100,
-          render: (h, params) => {
-            return h('span', {}, params.row.invitemsg.invitenum)
-          }
+          key: 'invitenum',
+          width: 80
         },
         {
           title: '奖励对象',
-          key: 'invitemsg',
+          key: 'invitetype',
           width: 100,
           render: (h, params) => {
-            return h('span', {}, params.row.invitemsg.invitetype)
+            return h('span', {}, params.row.invitetype == 1 ? '邀请人' : '被邀请人' )
           }
         },
         {
           title: '奖励类型',
-          key: 'invitemsg',
-          width: 80,
-          render: (h, params) => {
-            return h('span', {}, params.row.invitemsg.type)
-          }
+          key: 'type',
+          width: 80
         },
         {
           title: '奖励内容',
-          key: 'invitemsg',
-          width: 80,
+          key: 'goodsname',
+          minWidth: 200,
           render: (h, params) => {
-            return h('span', {}, params.row.invitemsg.prizeid)
+            let img = h('img', {
+              attrs: {
+                src: params.row.goodsimg
+              },
+              style: {
+                maxWidth: '45px',
+                maxHeight: '50px'
+              },
+              directives: [
+                {
+                  name: 'imgview'
+                }
+              ]
+            })
+            let text = h('span', null, params.row.goodsname)
+            return h('div', [img, text])
           }
         },
         {
           title: '奖励数量',
-          key: 'invitemsg',
+          key: 'num',
           width: 80,
-          render: (h, params) => {
-            return h('span', {}, params.row.invitemsg.num)
-          }
         },
         {
           title: '收取运费',
-          key: 'invitemsg',
+          key: 'isshipping',
           width: 100,
           render: (h, params) => {
-            return h('span', {}, params.row.invitemsg.isshipping)
+            return h('span', {}, params.row.isshipping == 0 ? '不收取' : '收取')
           }
         },
         {
           title: '运费',
-          key: 'invitemsg',
+          key: 'shippingamout',
           width: 100,
-          render: (h, params) => {
-            return h('span', {}, params.row.invitemsg.shippingamout)
-          }
         },
         // {
         //   title: '开始时间',
@@ -180,7 +192,7 @@ export default {
               }
             }, '删除')
 
-            return h('div', [del])
+            return h('div', [edit, del])
           }
         },
       ],
@@ -268,6 +280,36 @@ export default {
     },
     onClickAdd () {
       this.$router.push({name: 'InvitePrizeAdd'})
+    },
+    onSaveEdit () {
+      let d = {
+        "type": this.editData.type,
+        "num":  this.editData.num,
+        "prizeid": this.editData.prizeid,
+        "goodstypeid": this.editData.goodstypeid,
+        "isshipping": this.editData.isshipping,
+        "shippingamout": this.editData.shippingamout,
+        "invitenum": this.editData.invitenum,
+        "invitetype": this.editData.invitetype,
+        "goodsname": this.editData.goodsname,
+        "goodsimg": this.editData.goodsimg,
+      }
+      this.editData.invitemsg = JSON.stringify(d)
+      serverApi('/activity/inviteadd', this.editData,
+        response => {
+          if (response.data.code === 0) {
+            this.$Message.success(response.data.msg)
+            this.getTableData()
+          } else {
+            this.$Message.warning(response.data.msg)
+          }
+          this.editModal = false
+        },
+        error => {
+          this.editModal = false
+          this.$Message.error(error.toString())
+        }
+      )
     }
   }
 }
