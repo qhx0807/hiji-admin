@@ -29,7 +29,8 @@
             <FormItem label="奖励名称" prop="goodsname">
               <Input v-model="addData.goodsname"></Input>
             </FormItem>
-            <FormItem label="缩略图" prop="goodsname">
+            <FormItem label="缩略图">
+              <Input v-model="addData.goodsimg"></Input>
               <FileUpload @uploadSucc="uploadimg"></FileUpload>
             </FormItem>
           </Col>
@@ -78,8 +79,33 @@
               <InputNumber :max="999999" :min="1" style="width:100%" v-model="addData.num"></InputNumber>
             </FormItem>
             <FormItem label="奖品ID" prop="prizeid">
-              <Input v-model="addData.prizeid"></Input>
+              <Input v-model="addData.prizeid">
+                <Button v-show="addData.type==2 || addData.type==4 || addData.type==1 || addData.type==3" type="primary" @click="onClickSearchGoods" slot="append" icon="ios-search"></Button>
+              </Input>
             </FormItem>
+            <Alert v-show="ingoods.id">
+              <div class="ingoodsbox">
+                <p>{{ingoods.goodsname}}</p>
+                <ul>
+                  <li>
+                    <span>售价：</span>
+                    <span>{{ingoods.goodsprice}}</span>
+                  </li>
+                  <li>
+                    <span>平台优惠：</span>
+                    <span>{{ingoods.coupon}}</span>
+                  </li>
+                  <li>
+                    <span>商户优惠：</span>
+                    <span>{{ingoods.merchantcoupon}}</span>
+                  </li>
+                  <li>
+                    <span>运费：</span>
+                    <span>{{ingoods.freight}}</span>
+                  </li>
+                </ul>
+              </div>
+            </Alert>
           </Col>
         </Row>
         <Divider dashed/>
@@ -123,6 +149,7 @@ export default {
         goodsimg: '',
       },
       areaData: [],
+      ingoods: {},
       rules: {
         cityid: { required: true, type: 'number', message: '不能为空', trigger: 'blur' },
         starttime: { required: true, message: '不能为空', trigger: 'blur' },
@@ -209,6 +236,29 @@ export default {
           }
         )
       })
+    },
+    onClickSearchGoods () {
+      if (!this.addData.prizeid) {
+        this.$Message.warning('请输入商品ID')
+        return false
+      }
+      serverApi('/activity/goodsinfo', { id: this.addData.prizeid, type: this.addData.type },
+        response => {
+          if (response.data.code === 0) {
+            this.ingoods = response.data.data
+            this.addData.goodsimg = response.data.data.goodsimg
+            console.log(response)
+          } else {
+            this.ingoods = {}
+            this.$Message.warning(response.data.msg)
+          }
+        },
+        error => {
+          this.ingoods = {}
+          this.$Message.error(error.toString())
+          console.log(error)
+        }
+      )
     }
   }
 }
@@ -241,5 +291,25 @@ export default {
 .btn-box{
   text-align: center;
   padding-bottom: 30px;
+}
+.ingoodsbox{
+  p{
+    font-size: 14px;
+    margin-bottom: 6px;
+    white-space: normal;
+    word-break: break-all;
+  }
+  ul{
+    list-style: none;
+    padding: 0;
+    li{
+      span{
+        &:first-child{
+          display: inline-block;
+          width: 100px;
+        }
+      }
+    }
+  }
 }
 </style>

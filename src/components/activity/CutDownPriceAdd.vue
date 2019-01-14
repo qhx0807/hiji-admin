@@ -49,6 +49,7 @@
             <FormItem label="砍价目标(元)"  prop="lowerprice">
               <InputNumber :max="999999999" style="width:100%" :min="0" v-model="addData.lowerprice"></InputNumber>
             </FormItem>
+
           </Col>
           <Col span="6">
             <FormItem label="活动状态" prop="ison">
@@ -66,6 +67,11 @@
           <Col span="12">
             <FormItem label="活动描述"  prop="rule">
               <Input type="textarea" :rows="1" v-model="addData.rule"></Input>
+            </FormItem>
+          </Col>
+          <Col span="6">
+            <FormItem label="库存"  prop="goodsnum">
+              <InputNumber :max="999999999" style="width:100%" :min="0" v-model="addData.goodsnum"></InputNumber>
             </FormItem>
           </Col>
         </Row>
@@ -196,7 +202,8 @@ export default {
         shareimg: '',
         sharetitle: '',
         sharedesc: '',
-        cutrules: ''
+        cutrules: '',
+        goodsnum: 1
       },
       ruleValidate: {
         starttime: [

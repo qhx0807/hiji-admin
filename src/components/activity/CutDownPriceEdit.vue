@@ -116,6 +116,11 @@
               <UploadFile @uploadSucc="uploadHeadImg"></UploadFile>
             </FormItem>
           </Col>
+          <Col span="6">
+            <FormItem label="库存"  prop="goodsnum">
+              <InputNumber :max="999999999" style="width:100%" :min="0" v-model="editData.goodsnum"></InputNumber>
+            </FormItem>
+          </Col>
         </Row>
         <Divider />
         <Row>

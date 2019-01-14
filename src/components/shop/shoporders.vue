@@ -69,7 +69,7 @@
             <FormItem style="margin-bottom:0">
               <Button type="primary" style="margin-left:8px" icon="ios-search" @click="onClickSearch">搜索</Button>
               <Button type="default" :loading="expLoading" style="margin-left:8px" icon="md-arrow-down" @click="onClickExport">导出订单</Button>
-              <Button type="default" style="margin-left:8px" icon="ios-apps" @click="onClickXxdk">设置为线下打款</Button>
+              <Button v-show="isAdmin" type="default" style="margin-left:8px" icon="ios-apps" @click="onClickXxdk">设置为线下打款</Button>
             </FormItem>
           </Col>
         </Row>
@@ -176,7 +176,7 @@ export default {
         {
           title: '线下打款',
           key: 'billtype',
-          width: 120,
+          width: 80,
           render: (h, params) => {
             let text = params.row.billtype == 0 ? '否' : '是'
             let color = params.row.billtype == 0 ? 'orange' : 'cyan'
@@ -188,10 +188,11 @@ export default {
             }, text)
           }
         },
-        // {
-        //   title: '订单编号',
-        //   key: 'orderno',
-        // },
+        {
+          title: '打款说明',
+          key: 'billmsg',
+          minWidth: 100,
+        },
         {
           title: '详情',
           key: 'orderno',
@@ -226,6 +227,14 @@ export default {
       return this.$store.state.orderTypeConst
     },
     merchantShow () {
+      let role = sessionStorage.roleid
+      if (role == 6 || role == 10) {
+        return false
+      } else {
+        return true
+      }
+    },
+    isAdmin () {
       let role = sessionStorage.roleid
       if (role == 6 || role == 10) {
         return false
@@ -390,6 +399,10 @@ export default {
             response => {
               if (response.data.code === 0) {
                 this.$Message.success(response.data.msg)
+                this.$Notice.info({
+                  title: '操作完成',
+                  desc: `设置打款方式操作完成，成功：${response.data.data.countsuccess}, 失败： ${response.data.data.countdefault}`,
+                })
               } else {
                 this.$Message.warning(response.data.msg)
               }
