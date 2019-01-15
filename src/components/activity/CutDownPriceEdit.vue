@@ -121,6 +121,14 @@
               <InputNumber :max="999999999" style="width:100%" :min="0" v-model="editData.goodsnum"></InputNumber>
             </FormItem>
           </Col>
+          <Col span="6">
+            <FormItem label="即时购买">
+              <i-switch size="large" :true-value="1" :false-value="0" v-model="editData.buynow">
+                <span slot="open">开启</span>
+                <span slot="close">关闭</span>
+              </i-switch>
+            </FormItem>
+          </Col>
         </Row>
         <Divider />
         <Row>
