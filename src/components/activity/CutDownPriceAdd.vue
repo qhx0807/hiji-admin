@@ -119,9 +119,22 @@
               <Input v-model="addData.headimg"></Input>
             </FormItem>
           </Col> -->
-           <Col span="6">
+           <!-- <Col span="6">
             <FormItem label="活动页图" >
               <UploadFile @uploadSucc="uploadHeadImg"></UploadFile>
+            </FormItem>
+          </Col> -->
+          <Col span="6">
+            <FormItem label="砍价方式" >
+              <Select v-model="addData.type">
+                <Option :value="1">随机砍价</Option>
+                <Option :value="2">固定砍价</Option>
+              </Select>
+            </FormItem>
+          </Col>
+          <Col span="6">
+            <FormItem label="每人可砍价次数"  prop="helpnum">
+              <InputNumber :max="999999999" :min="0" v-model="addData.helpnum"></InputNumber>
             </FormItem>
           </Col>
         </Row>
@@ -129,13 +142,14 @@
         <Row>
           <Col span="12">
             <FormItem label="砍价规则">
-              <Alert>设置砍价规则，砍价次数对应砍价金额占单次最高砍价金额的百分百。</Alert>
+              <Alert>设置砍价规则，砍价次数对应单次砍价金额。</Alert>
               <Row>
                 <Col span="24" style="margin-bottom:8px" v-for="(item, index) in cutRules" :key="index">
                   <span>砍价次数 前</span>
                   <InputNumber size="small" :max="999999999" style="width:60px" :min="1" v-model="item.rank"></InputNumber>次
                   &nbsp;
-                  <span>最高可砍价金额(元)</span>
+                  <span><span v-show="addData.type == 1">最高</span>
+                    可砍价金额(元)</span>
                   <InputNumber  size="small" :max="999999999" style="width:100px" :min="1" v-model="item.maxprice"></InputNumber>
                   <Button  size="small" style="margin-left:6px" type="dashed" icon="ios-close" @click="onCLickDelRules(index)">删除</Button>
                 </Col>
@@ -212,7 +226,8 @@ export default {
         sharedesc: '',
         cutrules: '',
         goodsnum: 1,
-        buynow: 1
+        buynow: 1,
+        helpnum: 0
       },
       ruleValidate: {
         starttime: [
