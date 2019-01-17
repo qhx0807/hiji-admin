@@ -164,7 +164,7 @@ export default {
           align: 'center',
           fixed: 'right',
           render: (h, params) => {
-            if (params.row.carditemstate == 0 || params.row.carditemstate == 1) {
+            if (params.row.carditemstate == 0 || params.row.carditemstate == 1 || params.row.carditemstate == 2) {
               return h('Button', {
                 props: {
                   type: 'info',
