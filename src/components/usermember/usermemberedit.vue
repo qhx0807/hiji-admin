@@ -140,20 +140,21 @@ export default {
     },
     onClickSave () {
       this.modal_loading = true
-        serverApi('/member/editmember', this.userData,
-          response => {
-            this.modal_loading = false
-            if (response.data.code === 0) {
-              this.$router.push({name: 'UserMember'})
-            }
-            this.$Message.info(response.data.msg)
-          },
-          error => {
-            console.log(error)
-            this.modal_loading = false
-            this.$Message.error("连接失败！")
+      this.userData.newpassword = this.userPass
+      serverApi('/member/editmember', this.userData,
+        response => {
+          this.modal_loading = false
+          if (response.data.code === 0) {
+            this.$router.push({name: 'UserMember'})
           }
-        )
+          this.$Message.info(response.data.msg)
+        },
+        error => {
+          console.log(error)
+          this.modal_loading = false
+          this.$Message.error("连接失败！")
+        }
+      )
     }
   }
 }
