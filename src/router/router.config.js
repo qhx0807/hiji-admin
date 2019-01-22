@@ -94,6 +94,7 @@ const InvitePrizeAdd = r => require.ensure([], () => r(require('@/components/act
 const CouponDrawRecord = r => require.ensure([], () => r(require('@/components/coupon/CouponDrawRecord.vue')))
 const ServiceType = r => require.ensure([], () => r(require('@/components/service/ServiceType.vue')))
 const ServiceMsg = r => require.ensure([], () => r(require('@/components/service/ServiceMsg.vue')))
+const SysMsg = r => require.ensure([], () => r(require('@/components/service/SysMsg.vue')))
 
 const routes = [
   {
@@ -553,6 +554,11 @@ const routes = [
         path: 'ServiceMsg',
         component: ServiceMsg,
         name: 'ServiceMsg'
+      },
+      {
+        path: 'SysMsg',
+        component: SysMsg,
+        name: 'SysMsg'
       }
     ]
   },
