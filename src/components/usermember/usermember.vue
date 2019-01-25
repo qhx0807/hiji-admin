@@ -1,13 +1,33 @@
 <template>
   <div class="box">
     <Card :bordered="false">
-      <div class="head">
-        <Input v-model="searchKey" placeholder="搜索关键字..." style="width: 200px"></Input>
-        <Button type="primary" style="margin-left:8px" icon="ios-search" @click="onClickSearch">搜索</Button>
-        <router-link :to="{name: 'UserMemberAdd'}">
-          <Button type="primary" style="margin-left:8px" icon="md-add">新增</Button>
-        </router-link>
-      </div>
+      <Form :label-width="60">
+        <Row :gutter="12">
+          <Col span="5">
+            <FormItem label="关键字">
+              <Input v-model="searchKey" placeholder="搜索关键字..." ></Input>
+            </FormItem>
+          </Col>
+          <Col span="5">
+            <FormItem label="开始时间">
+              <DatePicker type="datetime" style="width:100%" @on-change="onSelectTime1" placeholder="选择时间"></DatePicker>
+            </FormItem>
+          </Col>
+          <Col span="5">
+            <FormItem label="结束时间">
+              <DatePicker type="datetime" style="width:100%" @on-change="onSelectTime2" placeholder="选择时间"></DatePicker>
+            </FormItem>
+          </Col>
+          <Col span="8">
+            <FormItem>
+              <Button type="primary" style="margin-left:8px" icon="ios-search" @click="onClickSearch">搜索</Button>
+              <router-link :to="{name: 'UserMemberAdd'}">
+                <Button type="primary" style="margin-left:8px" icon="md-add">新增</Button>
+              </router-link>
+            </FormItem>
+          </Col>
+        </Row>
+      </Form>
     </Card>
     <Card :bordered="false" style="margin-top:10px">
       <Table size="default" :columns="columns" :data="tableData"></Table>
@@ -148,7 +168,9 @@ export default {
             return h('div', [edit, more, del])
           }
         },
-      ]
+      ],
+      starttime: '',
+      endtime: ''
     }
   },
   created () {
@@ -158,6 +180,12 @@ export default {
     onClickSearch () {
       this.page = 1
       this.getTableData()
+    },
+    onSelectTime1 (e) {
+      this.starttime = e
+    },
+    onSelectTime2 (e) {
+      this.endtime = e
     },
     changePage (e) {
       this.page = e
@@ -172,7 +200,8 @@ export default {
         pagesize: this.pageSize,
         page: this.page,
         like: this.searchKey,
-        userid: sessionStorage.userid
+        starttime: this.starttime,
+        endtime: this.endtime
       }
       this.$store.commit('pageLoading', true)
       serverApi('/member/showmember', d,
