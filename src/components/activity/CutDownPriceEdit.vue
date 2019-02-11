@@ -28,7 +28,7 @@
           </Col>
           <Col span="6">
             <FormItem label="商品属性" prop="goodstypeid">
-              <Input v-model="editData.goodstypename" disabled></Input>
+              <Input v-model="editData.goodstypeid" disabled></Input>
             </FormItem>
             <FormItem label="结束时间">
               <Input v-model="editData.endtime"></Input>

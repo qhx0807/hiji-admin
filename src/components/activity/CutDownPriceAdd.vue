@@ -312,13 +312,14 @@ export default {
         this.addData.goodsid = e
         this.addData.goodsprice = row.goodsprice
         this.addData.shareimg = row.goodsimg
-
+        this.addData.goodsname = row.goodsname
       } else {
         this.getGoodsList('')
         this.goodsTypeData = []
         this.addData.goodsid = ''
         this.addData.goodsprice = ''
         this.addData.goodstypeid = ''
+        this.addData.goodsname = ''
       }
     },
     onSelectGoodsType (e) {

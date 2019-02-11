@@ -102,12 +102,24 @@ export default {
         userid: row.userid,
         createtime: row.createtime
       }
-      this.msgList.push(obj)
-      this.msgList = this.msgList.concat(row.msgtotal)
       this.userAvatar = row.avatar ? row.avatar : 'http://cdn.cqyyy.cn/hiji.jpg'
-      setTimeout(() => {
-        this.spinShow = false
-      }, 200)
+      // setTimeout(() => {
+      //   this.spinShow = false
+      // }, 200)
+      serverApi('/service/servicemsglistinfo', {id: row.id},
+        response => {
+          this.spinShow = false
+          if (response.data.code === 0) {
+            this.msgList = [obj, ...response.data.data]
+          } else {
+            this.$Message.warning(response.data.msg)
+          }
+        },
+        error => {
+          this.spinShow = false
+          this.$Message.error(error.toString())
+        }
+      )
     },
     onClickSend () {
       if (!this.msgcontent) {
