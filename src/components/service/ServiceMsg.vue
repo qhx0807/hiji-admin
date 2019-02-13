@@ -16,14 +16,15 @@
           <div class="msg-content">
             <Spin size="large" fix v-if="spinShow"></Spin>
             <ul>
-              <li class="left" v-for="(item, index) in msgList" v-if="item.userid>0" :key="index">
-                <Avatar icon="ios-person" shape="circle" :src="userAvatar" size="large" />
+              <li :class="[item.userid > 0 ? 'left' : 'right']" v-for="(item, index) in msgList"  :key="index">
+                <Avatar icon="ios-person" shape="circle" :src="userAvatar" v-if="item.userid>0" size="large" />
+                <Avatar class="avatar" icon="ios-person" shape="circle" v-if="item.userid==-1" src="http://cdn.cqyyy.cn/hiji.jpg" size="large" />
                 <span class="msg">{{item.content}}</span>
               </li>
-              <li class="right" v-for="(item, index) in msgList" v-if="item.userid == -1" :key="index">
+              <!-- <li class="right" v-for="(item, index) in msgList" v-if="item.userid == -1" :key="index">
                 <Avatar class="avatar" icon="ios-person" shape="circle" src="http://cdn.cqyyy.cn/hiji.jpg" size="large" />
                 <span class="msg">{{item.content}}</span>
-              </li>
+              </li> -->
             </ul>
           </div>
           <div class="input-box">
