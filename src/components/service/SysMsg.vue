@@ -202,7 +202,7 @@ export default {
         status: ''
       }
       this.$store.commit('pageLoading', true)
-      serverApi('/service/sysmsglist', d,
+      serverApi('/systemmsg/msglist', d,
         response => {
           console.log(response)
           if (response.data.code === 0){

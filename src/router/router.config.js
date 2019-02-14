@@ -95,6 +95,8 @@ const CouponDrawRecord = r => require.ensure([], () => r(require('@/components/c
 const ServiceType = r => require.ensure([], () => r(require('@/components/service/ServiceType.vue')))
 const ServiceMsg = r => require.ensure([], () => r(require('@/components/service/ServiceMsg.vue')))
 const SysMsg = r => require.ensure([], () => r(require('@/components/service/SysMsg.vue')))
+const SysType = r => require.ensure([], () => r(require('@/components/service/SysType.vue')))
+const PayDiscount = r => require.ensure([], () => r(require('@/components/activity/PayDiscount.vue')))
 
 const routes = [
   {
@@ -559,6 +561,16 @@ const routes = [
         path: 'SysMsg',
         component: SysMsg,
         name: 'SysMsg'
+      },
+      {
+        path: 'SysType',
+        component: SysType,
+        name: 'SysType'
+      },
+      {
+        path: 'PayDiscount',
+        component: PayDiscount,
+        name: 'PayDiscount'
       }
     ]
   },
