@@ -19,7 +19,7 @@
         <Row>
           <Col span="6">
             <FormItem label="选择城市" prop="cityid">
-              <Select v-model="addData.cityid" placeholder="请选择">
+              <Select v-model="addData.cityid" multiple placeholder="请选择">
                 <Option v-for="(item, index) in areaData" :key="index" :value="item.id">{{item.areaname}}</Option>
               </Select>
             </FormItem>
@@ -151,7 +151,7 @@ export default {
       areaData: [],
       ingoods: {},
       rules: {
-        cityid: { required: true, type: 'number', message: '不能为空', trigger: 'blur' },
+        // cityid: { required: true, type: 'number', message: '不能为空', trigger: 'blur' },
         starttime: { required: true, message: '不能为空', trigger: 'blur' },
         endtime: { required: true, message: '不能为空', trigger: 'blur' },
         ison: { required: true, type: 'number', message: '不能为空', trigger: 'blur' },
@@ -206,6 +206,7 @@ export default {
       this.$refs.form.validate(val => {
         if (!val) return false
         this.loading = true
+        this.addData.cityid = this.addData.cityid.toString()
         let obj = {
           "type": this.addData.type,
           "num":  this.addData.num,

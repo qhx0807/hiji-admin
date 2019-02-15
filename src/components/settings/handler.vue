@@ -1,40 +1,30 @@
 <template>
   <div class="box">
-    <Card :bordered="false">
-      <Row>
-        <Col span="24" style="padding-bottom:12px">
-          <Input v-model="searchKey" placeholder="搜索关键字..." style="width: 200px"></Input>
-          <Button type="primary" icon="ios-search" @click="onClickSearch">搜索</Button>
-          <Button type="primary" icon="md-add" style="margin-left:8px" @click="onClickAdd">新增</Button>
-        </Col>
-      </Row>
-      <Row>
-        <Col span="24">
-          <div class="tableBox">
-            <Table size="small" :columns="columns" :data="tableData"></Table>
-            <zk-table
-              :data="table"
-              :columns="tbcol"
-            ></zk-table>
-          </div>
-        </Col>
-      </Row>
+    <Card :bordered="false" class="mb10">
+      <p>权限句柄配置</p>
+    </Card>
+    <Card :bordered="false" class="mb10">
+      <ul class="item">
+        <li @click="onClickItem(item)" v-for="(item, index) in tableData" :key="index">
+          <img src="http://cdn.cqyyy.cn/pic/power.png" alt="">
+          <p>{{item.typename}}</p>
+        </li>
+        <li class="add" @click="onClickAdd"><Icon type="ios-add" /></li>
+      </ul>
+      <div class="clear-fix"></div>
     </Card>
 
     <!-- add -->
     <Modal v-model="addModal" width="460">
       <p slot="header" style="text-align:center">
-        <span>新增部门</span>
+        <span>新增类型</span>
       </p>
-      <Form ref="form" :model="form" :rules="rules" label-with="80">
-        <FormItem prop="departmentname" label="部门名称">
-          <Input v-model="form.departmentname" placeholder="请输入部门名称"></Input>
+      <Form ref="form" :model="addData" :rules="rules" :label-width="80">
+        <FormItem prop="authdes" label="句柄名称">
+          <Input v-model="addData.authdes" placeholder="请输入名称"></Input>
         </FormItem>
-        <FormItem prop="departmentcode" label="部门编码">
-          <Input  v-model="form.departmentcode" placeholder="请输入部门编码"></Input>
-        </FormItem>
-        <FormItem prop="updid" label="父级部门">
-          <Input  v-model="form.updid" placeholder="请输入父级id"></Input>
+        <FormItem prop="authcode" label="句柄code">
+          <Input  v-model="addData.authcode" placeholder="请输入编码"></Input>
         </FormItem>
       </Form>
       <div slot="footer">
@@ -46,323 +36,117 @@
     <!-- edit -->
     <Modal v-model="editModal" width="460">
       <p slot="header" style="text-align:center">
-        <span>修改信息</span>
+        <span>编辑</span>
       </p>
-      <Form :model="editData" :rules="rules" label-with="80">
-        <FormItem prop="departmentname" label="部门名称">
-          <Input v-model="editData.departmentname" placeholder="请输入部门名称"></Input>
+      <Form ref="form" :model="editData" :rules="rules" :label-width="70">
+        <FormItem prop="authdes" label="句柄名称">
+          <Input v-model="editData.authdes" placeholder="请输入名称"></Input>
         </FormItem>
-        <FormItem prop="departmentcode" label="部门编码">
-          <Input  v-model="editData.departmentcode" placeholder="请输入部门编码"></Input>
-        </FormItem>
-        <FormItem prop="updid" label="父级部门">
-          <Input  v-model="editData.updid" placeholder="请输入父级id"></Input>
+        <FormItem prop="authcode" label="句柄code">
+          <Input  v-model="editData.authcode" placeholder="请输入编码"></Input>
         </FormItem>
       </Form>
       <div slot="footer">
         <Button    @click="editModal = false">取消</Button>
+        <Button type="error" :loading="modal_loading" @click="remove">删除</Button>
         <Button type="primary" :loading="modal_loading" @click="edit">保存</Button>
       </div>
     </Modal>
-
   </div>
 </template>
-
 <script>
 import serverApi from '../../axios'
 export default {
   name: 'Handler',
   data () {
     return {
-      loading: false,
       addModal: false,
       editModal: false,
       modal_loading: false,
-      searchKey: '',
-      form: {
-        departmentname: '',
-        departmentcode: '',
-        updid: '1'
+      loading: false,
+      tableData: [],
+      editData: {},
+      addData: {
+        authdes: '',
+        authcode: ''
       },
       rules: {
-        departmentname: [{ required: true, message: '名称不能为空', trigger: 'blur' }],
-        departmentcode: [{ required: true, message: '编码不能为空', trigger: 'blur' }],
-        updid: [{ required: true, message: '父级不能为空', trigger: 'blur' }]
+        authdes: [{ required: true, message: '名称不能为空', trigger: 'blur' }],
+        authcode: [{ required: true, message: '不能为空', trigger: 'blur' }]
       },
-      tableData: [],
-      columns: [
-        {
-          title: 'id编号',
-          key: 'id',
-          width: 120
-        },
-        {
-          title: '部门名称',
-          key: 'departmentname'
-        },
-        {
-          title: '部门编码',
-          key: 'departmentcode'
-        },
-        {
-          title: '父级',
-          key: 'updid'
-        },
-        {
-          title: '操作',
-          key: 'id',
-          render: (h, params) => {
-            return h('div', [
-              h('Button', {
-                props: {
-                  type: 'primary',
-                  size: 'small'
-                },
-                style: {
-                  marginRight: '5px'
-                },
-                on: {
-                  click: () => {
-                    this.editData = Object.assign({}, params.row)
-                    this.editModal = true
-                  }
-                }
-              }, '修改'),
-              h('Button', {
-                props: {
-                  type: 'warning',
-                  size: 'small'
-                },
-                on: {
-                  click: () => {
-                    this.remove(params.row.id)
-                  }
-                }
-              }, '删除')
-            ])
-          }
-        }
-      ],
-      editData: {},
-      table: [
-        {
-            name: 'Jack',
-            sex: 'male',
-            likes: ['football', 'basketball'],
-            score: 10,
-            children: [
-              {
-                name: 'Ashley',
-                sex: 'female',
-                likes: ['football', 'basketball'],
-                score: 20,
-                children: [
-                  {
-                    name: 'Ashley',
-                    sex: 'female',
-                    likes: ['football', 'basketball'],
-                    score: 20,
-                  },
-                  {
-                    name: 'Taki',
-                    sex: 'male',
-                    likes: ['football', 'basketball'],
-                    score: 10,
-                    children: [
-                      {
-                        name: 'Ashley',
-                        sex: 'female',
-                        likes: ['football', 'basketball'],
-                        score: 20,
-                      },
-                      {
-                        name: 'Taki',
-                        sex: 'male',
-                        likes: ['football', 'basketball'],
-                        score: 10,
-                        children: [
-                          {
-                            name: 'Ashley',
-                            sex: 'female',
-                            likes: ['football', 'basketball'],
-                            score: 20,
-                          },
-                          {
-                            name: 'Taki',
-                            sex: 'male',
-                            likes: ['football', 'basketball'],
-                            score: 10,
-                          },
-                        ],
-                      },
-                    ],
-                  },
-                ],
-              },
-              {
-                name: 'Taki',
-                sex: 'male',
-                likes: ['football', 'basketball'],
-                score: 10,
-              },
-            ],
-          },
-          {
-            name: 'Tom',
-            sex: 'male',
-            likes: ['football', 'basketball'],
-            score: 20,
-            children: [
-              {
-                name: 'Ashley',
-                sex: 'female',
-                likes: ['football', 'basketball'],
-                score: 20,
-                children: [
-                  {
-                    name: 'Ashley',
-                    sex: 'female',
-                    likes: ['football', 'basketball'],
-                    score: 20,
-                  },
-                  {
-                    name: 'Taki',
-                    sex: 'male',
-                    likes: ['football', 'basketball'],
-                    score: 10,
-                  },
-                ],
-              },
-              {
-                name: 'Taki',
-                sex: 'male',
-                likes: ['football', 'basketball'],
-                score: 10,
-                children: [
-                  {
-                    name: 'Ashley',
-                    sex: 'female',
-                    likes: ['football', 'basketball'],
-                    score: 20,
-                  },
-                  {
-                    name: 'Taki',
-                    sex: 'male',
-                    likes: ['football', 'basketball'],
-                    score: 10,
-                  },
-                ],
-              },
-            ],
-          },
-          {
-            name: 'Tom',
-            sex: 'male',
-            likes: ['football', 'basketball'],
-            score: 20,
-          },
-          {
-            name: 'Tom',
-            sex: 'male',
-            likes: ['football', 'basketball'],
-            score: 20,
-            children: [
-              {
-                name: 'Ashley',
-                sex: 'female',
-                likes: ['football', 'basketball'],
-                score: 20,
-              },
-              {
-                name: 'Taki',
-                sex: 'male',
-                likes: ['football', 'basketball'],
-                score: 10,
-              },
-            ],
-          }
-      ],
-      tbcol: [
-        {
-            label: 'name',
-            prop: 'name',
-            width: '400px',
-          },
-          {
-            label: 'sex',
-            prop: 'sex',
-            minWidth: '50px',
-          },
-          {
-            label: 'score',
-            prop: 'score',
-          },
-          {
-            label: 'likes',
-            prop: 'likes',
-            minWidth: '200px',
-            type: 'template',
-            template: 'likes',
-          }
-      ]
     }
   },
   created () {
     this.getTableData()
-
   },
   methods: {
     getTableData () {
-      this.$store.commit('pageLoading', true)
-      serverApi('/depar/index', '',
+      this.loading = true
+      serverApi('/systemmsg/servicelist', null,
         response => {
-          console.log(response)
-          if (response.data.code === 0){
-            this.tableData = response.data.data
-          }else{
+          if (response.data.code === 0) {
+            // console.log(response)
+            this.tableData = response.data.data.result
+          } else {
             this.$Message.warning(response.data.msg)
           }
-          this.$store.commit('pageLoading', false)
+          this.loading = false
         },
         error => {
-          console.log(error)
-          this.$store.commit('pageLoading', false)
+          this.loading = false
+          this.$Message.error(error.toString())
         }
       )
     },
     onClickAdd () {
+      this.addData = {
+        authdes: '',
+        authcode: ''
+      }
       this.addModal = true
     },
-    edit () {
-      delete this.editData._index
-      delete this.editData._rowKey
+    add () {
+      if (!this.addData.typename || !this.addData.urlimg) {
+        this.$Message.warning('请输入内容！')
+        return false
+      }
       this.modal_loading = true
-      serverApi('/depar/edit', this.editData,
+      serverApi('/systemmsg/serviceadd', this.addData,
         response => {
-          this.modal_loading = false
           if (response.data.code === 0) {
-            this.editModal = false
+            this.$Message.success(response.data.msg)
+            this.getTableData()
+          } else {
+            this.$Message.warning(response.data.msg)
           }
-          this.$Message.info(response.data.msg)
-          this.getTableData()
+          this.modal_loading = false
+          this.addModal = false
         },
         error => {
-          console.log(error)
           this.modal_loading = false
+          this.$Message.error(error.toString())
         }
       )
     },
-    remove (id) {
+    onClickItem (item) {
+      this.editData = Object.assign({}, item)
+      this.editModal = true
+    },
+    remove () {
       this.$Modal.confirm({
         title: '提示',
         content: '<p>确认删除此条信息？</p>',
         onOk: () => {
-          serverApi('/depar/del', {id: id},
+          serverApi('/systemmsg/servicede', {id: this.editData.id},
             response => {
               this.$Message.info(response.data.msg)
               if (response.data.code === 0) {
                 this.getTableData()
+                this.$Message.info(response.data.msg)
+              } else {
+                this.$Message.warning(response.data.msg)
               }
+              this.editModal = false
             },
             error => {
               console.log(error)
@@ -372,34 +156,70 @@ export default {
         }
       })
     },
-    add () {
-      this.$refs.form.validate(valid => {
-        if (valid) {
-          this.modal_loading = true
-          serverApi('/depar/add', this.form,
-            response => {
-              this.modal_loading = false
-              if (response.data.code === 0) {
-                this.addModal = false
-                this.getTableData()
-              }
-              this.$Message.info(response.data.msg)
-            },
-            error => {
-              console.log(error)
-              this.modal_loading = false
-            }
-          )
+    edit () {
+      if (!this.editData.typename || !this.editData.urlimg) {
+        this.$Message.warning('请输入内容！')
+        return false
+      }
+      this.modal_loading = true
+      serverApi('/systemmsg/serviceadd', this.editData,
+        response => {
+          if (response.data.code === 0) {
+            this.$Message.success(response.data.msg)
+            this.getTableData()
+          } else {
+            this.$Message.warning(response.data.msg)
+          }
+          this.modal_loading = false
+          this.editModal = false
+        },
+        error => {
+          this.modal_loading = false
+          this.$Message.error(error.toString())
         }
-      })
-    },
-    onClickSearch () {
-
+      )
     }
   }
 }
 </script>
-
 <style lang="less" scoped>
-
+.box{
+  .item{
+    list-style: none;
+    padding: 0;
+    li{
+      float: left;
+      width: 100px;
+      height: 130px;
+      display: block;
+      margin-right: 20px;
+      border: 1px solid #dcdee2;
+      border-radius: 6px;
+      overflow: hidden;
+      cursor: pointer;
+      text-align: center;
+      padding-top: 5px;
+      img{
+        // height: 80px;
+        width: 60px;
+      }
+      p{
+        margin-top: 8px;
+      }
+      &.add{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: 1px dashed #dcdee2;
+        i{
+          font-size: 50px;
+        }
+        &:hover{
+          color: #5cadff;
+          border: 1px dashed #5cadff;
+        }
+      }
+    }
+  }
+}
 </style>

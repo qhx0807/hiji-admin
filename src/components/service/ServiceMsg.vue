@@ -20,6 +20,7 @@
                 <Avatar icon="ios-person" shape="circle" :src="userAvatar" v-if="item.userid>0" size="large" />
                 <Avatar class="avatar" icon="ios-person" shape="circle" v-if="item.userid==-1" src="http://cdn.cqyyy.cn/hiji.jpg" size="large" />
                 <span class="msg">{{item.content}}</span>
+                <span class="date">{{item.createtime.replace('2019-', '')}}</span>
               </li>
               <!-- <li class="right" v-for="(item, index) in msgList" v-if="item.userid == -1" :key="index">
                 <Avatar class="avatar" icon="ios-person" shape="circle" src="http://cdn.cqyyy.cn/hiji.jpg" size="large" />
@@ -215,14 +216,25 @@ export default {
               word-break: break-all;
               position: relative;
             }
+            .date{
+              font-size: 10px;
+              color: #666;
+              display: block;
+              margin-top: 12px;
+              margin-left: 8px;
+            }
             &.right{
               justify-content: flex-end;
               .avatar{
-                order: 2;
+                order: 3;
               }
               .msg{
                 margin-right: 12px;
                 background-color: aquamarine;
+                order: 2;
+              }
+              .date{
+                order: 1;
               }
             }
           }
