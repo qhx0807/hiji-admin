@@ -1,13 +1,15 @@
 <template>
   <div class="box">
+    <Spin fix v-show="loading"></Spin>
     <Card :bordered="false" class="mb10">
       <p>权限句柄配置</p>
     </Card>
     <Card :bordered="false" class="mb10">
       <ul class="item">
-        <li @click="onClickItem(item)" v-for="(item, index) in tableData" :key="index">
-          <img src="http://cdn.cqyyy.cn/pic/power.png" alt="">
-          <p>{{item.typename}}</p>
+        <li v-for="(item, index) in tableData" @click.self="seeMenuAuth(item)" :key="index">
+          <Icon type="ios-settings" class="edit" @click.native="onClickItem(item)"/>
+          <img @click.self="seeMenuAuth(item)" src="http://cdn.cqyyy.cn/pic/power.png" alt="">
+          <p @click.self="seeMenuAuth(item)">{{item.authdes}}</p>
         </li>
         <li class="add" @click="onClickAdd"><Icon type="ios-add" /></li>
       </ul>
@@ -48,10 +50,25 @@
       </Form>
       <div slot="footer">
         <Button    @click="editModal = false">取消</Button>
-        <Button type="error" :loading="modal_loading" @click="remove">删除</Button>
+        <Button type="error" :loading="delLoading" @click="remove">删除</Button>
         <Button type="primary" :loading="modal_loading" @click="edit">保存</Button>
       </div>
     </Modal>
+
+    <!-- auth -->
+    <Modal v-model="authModal" width="460">
+      <p slot="header" style="text-align:center">
+        <span>{{authObj.authdes}}-权限句柄配置</span>
+      </p>
+      <div class="authbox">
+        <Tree ref="tree" :data="authList" show-checkbox multiple></Tree>
+      </div>
+      <div slot="footer">
+        <Button @click="authModal = false">取消</Button>
+        <Button type="primary" :loading="modal_loading" @click="editAuth">保存</Button>
+      </div>
+    </Modal>
+
   </div>
 </template>
 <script>
@@ -63,9 +80,13 @@ export default {
       addModal: false,
       editModal: false,
       modal_loading: false,
+      delLoading: false,
       loading: false,
+      authModal: false,
       tableData: [],
       editData: {},
+      authList: [],
+      authObj: {},
       addData: {
         authdes: '',
         authcode: ''
@@ -82,11 +103,11 @@ export default {
   methods: {
     getTableData () {
       this.loading = true
-      serverApi('/systemmsg/servicelist', null,
+      serverApi('/role/authlist', null,
         response => {
           if (response.data.code === 0) {
             // console.log(response)
-            this.tableData = response.data.data.result
+            this.tableData = response.data.data
           } else {
             this.$Message.warning(response.data.msg)
           }
@@ -106,12 +127,12 @@ export default {
       this.addModal = true
     },
     add () {
-      if (!this.addData.typename || !this.addData.urlimg) {
+      if (!this.addData.authdes || !this.addData.authcode) {
         this.$Message.warning('请输入内容！')
         return false
       }
       this.modal_loading = true
-      serverApi('/systemmsg/serviceadd', this.addData,
+      serverApi('/role/authedit', this.addData,
         response => {
           if (response.data.code === 0) {
             this.$Message.success(response.data.msg)
@@ -137,7 +158,7 @@ export default {
         title: '提示',
         content: '<p>确认删除此条信息？</p>',
         onOk: () => {
-          serverApi('/systemmsg/servicede', {id: this.editData.id},
+          serverApi('/role/authdel', {id: this.editData.id},
             response => {
               this.$Message.info(response.data.msg)
               if (response.data.code === 0) {
@@ -157,12 +178,12 @@ export default {
       })
     },
     edit () {
-      if (!this.editData.typename || !this.editData.urlimg) {
+      if (!this.editData.authdes || !this.editData.authcode) {
         this.$Message.warning('请输入内容！')
         return false
       }
       this.modal_loading = true
-      serverApi('/systemmsg/serviceadd', this.editData,
+      serverApi('/role/authedit', this.editData,
         response => {
           if (response.data.code === 0) {
             this.$Message.success(response.data.msg)
@@ -175,6 +196,57 @@ export default {
         },
         error => {
           this.modal_loading = false
+          this.$Message.error(error.toString())
+        }
+      )
+    },
+    seeMenuAuth (item) {
+      const msg = this.$Message.loading({
+        content: 'Loading...',
+        duration: 0
+      })
+      this.authObj = item
+      serverApi('/role/authoritylist', {authid: item.id},
+        response => {
+          this.$Message.destroy()
+          if (response.data.code === 0) {
+            this.authList = response.data.data
+            this.authModal = true
+          } else {
+            this.$Message.warning(response.data.msg)
+          }
+        },
+        error => {
+          this.$Message.destroy()
+          console.log(error)
+          this.$Message.error(error.toString())
+        }
+      )
+    },
+    editAuth () {
+      this.modal_loading = true
+      const auth = this.$refs.tree.getCheckedNodes()
+      let arr = []
+      auth.forEach(e => {
+        arr.push(e.id)
+      })
+      let d = {
+        menusid: arr.join(','),
+        authid: this.authObj.id
+      }
+      serverApi('/role/authorityedit', d,
+        response => {
+          this.modal_loading = false
+          if (response.data.code === 0) {
+            this.$Message.success(response.data.msg)
+            this.authModal = false
+          } else {
+            this.$Message.warning(response.data.msg)
+          }
+        },
+        error => {
+          this.modal_loading = false
+          console.log(error)
           this.$Message.error(error.toString())
         }
       )
@@ -198,7 +270,21 @@ export default {
       overflow: hidden;
       cursor: pointer;
       text-align: center;
-      padding-top: 5px;
+      padding: 5px;
+      position: relative;
+      margin-bottom: 18px;
+      &:hover{
+        .edit{
+          display: block;
+        }
+      }
+      .edit{
+        font-size: 20px;
+        position: absolute;
+        right: 3px;
+        display: none;
+        color: red;
+      }
       img{
         // height: 80px;
         width: 60px;
@@ -211,8 +297,10 @@ export default {
         justify-content: center;
         align-items: center;
         border: 1px dashed #dcdee2;
+        color: #dcdee2;
         i{
           font-size: 50px;
+          color: #dcdee2;
         }
         &:hover{
           color: #5cadff;
@@ -221,5 +309,10 @@ export default {
       }
     }
   }
+}
+.authbox{
+  height: 320px;
+  overflow: auto;
+  padding-left: 20px;
 }
 </style>

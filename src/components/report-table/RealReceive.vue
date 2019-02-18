@@ -3,6 +3,11 @@
     <Card :bordered="false">
       <Input v-model="searchKey" placeholder="搜索关键字..." style="width: 200px"></Input>
       <DatePicker :options="dateOptions" type="daterange" placeholder="日期范围" @on-change="onSelectDate" style="width: 220px"></DatePicker>
+      <RadioGroup v-model="grouping" type="button">
+        <Radio label="1">年</Radio>
+        <Radio label="2">月</Radio>
+        <Radio label="3">日</Radio>
+      </RadioGroup>
       <Button type="primary" :loading="tableLoading" style="margin-left:8px" icon="ios-search" @click="onClickSearch">搜索</Button>
       <Button type="primary" style="margin-left:8px" @click="goBackFinace" icon="ios-arrow-back">返回</Button>
       <Button type="primary" style="margin-left:8px; float:right" @click="exportTable" icon="md-arrow-down">导出数据</Button>
@@ -112,9 +117,9 @@ export default {
           sortable: true
         },
         {
-          title: '收款日期',
+          title: '收款日期/月份/年份',
           key: 'paytime',
-          minWidth: 110,
+          minWidth: 120,
           sortable: true
         },
         {
@@ -219,6 +224,7 @@ export default {
       ],
       starttime: '',
       endtime: '',
+      grouping: '3',
     }
   },
   created () {
@@ -254,6 +260,17 @@ export default {
     },
     filterTable () {
       return arrSearch(this.tableData, this.searchKey)
+    },
+    labeldate () {
+      let str = ''
+      if (this.grouping == '3') {
+        str = '收款日期'
+      } else if (this.grouping == '2') {
+        str = '收款月份'
+      } else if (this.grouping == '1') {
+        str = '收款年份'
+      }
+      return str
     }
   },
   methods: {
@@ -267,7 +284,8 @@ export default {
     getTableData () {
       let d = {
         starttime: this.starttime,
-        endtime: this.endtime
+        endtime: this.endtime,
+        grouping: this.grouping
       }
       this.tableLoading = true
       serverApi('/Finance/index', d,

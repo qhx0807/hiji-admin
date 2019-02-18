@@ -44,7 +44,7 @@ export default {
   data () {
     return {
       searchKey: '',
-      pageSize: 10,
+      pageSize: 9999999,
       page: 1,
       count: 0,
       addModal: false,

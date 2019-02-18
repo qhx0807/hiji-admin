@@ -9,7 +9,7 @@ axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded
 
 axios.interceptors.request.use(function (config) {
   if (config.url.indexOf('login') === -1) {
-    config.headers[`token`] = sessionStorage.token
+    config.headers[`token`] = window.sessionStorage.token
   }
   return config
 }, function (error) {
@@ -32,11 +32,11 @@ axios.interceptors.response.use(function (res) {
 })
 
 const serverApi = (url, data, succFoo, errorFoo) => {
-  let userid = sessionStorage.userid || ''
+  let userid = window.sessionStorage.userid || ''
   axios({
     method: 'post',
     url: apiUrl + url,
-    data: Object.assign({userid: userid}, data),
+    data: Object.assign({ userid: userid }, data),
     transformRequest: [function (data) {
       let ret = ''
       for (let it in data) {

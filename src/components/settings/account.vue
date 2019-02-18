@@ -66,13 +66,13 @@
             <Option v-for="item in merData" :key="item.id" :value="item.merchantcode">{{item.name}}</Option>
           </Select>
         </FormItem>
-        <!-- <FormItem prop="roleid" label="账户角色">
+        <FormItem prop="roleid" label="账户角色">
           <Select v-model="editData.roleid">
             <Option v-for="item in roleData" :key="item.id" :value="item.id">{{item.rolename}}</Option>
           </Select>
-        </FormItem> -->
+        </FormItem>
         <FormItem label="当前部门">
-          <Input readonly v-model="editData.departmentname" placeholder="请输入"></Input>
+          <Input readonly v-model="editData.deparmentname" placeholder="请输入"></Input>
         </FormItem>
         <FormItem label="修改部门为">
           <Cascader change-on-select @on-change="onSelectDepEdit" :data="casData"></Cascader>
@@ -176,19 +176,14 @@ export default {
         {
           title: '操作',
           key: 'id',
-          width: 165,
+          width: 100,
           align: 'center',
           fixed: 'right',
           render: (h, params) => {
             return h('div', [
-                h('Button', {
-                    props: {
-                      type: 'text',
-                      size: 'small',
-                      icon: 'edit'
-                    },
+                h('a', {
                     style: {
-                      marginRight: '5px'
+                      marginRight: '12px'
                     },
                     on: {
                       click: () => {
@@ -196,11 +191,9 @@ export default {
                       }
                     }
                 }, '编辑'),
-                h('Button', {
-                    props: {
-                      type: 'text',
-                      size: 'small',
-                      icon: 'trash-a'
+                h('a', {
+                    style: {
+                      color: '#ff9900'
                     },
                     on: {
                       click: () => {

@@ -64,6 +64,25 @@
       </div>
     </Modal>
 
+    <!-- auth -->
+    <Modal v-model="authModal" width="660">
+      <p slot="header" style="text-align:center">
+        <span>【{{this.editData.rolename}}】角色权限</span>
+      </p>
+      <div class="authbox">
+        <Divider orientation="left" dashed >已有权限</Divider>
+        <p v-show="yTagArr.length === 0">无数据</p>
+        <Tag type="dot" @on-close="onCloseyTag(item, index)" v-for="(item, index) in yTagArr" :key="index" :name="item.code" closable :color="item.color">{{item.name}}</Tag>
+        <Divider orientation="left" dashed>可添加权限</Divider>
+        <p v-show="kTagArr.length === 0">无数据</p>
+        <Tag @click.native="onClickKTag(item, index)" type="dot" v-for="(item, index) in kTagArr" :key="index" :name="item.code" :color="item.color">{{item.name}}</Tag>
+      </div>
+      <div slot="footer">
+        <Button @click="authModal = false">取消</Button>
+        <Button type="primary" :loading="modal_loading" @click="authModal = false">关闭</Button>
+      </div>
+    </Modal>
+
   </div>
 </template>
 <script>
@@ -76,6 +95,7 @@ export default {
       addModal: false,
       editModal: false,
       modal_loading: false,
+      authModal: false,
       count: 0,
       page: 1,
       pageSize: 10,
@@ -123,44 +143,56 @@ export default {
           align: 'center',
           width: 170,
           render: (h, params) => {
-            return h('div', [
-                h('Button', {
-                    props: {
-                      type: 'text',
-                      size: 'small',
-                      icon: 'edit'
-                    },
-                    style: {
-                      marginRight: '5px'
-                    },
-                    on: {
-                      click: () => {
-                        this.onClickEdit(params.row)
-                      }
-                    }
-                }, '编辑'),
-                h('Button', {
-                    props: {
-                      type: 'text',
-                      size: 'small',
-                      icon: 'trash-a'
-                    },
-                    on: {
-                      click: () => {
-                        this.remove(params.row.id)
-                      }
-                    }
-                }, '删除')
-            ])
+            let a = h('a', {
+                style: {
+                  marginRight: '10px'
+                },
+                on: {
+                  click: () => {
+                    this.onClickEdit(params.row)
+                  }
+                }
+            }, '编辑')
+            let b = h('a', {
+                style: {
+                  marginRight: '10px',
+                  color: '#ff9900'
+                },
+                on: {
+                  click: () => {
+                    this.remove(params.row.id)
+                  }
+                }
+            }, '删除')
+            let c = h('a', {
+                style: {
+                  color: '#ed4014'
+                },
+                on: {
+                  click: () => {
+                    this.roleAuth(params.row)
+                  }
+                }
+            }, '角色权限')
+            if (params.row.rolecode == 'administrator') {
+              return h('div', {}, '禁止操作')
+            } else {
+              return h('div', [a, b, c])
+            }
           }
         }
       ],
       tableData: [],
       casData: [],
+      handlerData: [],
+      tagColors: ['primary', 'success', 'warning'],
+      yTagArr: [],
+      kTagArr: []
     }
   },
   created () {
     this.getTableData(1, 10, '')
+    this.getHandlerData()
     // this.getDepData()
   },
   methods: {
@@ -186,6 +218,21 @@ export default {
         error => {
           console.log(error)
           this.$store.commit('pageLoading', false)
+        }
+      )
+    },
+    getHandlerData () {
+      serverApi('/role/authlist', null,
+        response => {
+          if (response.data.code === 0) {
+            console.log(response)
+            this.handlerData = response.data.data
+          } else {
+            this.$Message.warning(response.data.msg)
+          }
+        },
+        error => {
+          this.$Message.error(error.toString())
         }
       )
     },
@@ -305,6 +352,116 @@ export default {
         })
         // console.log(dep)
       }
+    },
+    roleAuth (row) {
+      this.yTagArr = []
+      this.kTagArr = []
+      this.editData = Object.assign({}, row)
+      const msg = this.$Message.loading({
+        content: 'Loading...',
+        duration: 0
+      })
+      serverApi('/role/roleauthlist', {id: row.id},
+        response => {
+          this.$Message.destroy()
+          if (response.data.code === 0) {
+            console.log(response)
+            let yarr = []
+            let karr = []
+            let arr = [ ...this.handlerData ]
+            let yids = []
+            response.data.data.forEach( e => {
+              yids.push(e.authid)
+              let rand = Math.floor(Math.random() * this.tagColors.length)
+              let obj = {
+                name: e.authdes,
+                code: e.authcode,
+                color: this.tagColors[rand],
+                ...e
+              }
+              yarr.push(obj)
+            })
+            this.yTagArr = yarr
+
+            if (response.data.data.length > 0) {
+              karr = arr.filter(item => {
+                return !yids.includes(item.id)
+              })
+            } else {
+              karr = arr
+            }
+            karr.map(a => {
+              let rand1 = Math.floor( Math.random() * this.tagColors.length )
+              a.name = a.authdes
+              a.code = a.authcode
+              a.color = this.tagColors[rand1]
+            })
+            this.kTagArr = karr
+            this.authModal = true
+          } else {
+            this.$Message.warning(response.data.msg)
+          }
+        },
+        error => {
+          this.$Message.destroy()
+          console.log(error)
+          this.$Message.error(error.toString())
+        }
+      )
+    },
+    onCloseyTag (row, index) {
+      // console.log(row)
+      const msg = this.$Message.loading({
+        content: 'Loading...',
+        duration: 0
+      })
+      serverApi('/role/roleauthdel', { id: row.id },
+        response => {
+          this.$Message.destroy()
+          if (response.data.code === 0) {
+            this.$Message.success(response.data.msg)
+            this.authModal = false
+            // this.yTagArr.push(row)
+            // this.$delete(this.kTagArr, index)
+          } else {
+            this.$Message.warning(response.data.msg)
+          }
+        },
+        error => {
+          this.$Message.destroy()
+          console.log(error)
+          this.$Message.error(error.toString())
+        }
+      )
+
+    },
+    onClickKTag (row, index) {
+      const msg = this.$Message.loading({
+        content: 'Loading...',
+        duration: 0
+      })
+      let d = {
+        roleid: this.editData.id,
+        authid: row.id
+      }
+      serverApi('/role/roleedits', d,
+        response => {
+          this.$Message.destroy()
+          if (response.data.code === 0) {
+            this.$Message.success(response.data.msg)
+            this.authModal = false
+            // this.yTagArr.push(row)
+            // this.$delete(this.kTagArr, index)
+          } else {
+            this.$Message.warning(response.data.msg)
+          }
+        },
+        error => {
+          this.$Message.destroy()
+          console.log(error)
+          this.$Message.error(error.toString())
+        }
+      )
     }
   }
 }
@@ -312,6 +469,10 @@ export default {
 <style lang="less" scoped>
 .head{
   padding-bottom: 12px;
+}
+.authbox{
+  max-height: 620px;
+  overflow: auto;
 }
 </style>
 
