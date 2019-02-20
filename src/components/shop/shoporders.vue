@@ -278,7 +278,8 @@ export default {
       this.merchantcode = ''
     },
     onChangeSize (e) {
-      this.searchObj.pageSize = e
+      console.log(e);
+      this.searchObj.pagesize = e
       this.getTableData()
     },
     getTableData () {

@@ -20,7 +20,9 @@
               <Col span="4"><span></span><span>共{{filterTable.length}}条</span></Col>
               <Col span="4"><span>微信收款：</span><span>{{wxFee}}元</span></Col>
               <Col span="4"><span>支付宝收款：</span><span>{{aliFee}}元</span></Col>
-              <Col span="4"><span>合计收款：</span><span>{{totalFee}}元</span></Col>
+              <Col span="4"><span>应收合计：</span><span>{{totalYs}}元</span></Col>
+              <Col span="4"><span>实收合计：</span><span>{{totalFee}}元</span></Col>
+              <Col span="4"><span>优惠合计：</span><span>{{totalYh}}元</span></Col>
               <Col span="4"><span>合计笔数：</span><span>{{totalSum}}条</span></Col>
             </Row>
           </div>
@@ -172,39 +174,39 @@ export default {
           align: 'right',
           sortable: true
         },
-        {
-          title: '状态',
-          key: 'status',
-          width: 135,
-          align: 'center',
-          sortable: true,
-          render: (h, params) => {
-            let text = params.row.status
-            let color = 'green'
-            switch (text) {
-              case '已申请':
-                color = 'warning'
-                break
-              case '已对账':
-                color = 'primary'
-                break
-              case '已通过':
-                color = 'success'
-                break
-              case '未对账':
-                color = '#EF6AFF'
-                break
-              default:
-                color = 'error'
-            }
-            return h('Tag', {
-              props: {
-                color: color,
-                type: 'dot'
-              }
-            }, text)
-          }
-        },
+        // {
+        //   title: '状态',
+        //   key: 'status',
+        //   width: 135,
+        //   align: 'center',
+        //   sortable: true,
+        //   render: (h, params) => {
+        //     let text = params.row.status
+        //     let color = 'green'
+        //     switch (text) {
+        //       case '已申请':
+        //         color = 'warning'
+        //         break
+        //       case '已对账':
+        //         color = 'primary'
+        //         break
+        //       case '已通过':
+        //         color = 'success'
+        //         break
+        //       case '未对账':
+        //         color = '#EF6AFF'
+        //         break
+        //       default:
+        //         color = 'error'
+        //     }
+        //     return h('Tag', {
+        //       props: {
+        //         color: color,
+        //         type: 'dot'
+        //       }
+        //     }, text)
+        //   }
+        // },
         {
           title: '明细',
           key: 'merchantcode',
@@ -248,6 +250,13 @@ export default {
       })
       return fee.toFixed(2)
     },
+    totalYh () {
+      let fee = 0
+      this.filterTable.forEach(item => {
+        fee += Number(item.coupon)
+      })
+      return fee.toFixed(2)
+    },
     totalFee () {
       return (Number(this.wxFee) + Number(this.aliFee)).toFixed(2)
     },
@@ -257,6 +266,13 @@ export default {
         num += item.num
       })
       return num
+    },
+    totalYs () {
+      let fee = 0
+      this.filterTable.forEach(item => {
+        fee += Number(item.total)
+      })
+      return fee.toFixed(2)
     },
     filterTable () {
       return arrSearch(this.tableData, this.searchKey)
@@ -327,6 +343,7 @@ export default {
       serverApi('/Finance/index', d,
         response => {
           // console.log(response)
+          this.$Message.destroy()
           if (response.data.code === 0){
             this.seeTableData = response.data.data
             this.seeTableData.forEach(item => {
@@ -336,11 +353,11 @@ export default {
           }else{
             this.$Message.warning(response.data.msg)
           }
-          this.$Message.destroy()
         },
         error => {
           console.log(error)
           this.$Message.destroy()
+          this.$Message.error(error.toString())
         }
       )
     },
