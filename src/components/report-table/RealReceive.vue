@@ -17,13 +17,13 @@
         <div slot="footer">
           <div class="tablefooter" v-show="filterTable.length > 0">
             <Row>
-              <Col span="4"><span></span><span>共{{filterTable.length}}条</span></Col>
-              <Col span="4"><span>微信收款：</span><span>{{wxFee}}元</span></Col>
-              <Col span="4"><span>支付宝收款：</span><span>{{aliFee}}元</span></Col>
-              <Col span="4"><span>应收合计：</span><span>{{totalYs}}元</span></Col>
-              <Col span="4"><span>实收合计：</span><span>{{totalFee}}元</span></Col>
-              <Col span="4"><span>优惠合计：</span><span>{{totalYh}}元</span></Col>
-              <Col span="4"><span>合计笔数：</span><span>{{totalSum}}条</span></Col>
+              <Col span="6"><span></span><span>共{{filterTable.length}}条</span></Col>
+              <Col span="3"><span>微信收款：</span><span>{{wxFee}}元</span></Col>
+              <Col span="3"><span>支付宝收款：</span><span>{{aliFee}}元</span></Col>
+              <Col span="3"><span>应收合计：</span><span>{{totalYs}}元</span></Col>
+              <Col span="3"><span>实收合计：</span><span>{{totalFee}}元</span></Col>
+              <Col span="3"><span>优惠合计：</span><span>{{totalYh}}元</span></Col>
+              <Col span="3"><span>合计笔数：</span><span>{{totalSum}}条</span></Col>
             </Row>
           </div>
         </div>
