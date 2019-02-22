@@ -97,6 +97,7 @@ const ServiceMsg = r => require.ensure([], () => r(require('@/components/service
 const SysMsg = r => require.ensure([], () => r(require('@/components/service/SysMsg.vue')))
 const SysType = r => require.ensure([], () => r(require('@/components/service/SysType.vue')))
 const PayDiscount = r => require.ensure([], () => r(require('@/components/activity/PayDiscount.vue')))
+const ShopOrderRefund = r => require.ensure([], () => r(require('@/components/shop/ShopOrderRefund.vue')))
 
 const routes = [
   {
@@ -571,6 +572,11 @@ const routes = [
         path: 'PayDiscount',
         component: PayDiscount,
         name: 'PayDiscount'
+      },
+      {
+        path: 'ShopOrderRefund',
+        component: ShopOrderRefund,
+        name: 'ShopOrderRefund'
       }
     ]
   },
