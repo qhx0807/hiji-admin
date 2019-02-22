@@ -276,7 +276,9 @@ export default {
         like: this.searchKey,
         ispay: 1,
         ordertype: 4,
-        shipping: this.exptype
+        shipping: this.exptype,
+        starttime: this.starttime,
+        endtime: this.endtime
       }
       this.$store.commit('pageLoading', true)
       serverApi('/order/orderlist', d,

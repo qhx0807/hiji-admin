@@ -3,8 +3,12 @@
     <Card :bordered="false" style="margin-top:10px">
       <div class="wrap">
         <div class="left-box">
+          <!-- <div class="search"></div> -->
           <ul>
-            <li v-for="(item, index) in tableData" @click="onClickMsgItem(index, item)" :class="{'active': index==acli}" :key="index">
+            <li class="search">
+              <Input v-model="searchKey" search placeholder="搜索..."  />
+            </li>
+            <li v-for="(item, index) in userData" @click="onClickMsgItem(index, item)" :class="{'active': index==acli}" :key="index">
               <Badge :text="item.status == '0' ? 'new' : ''">
                 <Avatar icon="ios-person" shape="circle" :src="item.avatar" size="large" />
               </Badge>
@@ -20,7 +24,7 @@
                 <Avatar icon="ios-person" shape="circle" :src="userAvatar" v-if="item.userid>0" size="large" />
                 <Avatar class="avatar" icon="ios-person" shape="circle" v-if="item.userid==-1" src="http://cdn.cqyyy.cn/hiji.jpg" size="large" />
                 <span class="msg">{{item.content}}</span>
-                <span class="date">{{item.createtime.replace('2019-', '')}}</span>
+                <span class="date">{{item.createtime ? item.createtime.replace('2019-', '') : ''}}</span>
               </li>
               <!-- <li class="right" v-for="(item, index) in msgList" v-if="item.userid == -1" :key="index">
                 <Avatar class="avatar" icon="ios-person" shape="circle" src="http://cdn.cqyyy.cn/hiji.jpg" size="large" />
@@ -39,6 +43,7 @@
 </template>
 <script>
 import serverApi from '../../axios'
+import { arrSearch } from '../../utlis/tools.js'
 export default {
   name: 'ServiceMsg',
   data () {
@@ -66,6 +71,11 @@ export default {
   },
   created () {
     this.getTableData()
+  },
+  computed: {
+    userData () {
+      return arrSearch(this.tableData, this.searchKey)
+    }
   },
   methods: {
     getTableData () {
@@ -169,6 +179,8 @@ export default {
       width: 240px;
       height: 100%;
       overflow-x: hidden;
+      position: relative;
+
       ul{
         list-style: none;
         li{
@@ -181,6 +193,16 @@ export default {
             color: #2d8cf0;
             border-right: 3px solid #2d8cf0;
             padding-left: 20px;
+          }
+          &.search{
+            box-sizing: border-box;
+            height: 55px;
+            background-color: #eee;
+            position: sticky;
+            width: 240px;
+            top: 0;
+            z-index: 9;
+            padding-right: 30px;
           }
         }
       }

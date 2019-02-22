@@ -457,6 +457,11 @@ export default {
               return null
             }
           }
+        },
+        {
+          title: '营运审核时间',
+          key: 'checktime',
+          width: 120
         }
       ],
       starttime: '',
