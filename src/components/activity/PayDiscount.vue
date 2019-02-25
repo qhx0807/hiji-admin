@@ -1,7 +1,9 @@
 <template>
   <div class="box">
     <Spin fix v-if="loading"></Spin>
-    <Card :bordered="false" class="mb10">满减活动规则设置</Card>
+    <Card :bordered="false" class="mb10">满减活动规则设置
+    <Button class="remove" type="error" @click="remove">删除活动</Button>
+    </Card>
     <Card :bordered="false">
       <Form :model="editData" ref="form" :rules="ruleValidate" :label-width="80">
         <Row>
@@ -16,7 +18,7 @@
           </Col>
           <Col span="6">
             <FormItem label="限制条件" >
-              <Select v-model="editData.isuse">
+              <Select v-model="editData.enjoytype">
                 <Option :value="1">每天</Option>
                 <Option :value="2">每周</Option>
                 <Option :value="3">工作日</Option>
@@ -40,11 +42,8 @@
             </FormItem>
           </Col>
           <Col span="6">
-            <FormItem label="活动状态">
-              <Select v-model="editData.isuse">
-                <Option :value="1">发布</Option>
-                <Option :value="0">停止</Option>
-              </Select>
+            <FormItem label="商户选择">
+              <Button type="dashed" @click="optional">自选</Button>
             </FormItem>
           </Col>
         </Row>
@@ -79,6 +78,39 @@
         </Row>
       </Form>
     </Card>
+    <Modal v-model="optionalModal" width="800">
+      <p slot="header" style="text-align:center">
+        <span>商户名称</span>
+      </p>
+      <Form :model="optionalData" ref="optionalform" :rules="rules" :label-width="80">
+        <Row>
+          <Col span="24">
+            <FormItem label="搜索商户">
+              <Input v-model="searchKey" placeholder="搜索关键字..." style="width: 200px"></Input>
+              <Button type="primary" style="margin-left:8px" icon="ios-search" @click="searchUser">搜索</Button>
+            </FormItem>
+          </Col>
+        </Row>
+        <Row>
+          <Col span="24">
+            <FormItem label="商户名称" >
+              <!-- <div v-for="(item,index) in ceshiList" :key="index">
+                <input  type="checkbox" name="userCeshi" v-model="userCeshi" :id="item.id" :value="item.departmentname">
+                <label for="mike">{{item.departmentname}}</label>
+              </div> -->
+
+              <CheckboxGroup class="Checkbox" v-model="userCeshi">
+                <Checkbox class="CheckboxChild" v-for="item in ceshiList" :label="item.id" :key="item.id">{{item.departmentname}}</Checkbox>
+              </CheckboxGroup>
+            </FormItem>
+          </Col>
+        </Row>
+      </Form>
+      <div slot="footer">
+        <Button @click="optionalModal = false">取消</Button>
+        <Button type="primary" :loading="modal_loading" @click="optionalSave">保存</Button>
+      </div>
+    </Modal>
   </div>
 </template>
 <script>
@@ -87,19 +119,28 @@ export default {
   name: 'PayDiscount',
   data () {
     return {
-      editData: {},
+      editData: {
+        equipment:[]
+      },
+      userEquipment: [],
+      userCeshi: [],
+      optionalData: {},
+      ceshiList: [],
       loading: false,
       submitLoading: false,
+      optionalModal: false,
+      ceshilModal: false,
+      searchKey: '',
+      pageSize: 999,
+      page: 1,
       rules: [],
+      id: '',
       ruleValidate: {
         starttime: [
           { required: true, message: '请选择开始时间', trigger: 'blur', type: 'date' }
         ],
         endtime: [
           { required: true, message: '请选择结束时间', trigger: 'blur', type: 'date' }
-        ],
-        isuse: [
-          { required: true, message: '请选择条件', trigger: 'blur', type: 'number' }
         ],
         frequency: [
           { required: true, message: '请选择条件', type: 'number', trigger: 'blur' }
@@ -128,6 +169,14 @@ export default {
             console.log(response)
             this.editData = response.data.data.result[0]
             this.rules = response.data.data.result[0].regular
+            this.id = response.data.data.result[0].id
+            if (response.data.data.result[0].equipment === 'all') {
+              this.userCeshi = []
+            } else {
+              this.userCeshi = response.data.data.result[0].equipment
+            }
+            console.log(this.userEquipment)
+            console.log(response.data.data.result[0].equipment)
           } else {
             this.$Message.warning(response.data.msg)
           }
@@ -155,9 +204,12 @@ export default {
     },
     onSubmitData () {
       console.log(this.editData)
+      console.log(this.userCeshi)
       this.$refs.form.validate(valid => {
         if (valid) {
           this.submitLoading = true
+          // this.editData.equipment = this.userEquipment.join(',')
+          this.editData.equipment = JSON.stringify(this.userCeshi)
           this.editData.regular = JSON.stringify(this.rules)
           serverApi('/paymentactive/paymentedit', this.editData,
             response => {
@@ -179,6 +231,63 @@ export default {
           this.$Message.warning('验证失败')
         }
       })
+    },
+    optional () {
+      this.optionalModal = true
+      let d = {
+        pagesize: this.pageSize,
+        page: this.page,
+        like: this.searchKey
+      }
+      serverApi('/equipment/index', d,
+        response => {
+          if (response.data.code === 0) {
+            console.log(response)
+            this.ceshiList = response.data.data.result
+            console.log(this.ceshiList)
+          } else {
+            this.$Message.warning(response.data.msg)
+          }
+        },
+        error => {
+          this.loading = false
+          this.$Message.error(error.toString())
+        }
+      )
+    },
+    optionalSave () {
+      this.optionalModal = false
+      console.log(this.optionalData)
+      console.log(this.userCeshi)
+    },
+    searchUser () {
+      this.page = 1
+      this.optional()
+    },
+     remove () {
+      this.$Modal.confirm({
+        title: '提示',
+        content: '确定删除此活动？',
+        loading: true,
+        onOk: () => {
+          console.log(this.id)
+          serverApi('/paymentactive/paymentdel', { id: this.id },
+            response => {
+              if (response.data.code === 0) {
+                this.$Message.success(response.data.msg)
+                this.getTableData()
+              } else {
+                this.$Message.warning(response.data.msg)
+              }
+              this.$Modal.remove()
+            },
+            error => {
+              this.$Modal.remove()
+              this.$Message.error(error.toString())
+            }
+          )
+        }
+      })
     }
   }
 }
@@ -186,5 +295,12 @@ export default {
 <style lang="less" scoped>
 .box{
   position: relative;
+}
+.CheckboxChild {
+  margin-right: 30px;
+}
+.remove {
+  float: right;
+  margin-top: -5px;
 }
 </style>

@@ -15,7 +15,7 @@
       <div style="clear:both"></div>
     </Card>
 
-    <Modal v-model="addModal" width="650">
+    <Modal v-model="addModal" width="750">
       <p slot="header" style="text-align:center">
         <span>新增</span>
       </p>
@@ -31,8 +31,8 @@
             <FormItem label="接收状态" prop="usertype">
               <Select v-model="addData.usertype" >
                 <Option :value="0">所有用户收到</Option>
-                <Option :value="1">指定用户收到</Option>
-                <Option :value="2">指定用户收不到</Option>
+                <Option :value="1">指定等级用户收到</Option>
+                <Option :value="2">指定等级用户收不到</Option>
               </Select>
             </FormItem>
             <FormItem label="消息类型">
@@ -48,8 +48,10 @@
               <Option :value="1">发布</Option>
             </Select>
             </FormItem>
-            <FormItem label="存放的用户">
-              <Input v-model="addData.userdetails"></Input>
+            <FormItem label="用户等级">
+              <CheckboxGroup class="Checkbox" v-model="usersLevel">
+                <Checkbox class="CheckboxChild" v-for="item in userLevel" :label="item.id" :key="item.id">{{item.gradename}}</Checkbox>
+              </CheckboxGroup>
             </FormItem>
           </Col>
         </Row>
@@ -82,8 +84,8 @@
             <FormItem label="接收状态">
               <Select v-model="modifyData.usertype">
                 <Option :value="0">所有用户收到</Option>
-                <Option :value="1">指定用户收到</Option>
-                <Option :value="2">指定用户收不到</Option>
+                <Option :value="1">指定等级用户收到</Option>
+                <Option :value="2">指定等级用户收不到</Option>
               </Select>
             </FormItem>
             <FormItem label="消息类型">
@@ -93,26 +95,20 @@
             </FormItem>
           </Col>
           <Col span="12">
-            <!-- <FormItem label="消息类型">
-              <Input v-model="modifyData.type"></Input>
-            </FormItem> -->
             <FormItem label="发布状态">
               <Select v-model="modifyData.status">
               <Option :value="0">未发布</Option>
               <Option :value="1">发布</Option>
             </Select>
             </FormItem>
-            <FormItem label="存放的用户">
-              <Input v-model="modifyData.userdetails"></Input>
+            <FormItem label="用户等级">
+              <CheckboxGroup class="Checkbox" v-model="userLists">
+                <Checkbox class="CheckboxChild" v-for="item in userLevel" :label="item.id" :key="item.id">{{item.gradename}}</Checkbox>
+              </CheckboxGroup>
             </FormItem>
           </Col>
         </Row>
         <Row>
-          <Col span="24">
-            <!-- <FormItem label="消息名字">
-              <Input v-model="modifyData.typename"></Input>
-            </FormItem> -->
-          </Col>
           <Col span="24">
             <FormItem label="消息内容">
               <Input type="textarea" v-model="modifyData.msg"></Input>
@@ -125,29 +121,6 @@
         <Button type="primary" :loading="modal_loading" @click="modifySave">保存</Button>
       </div>
     </Modal>
-    <!-- <Modal v-model="editModal" width="650">
-      <p slot="header" style="text-align:center">
-        <span>消息</span>
-      </p>
-      <Form :model="editData" ref="form" :rules="rules" :label-width="80">
-        <Row>
-          <Col span="24">
-            <FormItem label="消息名字">
-              <Input v-model="editData.typename"></Input>
-            </FormItem>
-          </Col>
-          <Col span="24">
-            <FormItem label="消息内容">
-              <Input type="textarea" v-model="editData.msg"></Input>
-            </FormItem>
-          </Col>
-        </Row>
-      </Form>
-      <div slot="footer">
-        <Button @click="editModal = false">取消</Button>
-        <Button type="primary" :loading="modal_loading" @click="onSave">发送</Button>
-      </div>
-    </Modal> -->
   </div>
 </template>
 <script>
@@ -166,6 +139,10 @@ export default {
       modal_loading: false,
       tableData: [],
       typeList: [],
+      userLevel: [],
+      usersLevel: [],
+      userList: [],
+      userLists: [],
       addData: {
         urlimg: '',
         msg: '',
@@ -179,8 +156,10 @@ export default {
       editData: {},
       modifyData: {
         type: '',
-        typename: ''
+        typename: '',
+        userdetails:[]
       },
+      modifyUser: '',
       rules: {
         sevicemsg: [
           { required: true, message: '请输入名称', trigger: 'blur' }
@@ -222,7 +201,7 @@ export default {
           }
         },
         {
-          title: '存放的用户对象',
+          title: '存放的用户等级',
           key: 'userdetails',
         },
         {
@@ -271,6 +250,7 @@ export default {
   created () {
     this.getTableData()
     this.messageType()
+    this.usergrade()
   },
   methods: {
     onClickSearch () {
@@ -333,18 +313,38 @@ export default {
         }
       )
     },
+    usergrade () {
+      let d = {
+        pagesize: 999,
+        page: 1
+      }
+      serverApi('/member/usergradelist', d,
+        response => {
+          console.log(response)
+          if (response.data.code === 0){
+            this.userLevel = response.data.data.result
+          }else{
+            this.$Message.warning(response.data.msg)
+          }
+          this.$store.commit('pageLoading', false)
+        },
+        error => {
+          console.log(error)
+          this.$store.commit('pageLoading', false)
+        }
+      )
+    },
     perChange (e) {
       console.log(e)
-      console.log(e.value)
-      console.log(e.label)
       this.modifyData.typename = e.label
       // this.modifyData.type = e.value
     },
     addChange (e) {
       console.log(e)
-      console.log(e.value)
-      console.log(e.label)
       this.addData.typename = e.label
+    },
+    userChange (e) {
+      console.log(e)
     },
     onClickAdd () {
       this.addData = {
@@ -361,6 +361,9 @@ export default {
     },
     onSave () {
       console.log(this.addData)
+      console.log(this.usersLevel.toString())
+      console.log(this.userdetails)
+      this.addData.userdetails = this.usersLevel.toString()
       this.modal_loading = true
       serverApi('/systemmsg/index', this.addData,
         response => {
@@ -379,10 +382,6 @@ export default {
         }
       )
     },
-    // onClickEdit (row) {
-    //   this.editData = row
-    //   this.editModal = true
-    // },
     remove (row) {
       this.$Modal.confirm({
         title: '提示',
@@ -409,12 +408,25 @@ export default {
     },
     modify (row) {
       console.log(row)
+      // console.log(row.userdetails.split(','))
+      console.log(row.userdetails)
       this.modifyModal = true
       this.modifyData = row
+      this.userList = row.userdetails.split(',')
+      console.log(this.userList)
+      this.userLists = this.userList.map(Number)
+      console.log(this.modifyData.userdetails)
+      console.log(this.userLists)
+      // this.modifyData.userdetails = this.modifyData.userdetails.toString()
+      // console.log(this.modifyData.userdetails)
+
+
     },
     modifySave () {
       this.modifyModal = false
       console.log(this.modifyData)
+      console.log(this.userLists)
+      this.modifyData.userdetails = this.userLists.toString()
       serverApi('/systemmsg/index', this.modifyData,
         response => {
           if (response.data.code === 0) {
