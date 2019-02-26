@@ -1,11 +1,31 @@
 <template>
   <div class="box">
     <Card :bordered="false">
-      <div>
-        <Input v-model="searchKey" placeholder="搜索关键字..." style="width: 200px"></Input>
-        <Button type="primary" style="margin-left:8px" icon="ios-search" @click="onClickSearch">搜索</Button>
-        <Button type="primary" style="margin-left:8px" icon="md-add" @click="onClickAdd">新增</Button>
-      </div>
+      <Row>
+        <Form :label-width="45" label-position="right">
+          <Col span="5">
+            <FormItem label="搜索" style="margin-bottom:0">
+              <Input v-model="searchKey" clearable placeholder="搜索关键字..." ></Input>
+            </FormItem>
+          </Col>
+          <Col span="5">
+            <FormItem label="状态" style="margin-bottom:0">
+              <Select v-model="status" clearable>
+                <Option value="0">编制</Option>
+                <Option value="1">发布</Option>
+                <Option value="2">有效</Option>
+                <Option value="3">停止</Option>
+                <Option value="4">无效</Option>
+                <Option value="5">过期</Option>
+              </Select>
+            </FormItem>
+          </Col>
+          <Col span="8">
+            <Button type="primary" style="margin-left:8px" icon="ios-search" @click="onClickSearch">搜索</Button>
+            <Button type="primary" style="margin-left:8px" icon="md-add" @click="onClickAdd">新增</Button>
+          </Col>
+        </Form>
+      </Row>
     </Card>
     <Card :bordered="false" style="margin-top:12px;">
       <div class="body">
@@ -49,6 +69,7 @@ export default {
       modal_loading: false,
       recLoading: false,
       recModal: false,
+      status: '',
       count: 0,
       page: 1,
       pageSize: 10,
@@ -353,7 +374,8 @@ export default {
       let d = {
         pagesize: this.pageSize,
         page: this.page,
-        like: this.searchKey
+        like: this.searchKey,
+        status: this.status
       }
       this.$store.commit('pageLoading', true)
       serverApi('/card/coupon', d,

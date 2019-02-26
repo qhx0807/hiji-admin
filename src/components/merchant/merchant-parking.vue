@@ -8,6 +8,11 @@
           &nbsp;&nbsp;&nbsp;详情请咨询【宏帆Hi集客服】。点击
           <a v-show="action === 'records'" @click="action='send'">去发放优惠券</a>
           <a v-show="action === 'send'" @click="onClickSeeRecords">查看我的发放记录</a>
+          <span v-show="action === 'records'" class="search-box">
+            <input type="text" v-model="like" placeholder="搜索...">
+            <!-- <button>搜索</button> -->
+            <Button type="primary" :loading='getReLoading' @click="onClickSeeRecords">搜索</Button>
+          </span>
         </p>
       </div>
     </Card>
@@ -106,6 +111,7 @@ export default {
       stepNum: 0,
       carNum: '',
       action: 'send',
+      like: '',
       count: 0,
       page: 1,
       pageSize: 10,
@@ -192,7 +198,7 @@ export default {
       let d = {
         pagesize: this.pageSize,
         page: this.page,
-        like: ''
+        like: this.like
       }
       this.$Message.loading({
         content: '数据加载中...',
@@ -262,7 +268,7 @@ export default {
       let d = {
         pagesize: this.pageSize,
         page: this.page,
-        like: ''
+        like: this.like
       }
       this.getReLoading = true
       this.$Message.loading({
@@ -320,5 +326,21 @@ export default {
     color: #999;
     margin-top: 5px;
   }
+}
+.search-box{
+  margin-left: 15px;
+  input{
+    outline: none;
+    border: 1px solid #ddd;
+    padding: 4px 8px;
+  }
+  // button{
+  //   border: none;
+  //   outline: none;
+  //   background-color: #2d8cf0;
+  //   color: #fff;
+  //   padding: 4px 12px;
+  //   cursor: pointer;
+  // }
 }
 </style>
