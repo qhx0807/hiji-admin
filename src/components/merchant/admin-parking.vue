@@ -6,12 +6,17 @@
         <p>设置商户所拥有的停车优惠券</p>
       </div>
       <div class="search-p">
-        <Icon type="ios-search"></Icon>
-        <input v-model="searchKey" placeholder="在列表中搜索..." type="text">
+        <Input v-model="searchKey" search style="width: 320px" :enter-button="true" @on-search="getTableData" placeholder="搜索..." />
+        <!-- <Icon type="ios-search"></Icon>
+        <input v-model="searchKey" placeholder="在列表中搜索..." type="text"> -->
       </div>
     </Card>
     <Card :bordered="false">
-      <Table :columns="columns" height="600" :data="filterTable"></Table>
+      <Table :columns="columns" :data="tableData"></Table>
+      <div style="float: right; padding-top:12px">
+        <Page :total="count" show-total :current="page" @on-change="changePage" show-sizer @on-page-size-change="onChangeSize"></Page>
+      </div>
+      <div style="clear:both"></div>
     </Card>
   </div>
 </template>
@@ -29,27 +34,30 @@ export default {
       inputNum: 0,
       columns: [
         {
-          title: '序号',
-          type: 'index',
+          title: '#',
+          key: 'id',
           width: 80
         },
         {
-          title: '用户',
-          key: 'username',
-          sortable: true
+          title: '账号',
+          key: 'username'
+        },
+        {
+          title: '用户名',
+          key: 'name'
         },
         {
           title: '金额',
           key: 'parkingtickets',
-          sortable: true,
           render: (h, params) => {
             if (this.currentRow == params.row.id) {
               return h('InputNumber',{
                 props: {
-                  step: 100,
+                  step: 1,
                   max: 99999,
                   min: 0,
-                  value: params.row.parkingtickets
+                  value: params.row.parkingtickets,
+                  activeChange: true
                 },
                 style: {
                   width: '120px'
@@ -61,7 +69,12 @@ export default {
                 }
               })
             } else {
-              return h('div', {}, params.row.parkingtickets)
+              return h('div', {
+                style: {
+                  color: '#f90',
+                  fontSize: '16px'
+                }
+              }, params.row.parkingtickets)
             }
           }
         },
@@ -98,32 +111,28 @@ export default {
             }
           }
         }
-      ]
-    }
-  },
-  computed: {
-    filterTable () {
-      return arrSearch(this.tableData, this.searchKey)
+      ],
+      page: 1,
+      pagesize: 10,
     }
   },
   created () {
     this.getTableData()
   },
   methods: {
-    getTableData (page, size, key) {
+    getTableData () {
       let d = {
-        pagesize: size,
-        page: page,
-        like: key,
-        userid: sessionStorage.userid
+        pagesize: this.pagesize,
+        page: this.page,
+        like: this.searchKey,
       }
       this.$store.commit('pageLoading', true)
       serverApi('/Merchant/parkingvoucher', d,
         response => {
           // console.log(response)
           if (response.data.code === 0){
-            this.tableData = response.data.data
-            // this.count = response.data.data.counts
+            this.tableData = response.data.data.result
+            this.count = response.data.data.counts
           }else{
             this.$Message.warning(response.data.msg)
           }
@@ -134,6 +143,14 @@ export default {
           this.$store.commit('pageLoading', false)
         }
       )
+    },
+    changePage (e) {
+      this.page = e
+      this.getTableData()
+    },
+    onChangeSize (e) {
+      this.pagesize = e
+      this.getTableData()
     },
     onClickEditNum (id) {
       this.currentRow = id
@@ -172,17 +189,7 @@ export default {
 }
 .search-p{
   position: absolute;
-  top: 45px;
+  top: 30px;
   left: 200px;
-  input{
-    border: none;
-    border-left: 1px solid #eee;
-    outline: none;
-    padding-left: 10px;
-    &::-webkit-input-placeholder{
-      font-size: 12px;
-      color: #ddd;
-    }
-  }
 }
 </style>
