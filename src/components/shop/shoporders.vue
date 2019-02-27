@@ -1,25 +1,6 @@
 <template>
   <div class="box">
     <Card :bordered="false">
-      <!-- <div class="head">
-        <Input v-model="searchKey" @on-enter="getTableData" placeholder="搜索..." style="width: 200px"></Input>
-        <Select v-model="ordertype" style="width:210px">
-          <Option v-for="(item, index) in orderTypeArr" :key="index" :value="item.value">{{item.label}}</Option>
-        </Select>
-        <Select v-model="ispay" style="width:190px">
-          <Option value="">全部</Option>
-          <Option value="1">已支付</Option>
-          <Option value="0">未支付</Option>
-        </Select>
-        <DatePicker :options="dateOptions" type="daterange" placeholder="日期范围" @on-change="onSelectDate" style="width: 220px;"></DatePicker>
-        <Select v-if="merchantShow" v-model="merchantcode" filterable clearable @on-clear="onCLickClear" style="width:200px" placeholder="选择商户">
-          <Option value="">全部商户</Option>
-          <Option v-for="(item, index) in merchantData" :key="index" :value="item.merchantcode">{{item.name}}</Option>
-        </Select>
-        <Button type="primary" style="margin-left:8px" icon="ios-search" @click="onClickSearch">搜索</Button>
-        <Button type="primary" :loading="expLoading" style="margin-left:8px" icon="md-arrow-down" @click="onClickExport">导出订单</Button>
-      </div> -->
-
       <Form label-width="60">
         <Row :gutter="10">
           <Col span="6">
@@ -42,19 +23,10 @@
           <Col span="6">
             <FormItem label="选择商户">
               <Select v-if="merchantShow" v-model="searchObj.merchantcode" filterable clearable @on-clear="onCLickClear"  placeholder="选择商户">
-                <Option value="">全部商户</Option>
                 <Option v-for="(item, index) in merchantData" :key="index" :value="item.merchantcode">{{item.name}}</Option>
               </Select>
             </FormItem>
           </Col>
-          <!-- <Col span="4">
-            <FormItem label="线下打款">
-              <Select v-model="searchObj.billtype" clearable>
-                <Option value="0">否</Option>
-                <Option value="1">是</Option>
-              </Select>
-            </FormItem>
-          </Col> -->
         </Row>
         <Row>
           <Col span="6">
@@ -267,6 +239,7 @@ export default {
       )
     },
     onClickSearch () {
+      this.searchObj.merchantcode = this.searchObj.merchantcode || ''
       this.page = 1
       this.getTableData()
     },
@@ -275,7 +248,7 @@ export default {
       this.getTableData()
     },
     onCLickClear () {
-      this.merchantcode = ''
+      this.searchObj.merchantcode = ''
     },
     onChangeSize (e) {
       console.log(e);
