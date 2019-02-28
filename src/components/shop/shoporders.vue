@@ -143,7 +143,17 @@ export default {
         {
           title: '创建时间',
           key: 'createtime',
-          minWidth: 160
+          width: 160
+        },
+        {
+          title: '发货时间',
+          key: 'shipping_codetime',
+          width: 160
+        },
+        {
+          title: '收货时间',
+          key: 'confirmtime',
+          width: 160
         },
         {
           title: '线下打款',

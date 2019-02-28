@@ -175,6 +175,11 @@ export default {
           width: 160
         },
         {
+          title: '发货时间',
+          key: 'shipping_codetime',
+          width: 160
+        },
+        {
           title: '物流单号',
           key: 'shipping_code',
           width: 120,
