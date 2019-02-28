@@ -5,10 +5,10 @@
         <img src="../../images/order.png" alt="">
       </div>
       <div class="tips">
-        <h4><span style="font-size:14px;font-weight:500">编辑促销商品</span></h4>
+        <h4><span style="font-size:14px;font-weight:500">编辑限购商品</span></h4>
         <p>
-          添加促销商品。促销时间，促销价格。
-          <router-link :to="{name: 'ShopGoodsCx'}">返回【促销商品列表】</router-link>
+          添加限购商品。限购时间，限购价格。
+          <router-link :to="{name: 'ShopGoodsCx'}">返回【限购商品列表】</router-link>
         </p>
       </div>
       <div class="clear-fix"></div>
@@ -16,18 +16,38 @@
     <Card :bordered="false">
       <Form :model="addData" :label-width="120" ref="from" :rules="rules">
         <Row>
-          <Col span="14" offset="4">
-            <FormItem label="选择促销商品" prop="goodsid" >
+          <Col span="12">
+            <FormItem label="活动类型">
+              <Select v-model="addData.type"  @on-change="test" style="width:350px">
+                <Option :value="0">商品</Option>
+                <Option :value="1">卡卷</Option>
+              </Select>
+            </FormItem>
+            <FormItem label="选择限购商品" v-show="commodity">
               <Select
                 filterable
                 remote
                 clearable
+                style="width:350px"
                 @on-change="onSelectGoods"
                 :loading="searchLoading"
                 v-model="addData.goodsid"
                 :remote-method="onSearchGoods"
                 placeholder="选择商品">
                 <Option v-for="(item, index) in goodsData" :disabled="item.ispromote == 1" :key="item.id" :value="item.id">{{item.goodsname}}</Option>
+              </Select>
+            </FormItem>
+            <FormItem label="选择卡卷"  v-show="cardVolume">
+              <Select
+                filterable
+                remote
+                clearable
+                style="width:350px"
+                :loading="searchLoading"
+                v-model="addData.goodsid"
+                :remote-method="onSearchGoods"
+                placeholder="选择商品">
+                <Option v-for="(item, index) in cardsData" :disabled="item.ispromote == 1" :key="item.id" :value="item.id">{{item.cardname}}</Option>
               </Select>
             </FormItem>
             <FormItem style="margin-bottom:12px" v-show="selectedGoods.id">
@@ -49,18 +69,50 @@
               </div>
             </FormItem>
             <FormItem label="选择属性" v-if="selectedGoods.goodstype && selectedGoods.goodstype.length > 0">
-              <RadioGroup  v-model="addData.typeid">
+              <!-- <RadioGroup  v-model="addData.typeid">
                 <Radio v-for="(item, index) in selectedGoods.goodstype" :key="index" :label="item.id">{{item.typename}}</Radio>
-              </RadioGroup>
+              </RadioGroup> -->
+              <CheckboxGroup class="Checkbox" v-model="commodityAtt">
+                <Checkbox class="CheckboxChild" v-for="item in selectedGoods.goodstype" :label="item.id" :key="item.id">{{item.typename}}</Checkbox>
+              </CheckboxGroup>
+            </FormItem>
+            <FormItem label="优惠卷使用状态" prop="dytype">
+              <Select v-model="addData.dytype" style="width:350px">
+                <Option :value="0">不可用</Option>
+                <Option :value="1">可使用</Option>
+              </Select>
+            </FormItem>
+            <FormItem label="选择优惠卷">
+              <Select
+                filterable
+                remote
+                clearable
+                multiple
+                style="width:350px"
+                :loading="searchLoading"
+                v-model="cardsAtt"
+                :remote-method="onSearchGoods"
+                placeholder="选择商品">
+                <Option v-for="(item, index) in cardsData" :disabled="item.ispromote == 1" :key="item.id" :value="item.id">{{item.cardname}}</Option>
+              </Select>
             </FormItem>
             <FormItem label="促销开始时间" prop="starttime">
-              <DatePicker type="datetime" style="width:200px"  @on-change="onSelectStartDate" placeholder="选择时间"></DatePicker>
+              <DatePicker type="datetime" style="width:350px"  @on-change="onSelectStartDate" placeholder="选择时间"></DatePicker>
             </FormItem>
             <FormItem label="促销结束时间" prop="endtime">
-              <DatePicker type="datetime" style="width:200px" @on-change="onSelectEndDate" placeholder="选择时间"></DatePicker>
+              <DatePicker type="datetime" style="width:350px" @on-change="onSelectEndDate" placeholder="选择时间"></DatePicker>
             </FormItem>
-            <FormItem label="促销价格" prop="pidprice">
-              <InputNumber :min="0.01" style="width:200px" v-model="addData.pidprice" placeholder="输入价格"></InputNumber>
+            <FormItem label="商家优惠" >
+              <InputNumber :min="0.01" style="width:350px" v-model="addData.merchantcoupon" placeholder="输入价格"></InputNumber>
+            </FormItem>
+            <FormItem label="平台优惠">
+              <InputNumber :min="0.01" style="width:350px" v-model="addData.coupon" placeholder="输入价格"></InputNumber>
+            </FormItem>
+            <FormItem label="抢购数量">
+              <InputNumber :min="0.01" style="width:350px" v-model="addData.totalcount" placeholder="输入数量"></InputNumber>
+            </FormItem>
+            <FormItem label="限制购买数">
+              <InputNumber :min="0.01" style="width:350px" v-model="addData.buynum" placeholder="输入数量"></InputNumber>
             </FormItem>
             <FormItem>
               <Button type="primary" @click="onClickSubmit" :loading="submitLoading">提交</Button>
@@ -80,13 +132,24 @@ export default {
     return {
       submitLoading: false,
       searchLoading: false,
+      commodity: false,
+      cardVolume: false,
       goodsData: [],
+      cardsData: [],
+      commodityAtt: [],
+      cardsAtt: [],
       addData: {
         goodsid: '',
         typeid: '',
+        type: '',
+        dytype: '',
         starttime: '',
         endtime: '',
-        pidprice: ''
+        merchantcoupon: '',
+        coupon: '',
+        totalcount: '',
+        buynum: '',
+        cardmainid: ''
       },
       selectedGoods: {},
       rules: {
@@ -108,6 +171,7 @@ export default {
   },
   created () {
     this.getGoodsData(10, '')
+    this.getCardsData(10, '')
   },
   methods: {
     getGoodsData (size, key) {
@@ -131,15 +195,38 @@ export default {
         }
       )
     },
+    getCardsData (size, key) {
+      let d = {
+        page: 1,
+        pagesize: size,
+        like: key
+      }
+      serverApi('/card/coupon', d,
+        response => {
+          console.log(response)
+          if (response.data.code === 0){
+            this.cardsData = response.data.data.result
+          }else{
+            this.$Message.warning(response.data.msg)
+          }
+        },
+        error => {
+          console.log(error)
+          this.$Message.error('连接失败！')
+        }
+      )
+    },
     onClickSubmit () {
       this.$refs.from.validate((valid) => {
         if (valid) {
           if (new Date(this.addData.endtime) - new Date(this.addData.starttime) <= 0) {
-            this.$Message.warning('促销时间不符合规范！请检查')
+            this.$Message.warning('限购时间不符合规范！请检查')
             return false
           }
-          console.log(this.addData)
           this.submitLoading = true
+          this.addData.cardmainid = this.cardsAtt.toString()
+          this.addData.typeid = this.commodityAtt.toString()
+          console.log(this.addData)
           serverApi('/goods/ispidadd', this.addData,
             response => {
               console.log(response)
@@ -147,7 +234,7 @@ export default {
               if (response.data.code === 0){
                 this.$Notice.success({
                   title: response.data.msg,
-                  desc: '添加促销商品成功！'
+                  desc: '添加限购商品成功！'
                 })
                 this.$refs.from.resetFields()
                 this.getGoodsData(10, '')
@@ -205,6 +292,19 @@ export default {
     },
     onSelectEndDate (e) {
       this.addData.endtime = e
+    },
+    test (e) {
+      console.log(e)
+      if (e === 0 ) {
+        this.commodity = true
+        this.cardVolume = false
+        this.addData.goodsid = ''
+      } else  {
+        this.commodity = false
+        this.cardVolume = true
+        this.addData.goodsid = ''
+        this.selectedGoods = {}
+      }
     }
   }
 }

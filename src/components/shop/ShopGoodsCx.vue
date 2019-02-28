@@ -7,6 +7,7 @@
         <router-link :to="{name: 'ShopGoodsCxAdd'}">
           <Button type="primary" style="margin-left:8px" icon="md-add">新增</Button>
         </router-link>
+        <Button type="primary" style="margin-left:8px" icon="ios-switch" @click="switchlist">列表切换</Button>
       </div>
     </Card>
     <Card :bordered="false" style="margin-top:12px;">
@@ -30,8 +31,40 @@
         <FormItem label="促销结束时间" prop="endtime">
           <DatePicker type="datetime" style="width:100%" placeholder="选择时间" @on-change="onSelectEndDate" :value="editData.endtime"></DatePicker>
         </FormItem>
-        <FormItem label="促销价格" required>
-          <InputNumber :min="0.01" style="width:100%" v-model="editData.pidprice" placeholder="输入价格"></InputNumber>
+        <FormItem label="剩余抢购数量">
+          <InputNumber :min="0.01" style="width:100%" v-model="editData.remaincount" placeholder="输入数量"></InputNumber>
+        </FormItem>
+        <FormItem label="优惠卷使用状态">
+          <Select v-model="editData.dytype" style="width:100%">
+            <Option :value="0">不可用</Option>
+            <Option :value="1">可使用</Option>
+          </Select>
+        </FormItem>
+        <FormItem label="选择优惠卷">
+          <Select
+            filterable
+            remote
+            clearable
+            multiple
+            style="width:100%"
+            :loading="searchLoading"
+            v-model="cardsAtt"
+            :remote-method="onSearchGoods"
+            placeholder="选择商品">
+            <Option v-for="(item, index) in cardsData" :disabled="item.ispromote == 1" :key="item.id" :value="item.id">{{item.cardname}}</Option>
+          </Select>
+        </FormItem>
+        <FormItem label="会员可购数">
+          <InputNumber :min="0.01" style="width:100%" v-model="editData.buynum" placeholder="输入数量"></InputNumber>
+        </FormItem>
+        <FormItem label="平台优惠">
+          <InputNumber :min="0.01" style="width:100%" v-model="editData.coupon" placeholder="输入数量"></InputNumber>
+        </FormItem>
+        <FormItem label="商家优惠">
+          <InputNumber :min="0.01" style="width:100%" v-model="editData.merchantcoupon" placeholder="输入数量"></InputNumber>
+        </FormItem>
+        <FormItem label="促销价格">
+          <InputNumber :min="0.01" style="width:100%" v-model="pidprice" placeholder="输入价格"></InputNumber>
         </FormItem>
       </Form>
       <div slot="footer">
@@ -52,7 +85,9 @@ export default {
   data () {
     return {
       searchKey: '',
+      switchli: 0,
       tableData: [],
+      cardsAtt: [],
       editModal: false,
       modal_loading: false,
       recModal: false,
@@ -194,6 +229,7 @@ export default {
       ],
       activtyData: [],
       editData: {},
+      pidprice: '',
       rules: {
         starttime: [
           { required: true, message: '请选择开始时间', trigger: 'blur' }
@@ -206,6 +242,7 @@ export default {
   },
   created () {
     this.getTableData()
+    this.getCardsData(10, '')
   },
   methods: {
     onClickSearch () {
@@ -216,7 +253,8 @@ export default {
       let d = {
         pagesize: this.pageSize,
         page: this.page,
-        like: this.searchKey
+        like: this.searchKey,
+        type: this.switchli
       }
       this.$store.commit('pageLoading', true)
       serverApi('/goods/ispidindex', d,
@@ -249,7 +287,12 @@ export default {
       this.$router.push({name: 'ShopGoodsCxAdd'})
     },
     onClickEdit (row) {
+      console.log(row)
       this.editData = Object.assign({}, row)
+      this.cardsAtt = row.cardmainid.split(',')
+      this.cardsAtt = this.cardsAtt.map(Number)
+      console.log(this.cardsAtt)
+      this.pidprice = row.goodsprice - row.coupon - row.merchantcoupon
       this.editModal = true
     },
     onSelectStartDate (e) {
@@ -266,6 +309,7 @@ export default {
             return false
           }
           this.modal_loading = true
+          this.editData.cardmainid = this.cardsAtt.toString()
           serverApi('/goods/ispidedit', this.editData,
             response => {
               console.log(response)
@@ -306,6 +350,38 @@ export default {
           )
         }
       })
+    },
+    getCardsData (size, key) {
+      let d = {
+        page: 1,
+        pagesize: size,
+        like: key
+      }
+      serverApi('/card/coupon', d,
+        response => {
+          console.log(response)
+          if (response.data.code === 0){
+            this.cardsData = response.data.data.result
+          }else{
+            this.$Message.warning(response.data.msg)
+          }
+        },
+        error => {
+          console.log(error)
+          this.$Message.error('连接失败！')
+        }
+      )
+    },
+    switchlist () {
+      if (this.switchli === 0) {
+        this.switchli = 1
+        this.getTableData()
+      } else {
+        this.switchli = 0
+        this.getTableData()
+      }
+      console.log(this.switchli)
+
     }
   }
 }

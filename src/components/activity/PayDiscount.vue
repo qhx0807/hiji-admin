@@ -50,7 +50,7 @@
         <Row v-for="(item, index) in rules" :key="index">
           <Col span="5" >
             <FormItem label="规则">
-              <Input v-model="item.discount" ></Input>
+              <Input v-model="item.discount"></Input>
             </FormItem>
           </Col>
           <Col span="5" >
@@ -134,6 +134,7 @@ export default {
       pageSize: 999,
       page: 1,
       rules: [],
+      rulesss: [],
       id: '',
       ruleValidate: {
         starttime: [
@@ -160,6 +161,9 @@ export default {
   created () {
     this.inquire()
   },
+  computed:{
+
+  },
   methods: {
     inquire () {
       this.loading = true
@@ -169,6 +173,11 @@ export default {
             console.log(response)
             this.editData = response.data.data.result[0]
             this.rules = response.data.data.result[0].regular
+            this.rules.forEach(item => {
+              item.discount = (item.discount / 100).toFixed(2)
+              item.max = (item.max / 100).toFixed(2)
+              item.min = (item.min / 100).toFixed(2)
+            })
             this.id = response.data.data.result[0].id
             if (response.data.data.result[0].equipment === 'all') {
               this.userCeshi = []
@@ -176,6 +185,7 @@ export default {
               this.userCeshi = response.data.data.result[0].equipment
             }
             console.log(this.userEquipment)
+            console.log(this.rulesss)
             console.log(response.data.data.result[0].equipment)
           } else {
             this.$Message.warning(response.data.msg)
@@ -205,12 +215,19 @@ export default {
     onSubmitData () {
       console.log(this.editData)
       console.log(this.userCeshi)
+      console.log(this.rules)
+      const arr = JSON.parse(JSON.stringify(this.rules))
+      arr.forEach(item => {
+        item.discount = item.discount * 100
+        item.max = item.max * 100
+        item.min = item.min * 100
+      })
       this.$refs.form.validate(valid => {
         if (valid) {
           this.submitLoading = true
           // this.editData.equipment = this.userEquipment.join(',')
           this.editData.equipment = JSON.stringify(this.userCeshi)
-          this.editData.regular = JSON.stringify(this.rules)
+          this.editData.regular = JSON.stringify(arr)
           serverApi('/paymentactive/paymentedit', this.editData,
             response => {
               if (response.data.code === 0) {
