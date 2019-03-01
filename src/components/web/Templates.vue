@@ -20,13 +20,13 @@
       <p slot="header" style="text-align:center">
         <span>新增页面</span>
       </p>
-      <Form :model="addData" ref="form" :label-width="80">
-        <!-- <FormItem label="选择城市" required>
+      <Form :model="addData" ref="form" :label-width="90">
+        <FormItem label="选择城市" required>
           <Select v-model="addData.city">
             <Option value="0">通用</Option>
             <Option v-for="(item, index) in cityList" :key="index" :value="item.id">{{item.areaname}}</Option>
           </Select>
-        </FormItem> -->
+        </FormItem>
         <FormItem label="选择类型" required>
           <Select v-model="addData.type">
             <Option value="2">自定义内容</Option>
