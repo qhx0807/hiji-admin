@@ -15,7 +15,7 @@
     </Card>
     <Card :bordered="false">
       <Form :model="addData" :label-width="120" ref="from" :rules="rules">
-        <Row>
+        <Row type="flex" justify="center" class="code-row-bg">
           <Col span="12">
             <FormItem label="活动类型">
               <Select v-model="addData.type"  @on-change="test" style="width:350px">
@@ -102,23 +102,37 @@
             <FormItem label="促销结束时间" prop="endtime">
               <DatePicker type="datetime" style="width:350px" @on-change="onSelectEndDate" placeholder="选择时间"></DatePicker>
             </FormItem>
+          </Col>
+        </Row>
+        <Row type="flex" justify="center" align="middle" class="code-row-bg">
+          <Col span="6">
             <FormItem label="商家优惠" >
-              <InputNumber :min="0.01" style="width:350px" v-model="addData.merchantcoupon" placeholder="输入价格"></InputNumber>
-            </FormItem>
-            <FormItem label="平台优惠">
-              <InputNumber :min="0.01" style="width:350px" v-model="addData.coupon" placeholder="输入价格"></InputNumber>
-            </FormItem>
-            <FormItem label="抢购数量">
-              <InputNumber :min="0.01" style="width:350px" v-model="addData.totalcount" placeholder="输入数量"></InputNumber>
-            </FormItem>
-            <FormItem label="限制购买数">
-              <InputNumber :min="0.01" style="width:350px" v-model="addData.buynum" placeholder="输入数量"></InputNumber>
-            </FormItem>
-            <FormItem>
-              <Button type="primary" @click="onClickSubmit" :loading="submitLoading">提交</Button>
-              <Button type="default" @click="onClickBack" style="margin-left: 10px">返回</Button>
+              <InputNumber :min="0.01" style="width:175px" v-model="addData.merchantcoupon" placeholder="输入价格"></InputNumber>
             </FormItem>
           </Col>
+          <Col span="6">
+            <FormItem label="平台优惠">
+              <InputNumber :min="0.01" style="width:175px" v-model="addData.coupon" placeholder="输入价格"></InputNumber>
+            </FormItem>
+          </Col>
+        </Row>
+        <Row type="flex" justify="center" align="middle" class="code-row-bg">
+          <Col span="6">
+            <FormItem label="抢购数量">
+              <InputNumber :min="0.01" style="width:175px" v-model="addData.totalcount" placeholder="输入数量"></InputNumber>
+            </FormItem>
+          </Col>
+          <Col span="6">
+            <FormItem label="限制购买数">
+              <InputNumber :min="0.01" style="width:175px" v-model="addData.buynum" placeholder="输入数量"></InputNumber>
+            </FormItem>
+          </Col>
+        </Row>
+        <Row type="flex" justify="center" class="code-row-bg">
+          <FormItem>
+            <Button type="primary" @click="onClickSubmit" :loading="submitLoading">提交</Button>
+            <Button type="default" @click="onClickBack" style="margin-left: 10px">返回</Button>
+          </FormItem>
         </Row>
       </Form>
     </Card>
@@ -236,6 +250,7 @@ export default {
                   title: response.data.msg,
                   desc: '添加限购商品成功！'
                 })
+                this.$router.push({name: 'ShopGoodsCx'})
                 this.$refs.from.resetFields()
                 this.getGoodsData(10, '')
               }else{

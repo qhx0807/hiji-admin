@@ -63,8 +63,9 @@
         <FormItem label="商家优惠">
           <InputNumber :min="0.01" style="width:100%" v-model="editData.merchantcoupon" placeholder="输入数量"></InputNumber>
         </FormItem>
-        <FormItem label="促销价格">
-          <InputNumber :min="0.01" style="width:100%" v-model="pidprice" placeholder="输入价格"></InputNumber>
+        <FormItem label="促销售价">
+          <span style="color: #f60">￥</span>
+          <span class="cardPrice">{{cardPrice}}</span>
         </FormItem>
       </Form>
       <div slot="footer">
@@ -97,7 +98,7 @@ export default {
       columns: [
         {
           title: '#',
-          type: 'index',
+          key: 'goodsid',
           width: 60
         },
         {
@@ -134,14 +135,19 @@ export default {
           width: 100
         },
         {
-          title: '库存',
-          key: 'goodsstock',
+          title: '抢购数量',
+          key: 'totalcount',
           width: 90
         },
         {
-          title: '商品价格',
-          key: 'goodsprice',
-          width: 100
+          title: '剩余抢购数量',
+          key: 'remaincount',
+          width: 90
+        },
+        {
+          title: '会员抢购数量',
+          key: 'buynum',
+          width: 90
         },
         {
           title: '促销时间',
@@ -186,7 +192,8 @@ export default {
           key: 'pidprice',
           width: 120,
           render: (h, params) => {
-            return h('div', {}, params.row.pidprice)
+            const pidprice = params.row.goodsprice - params.row.coupon - params.row.merchantcoupon
+            return h('div', {}, pidprice)
           }
         },
         // {
@@ -243,6 +250,14 @@ export default {
   created () {
     this.getTableData()
     this.getCardsData(10, '')
+  },computed: {
+    cardPrice () {
+      if (this.editData.goodsprice && this.editData.merchantcoupon && this.editData.coupon) {
+        return Number(this.editData.goodsprice) - Number(this.editData.merchantcoupon) - Number(this.editData.coupon)
+      } else {
+        return this.pidprice
+      }
+    }
   },
   methods: {
     onClickSearch () {
@@ -387,4 +402,8 @@ export default {
 }
 </script>
 <style lang="less" scoped>
+.cardPrice{
+  font-size: 15px;
+  color: #f60;
+}
 </style>

@@ -30,7 +30,7 @@
             </FormItem>
           </Col>
           <Col span="6">
-            <FormItem label="享受次数"  prop="frequency">
+            <FormItem label="享受次数">
               <Input v-model="editData.frequency" ></Input>
             </FormItem>
             <FormItem label="活动类型" prop="type">
