@@ -337,7 +337,6 @@ export default {
     perChange (e) {
       console.log(e)
       this.modifyData.typename = e.label
-      // this.modifyData.type = e.value
     },
     addChange (e) {
       console.log(e)
@@ -417,10 +416,6 @@ export default {
       this.userLists = this.userList.map(Number)
       console.log(this.modifyData.userdetails)
       console.log(this.userLists)
-      // this.modifyData.userdetails = this.modifyData.userdetails.toString()
-      // console.log(this.modifyData.userdetails)
-
-
     },
     modifySave () {
       this.modifyModal = false

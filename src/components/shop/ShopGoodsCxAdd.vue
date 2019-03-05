@@ -45,7 +45,7 @@
                 style="width:350px"
                 :loading="searchLoading"
                 v-model="addData.goodsid"
-                :remote-method="onSearchGoods"
+                :remote-method="onSearchCards"
                 placeholder="选择商品">
                 <Option v-for="(item, index) in cardsData" :disabled="item.ispromote == 1" :key="item.id" :value="item.id">{{item.cardname}}</Option>
               </Select>
@@ -91,7 +91,7 @@
                 style="width:350px"
                 :loading="searchLoading"
                 v-model="cardsAtt"
-                :remote-method="onSearchGoods"
+                :remote-method="onSearchCards"
                 placeholder="选择商品">
                 <Option v-for="(item, index) in cardsData" :disabled="item.ispromote == 1" :key="item.id" :value="item.id">{{item.cardname}}</Option>
               </Select>
@@ -271,6 +271,9 @@ export default {
     },
     onSearchGoods (e) {
       this.getGoodsData(999999, e)
+    },
+    onSearchCards (e) {
+      this.getCardsData(999999, e)
     },
     getGoodsById (id) {
       this.$Message.loading({

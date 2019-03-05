@@ -31,7 +31,7 @@
         <FormItem label="促销结束时间" prop="endtime">
           <DatePicker type="datetime" style="width:100%" placeholder="选择时间" @on-change="onSelectEndDate" :value="editData.endtime"></DatePicker>
         </FormItem>
-        <FormItem label="剩余抢购数量">
+        <FormItem label="抢购数量限制">
           <InputNumber :min="0.01" style="width:100%" v-model="editData.remaincount" placeholder="输入数量"></InputNumber>
         </FormItem>
         <FormItem label="优惠卷使用状态">
@@ -54,7 +54,7 @@
             <Option v-for="(item, index) in cardsData" :disabled="item.ispromote == 1" :key="item.id" :value="item.id">{{item.cardname}}</Option>
           </Select>
         </FormItem>
-        <FormItem label="会员可购数">
+        <FormItem label="抢购数量限制">
           <InputNumber :min="0.01" style="width:100%" v-model="editData.buynum" placeholder="输入数量"></InputNumber>
         </FormItem>
         <FormItem label="平台优惠">
@@ -145,7 +145,7 @@ export default {
           width: 90
         },
         {
-          title: '会员抢购数量',
+          title: '抢购数量限制',
           key: 'buynum',
           width: 90
         },
@@ -391,9 +391,11 @@ export default {
       if (this.switchli === 0) {
         this.switchli = 1
         this.getTableData()
+        this.$Message.info('卡卷列表')
       } else {
         this.switchli = 0
         this.getTableData()
+        this.$Message.info('商品列表')
       }
       console.log(this.switchli)
 
