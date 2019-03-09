@@ -107,24 +107,24 @@
         <Row type="flex" justify="center" align="middle" class="code-row-bg">
           <Col span="6">
             <FormItem label="商家优惠" >
-              <InputNumber :min="0.01" style="width:175px" v-model="addData.merchantcoupon" placeholder="输入价格"></InputNumber>
+              <InputNumber :min="0" style="width:175px" v-model="addData.merchantcoupon" placeholder="输入价格"></InputNumber>
             </FormItem>
           </Col>
           <Col span="6">
             <FormItem label="平台优惠">
-              <InputNumber :min="0.01" style="width:175px" v-model="addData.coupon" placeholder="输入价格"></InputNumber>
+              <InputNumber :min="0" style="width:175px" v-model="addData.coupon" placeholder="输入价格"></InputNumber>
             </FormItem>
           </Col>
         </Row>
         <Row type="flex" justify="center" align="middle" class="code-row-bg">
           <Col span="6">
             <FormItem label="抢购数量">
-              <InputNumber :min="0.01" style="width:175px" v-model="addData.totalcount" placeholder="输入数量"></InputNumber>
+              <InputNumber :min="0" style="width:175px" v-model="addData.totalcount" placeholder="输入数量"></InputNumber>
             </FormItem>
           </Col>
           <Col span="6">
             <FormItem label="限制购买数">
-              <InputNumber :min="0.01" style="width:175px" v-model="addData.buynum" placeholder="输入数量"></InputNumber>
+              <InputNumber :min="0" style="width:175px" v-model="addData.buynum" placeholder="输入数量"></InputNumber>
             </FormItem>
           </Col>
         </Row>

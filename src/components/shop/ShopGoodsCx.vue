@@ -31,8 +31,8 @@
         <FormItem label="促销结束时间" prop="endtime">
           <DatePicker type="datetime" style="width:100%" placeholder="选择时间" @on-change="onSelectEndDate" :value="editData.endtime"></DatePicker>
         </FormItem>
-        <FormItem label="抢购数量限制">
-          <InputNumber :min="0.01" style="width:100%" v-model="editData.remaincount" placeholder="输入数量"></InputNumber>
+        <FormItem label="剩余抢购数量">
+          <InputNumber :min="0" style="width:100%" v-model="editData.remaincount" placeholder="输入数量"></InputNumber>
         </FormItem>
         <FormItem label="优惠卷使用状态">
           <Select v-model="editData.dytype" style="width:100%">
@@ -55,13 +55,13 @@
           </Select>
         </FormItem>
         <FormItem label="抢购数量限制">
-          <InputNumber :min="0.01" style="width:100%" v-model="editData.buynum" placeholder="输入数量"></InputNumber>
+          <InputNumber :min="0" style="width:100%" v-model="editData.buynum" placeholder="输入数量"></InputNumber>
         </FormItem>
         <FormItem label="平台优惠">
-          <InputNumber :min="0.01" style="width:100%" v-model="editData.coupon" placeholder="输入数量"></InputNumber>
+          <InputNumber :min="0" style="width:100%" v-model="editData.coupon" placeholder="输入数量"></InputNumber>
         </FormItem>
         <FormItem label="商家优惠">
-          <InputNumber :min="0.01" style="width:100%" v-model="editData.merchantcoupon" placeholder="输入数量"></InputNumber>
+          <InputNumber :min="0" style="width:100%" v-model="editData.merchantcoupon" placeholder="输入数量"></InputNumber>
         </FormItem>
         <FormItem label="促销售价">
           <span style="color: #f60">￥</span>

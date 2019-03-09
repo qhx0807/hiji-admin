@@ -42,14 +42,14 @@
             </FormItem>
           </Col>
           <Col span="6">
-            <FormItem label="所属目录" prop="goodsname">
+            <!-- <FormItem label="所属目录" prop="goodsname">
               <Select v-model="editData.categoryid">
                 <Option v-for="(item, index) in goodsTypeData" :key="index" :value="item.id">{{item.name}}</Option>
               </Select>
-            </FormItem>
-            <!-- <FormItem label="所属目录" prop="goodsname">
-              <Cascader change-on-select @on-change="onSelectDep" :data="goodsTypeData"></Cascader>
             </FormItem> -->
+            <FormItem label="所属目录" prop="goodsname">
+              <Cascader change-on-select @on-change="onSelectDep" :data="goodsTypeData" v-model="editData.categoryid"></Cascader>
+            </FormItem>
             <FormItem label="库存数量" prop="goodsname">
               <InputNumber :max="9999999" style="width:100%" :min="0" v-model="editData.goodsstock"></InputNumber>
             </FormItem>
@@ -353,6 +353,7 @@ export default {
           // console.log(response)
           if (response.data.code === 0){
             this.merchantData = response.data.data.result
+
           }else{
             this.$Message.warning(response.data.msg)
           }
@@ -371,19 +372,20 @@ export default {
           // console.log(response)
           if (response.data.code === 0){
             let cas = response.data.data
-            // let getCas = function (arr) {
-            //   arr.forEach(item => {
-            //     item.label = item.name,
-            //     item.value = item.id
-            //     item.children = item.child
-            //     if (item.child.length > 0) {
-            //       getCas(item.child)
-            //     }
-            //   })
-            // }
-            // getCas(cas)
+            let getCas = function (cas) {
+              cas.forEach(item => {
+                item.label = item.name,
+                item.value = item.id
+                item.children = item.child
+                if (item.child.length > 0) {
+                  getCas(item.child)
+                }
+              })
+            }
+            getCas(cas)
+            console.log(cas)
             this.goodsTypeData = cas
-            // console.log(this.goodsTypeData)
+            console.log(this.goodsTypeData)
           }else{
             this.$Message.warning(response.data.msg)
           }
