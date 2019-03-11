@@ -84,7 +84,6 @@ const CutDownPriceEdit = r => require.ensure([], () => r(require('@/components/a
 const CollageBuy = r => require.ensure([], () => r(require('@/components/activity/CollageBuy.vue')))
 const CollageBuyAdd = r => require.ensure([], () => r(require('@/components/activity/CollageBuyAdd.vue')))
 const CollageBuyEdit = r => require.ensure([], () => r(require('@/components/activity/CollageBuyEdit.vue')))
-
 const AcuLog = r => require.ensure([], () => r(require('@/components/auction/AcuLog.vue')))
 const UserScore = r => require.ensure([], () => r(require('@/components/merchant/UserScore.vue')))
 const ParkingReport = r => require.ensure([], () => r(require('@/components/parking/ParkingReport.vue')))
@@ -98,6 +97,8 @@ const SysMsg = r => require.ensure([], () => r(require('@/components/service/Sys
 const SysType = r => require.ensure([], () => r(require('@/components/service/SysType.vue')))
 const PayDiscount = r => require.ensure([], () => r(require('@/components/activity/PayDiscount.vue')))
 const ShopOrderRefund = r => require.ensure([], () => r(require('@/components/shop/ShopOrderRefund.vue')))
+const LuckDraw = r => require.ensure([], () => r(require('@/components/activity/LuckDraw.vue')))
+const LuckDrawEdit = r => require.ensure([], () => r(require('@/components/activity/LuckDrawEdit.vue')))
 
 const routes = [
   {
@@ -517,6 +518,16 @@ const routes = [
         path: 'CollageBuy/:id',
         component: CollageBuyEdit,
         name: 'CollageBuyEdit'
+      },
+      {
+        path: 'LuckDraw',
+        component: LuckDraw,
+        name: 'LuckDraw'
+      },
+      {
+        path: 'LuckDraw/:id',
+        component: LuckDrawEdit,
+        name: 'LuckDrawEdit'
       },
       {
         path: 'UserScore',
