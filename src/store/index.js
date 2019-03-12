@@ -78,6 +78,9 @@ const store = new Vuex.Store({
       {value: 9, label: '邀请有礼领取商品'},
       {value: 10, label: '邀请有礼卡券'},
       {value: 11, label: '虚拟订单'},
+      {value: 12, label: '抢购商品订单'},
+      {value: 13, label: '抢购卡券订单'},
+      {value: 14, label: '超市订单'},
     ],
     inviteTypeArr: [
       {value: 1, label: '线下实物商品'},
