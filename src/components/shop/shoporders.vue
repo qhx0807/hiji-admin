@@ -180,15 +180,27 @@ export default {
           key: 'orderno',
           fixed: 'right',
           align: 'center',
-          width: 90,
+          width: 120,
           render: (h, params) => {
-            return h('a', {
+            const see = h('a', {
               on: {
                 click: () => {
                   this.onClickSeeInfo(params.row)
                 }
               }
             }, '查看详情')
+            const pri = h('a', {
+              on: {
+                click: () => {
+                  this.onClickPrint(params.row)
+                }
+              },
+              style: {
+                marginLeft: '12px',
+                color: '#f90'
+              }
+            }, '打印')
+            return h('div',[see,pri])
           }
         },
       ],
@@ -400,6 +412,27 @@ export default {
           )
         }
       })
+    },
+    onClickPrint (row) {
+      this.$Message.loading({
+        duration: 0,
+        content: '加载中...'
+      })
+      serverApi('/order/orderoutone', {orderno: row.orderno},
+        response => {
+          this.$Message.destroy()
+          if (response.data.code === 0) {
+            downloadFile(response.data.data)
+          } else {
+            this.$Message.warning(response.data.msg)
+          }
+        },
+        error => {
+          this.$Message.destroy()
+          console.log(error)
+          this.$Message.warning('连接失败！')
+        }
+      )
     }
   }
 }

@@ -55,17 +55,17 @@
             </Row>
             <Row>
               <Col span="6">
-                <FormItem label="每人抽奖机会">
+                <FormItem label="单人总抽奖机会">
                   <InputNumber :min="0" style="width:100%" v-model="addData.singlenum" placeholder="输入数量"></InputNumber>
                 </FormItem>
               </Col>
               <Col span="6">
-                <FormItem label="每日抽奖机会">
+                <FormItem label="每人每日抽奖机会">
                   <InputNumber :min="0" style="width:100%" v-model="addData.daynum" placeholder="输入数量"></InputNumber>
                 </FormItem>
               </Col>
               <Col span="6">
-                <FormItem label="总中奖机会">
+                <FormItem label="单人最多中奖次数">
                   <InputNumber :min="0" style="width:100%" v-model="addData.singledraw" placeholder="输入数量"></InputNumber>
                 </FormItem>
               </Col>

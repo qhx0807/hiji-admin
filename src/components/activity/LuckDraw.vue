@@ -27,13 +27,13 @@
         <FormItem label="结束时间" prop="endtime">
           <DatePicker type="datetime" style="width:100%" placeholder="选择时间" @on-change="onSelectEndDate"></DatePicker>
         </FormItem>
-        <FormItem label="每人抽奖机会">
+        <FormItem label="单人总抽奖机会">
           <InputNumber :min="0" style="width:100%" v-model="addData.singlenum" placeholder="输入数量"></InputNumber>
         </FormItem>
-        <FormItem label="每日抽奖机会">
+        <FormItem label="每人每日抽奖机会">
           <InputNumber :min="0" style="width:100%" v-model="addData.daynum" placeholder="输入数量"></InputNumber>
         </FormItem>
-        <FormItem label="总中奖机会">
+        <FormItem label="单人最多中奖次数">
           <InputNumber :min="0" style="width:100%" v-model="addData.singledraw" placeholder="输入数量"></InputNumber>
         </FormItem>
         <FormItem label="好友助力">
