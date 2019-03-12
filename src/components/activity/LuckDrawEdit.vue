@@ -8,6 +8,7 @@
               <img src="http://cdn.cqyyy.cn/pic/20190311163115.png" alt="">
               <p>{{addData.gamename}}</p>
             </div>
+            <div class="phone-content" :style="{backgroundImage: 'url('+ addData.bgimg +')'}"></div>
           </div>
         </div>
         <div class="editarea">
@@ -20,16 +21,16 @@
               </Col>
               <Col span="6">
                 <FormItem label="背景图">
-                  <Input v-model="addData.shareimg" >
-                    <UploadFile @uploadSucc="onUploadShareImg" slot="append"></UploadFile>
+                  <Input v-model="addData.bgimg" >
+                    <UploadFile @uploadSucc="onUploadbgimgImg" slot="append"></UploadFile>
                   </Input>
                 </FormItem>
               </Col>
               <Col span="12">
                 <FormItem label="活动时间">
-                  <DatePicker type="datetime" placeholder="选择时间" @on-change="onSelectStartDate"></DatePicker>
+                  <DatePicker type="datetime" placeholder="选择时间" @on-change="onSelectStartDate" :value="addData.starttime"></DatePicker>
                   -
-                  <DatePicker type="datetime" placeholder="选择时间" @on-change="onSelectEndDate"></DatePicker>
+                  <DatePicker type="datetime" placeholder="选择时间" @on-change="onSelectEndDate" :value="addData.endtime"></DatePicker>
                 </FormItem>
               </Col>
               <Col span="12">
@@ -179,7 +180,7 @@
             </Tabs>
             <Row>
               <Col span="24">
-                <Button type="primary" style="margin-left:80px;" :loading="isLoading" @click="onClickSave">保存配置</Button>
+                <Button type="primary" style="margin-left:80px;" :loading="submitLoading" @click="onClickSave">保存配置</Button>
               </Col>
             </Row>
           </div>
@@ -265,7 +266,8 @@ export default {
           type: 5, // 摇一摇
           url: 'http://cdn.cqyyy.cn/pic/20190311180503.png'
         },
-      ]
+      ],
+      submitLoading: false
     }
   },
   created () {
@@ -274,11 +276,24 @@ export default {
   methods: {
     getGameInfo () {
       this.$store.commit('pageLoading', true)
+      let arr = [
+        {
+          name: '',
+          imgurl: '',
+          img: '',
+          cardid: '',
+          num: 0,
+          imgshare: '',
+          drawval: '',
+          msgdesc: ''
+        }
+      ]
       const id = this.$route.params.id
       serverApi('/activity/gameinfo', {id: id},
         response => {
           if (response.data.code === 0) {
             this.addData = response.data.data
+            this.tabs = response.data.data.gamelist.length > 0 ? response.data.data.gamelist : arr
           } else {
             this.$Message.warning(response.data.msg)
           }
@@ -309,6 +324,9 @@ export default {
     onUploadLoseImg (path) {
       this.addData.loseimg = path
     },
+    onUploadbgimgImg (path) {
+      this.addData.bgimg = path
+    },
     handleTabsAdd () {
       let obj = {
         name: '',
@@ -321,6 +339,7 @@ export default {
         msgdesc: ''
       }
       this.tabs.push(obj)
+      this.activeTab = this.tabs.length - 1
     },
     onClickPrice (e) {
       this.tabs.splice(e, 1)
@@ -330,7 +349,24 @@ export default {
       this.tabs[index].imgurl = path
     },
     onClickSave () {
+      this.addData.gamelist = JSON.stringify(this.tabs)
+      this.submitLoading = true
       console.log(this.addData)
+      serverApi('/activity/game', this.addData,
+        response => {
+          this.submitLoading = false
+          if (response.data.code === 0) {
+            this.$Message.success(response.data.msg)
+          } else {
+            this.$Message.warning(response.data.msg)
+          }
+        },
+        error => {
+          this.submitLoading = false
+          console.log(error)
+          this.$Message.error(error.toString())
+        }
+      )
     }
   }
 }
@@ -369,6 +405,11 @@ export default {
             font-size: 15px;
             color: #444;
           }
+        }
+        .phone-content{
+          width: 100%;
+          height: 100%;
+          background-size: 100% 100%;
         }
       }
     }

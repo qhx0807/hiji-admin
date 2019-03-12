@@ -237,7 +237,7 @@ export default {
       })
     },
     onClickLink (row) {
-
+      this.$Message.info('请询问开发者~~~')
     },
     onClickEdit (row) {
       this.$router.push({name: 'LuckDrawEdit', params: {id: row.id}})
