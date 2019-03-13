@@ -237,7 +237,10 @@ export default {
       })
     },
     onClickLink (row) {
-      this.$Message.info('请询问开发者~~~')
+      let text = 'http://m.cqyyy.cn/activity/h5game/index.html?id='+row.id
+      this.$copyText(text).then((e) => {
+        this.$Message.success('活动链接已复制到剪切板')
+      })
     },
     onClickEdit (row) {
       this.$router.push({name: 'LuckDrawEdit', params: {id: row.id}})

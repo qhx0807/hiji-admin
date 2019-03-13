@@ -8,9 +8,10 @@ import store from './store'
 import iView from 'iview'
 // import viserVue from 'viser-vue'
 import 'iview/dist/styles/iview.css'
+import VueClipboard from 'vue-clipboard2'
 
 Vue.use(iView)
-// Vue.use(viserVue)
+Vue.use(VueClipboard)
 
 Vue.config.productionTip = false
 

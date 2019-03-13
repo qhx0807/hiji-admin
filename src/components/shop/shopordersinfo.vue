@@ -15,6 +15,7 @@
         <ButtonGroup>
           <Button  >{{orderData.order_status}}</Button>
           <Button  >{{orderData.pay_status}}</Button>
+          <Button  @click="onClickPrint(orderData.orderno)">打印</Button>
         </ButtonGroup>
         <div>
           <Row>
@@ -138,6 +139,7 @@
 </template>
 <script>
 import serverApi from '../../axios'
+import { downloadFile } from '../../utlis/tools.js'
 export default {
   name: 'ShopOrdersInfo',
   data () {
@@ -203,6 +205,27 @@ export default {
     onClickCoupon (id) {
       // this.$Message.info('暂未开放~~')
       this.$router.push({name: 'CouponItemEdit', params: {id: id}})
+    },
+    onClickPrint (orderno) {
+      this.$Message.loading({
+        duration: 0,
+        content: '加载中...'
+      })
+      serverApi('/order/orderoutone', {orderno: orderno},
+        response => {
+          this.$Message.destroy()
+          if (response.data.code === 0) {
+            downloadFile(response.data.data)
+          } else {
+            this.$Message.warning(response.data.msg)
+          }
+        },
+        error => {
+          this.$Message.destroy()
+          console.log(error)
+          this.$Message.warning('连接失败！')
+        }
+      )
     }
   }
 }
@@ -266,7 +289,7 @@ export default {
   position: absolute;
   right: 12px;
   top: 16px;
-  width: 200px;
+  width: 300px;
   text-align: right;
   padding-right: 20px;
 }
