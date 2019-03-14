@@ -139,7 +139,7 @@
                         </FormItem>
                       </Col>
                       <Col span="4">
-                        <FormItem label="数量">
+                        <FormItem label="数量(剩余)">
                           <InputNumber :min="0" style="width:100%" v-model="tab.num" placeholder="输入数量"></InputNumber>
                         </FormItem>
                       </Col>
@@ -156,6 +156,11 @@
                             <UploadFile @uploadSucc="e => onUploadImg(e, index)" slot="append"></UploadFile>
                           </Input>
                           <!-- <UploadFile @uploadSucc="e => onUploadImg(e, index)"></UploadFile> -->
+                        </FormItem>
+                      </Col>
+                      <Col span="4">
+                        <FormItem label="已抽中数量">
+                          <Input v-model="tab.restnum" readonly></Input>
                         </FormItem>
                       </Col>
                     </Row>
@@ -242,7 +247,8 @@ export default {
           num: 0,
           imgshare: '',
           drawval: '',
-          msgdesc: ''
+          msgdesc: '',
+          restnum: ''
         }
       ],
       gameType: [
@@ -336,7 +342,8 @@ export default {
         num: '',
         imgshare: '',
         drawval: '',
-        msgdesc: ''
+        msgdesc: '',
+        restnum: ''
       }
       this.tabs.push(obj)
       this.activeTab = this.tabs.length - 1
