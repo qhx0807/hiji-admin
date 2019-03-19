@@ -105,7 +105,7 @@
       </div>
       <div slot="footer">
         <Button @click="shModal = false">关闭</Button>
-        <Button type="default" @click="downLoadShData">下载数据</Button>
+        <Button type="default" :loading="downLoading" @click="downLoadShData">下载数据</Button>
       </div>
     </Modal>
   </div>
@@ -119,6 +119,7 @@ export default {
     return {
       tableLoading: false,
       exportLoading: false,
+      downLoading: false,
       shModal: false,
       pageSizeOpts: [10, 15, 25, 50, 70, 100, 200],
       searchObj: {
@@ -541,11 +542,35 @@ export default {
         this.$Message.info('暂无数据')
         return false
       }
-      let para = {
-        filename: this.shData.name + '_' + this.shData.applyno,
-        original: false
+      // let para = {
+      //   filename: this.shData.name + '_' + this.shData.applyno,
+      //   original: false
+      // }
+      // this.$refs.tableSh.exportCsv(para)
+      this.downLoading = true
+      let d = {
+        id: this.shData.id,
+        isout: '1'
       }
-      this.$refs.tableSh.exportCsv(para)
+      serverApi('/Finance/auditororderlist', d,
+        response => {
+          console.log(response)
+          if (response.data.code === 0){
+            if (typeof(response.data.data) === 'string') {
+              downloadFile(response.data.data)
+            } else {
+              this.$Message.warning('返回数据错误！')
+            }
+          }else{
+            this.$Message.warning(response.data.msg)
+          }
+          this.downLoading = false
+        },
+        error => {
+          console.log(error)
+          this.downLoading = false
+        }
+      )
     },
   }
 }

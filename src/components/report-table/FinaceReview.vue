@@ -644,11 +644,35 @@ export default {
         this.$Message.info('暂无数据')
         return false
       }
-      let para = {
-        filename: this.shData.merchantname + '_' + this.shData.applyno,
-        original: false
+      // let para = {
+      //   filename: this.shData.merchantname + '_' + this.shData.applyno,
+      //   original: false
+      // }
+      // this.$refs.tableSh.exportCsv(para)
+      this.downLoading = true
+      let d = {
+        id: this.shData.id,
+        isout: '1'
       }
-      this.$refs.tableSh.exportCsv(para)
+      serverApi('/Finance/auditororderlist', d,
+        response => {
+          console.log(response)
+          if (response.data.code === 0){
+            if (typeof(response.data.data) === 'string') {
+              downloadFile(response.data.data)
+            } else {
+              this.$Message.warning('返回数据错误！')
+            }
+          }else{
+            this.$Message.warning(response.data.msg)
+          }
+          this.downLoading = false
+        },
+        error => {
+          console.log(error)
+          this.downLoading = false
+        }
+      )
     },
     changePage (e) {
       this.page = e

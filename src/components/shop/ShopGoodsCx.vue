@@ -166,7 +166,7 @@ export default {
             return h(CountDown, {
               props: {
                 currentTime: new Date().getTime(),
-                startTime: new Date(params.row.starttime).getTime(),
+                startTime: new Date().getTime(),
                 endTime: new Date(params.row.endtime).getTime(),
                 tipText: '离开始',
                 tipTextEnd: '离结束',
