@@ -100,6 +100,8 @@ const PayDiscount = r => require.ensure([], () => r(require('@/components/activi
 const ShopOrderRefund = r => require.ensure([], () => r(require('@/components/shop/ShopOrderRefund.vue')))
 const LuckDraw = r => require.ensure([], () => r(require('@/components/activity/LuckDraw.vue')))
 const LuckDrawEdit = r => require.ensure([], () => r(require('@/components/activity/LuckDrawEdit.vue')))
+const Additional = r => require.ensure([], () => r(require('@/components/activity/Additional.vue')))
+const AdditionalGoods = r => require.ensure([], () => r(require('@/components/activity/AdditionalGoods.vue')))
 
 const routes = [
   {
@@ -594,6 +596,17 @@ const routes = [
         path: 'FinaceMerchant',
         component: FinaceMerchant,
         name: 'FinaceMerchant'
+      },
+      {
+        path: 'Additional',
+        component: Additional,
+        name: 'Additional'
+      }
+      ,
+      {
+        path: 'AdditionalGoods',
+        component: AdditionalGoods,
+        name: 'AdditionalGoods'
       }
     ]
   },
