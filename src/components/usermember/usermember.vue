@@ -4,26 +4,27 @@
       <Form :label-width="60">
         <Row :gutter="12">
           <Col span="5">
-            <FormItem label="关键字">
+            <FormItem label="关键字" style="margin-bottom: 0">
               <Input v-model="searchKey" placeholder="搜索关键字..." ></Input>
             </FormItem>
           </Col>
           <Col span="5">
-            <FormItem label="开始时间">
+            <FormItem label="开始时间" style="margin-bottom: 0">
               <DatePicker type="datetime" style="width:100%" @on-change="onSelectTime1" placeholder="选择时间"></DatePicker>
             </FormItem>
           </Col>
           <Col span="5">
-            <FormItem label="结束时间">
+            <FormItem label="结束时间" style="margin-bottom: 0">
               <DatePicker type="datetime" style="width:100%" @on-change="onSelectTime2" placeholder="选择时间"></DatePicker>
             </FormItem>
           </Col>
           <Col span="8">
-            <FormItem>
+            <FormItem  style="margin-bottom: 0">
               <Button type="primary" style="margin-left:8px" icon="ios-search" @click="onClickSearch">搜索</Button>
               <router-link :to="{name: 'UserMemberAdd'}">
                 <Button type="primary" style="margin-left:8px" icon="md-add">新增</Button>
               </router-link>
+              <Button style="margin-left:8px" icon="ios-cloud-download-outline" :loading="downloading" @click="onClickDownLoad">下载数据</Button>
             </FormItem>
           </Col>
         </Row>
@@ -40,6 +41,7 @@
 </template>
 <script>
 import serverApi from '../../axios'
+import { downloadFile } from '../../utlis/tools.js'
 export default {
   name: 'UserMember',
   data () {
@@ -170,7 +172,8 @@ export default {
         },
       ],
       starttime: '',
-      endtime: ''
+      endtime: '',
+      downloading: false
     }
   },
   created () {
@@ -244,6 +247,30 @@ export default {
     },
     onClickMore (id) {
       this.$router.push({name: 'UserMemberCenter', params: {id: id}})
+    },
+    onClickDownLoad () {
+      let d = {
+        like: this.searchKey,
+        starttime: this.starttime,
+        endtime: this.endtime,
+        exports: 'out'
+      }
+      this.downloading = true
+      serverApi('/member/showmember', d,
+        response => {
+          // console.log(response)
+          if (response.data.code === 0){
+            downloadFile(response.data.data)
+          }else{
+            this.$Message.warning(response.data.msg)
+          }
+          this.downloading = false
+        },
+        error => {
+          console.log(error)
+          this.downloading = false
+        }
+      )
     }
   }
 }
