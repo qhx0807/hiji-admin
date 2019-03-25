@@ -158,26 +158,11 @@ export default {
           key: 'remaincount',
           width: 90
         },
-        // {
-        //   title: '扩展信息',
-        //   key: 'cardextrainfo',
-        //   minWidth: 280,
-        //   ellipsis: true,
-        //   render: (h, params) => {
-        //     return h('Poptip', {
-        //       props: {
-        //         content: params.row.cardextrainfo,
-        //         placement: 'top-start',
-        //         trigger: 'hover'
-        //       }
-        //     }, params.row.cardextrainfo)
-        //   }
-        // },
-        // {
-        //   title: '关联活动',
-        //   key: 'assignactiveid',
-        //   width: 100
-        // },
+        {
+          title: '当前价格',
+          key: 'price',
+          width: 90
+        },
         {
           title: '发放时间',
           key: 'id',
