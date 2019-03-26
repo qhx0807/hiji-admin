@@ -102,6 +102,7 @@ const LuckDraw = r => require.ensure([], () => r(require('@/components/activity/
 const LuckDrawEdit = r => require.ensure([], () => r(require('@/components/activity/LuckDrawEdit.vue')))
 const Additional = r => require.ensure([], () => r(require('@/components/activity/Additional.vue')))
 const AdditionalGoods = r => require.ensure([], () => r(require('@/components/activity/AdditionalGoods.vue')))
+const ShopStatistics = r => require.ensure([], () => r(require('@/components/shop/ShopStatistics.vue')))
 
 const routes = [
   {
@@ -601,12 +602,16 @@ const routes = [
         path: 'Additional',
         component: Additional,
         name: 'Additional'
-      }
-      ,
+      },
       {
         path: 'AdditionalGoods',
         component: AdditionalGoods,
         name: 'AdditionalGoods'
+      },
+      {
+        path: 'ShopStatistics',
+        component: ShopStatistics,
+        name: 'ShopStatistics'
       }
     ]
   },

@@ -55,6 +55,7 @@
 </template>
 <script>
 import serverApi from '../../axios'
+import { downloadFile } from '../../utlis/tools.js'
 export default {
   name: 'LuckDraw',
   data () {
@@ -145,7 +146,7 @@ export default {
         {
           title: '操作',
           key: 'id',
-          width: 130,
+          width: 190,
           render: (h, params) => {
             let link = h('a', {
               style: {
@@ -168,7 +169,17 @@ export default {
                 }
               }
             }, '编辑')
-            return h('div', [link, edit])
+            let down = h('a', {
+              style: {
+                marginRight: '10px'
+              },
+              on: {
+                click: () => {
+                  this.onClickDownload(params.row)
+                }
+              }
+            }, '导出抽奖数据')
+            return h('div', [link, edit, down])
           }
         },
       ],
@@ -244,6 +255,31 @@ export default {
     },
     onClickEdit (row) {
       this.$router.push({name: 'LuckDrawEdit', params: {id: row.id}})
+    },
+    onClickDownload (row) {
+      this.$Message.loading({
+        duration: 0,
+        content: '正在生成Excel...'
+      })
+      serverApi('/activity/gamelogout', {id: row.id},
+        response => {
+          this.$Message.destroy()
+          if (response.data.code === 0) {
+            if (typeof(response.data.data) === 'string') {
+              downloadFile(response.data.data)
+            } else {
+              this.$Message.warning('返回数据格式不正确！')
+            }
+          } else {
+            this.$Message.warning(response.data.msg)
+          }
+        },
+        error => {
+          this.$Message.destroy()
+          console.log(error)
+          this.$Message.warning('连接失败！')
+        }
+      )
     }
   }
 }
