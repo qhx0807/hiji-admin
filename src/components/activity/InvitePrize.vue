@@ -6,6 +6,10 @@
     </Card>
     <Card :bordered="false">
       <Table :loading="tableLoading" :columns="columns" height="560" :data="tableData"></Table>
+      <div style="float: right; padding-top:12px">
+        <Page :total="count" show-total :current="page" @on-change="changePage" ></Page>
+      </div>
+      <div style="clear:both"></div>
     </Card>
 
     <Modal v-model="editModal" width="850">
@@ -61,6 +65,8 @@ export default {
       editModal: false,
       modal_loading: false,
       tableData: [],
+      count: 0,
+      page: 1,
       columns: [
         {
           title: '#',
@@ -210,12 +216,15 @@ export default {
   },
   methods: {
     getTableData () {
-      let d = {}
+      let d = {
+        page: this.page
+      }
       this.tableLoading = true
       serverApi('/activity/inviteindex', d,
         response => {
           console.log(response)
           if (response.data.code === 0){
+            this.count = response.data.data.count
             this.tableData = response.data.data.result
           }else{
             this.$Message.warning(response.data.msg)
@@ -260,7 +269,7 @@ export default {
         onOk: () => {
           row.isuse = 0
           row.invitemsg = JSON.stringify(row.invitemsg)
-          serverApi('/activity/inviteadd', row,
+          serverApi('/activity/invitedel', {id: row.id},
             response => {
               if (response.data.code === 0) {
                 this.$Message.success(response.data.msg)
@@ -310,6 +319,10 @@ export default {
           this.$Message.error(error.toString())
         }
       )
+    },
+    changePage (e) {
+      this.page = e
+      this.getTableData()
     }
   }
 }

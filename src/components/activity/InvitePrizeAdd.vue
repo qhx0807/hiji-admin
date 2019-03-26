@@ -11,7 +11,6 @@
           <router-link :to="{name: 'InvitePrize'}">返回【邀请有礼活动列表】</router-link>
         </p>
       </div>
-
       <div class="clear-fix"></div>
     </Card>
     <Card :bordered="false">
@@ -23,49 +22,15 @@
                 <Option v-for="(item, index) in areaData" :key="index" :value="item.id">{{item.areaname}}</Option>
               </Select>
             </FormItem>
-            <FormItem label="邀请人数" prop="invitenum">
-              <InputNumber :max="999999" :min="1" style="width:100%" v-model="addData.invitenum"></InputNumber>
-            </FormItem>
-            <FormItem label="奖励名称" prop="goodsname">
-              <Input v-model="addData.goodsname"></Input>
-            </FormItem>
-            <FormItem label="缩略图">
-              <Input v-model="addData.goodsimg"></Input>
-              <FileUpload @uploadSucc="uploadimg"></FileUpload>
-            </FormItem>
           </Col>
           <Col span="6">
             <FormItem label="开始时间" prop="starttime">
               <DatePicker type="datetime" placeholder="选择时间" style="width:100%" @on-change="onSelectStartTime"></DatePicker>
             </FormItem>
-            <FormItem label="奖励对象" prop="invitetype">
-              <Select v-model="addData.invitetype" placeholder="请选择">
-                <Option :value="1">邀请人</Option>
-                <Option :value="2">被邀请人</Option>
-              </Select>
-            </FormItem>
-            <FormItem label="是否需邮费" v-show="addData.type==2" prop="isshipping">
-               <i-switch v-model="addData.isshipping" :true-value="1" :false-value="0" size="large">
-                  <span slot="open">是</span>
-                  <span slot="close">否</span>
-                </i-switch>
-            </FormItem>
-            <FormItem label="邮费" v-show="addData.isshipping == 1" prop="shippingamout">
-              <!-- <Input v-model="addData.shippingamout"></Input> -->
-              <InputNumber :max="999999" :min="0" style="width:100%" v-model="addData.shippingamout"></InputNumber>
-            </FormItem>
           </Col>
           <Col span="6">
             <FormItem label="结束时间" prop="endtime">
               <DatePicker type="datetime" placeholder="选择时间" style="width:100%" @on-change="onSelectEndTime"></DatePicker>
-            </FormItem>
-            <FormItem label="奖励类型" prop="invitetype">
-              <Select v-model="addData.type" placeholder="请选择">
-                <Option v-for="(item, index) in inviteTypeArr" :key="index" :value="item.value">{{item.label}}</Option>
-              </Select>
-            </FormItem>
-            <FormItem label="属性id" v-show="addData.type==1 || addData.type==2" prop="goodstypeid">
-              <Input v-model="addData.goodstypeid"></Input>
             </FormItem>
           </Col>
           <Col span="6">
@@ -75,37 +40,93 @@
                 <Option :value="0">关闭</Option>
               </Select>
             </FormItem>
-            <FormItem label="奖励数量" prop="num">
-              <InputNumber :max="999999" :min="1" style="width:100%" v-model="addData.num"></InputNumber>
-            </FormItem>
-            <FormItem label="奖品ID" prop="prizeid">
-              <Input v-model="addData.prizeid">
-                <Button v-show="addData.type==2 || addData.type==4 || addData.type==1 || addData.type==3" type="primary" @click="onClickSearchGoods" slot="append" icon="ios-search"></Button>
-              </Input>
-            </FormItem>
-            <Alert v-show="ingoods.id">
-              <div class="ingoodsbox">
-                <p>{{ingoods.goodsname}}</p>
-                <ul>
-                  <li>
-                    <span>售价：</span>
-                    <span>{{ingoods.goodsprice}}</span>
-                  </li>
-                  <li>
-                    <span>平台优惠：</span>
-                    <span>{{ingoods.coupon}}</span>
-                  </li>
-                  <li>
-                    <span>商户优惠：</span>
-                    <span>{{ingoods.merchantcoupon}}</span>
-                  </li>
-                  <li>
-                    <span>运费：</span>
-                    <span>{{ingoods.freight}}</span>
-                  </li>
-                </ul>
-              </div>
-            </Alert>
+          </Col>
+        </Row>
+        <Divider dashed/>
+        <Row>
+          <Col span="24">
+            <Tabs v-model="tabname" type="card" >
+              <Button @click="handleTabsAdd" slot="extra">增加</Button>
+              <TabPane :label="'规则'+(index+1)" v-for="(item, index) in rulesArr" :key="index">
+                <Row>
+                  <Col span="6">
+                    <FormItem label="邀请人数" prop="invitenum">
+                      <InputNumber :max="999999" :min="1" style="width:100%" v-model="item.invitenum"></InputNumber>
+                    </FormItem>
+                    <FormItem label="奖励名称" prop="goodsname">
+                      <Input v-model="item.goodsname"></Input>
+                    </FormItem>
+                    <FormItem label="缩略图">
+                      <Input v-model="item.goodsimg"></Input>
+                      <FileUpload @uploadSucc="e => uploadimg(e, index)"></FileUpload>
+                    </FormItem>
+                    <FormItem>
+                      <Button @click="onClickdelTab">删除此规则</Button>
+                    </FormItem>
+                  </Col>
+                  <Col span="6">
+                    <FormItem label="奖励对象" prop="invitetype">
+                      <Select v-model="item.invitetype" placeholder="请选择">
+                        <Option :value="1">邀请人</Option>
+                        <Option :value="2">被邀请人</Option>
+                      </Select>
+                    </FormItem>
+                    <FormItem label="是否需邮费"  prop="isshipping">
+                      <i-switch v-model="item.isshipping" :true-value="1" :false-value="0" size="large">
+                          <span slot="open">是</span>
+                          <span slot="close">否</span>
+                        </i-switch>
+                    </FormItem>
+                    <FormItem label="邮费" prop="shippingamout">
+                      <InputNumber :max="999999" :min="0" style="width:100%" v-model="item.shippingamout"></InputNumber>
+                    </FormItem>
+                  </Col>
+                  <Col span="6">
+                    <FormItem label="奖励类型" prop="invitetype">
+                      <Select v-model="item.type" placeholder="请选择">
+                        <Option v-for="(item, index) in inviteTypeArr" :key="index" :value="item.value">{{item.label}}</Option>
+                      </Select>
+                    </FormItem>
+                    <FormItem label="属性id" prop="goodstypeid">
+                      <Input v-model="item.goodstypeid"></Input>
+                    </FormItem>
+                  </Col>
+                  <Col span="6">
+                    <FormItem label="奖励数量" prop="num">
+                      <InputNumber :max="999999" :min="1" style="width:100%" v-model="item.num"></InputNumber>
+                    </FormItem>
+                    <FormItem label="奖品ID" prop="prizeid">
+                      <Input v-model="item.prizeid">
+                        <Button v-show="item.type==2 || item.type==4 || item.type==1 || item.type==3" type="primary" @click="onClickSearchGoods(item, index)" slot="append" icon="ios-search"></Button>
+                      </Input>
+                    </FormItem>
+                    <Alert v-show="item.ingoods.id">
+                      <div class="ingoodsbox">
+                        <p>{{item.ingoods.goodsname}}</p>
+                        <ul>
+                          <li>
+                            <span>售价：</span>
+                            <span>{{item.ingoods.goodsprice}}</span>
+                          </li>
+                          <li>
+                            <span>平台优惠：</span>
+                            <span>{{item.ingoods.coupon}}</span>
+                          </li>
+                          <li>
+                            <span>商户优惠：</span>
+                            <span>{{item.ingoods.merchantcoupon}}</span>
+                          </li>
+                          <li>
+                            <span>运费：</span>
+                            <span>{{item.ingoods.freight}}</span>
+                          </li>
+                        </ul>
+                      </div>
+                    </Alert>
+                  </Col>
+                </Row>
+              </TabPane>
+            </Tabs>
           </Col>
         </Row>
         <Divider dashed/>
@@ -137,33 +158,38 @@ export default {
         endtime: '',
         ison: 1,
         invitemsg: '',
-        prizeid: '',
-        goodstypeid: '',
-        type: null,
-        num: 1,
-        isshipping: 0,
-        shippingamout: '0',
-        invitenum: 1,
-        invitetype: 1,
-        goodsname: '',
-        goodsimg: '',
       },
+      tabname: 0,
       areaData: [],
       ingoods: {},
       rules: {
-        // cityid: { required: true, type: 'number', message: '不能为空', trigger: 'blur' },
         starttime: { required: true, message: '不能为空', trigger: 'blur' },
         endtime: { required: true, message: '不能为空', trigger: 'blur' },
         ison: { required: true, type: 'number', message: '不能为空', trigger: 'blur' },
-        prizeid: { required: true, message: '不能为空', trigger: 'blur' },
-        type: { required: true, type: 'number', message: '不能为空', trigger: 'blur' },
-        invitetype: { required: true, type: 'number', message: '不能为空', trigger: 'blur' },
-        num: { required: true, type: 'number', message: '不能为空', trigger: 'blur' },
-        invitenum: { required: true, type: 'number', message: '不能为空', trigger: 'blur' },
-        goodsname: { required: true, message: '不能为空', trigger: 'blur' },
-        goodsimg: { required: true, message: '不能为空', trigger: 'blur' },
+        // prizeid: { required: true, message: '不能为空', trigger: 'blur' },
+        // type: { required: true, type: 'number', message: '不能为空', trigger: 'blur' },
+        // invitetype: { required: true, type: 'number', message: '不能为空', trigger: 'blur' },
+        // num: { required: true, type: 'number', message: '不能为空', trigger: 'blur' },
+        // invitenum: { required: true, type: 'number', message: '不能为空', trigger: 'blur' },
+        // goodsname: { required: true, message: '不能为空', trigger: 'blur' },
+        // goodsimg: { required: true, message: '不能为空', trigger: 'blur' },
       },
-      loading: false
+      loading: false,
+      rulesArr: [
+        {
+          type: 2,
+          num: 1,
+          prizeid: '',
+          goodstypeid: '',
+          isshipping: 0,
+          shippingamout: '0',
+          invitenum: 1,
+          invitetype: 1,
+          goodsname: '',
+          goodsimg: '',
+          ingoods: {}
+        }
+      ]
     }
   },
   created () {
@@ -198,28 +224,24 @@ export default {
     onSelectEndTime (e) {
       this.addData.endtime = e
     },
-    uploadimg (e) {
-      this.addData.goodsimg = e
+    uploadimg (e, index) {
+      this.rulesArr[index].goodsimg = e
+      // this.addData.goodsimg = e
     },
     onSubmit () {
-      console.log(this.addData)
+      if (this.rulesArr.length < 1) {
+        this.$Message.warning('请填写规则！')
+        return false
+      }
       this.$refs.form.validate(val => {
         if (!val) return false
         this.loading = true
         this.addData.cityid = this.addData.cityid.toString()
-        let obj = {
-          "type": this.addData.type,
-          "num":  this.addData.num,
-          "prizeid": this.addData.prizeid,
-          "goodstypeid": this.addData.goodstypeid,
-          "isshipping": this.addData.isshipping,
-          "shippingamout": this.addData.shippingamout,
-          "invitenum": this.addData.invitenum,
-          "invitetype": this.addData.invitetype,
-          "goodsname": this.addData.goodsname,
-          "goodsimg": this.addData.goodsimg,
-        }
-        this.addData.invitemsg = JSON.stringify(obj)
+        let invitemsg = JSON.parse(JSON.stringify(this.rulesArr))
+        invitemsg.forEach(item => {
+          delete item.ingoods
+        })
+        this.addData.invitemsg =  JSON.stringify(invitemsg)
         serverApi('/activity/inviteadd', this.addData,
           response => {
             if (response.data.code === 0) {
@@ -238,29 +260,53 @@ export default {
         )
       })
     },
-    onClickSearchGoods () {
-      if (!this.addData.prizeid) {
+    onClickSearchGoods (row, index) {
+      if (!row.prizeid) {
         this.$Message.warning('请输入商品ID')
         return false
       }
-      serverApi('/activity/goodsinfo', { id: this.addData.prizeid, type: this.addData.type },
+      let d = {
+        id: row.prizeid,
+        type: row.type
+      }
+      serverApi('/activity/goodsinfo', d,
         response => {
           if (response.data.code === 0) {
-            this.ingoods = response.data.data
-            this.addData.goodsimg = response.data.data.goodsimg
-            console.log(response)
+            row.ingoods = response.data.data
+            row.goodsimg = response.data.data.goodsimg
           } else {
-            this.ingoods = {}
+            row.ingoods = {}
             this.$Message.warning(response.data.msg)
           }
         },
         error => {
-          this.ingoods = {}
+          row.ingoods = {}
           this.$Message.error(error.toString())
           console.log(error)
         }
       )
-    }
+    },
+    handleTabsAdd () {
+      let obj = {
+        type: 2,
+        num: 1,
+        prizeid: '',
+        goodstypeid: '',
+        isshipping: 0,
+        shippingamout: '0',
+        invitenum: 1,
+        invitetype: 1,
+        goodsname: '',
+        goodsimg: '',
+        ingoods: {}
+      }
+      this.rulesArr.push(obj)
+      this.tabname = this.rulesArr.length - 1
+    },
+    onClickdelTab (e) {
+      this.rulesArr.splice(e, 1)
+      this.tabname = 0
+    },
   }
 }
 </script>
