@@ -535,7 +535,6 @@ export default {
       } else {
         this.editData.goodstype = ''
       }
-      console.log(this.editData)
       let realArr = this.picArr.filter(item => item !== '')
       this.editData.imgdetailed = realArr.toString()
       let content = this.$refs.ue.getUEContent()

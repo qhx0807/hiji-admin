@@ -25,7 +25,7 @@
             <FormItem label="活动ID">
               <Input v-model="addData.mainid"></Input>
             </FormItem>
-            <FormItem label="商品/卡卷ID">
+            <FormItem label="商品ID">
               <Input v-model="addData.goodsid"></Input>
             </FormItem>
           </Col>
@@ -145,11 +145,11 @@ export default {
         // },
         {
           title: '商家优惠',
-          key: 'coupon',
+          key: 'merchantcoupon',
         },
         {
           title: '平台优惠',
-          key: 'merchantcoupon',
+          key: 'coupon',
         },
         {
           title: '操作',

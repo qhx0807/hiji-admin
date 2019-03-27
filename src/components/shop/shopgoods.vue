@@ -41,7 +41,7 @@ export default {
         {
           title: '#',
           key: 'id',
-          width: 60
+          width: 100
         },
         // {
         //   title: '商品编码',
