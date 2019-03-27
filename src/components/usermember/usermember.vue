@@ -116,6 +116,21 @@ export default {
           width: 80
         },
         {
+          title: '积分',
+          key: 'intergral',
+          width: 80
+        },
+        {
+          title: '下单次数',
+          key: 'ordernum',
+          width: 80
+        },
+        {
+          title: '合计实付',
+          key: 'cash',
+          width: 80
+        },
+        {
           title: '操作',
           key: 'user_id',
           width: 220,
