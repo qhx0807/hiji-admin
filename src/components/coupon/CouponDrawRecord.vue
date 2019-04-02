@@ -153,6 +153,13 @@ export default {
           tooltip: true
         },
         {
+          title: '核销商户',
+          key: 'merchantname',
+          minWidth: 120,
+          ellipsis: true,
+          tooltip: true
+        },
+        {
           title: '作废时间',
           key: 'dstime',
           width: 140,

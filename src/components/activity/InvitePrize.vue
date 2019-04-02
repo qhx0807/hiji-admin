@@ -75,7 +75,7 @@ export default {
         },
         {
           title: '城市',
-          key: 'cityid',
+          key: 'cityname',
           width: 100,
         },
         {

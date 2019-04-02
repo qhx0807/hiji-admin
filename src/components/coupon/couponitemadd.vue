@@ -82,14 +82,14 @@
           </Col>
           <Col span="6">
             <FormItem label="限制属性">
-              <Select v-model="addData.restrict">
+              <Select v-model="addData.restricts">
                 <Option value="0">不限制</Option>
                 <Option value="1">每天</Option>
                 <Option value="2">活动期间</Option>
               </Select>
             </FormItem>
             <FormItem label="限制属性值">
-              <InputNumber :max="999999" style="width: 100%" :min="1" v-model="addData.restrictvalue"></InputNumber>
+              <InputNumber :max="999999" style="width: 100%" :min="1" v-model="addData.restrictsvalue"></InputNumber>
             </FormItem>
             <FormItem label="商户/商品" v-show="addData.typeid == 6 && addData.dytype != 6 && addData.dytype != 99 && addData.dytype != 4">
               <Tooltip content="请输入商品/商户或类型id,用逗号隔开" placement="top">

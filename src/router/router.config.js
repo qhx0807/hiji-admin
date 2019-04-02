@@ -103,6 +103,7 @@ const LuckDrawEdit = r => require.ensure([], () => r(require('@/components/activ
 const Additional = r => require.ensure([], () => r(require('@/components/activity/Additional.vue')))
 const AdditionalGoods = r => require.ensure([], () => r(require('@/components/activity/AdditionalGoods.vue')))
 const ShopStatistics = r => require.ensure([], () => r(require('@/components/shop/ShopStatistics.vue')))
+const SendCoupon = r => require.ensure([], () => r(require('@/components/coupon/SendCoupon.vue')))
 
 const routes = [
   {
@@ -612,6 +613,11 @@ const routes = [
         path: 'ShopStatistics',
         component: ShopStatistics,
         name: 'ShopStatistics'
+      },
+      {
+        path: 'SendCoupon',
+        component: SendCoupon,
+        name: 'SendCoupon'
       }
     ]
   },

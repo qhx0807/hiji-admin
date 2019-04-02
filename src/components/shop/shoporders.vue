@@ -37,7 +37,15 @@
               </Select>
             </FormItem>
           </Col>
-          <Col span="18">
+          <Col span="6">
+            <FormItem label="筛选" style="margin-bottom:0">
+              <Select v-model="searchObj.ispay" clearable>
+                <Option value="0">未支付</Option>
+                <Option value="1">已支付</Option>
+              </Select>
+            </FormItem>
+          </Col>
+          <Col span="12">
             <FormItem style="margin-bottom:0">
               <Button type="primary" style="margin-left:8px" icon="ios-search" @click="onClickSearch">搜索</Button>
               <Button type="default" :loading="expLoading" style="margin-left:8px" icon="md-arrow-down" @click="onClickExport">导出订单</Button>
@@ -72,7 +80,8 @@ export default {
         endtime: '',
         ispay: '',
         merchantcode: '',
-        billtype: ''
+        billtype: '',
+        ispay: ''
       },
       searchKey: '',
       ordertype: 0,

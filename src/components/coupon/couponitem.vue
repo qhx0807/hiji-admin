@@ -23,6 +23,7 @@
           <Col span="8">
             <Button type="primary" style="margin-left:8px" icon="ios-search" @click="onClickSearch">搜索</Button>
             <Button type="primary" style="margin-left:8px" icon="md-add" @click="onClickAdd">新增</Button>
+            <Button type="default" :loading="recLoading" style="margin-left:8px" icon="md-arrow-down" @click="onClickExport">导出卡卷列表</Button>
           </Col>
         </Form>
       </Row>
@@ -55,10 +56,25 @@
         <Button type="primary" @click="recModal = false">确定</Button> -->
       </div>
     </Modal>
+    <Modal v-model="modal12" draggable scrollable title="状态选择">
+        <RadioGroup v-model="itemData.cardmainstate" @on-change="onCardmainstate">
+          <Radio :label="0">编制</Radio>
+          <Radio :label="1">发布</Radio>
+          <Radio :label="2">有效</Radio>
+          <Radio :label="3">停止</Radio>
+          <Radio :label="4">无效</Radio>
+          <Radio :label="5">过期</Radio>
+        </RadioGroup>
+        <div slot="footer">
+        <Button @click="modal12 = false">取消</Button>
+        <Button type="primary" @click="cardState">确定</Button>
+      </div>
+    </Modal>
   </div>
 </template>
 <script>
 import serverApi from '../../axios'
+import { downloadFile } from '../../utlis/tools.js'
 export default {
   name: 'CouponItem',
   data () {
@@ -69,10 +85,14 @@ export default {
       modal_loading: false,
       recLoading: false,
       recModal: false,
+      modal12: false,
       status: '',
       count: 0,
       page: 1,
       pageSize: 10,
+      animal: '',
+      cardid: '',
+      cardmainstate: '',
       columns: [
         {
           title: '编号',
@@ -123,15 +143,25 @@ export default {
           key: 'cardmainstate',
           width: 80,
           render: (h, params) => {
-            if (params.row.cardmainstate == 1) {
-              return h('Tag', {
-                props: {
-                  color: 'success'
-                }
-              }, '发布')
-            }
+            // if (params.row.cardmainstate == 1) {
+            //   return h('Tag', {
+            //     props: {
+            //       color: 'success'
+            //     }
+            //   }, '发布')
+            // }
             let text = this.stateData[params.row.cardmainstate] || ''
-            return h('span', {}, text)
+            // return h('span', {}, text)
+            return h('span', {
+              style: {
+                color: 'blue',
+                cursor: 'pointer'
+              },
+              on: {
+                click: ()=>this.onChangeCard(params.row)
+              },
+            }, text)
+
           }
         },
         {
@@ -344,7 +374,8 @@ export default {
       recpage: 1,
       recId: null,
       bool: true,
-      voidResain: ''
+      voidResain: '',
+      itemData: {}
     }
   },
   created () {
@@ -553,7 +584,72 @@ export default {
           )
         }
       })
-    }
+    },
+    onChangeCard (row) {
+      this.itemData = row
+      this.modal12 = true
+
+
+    },
+    onCardmainstate (e) {
+      console.log(e)
+      this.cardmainstate = e
+
+    },
+    cardState () {
+      this.modal12 = false
+      let d = {
+        id: this.itemData.id,
+        cardmainstate: this.cardmainstate
+      }
+      serverApi('/card/cardmainstatechange', d,
+        response => {
+          if (response.data.code === 0){
+            this.$Message.success(response.data.msg)
+            this.itemData.cardmainstate = this.cardmainstate
+          }else{
+            this.$Message.warning(response.data.msg)
+          }
+        },
+        error => {
+          console.log(error)
+          this.$Message.error('修改失败！')
+        }
+      )
+    },
+    onClickExport () {
+      this.recLoading = true
+      this.$Message.loading({
+        duration: 0,
+        content: '正在生成Excel...'
+      })
+      let d = {
+        like: this.searchKey,
+        status: this.status
+      }
+      serverApi('/card/cardmainout', d,
+        response => {
+          console.log(response)
+          this.$Message.destroy()
+          if (response.data.code === 0) {
+            if (typeof(response.data.data) === 'string') {
+              downloadFile(response.data.data)
+            } else {
+              this.$Message.warning('返回数据格式不正确！')
+            }
+          } else {
+            this.$Message.warning(response.data.msg)
+          }
+          this.recLoading = false
+        },
+        error => {
+          this.$Message.destroy()
+          console.log(error)
+          this.recLoading = false
+          this.$Message.warning('连接失败！')
+        }
+      )
+    },
   }
 }
 </script>

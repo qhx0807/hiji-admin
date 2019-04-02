@@ -6,10 +6,16 @@
           <Option value="">全部商户</Option>
           <Option v-for="(item, index) in merchantData" :key="index" :value="item.merchantcode">{{item.name}}</Option>
         </Select>
+        <Select v-model="isonsale" clearable style="width:220px" placeholder="选择状态">
+          <Option value="0">下架</Option>
+          <Option value="1">上架</Option>
+          <Option value="2">仓库</Option>
+        </Select>
         <Button type="primary" style="margin-left:8px" icon="ios-search" @click="onClickSearch">搜索</Button>
         <router-link :to="{name: 'ShopGoodsAdd'}">
           <Button type="primary" style="margin-left:8px" icon="md-add">新增</Button>
         </router-link>
+        <Button type="default" :loading="recLoading" style="margin-left:8px" icon="md-arrow-down" @click="onClickExport">导出商品列表</Button>
     </Card>
     <Card :bordered="false" style="margin-top:12px;">
       <div class="body">
@@ -25,6 +31,7 @@
 </template>
 <script>
 import serverApi from '../../axios'
+import { downloadFile } from '../../utlis/tools.js'
 export default {
   name: 'ShopGoods',
   data () {
@@ -37,6 +44,7 @@ export default {
       count: 0,
       page: 1,
       pageSize: 10,
+      isonsale: '',
       columns: [
         {
           title: '#',
@@ -118,20 +126,45 @@ export default {
         //     return params.row.ispromote == 1 ? c : ''
         //   }
         // },
+        // {
+        //   title: '状态',
+        //   key: 'isonsale',
+        //   sortable: 'custom',
+        //   width: 120,
+        //   render: (h, params) => {
+        //     let text = params.row.isonsale == 1 ? '上架' : '下架'
+        //     let color = params.row.isonsale == 1 ? 'success' : 'warning'
+        //     return h('Tag', {
+        //       props: {
+        //         type: 'dot',
+        //         color: color
+        //       }
+        //     }, text)
+        //   }
+        // },
         {
-          title: '状态',
-          key: 'isonsale',
+          title: '商品状态',
+          key: 'isrecommend',
+          width: 110,
           sortable: 'custom',
-          width: 120,
           render: (h, params) => {
             let text = params.row.isonsale == 1 ? '上架' : '下架'
-            let color = params.row.isonsale == 1 ? 'success' : 'warning'
-            return h('Tag', {
+            let open = h('span', {slot: 'open'}, '上架')
+            let close = h('span', {slot: 'close'}, '下架')
+            return h('i-switch', {
               props: {
-                type: 'dot',
-                color: color
+                // trueValue: 1,
+                // falseValue: 0,
+                size: 'large',
+                loading: params.row.loading,
+                value: params.row.isonsale > 0
+              },
+              on: {
+                'on-change': (e) => {
+                  this.OnChangeIsonsale(e, params.row)
+                }
               }
-            }, text)
+            }, [open, close])
           }
         },
         {
@@ -210,6 +243,7 @@ export default {
     },
     getTableData (order) {
       let d = {
+        isonsale: this.isonsale,
         pagesize: this.pageSize,
         page: this.page,
         like: this.searchKey,
@@ -329,6 +363,68 @@ export default {
           this.$Message.destroy()
           console.log(error)
           this.$Message.error(error.toString())
+        }
+      )
+    },
+    OnChangeIsonsale (e, row) {
+      console.log(e)
+      this.$Message.loading({
+        content: '加载中...',
+        duration: 0
+      })
+      let d = {
+        id: row.id,
+        isonsale: e ? 1 : 0
+      }
+      serverApi('/goods/goodsonsalechange', d,
+        response => {
+          // console.log(response)
+          this.$Message.destroy()
+          if (response.data.code === 0){
+            this.$Message.success(response.data.msg)
+          }else{
+            this.$Message.warning(response.data.msg)
+          }
+        },
+        error => {
+          this.$Message.destroy()
+          console.log(error)
+          this.$Message.error(error.toString())
+        }
+      )
+    },
+    onClickExport () {
+      this.recLoading = true
+      this.$Message.loading({
+        duration: 0,
+        content: '正在生成Excel...'
+      })
+      let d = {
+        like: this.searchKey,
+        isonsale: this.isonsale,
+        merchantcode: this.merchantcode
+      }
+      console.log(d)
+      serverApi('/goods/goodsout', d,
+        response => {
+          console.log(response)
+          this.$Message.destroy()
+          if (response.data.code === 0) {
+            if (typeof(response.data.data) === 'string') {
+              downloadFile(response.data.data)
+            } else {
+              this.$Message.warning('返回数据格式不正确！')
+            }
+          } else {
+            this.$Message.warning(response.data.msg)
+          }
+          this.recLoading = false
+        },
+        error => {
+          this.$Message.destroy()
+          console.log(error)
+          this.recLoading = false
+          this.$Message.warning('连接失败！')
         }
       )
     }
