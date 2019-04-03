@@ -1,7 +1,7 @@
 <template>
   <div class="box">
     <Card :bordered="false" class="mb10">
-      <Form :label-width="60">
+      <Form :label-width="80">
         <Row>
           <Col span="5">
             <FormItem prop="typename" label="开始时间" style="margin-bottom:0">
@@ -24,12 +24,12 @@
     </Card>
     <Card :bordered="false">
       <div class="table-box">
-        <Table height="600" border size="small" :loading="tableLoading" :columns="columns" :data="tableData"></Table>
+        <Table border size="small" :loading="tableLoading" :columns="columns" :data="tableData"></Table>
       </div>
-      <!-- <div style="float: right; padding-top:12px">
+      <div style="float: right; padding-top:12px">
         <Page :total="count" show-total :current="page" @on-change="changePage" show-sizer></Page>
       </div>
-      <div style="clear:both"></div> -->
+      <div style="clear:both"></div>
     </Card>
   </div>
 </template>
@@ -37,7 +37,7 @@
 import serverApi from '../../axios'
 import { downloadFile } from '../../utlis/tools.js'
 export default {
-  name: 'PayDiscountReport',
+  name: 'ShopGoodsCxReport',
   data () {
     return {
       tableLoading: false,
@@ -46,30 +46,59 @@ export default {
       count: 0,
       tableData: [],
       columns: [
-        // {
-        //   title: '#',
-        //   key: 'id',
-        //   width: 60
-        // },
         {
           title: '商户名称',
           key: 'merchantname',
         },
         {
-          title: '交易笔数',
-          key: 'num',
+          title: '订单类型',
+          key: 'type',
         },
         {
-          title: '实付合计',
-          key: 'cash',
+          title: '商品',
+          key: 'goodsname',
+          width: 200
         },
         {
-          title: '应收合计',
-          key: 'total',
+          title: '市场价',
+          key: 'marketprice',
         },
         {
-          title: '优惠合计',
+          title: '定价',
+          key: 'goodsprice',
+        },
+        {
+          title: '销售价',
+          key: 'buyprice',
+        },
+        {
+          title: '订单实付价',
+          key: 'cash_amount',
+        },
+        {
+          title: '平台优惠',
           key: 'coupon',
+        },
+        {
+          title: '商户优惠',
+          key: 'merchantcoupon',
+        },
+        {
+          title: '抵用券金额',
+          key: 'ordercoupon',
+        },
+        {
+          title: '抵用券名称',
+          key: 'cardname',
+        },
+        {
+          title: '购买数量',
+          key: 'goodsnum',
+        },
+        {
+          title: '下单时间',
+          key: 'createtime',
+          width: 150
         },
         {
           title: '折扣率',
@@ -80,7 +109,9 @@ export default {
       searchObj: {
         starttime: '',
         endtime: '',
-        exports: ''
+        exports: '',
+        page: 1,
+        pagesize: 10
       }
     }
   },
@@ -92,11 +123,12 @@ export default {
       this.tableLoading = true
       this.isloading = true
       this.searchObj.exports = ''
-      serverApi('/Paymentactive/reportform', this.searchObj,
+      serverApi('/goods/ispidreportform', this.searchObj,
         response => {
           console.log(response)
           if (response.data.code === 0) {
-            this.tableData = response.data.data
+            this.count = response.data.data.counts
+            this.tableData = response.data.data.result
           } else {
             this.$Message.warning(response.data.msg)
           }
@@ -112,7 +144,7 @@ export default {
       )
     },
     changePage (e) {
-      this.page = e
+      this.searchObj.page = e
       this.getTableData()
     },
     onClickExport () {
@@ -124,7 +156,7 @@ export default {
       let d = {
         exports: 'out'
       }
-      serverApi('/Paymentactive/reportform', d,
+      serverApi('/goods/ispidreportform', d,
         response => {
           this.$Message.destroy()
           this.isloading = false

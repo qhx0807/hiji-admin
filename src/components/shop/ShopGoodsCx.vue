@@ -8,6 +8,7 @@
           <Button type="primary" style="margin-left:8px" icon="md-add">新增</Button>
         </router-link>
         <Button type="primary" style="margin-left:8px" icon="ios-switch" @click="switchlist">商品卡券列表切换</Button>
+        <Button style="margin-left:8px" :to="{name: 'ShopGoodsCxReport'}">数据报表</Button>
       </div>
     </Card>
     <Card :bordered="false" style="margin-top:12px;">
