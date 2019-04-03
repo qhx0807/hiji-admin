@@ -45,6 +45,9 @@
             <FormItem label="商户选择">
               <Button type="dashed" @click="optional">自选</Button>
             </FormItem>
+            <FormItem label="报表">
+              <Button @click="onCLickReport">查看报表</Button>
+            </FormItem>
           </Col>
         </Row>
         <Row v-for="(item, index) in rules" :key="index">
@@ -281,7 +284,7 @@ export default {
       this.page = 1
       this.optional()
     },
-     remove () {
+    remove () {
       this.$Modal.confirm({
         title: '提示',
         content: '确定删除此活动？',
@@ -305,6 +308,9 @@ export default {
           )
         }
       })
+    },
+    onCLickReport () {
+      this.$router.push({name: 'PayDiscountReport'})
     }
   }
 }

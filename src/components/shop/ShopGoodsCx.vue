@@ -249,7 +249,7 @@ export default {
   },
   created () {
     this.getTableData()
-    this.getCardsData(10, '')
+    this.getCardsData('')
   },computed: {
     cardPrice () {
       if (this.editData.goodsprice && this.editData.merchantcoupon && this.editData.coupon) {
@@ -366,10 +366,11 @@ export default {
         }
       })
     },
-    getCardsData (size, key) {
+    getCardsData (key) {
+      this.modal_loading = true
       let d = {
         page: 1,
-        pagesize: size,
+        pagesize: 20,
         like: key
       }
       serverApi('/card/coupon', d,
@@ -377,11 +378,14 @@ export default {
           console.log(response)
           if (response.data.code === 0){
             this.cardsData = response.data.data.result
+            this.modal_loading = false
           }else{
+            this.modal_loading = false
             this.$Message.warning(response.data.msg)
           }
         },
         error => {
+          this.modal_loading = false
           console.log(error)
           this.$Message.error('连接失败！')
         }
@@ -398,7 +402,10 @@ export default {
         this.$Message.info('商品列表')
       }
       console.log(this.switchli)
-
+    },
+    onSearchGoods (e) {
+      console.log(e)
+      this.getCardsData(e)
     }
   }
 }

@@ -104,6 +104,7 @@ const Additional = r => require.ensure([], () => r(require('@/components/activit
 const AdditionalGoods = r => require.ensure([], () => r(require('@/components/activity/AdditionalGoods.vue')))
 const ShopStatistics = r => require.ensure([], () => r(require('@/components/shop/ShopStatistics.vue')))
 const SendCoupon = r => require.ensure([], () => r(require('@/components/coupon/SendCoupon.vue')))
+const PayDiscountReport = r => require.ensure([], () => r(require('@/components/activity/PayDiscountReport.vue')))
 
 const routes = [
   {
@@ -618,6 +619,11 @@ const routes = [
         path: 'SendCoupon',
         component: SendCoupon,
         name: 'SendCoupon'
+      },
+      {
+        path: 'PayDiscountReport',
+        component: PayDiscountReport,
+        name: 'PayDiscountReport'
       }
     ]
   },

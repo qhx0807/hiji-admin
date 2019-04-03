@@ -15,47 +15,79 @@
       <div style="clear:both"></div>
     </Card>
 
-    <Modal v-model="addModal" width="750">
+    <Modal v-model="addModal" width="1050">
       <p slot="header" style="text-align:center">
         <span>新增</span>
       </p>
-      <Form :model="addData" ref="form" :rules="rules" :label-width="100">
+      <Form :model="addData" ref="form" :rules="rules" :label-width="120">
         <Row>
-          <Col span="12">
+          <Col span="24">
+            <FormItem label="活动名称" prop="type">
+              <Input v-model="addData.activityname" placeholder="请输入活动名称" clearable style="width: 560px" />
+            </FormItem>
+          </Col>
+          <Col span="8">
             <FormItem label="活动类型" prop="type">
               <Select v-model="addData.type" >
                 <Option :value="0">加价购商品</Option>
-                <!-- <Option :value="1">加价购卡卷</Option> -->
+                <Option :value="1">加价购卡卷</Option>
               </Select>
             </FormItem>
             <FormItem label="规则对象" >
-              <Select v-model="addData.buytype" >
+              <Select v-model="addData.buytype" v-if="addData.type===''">
+                <Option :value="0">请选择活动类型</Option>
+              </Select>
+              <Select v-model="addData.buytype" v-if="addData.type===0">
                 <Option :value="0">以下商户</Option>
                 <Option :value="1">以下商品类型</Option>
                 <Option :value="2">以下商品</Option>
               </Select>
-            </FormItem>
-            <FormItem label="订单最小金额" prop="orderpaymin">
-              <InputNumber :max="99999" :min="0" v-model="addData.orderpaymin" style="width: 220px"></InputNumber>
-              <!-- <Tooltip max-width="800" content="规则：假如用户支付订单金额为N元，设置订单最小金额为0元，订单最大金额为20元，则0<N<=20的情况满足加价购条件" placement="right-end">
-                <Icon type="ios-help-circle" size="20" class="icon"/>
-              </Tooltip> -->
-              <Poptip word-wrap trigger="hover" width="300" content="规则：假如用户支付订单金额为N元，设置订单最小金额为0元，订单最大金额为20元，则 0<N<=20 的情况满足加价购条件." placement="right">
-                <Icon type="ios-help-circle" size="20" class="icon"/>
-              </Poptip>
+              <Select v-model="addData.buytype" v-if="addData.type===1">
+                <Option :value="0">以下商户</Option>
+                <Option :value="1">以下商卡卷类型</Option>
+                <Option :value="2">以下卡卷</Option>
+              </Select>
             </FormItem>
           </Col>
-          <Col span="12">
+          <Col span="8">
             <FormItem label="开始时间" prop="type">
               <DatePicker type="datetime" @on-change="onStarttime" style="width: 200px"></DatePicker>
             </FormItem>
             <FormItem label="结束时间" prop="type">
               <DatePicker type="datetime" @on-change="onEndtime" style="width: 200px"></DatePicker>
             </FormItem>
+
+          </Col>
+          <Col span="8">
+            <FormItem label="订单最小金额" prop="orderpaymin">
+              <InputNumber :max="99999" :min="0" v-model="addData.orderpaymin" style="width: 150px"></InputNumber>
+              <!-- <Tooltip max-width="800" content="规则：假如用户支付订单金额为N元，设置订单最小金额为0元，订单最大金额为20元，则0<N<=20的情况满足加价购条件" placement="right-end">
+                <Icon type="ios-help-circle" size="20" class="icon"/>
+              </Tooltip> -->
+              <Poptip word-wrap trigger="hover" width="200" content="规则：假如用户支付订单金额为N元，设置订单最小金额为0元，订单最大金额为20元，则 0<N<=20 的情况满足加价购条件." placement="right">
+                <Icon type="ios-help-circle" size="20" class="icon"/>
+              </Poptip>
+            </FormItem>
             <FormItem label="订单最大金额" prop="orderpaymax">
-              <InputNumber :max="99999" :min="0" v-model="addData.orderpaymax" style="width: 200px"></InputNumber>
+              <InputNumber :max="99999" :min="0" v-model="addData.orderpaymax" style="width: 150px"></InputNumber>
             </FormItem>
           </Col>
+          <!-- <Col span="24">
+            <FormItem label="选择优惠卷">
+              <Select
+                filterable
+                remote
+                clearable
+                multiple
+                style="width:100%"
+                :loading="searchLoading"
+                v-model="cardsAtt"
+                :remote-method="onSearchGoods"
+                placeholder="选择商品">
+                <Option v-for="(item, index) in cardsData" :disabled="item.ispromote == 1" :key="item.id" :value="item.id">{{item.cardname}}</Option>
+              </Select>
+            </FormItem>
+          <Col/> -->
         </Row>
       </Form>
       <div slot="footer">
@@ -63,12 +95,17 @@
         <Button type="primary" :loading="modal_loading" @click="onSave">发送</Button>
       </div>
     </Modal>
-    <Modal v-model="modifyModal" width="650">
+    <Modal v-model="modifyModal" width="750">
       <p slot="header" style="text-align:center">
         <span>修改</span>
       </p>
       <Form :model="modifyData" ref="form" :rules="modifyRule" :label-width="100">
         <Row>
+          <Col span="24">
+            <FormItem label="活动名称" prop="type">
+              <Input v-model="addData.activityname" placeholder="请输入活动名称" clearable style="width: 560px" />
+            </FormItem>
+          </Col>
           <Col span="12">
             <FormItem label="活动类型" prop="type">
               <Select v-model="modifyData.type" >
@@ -154,6 +191,10 @@ export default {
           title: 'ID',
           key: 'id',
           width: 80
+        },
+        {
+          title: '活动名称',
+          key: 'activityname',
         },
         {
           title: '类型名称',
