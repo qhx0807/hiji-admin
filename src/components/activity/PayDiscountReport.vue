@@ -121,10 +121,8 @@ export default {
         duration: 0,
         content: '加载中...'
       })
-      let d = {
-        exports: 'out'
-      }
-      serverApi('/Paymentactive/reportform', d,
+      this.searchObj.exports = 'out'
+      serverApi('/Paymentactive/reportform', this.searchObj,
         response => {
           this.$Message.destroy()
           this.isloading = false

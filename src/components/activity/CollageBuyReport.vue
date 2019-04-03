@@ -145,10 +145,8 @@ export default {
         duration: 0,
         content: '加载中...'
       })
-      let d = {
-        exports: 'out'
-      }
-      serverApi('/Activity/assemblereportform', d,
+      this.searchObj.exports = 'out'
+      serverApi('/Activity/assemblereportform', this.searchObj,
         response => {
           this.$Message.destroy()
           this.isloading = false
