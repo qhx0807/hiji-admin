@@ -109,6 +109,7 @@ const ShopGoodsCxReport = r => require.ensure([], () => r(require('@/components/
 const CollageBuyReport = r => require.ensure([], () => r(require('@/components/activity/CollageBuyReport.vue')))
 const CutDownPriceReport = r => require.ensure([], () => r(require('@/components/activity/CutDownPriceReport.vue')))
 const LuckDrawReport = r => require.ensure([], () => r(require('@/components/activity/LuckDrawReport.vue')))
+const OperateReport = r => require.ensure([], () => r(require('@/components/report-table/OperateReport.vue')))
 
 const routes = [
   {
@@ -648,6 +649,11 @@ const routes = [
         path: 'LuckDrawReport/:id',
         component: LuckDrawReport,
         name: 'LuckDrawReport'
+      },
+      {
+        path: 'OperateReport',
+        component: OperateReport,
+        name: 'OperateReport'
       }
     ]
   },
