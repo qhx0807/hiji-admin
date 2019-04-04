@@ -166,11 +166,11 @@ export default {
             key: 'discountrate',
           },
           {
-            title: '同比',
+            title: '环比',
             key: 'chainratio',
           },
           {
-            title: '环比',
+            title: '同比',
             key: 'yearonyear',
           }
         ]

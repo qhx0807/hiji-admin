@@ -146,7 +146,7 @@ export default {
         {
           title: '操作',
           key: 'id',
-          width: 190,
+          width: 250,
           render: (h, params) => {
             let link = h('a', {
               style: {
@@ -179,7 +179,17 @@ export default {
                 }
               }
             }, '导出抽奖数据')
-            return h('div', [link, edit, down])
+            let data = h('a', {
+              style: {
+                marginRight: '10px'
+              },
+              on: {
+                click: () => {
+                  this.onClickReport(params.row)
+                }
+              }
+            }, '活动报表')
+            return h('div', [link, edit, down, data])
           }
         },
       ],
@@ -280,6 +290,9 @@ export default {
           this.$Message.warning('连接失败！')
         }
       )
+    },
+    onClickReport (row) {
+      this.$router.push({name: 'LuckDrawReport', params: {id: row.id}})
     }
   }
 }
