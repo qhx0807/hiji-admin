@@ -48,7 +48,8 @@ export default {
       columns: [
         {
           title: '品类',
-          key: 'typeb'
+          key: 'typeb',
+          width: 100
         },
         {
           title: '订单数量',
@@ -250,6 +251,41 @@ export default {
           console.log(response)
           if (response.data.code === 0) {
             this.tableData = response.data.data
+            let obj = {
+              "numberb":0,
+              "numberd":0,
+              "totalb":0,
+              "totald":0,
+              "cashb":0,
+              "cashd":0,
+              "shippingamoutb":0,
+              "shippingamoutd":0,
+              "couponb":0,
+              "coupond":0,
+              "merchantcouponb":0,
+              "merchantcoupond":0,
+              "settlementpriceb":0,
+              "settlementpriced":0,
+              "settlementpostagepriceb":0,
+              "settlementpostagepriced":0,
+              "discountb":0,
+              "discountd":0,
+              "pointspriceb":0,
+              "pointspriced":0,
+              "feeb":0,
+              "feed":0
+            }
+            response.data.data.forEach(item => {
+              Object.keys(obj).forEach(k => {
+                obj[k] += Number(item[k])
+              })
+            })
+            Object.keys(obj).forEach(k => {
+              obj[k] = obj[k].toFixed(2)
+            })
+            obj.typeb = '合计'
+            this.tableData.push(obj)
+            console.log(obj)
           } else {
             this.$Message.warning(response.data.msg)
           }
