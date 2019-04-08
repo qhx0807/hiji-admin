@@ -58,12 +58,14 @@ export default {
             {
               title: '本期',
               key: 'numberb',
-              align: 'center'
+              align: 'center',
+              width: 100
             },
             {
               title: '对比',
               key: 'numberd',
-              align: 'center'
+              align: 'center',
+              width: 100
             },
           ]
         },
@@ -74,12 +76,14 @@ export default {
             {
               title: '本期',
               key: 'totalb',
-              align: 'center'
+              align: 'center',
+              width: 100
             },
             {
               title: '对比期',
               key: 'totald',
-              align: 'center'
+              align: 'center',
+              width: 100
             },
           ]
         },
@@ -90,12 +94,14 @@ export default {
             {
               title: '本期',
               key: 'cashb',
-              align: 'center'
+              align: 'center',
+              width: 100
             },
             {
               title: '对比期',
               key: 'cashd',
-              align: 'center'
+              align: 'center',
+              width: 100
             },
           ]
         },
@@ -106,12 +112,14 @@ export default {
             {
               title: '本期',
               key: 'shippingamoutb',
-              align: 'center'
+              align: 'center',
+              width: 100
             },
             {
               title: '对比期',
               key: 'shippingamoutd',
-              align: 'center'
+              align: 'center',
+              width: 100
             },
           ]
         },
@@ -122,12 +130,14 @@ export default {
             {
               title: '本期',
               key: 'couponb',
-              align: 'center'
+              align: 'center',
+              width: 100
             },
             {
               title: '对比期',
               key: 'coupond',
-              align: 'center'
+              align: 'center',
+              width: 100
             },
           ]
         },
@@ -138,12 +148,14 @@ export default {
             {
               title: '本期',
               key: 'merchantcouponb',
-              align: 'center'
+              align: 'center',
+              width: 100
             },
             {
               title: '对比期',
               key: 'merchantcoupond',
-              align: 'center'
+              align: 'center',
+              width: 100
             },
           ]
         },
@@ -154,12 +166,14 @@ export default {
             {
               title: '本期',
               key: 'settlementpriceb',
-              align: 'center'
+              align: 'center',
+              width: 100
             },
             {
               title: '对比期',
               key: 'settlementpriced',
-              align: 'center'
+              align: 'center',
+              width: 100
             },
           ]
         },
@@ -170,12 +184,14 @@ export default {
             {
               title: '本期',
               key: 'settlementpostagepriceb',
-              align: 'center'
+              align: 'center',
+              width: 100
             },
             {
               title: '对比期',
               key: 'settlementpostagepriced',
-              align: 'center'
+              align: 'center',
+              width: 100
             },
           ]
         },
@@ -186,12 +202,14 @@ export default {
             {
               title: '本期',
               key: 'discountb',
-              align: 'center'
+              align: 'center',
+              width: 100
             },
             {
               title: '对比期',
               key: 'discountd',
-              align: 'center'
+              align: 'center',
+              width: 100
             },
           ]
         },
@@ -202,12 +220,14 @@ export default {
             {
               title: '本期',
               key: 'pointspriceb',
-              align: 'center'
+              align: 'center',
+              width: 100
             },
             {
               title: '对比期',
               key: 'pointspriced',
-              align: 'center'
+              align: 'center',
+              width: 100
             },
           ]
         },
@@ -218,12 +238,14 @@ export default {
             {
               title: '本期',
               key: 'feeb',
-              align: 'center'
+              align: 'center',
+              width: 100
             },
             {
               title: '对比期',
               key: 'feed',
-              align: 'center'
+              align: 'center',
+              width: 100
             },
           ]
         },
@@ -239,14 +261,14 @@ export default {
     }
   },
   created () {
-    this.getTableData()
+    // this.getTableData()
   },
   methods: {
     getTableData () {
       this.tableLoading = true
       this.isloading = true
       this.searchObj.exports = ''
-      serverApi('/order/orderreportform', this.searchObj,
+      serverApi('/Reportform/orderreportform', this.searchObj,
         response => {
           console.log(response)
           if (response.data.code === 0) {
@@ -311,7 +333,7 @@ export default {
         content: '加载中...'
       })
       this.searchObj.exports = 'out'
-      serverApi('/order/orderreportform', this.searchObj,
+      serverApi('/Reportform/orderreportform', this.searchObj,
         response => {
           this.$Message.destroy()
           this.isloading = false

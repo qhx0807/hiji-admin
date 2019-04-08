@@ -42,19 +42,16 @@
             </FormItem>
           </Col>
         </Row>
-        <Divider dashed/>
+        <Divider orientation="left">邀请人</Divider>
         <Row>
           <Col span="24">
             <Tabs v-model="tabname" type="card" >
               <Button @click="handleTabsAdd" slot="extra">增加</Button>
               <TabPane :label="'规则'+(index+1)" v-for="(item, index) in rulesArr" :key="index">
                 <Row>
-                  <Col span="6">
+                  <Col span="4">
                     <FormItem label="邀请人数" prop="invitenum">
                       <InputNumber :max="999999" :min="1" style="width:100%" v-model="item.invitenum"></InputNumber>
-                    </FormItem>
-                    <FormItem label="奖励名称" prop="goodsname">
-                      <Input v-model="item.goodsname"></Input>
                     </FormItem>
                     <FormItem label="缩略图">
                       <Input v-model="item.goodsimg"></Input>
@@ -64,12 +61,17 @@
                       <Button @click="onClickdelTab">删除此规则</Button>
                     </FormItem>
                   </Col>
-                  <Col span="6">
-                    <FormItem label="奖励对象" prop="invitetype">
-                      <Select v-model="item.invitetype" placeholder="请选择">
-                        <Option :value="1">邀请人</Option>
-                        <Option :value="2">被邀请人</Option>
-                      </Select>
+                  <Col span="4">
+                  <FormItem label="奖励名称" prop="goodsname">
+                      <Input v-model="item.goodsname"></Input>
+                    </FormItem>
+                    <FormItem label="剩余数量" >
+                      <Input v-model="item.remaincount"></Input>
+                    </FormItem>
+                  </Col>
+                  <Col span="4">
+                    <FormItem label="奖励数量" prop="num">
+                      <InputNumber :max="999999" :min="1" style="width:100%" v-model="item.num"></InputNumber>
                     </FormItem>
                     <FormItem label="是否需邮费"  prop="isshipping">
                       <i-switch v-model="item.isshipping" :true-value="1" :false-value="0" size="large">
@@ -77,28 +79,31 @@
                           <span slot="close">否</span>
                         </i-switch>
                     </FormItem>
-                    <FormItem label="邮费" prop="shippingamout">
-                      <InputNumber :max="999999" :min="0" style="width:100%" v-model="item.shippingamout"></InputNumber>
-                    </FormItem>
+
                   </Col>
-                  <Col span="6">
+                  <Col span="4">
                     <FormItem label="奖励类型" prop="invitetype">
                       <Select v-model="item.type" placeholder="请选择">
                         <Option v-for="(item, index) in inviteTypeArr" :key="index" :value="item.value">{{item.label}}</Option>
                       </Select>
                     </FormItem>
-                    <FormItem label="属性id" prop="goodstypeid">
-                      <Input v-model="item.goodstypeid"></Input>
+                    <FormItem label="邮费" prop="shippingamout">
+                      <InputNumber :max="999999" :min="0" style="width:100%" v-model="item.shippingamout"></InputNumber>
                     </FormItem>
                   </Col>
-                  <Col span="6">
-                    <FormItem label="奖励数量" prop="num">
-                      <InputNumber :max="999999" :min="1" style="width:100%" v-model="item.num"></InputNumber>
-                    </FormItem>
+                  <Col span="4">
                     <FormItem label="奖品ID" prop="prizeid">
                       <Input v-model="item.prizeid">
-                        <Button v-show="item.type==2 || item.type==4 || item.type==1 || item.type==3" type="primary" @click="onClickSearchGoods(item, index)" slot="append" icon="ios-search"></Button>
+                        <Button v-show="item.type==2 || item.type==4 || item.type==1 || item.type==3" type="primary" @click="onClickSearchGoods(item, index, 'rulesArr')" slot="append" icon="ios-search"></Button>
                       </Input>
+                    </FormItem>
+                    <FormItem label="已发放数量" >
+                      <Input v-model="item.invitetype" readonly></Input>
+                    </FormItem>
+                  </Col>
+                  <Col span="4">
+                    <FormItem label="属性id" prop="goodstypeid">
+                      <Input v-model="item.goodstypeid"></Input>
                     </FormItem>
                     <Alert v-show="item.ingoods.id">
                       <div class="ingoodsbox">
@@ -129,7 +134,98 @@
             </Tabs>
           </Col>
         </Row>
-        <Divider dashed/>
+        <Divider orientation="left">被邀请人</Divider>
+        <Row>
+          <Col span="24">
+            <Tabs v-model="tabnamed" type="card" >
+              <Button @click="handleTabsAddInva" slot="extra">增加</Button>
+              <TabPane :label="'规则'+(index+1)" v-for="(item, index) in rulesArred" :key="index">
+                <Row>
+                  <Col span="4">
+                    <!-- <FormItem label="邀请人数" prop="invitenum">
+                      <InputNumber :max="999999" :min="1" style="width:100%" v-model="item.invitenum"></InputNumber>
+                    </FormItem> -->
+                    <FormItem label="缩略图">
+                      <Input v-model="item.goodsimg"></Input>
+                      <FileUpload @uploadSucc="e => uploadimgEd(e, index)"></FileUpload>
+                    </FormItem>
+                    <FormItem>
+                      <Button @click="onClickdelTabEd">删除此规则</Button>
+                    </FormItem>
+                  </Col>
+                  <Col span="4">
+                  <FormItem label="奖励名称" prop="goodsname">
+                      <Input v-model="item.goodsname"></Input>
+                    </FormItem>
+                    <FormItem label="剩余数量" >
+                      <Input v-model="item.remaincount"></Input>
+                    </FormItem>
+                  </Col>
+                  <Col span="4">
+                    <FormItem label="奖励数量" prop="num">
+                      <InputNumber :max="999999" :min="1" style="width:100%" v-model="item.num"></InputNumber>
+                    </FormItem>
+                    <FormItem label="是否需邮费"  prop="isshipping">
+                      <i-switch v-model="item.isshipping" :true-value="1" :false-value="0" size="large">
+                          <span slot="open">是</span>
+                          <span slot="close">否</span>
+                        </i-switch>
+                    </FormItem>
+                  </Col>
+                  <Col span="4">
+                    <FormItem label="奖励类型" prop="invitetype">
+                      <Select v-model="item.type" placeholder="请选择">
+                        <Option v-for="(item, index) in inviteTypeArr" :key="index" :value="item.value">{{item.label}}</Option>
+                      </Select>
+                    </FormItem>
+                    <FormItem label="邮费" prop="shippingamout">
+                      <InputNumber :max="999999" :min="0" style="width:100%" v-model="item.shippingamout"></InputNumber>
+                    </FormItem>
+                  </Col>
+                  <Col span="4">
+                    <FormItem label="奖品ID" prop="prizeid">
+                      <Input v-model="item.prizeid">
+                        <Button v-show="item.type==2 || item.type==4 || item.type==1 || item.type==3" type="primary" @click="onClickSearchGoods(item, index, 'rulesArred')" slot="append" icon="ios-search"></Button>
+                      </Input>
+                    </FormItem>
+                    <FormItem label="已发放数量" >
+                      <Input v-model="item.invitetype" readonly></Input>
+                    </FormItem>
+                  </Col>
+                  <Col span="4">
+                    <FormItem label="属性id" prop="goodstypeid">
+                      <Input v-model="item.goodstypeid"></Input>
+                    </FormItem>
+                    <Alert v-show="item.ingoods.id">
+                      <div class="ingoodsbox">
+                        <p>{{item.ingoods.goodsname}}</p>
+                        <ul>
+                          <li>
+                            <span>售价：</span>
+                            <span>{{item.ingoods.goodsprice}}</span>
+                          </li>
+                          <li>
+                            <span>平台优惠：</span>
+                            <span>{{item.ingoods.coupon}}</span>
+                          </li>
+                          <li>
+                            <span>商户优惠：</span>
+                            <span>{{item.ingoods.merchantcoupon}}</span>
+                          </li>
+                          <li>
+                            <span>运费：</span>
+                            <span>{{item.ingoods.freight}}</span>
+                          </li>
+                        </ul>
+                      </div>
+                    </Alert>
+                  </Col>
+                </Row>
+              </TabPane>
+            </Tabs>
+          </Col>
+        </Row>
+        <Divider orientation="left"></Divider>
         <Row>
           <Col span="24">
             <FormItem >
@@ -158,21 +254,16 @@ export default {
         endtime: '',
         ison: 1,
         invitemsg: '',
+        invitedmsg: '',
       },
       tabname: 0,
+      tabnamed: 0,
       areaData: [],
       ingoods: {},
       rules: {
         starttime: { required: true, message: '不能为空', trigger: 'blur' },
         endtime: { required: true, message: '不能为空', trigger: 'blur' },
         ison: { required: true, type: 'number', message: '不能为空', trigger: 'blur' },
-        // prizeid: { required: true, message: '不能为空', trigger: 'blur' },
-        // type: { required: true, type: 'number', message: '不能为空', trigger: 'blur' },
-        // invitetype: { required: true, type: 'number', message: '不能为空', trigger: 'blur' },
-        // num: { required: true, type: 'number', message: '不能为空', trigger: 'blur' },
-        // invitenum: { required: true, type: 'number', message: '不能为空', trigger: 'blur' },
-        // goodsname: { required: true, message: '不能为空', trigger: 'blur' },
-        // goodsimg: { required: true, message: '不能为空', trigger: 'blur' },
       },
       loading: false,
       rulesArr: [
@@ -187,6 +278,23 @@ export default {
           invitetype: 1,
           goodsname: '',
           goodsimg: '',
+          remaincount: 0,
+          ingoods: {}
+        }
+      ],
+      rulesArred: [
+        {
+          type: 2,
+          num: 1,
+          prizeid: '',
+          goodstypeid: '',
+          isshipping: 0,
+          shippingamout: '0',
+          invitenum: 1,
+          invitetype: 1,
+          goodsname: '',
+          goodsimg: '',
+          remaincount: 0,
           ingoods: {}
         }
       ]
@@ -226,7 +334,9 @@ export default {
     },
     uploadimg (e, index) {
       this.rulesArr[index].goodsimg = e
-      // this.addData.goodsimg = e
+    },
+    uploadimgEd (e, index) {
+      this.rulesArred[index].goodsimg = e
     },
     onSubmit () {
       if (this.rulesArr.length < 1) {
@@ -241,8 +351,13 @@ export default {
         invitemsg.forEach(item => {
           delete item.ingoods
         })
-        this.addData.invitemsg =  JSON.stringify(invitemsg)
-        serverApi('/activity/inviteadd', this.addData,
+        let invitemsged = JSON.parse(JSON.stringify(this.rulesArred))
+        invitemsged.forEach(item => {
+          delete item.ingoods
+        })
+        this.addData.invitemsg = JSON.stringify(invitemsg)
+        this.addData.invitedmsg = JSON.stringify(invitemsged)
+        serverApi('/activity/inviteaddnew', this.addData,
           response => {
             if (response.data.code === 0) {
               this.$Message.success(response.data.msg)
@@ -260,7 +375,7 @@ export default {
         )
       })
     },
-    onClickSearchGoods (row, index) {
+    onClickSearchGoods (row, index, srcname) {
       if (!row.prizeid) {
         this.$Message.warning('请输入商品ID')
         return false
@@ -298,6 +413,7 @@ export default {
         invitetype: 1,
         goodsname: '',
         goodsimg: '',
+        remaincount: 0,
         ingoods: {}
       }
       this.rulesArr.push(obj)
@@ -307,6 +423,28 @@ export default {
       this.rulesArr.splice(e, 1)
       this.tabname = 0
     },
+    onClickdelTabEd (e) {
+      this.rulesArred.splice(e, 1)
+      this.tabnamed = 0
+    },
+    handleTabsAddInva () {
+      let obj = {
+        type: 2,
+        num: 1,
+        prizeid: '',
+        goodstypeid: '',
+        isshipping: 0,
+        shippingamout: '0',
+        invitenum: 1,
+        invitetype: 1,
+        goodsname: '',
+        goodsimg: '',
+        remaincount: 0,
+        ingoods: {}
+      }
+      this.rulesArred.push(obj)
+      this.tabnamed = this.rulesArred.length - 1
+    }
   }
 }
 </script>

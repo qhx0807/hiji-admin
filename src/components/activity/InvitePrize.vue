@@ -75,89 +75,78 @@ export default {
         },
         {
           title: '城市',
-          key: 'cityname',
-          width: 100,
-        },
-        {
-          title: '邀请人数',
-          key: 'invitenum',
-          width: 80
-        },
-        {
-          title: '奖励对象',
-          key: 'invitetype',
-          width: 100,
-          render: (h, params) => {
-            return h('span', {}, params.row.invitetype == 1 ? '邀请人' : '被邀请人' )
-          }
-        },
-        {
-          title: '奖励类型',
-          key: 'type',
-          width: 80
-        },
-        {
-          title: '奖励内容',
-          key: 'goodsname',
-          minWidth: 200,
-          render: (h, params) => {
-            let img = h('img', {
-              attrs: {
-                src: params.row.goodsimg
-              },
-              style: {
-                maxWidth: '45px',
-                maxHeight: '50px'
-              },
-              directives: [
-                {
-                  name: 'imgview'
-                }
-              ]
-            })
-            let text = h('span', null, params.row.goodsname)
-            return h('div', [img, text])
-          }
-        },
-        {
-          title: '奖励数量',
-          key: 'num',
-          width: 80,
-        },
-        {
-          title: '收取运费',
-          key: 'isshipping',
-          width: 100,
-          render: (h, params) => {
-            return h('span', {}, params.row.isshipping == 0 ? '不收取' : '收取')
-          }
-        },
-        {
-          title: '运费',
-          key: 'shippingamout',
-          width: 100,
+          key: 'cityid',
         },
         // {
-        //   title: '开始时间',
-        //   key: 'starttime',
+        //   title: '邀请人数',
+        //   key: 'invitenum',
+        //   width: 80
+        // },
+        // {
+        //   title: '奖励对象',
+        //   key: 'invitetype',
+        //   width: 100,
         //   render: (h, params) => {
-        //     return h('span', {}, params.row.invitemsg.shippingamout)
+        //     return h('span', {}, params.row.invitetype == 1 ? '邀请人' : '被邀请人' )
         //   }
+        // },
+        // {
+        //   title: '奖励类型',
+        //   key: 'type',
+        //   width: 80
+        // },
+        // {
+        //   title: '奖励内容',
+        //   key: 'goodsname',
+        //   minWidth: 200,
+        //   render: (h, params) => {
+        //     let img = h('img', {
+        //       attrs: {
+        //         src: params.row.goodsimg
+        //       },
+        //       style: {
+        //         maxWidth: '45px',
+        //         maxHeight: '50px'
+        //       },
+        //       directives: [
+        //         {
+        //           name: 'imgview'
+        //         }
+        //       ]
+        //     })
+        //     let text = h('span', null, params.row.goodsname)
+        //     return h('div', [img, text])
+        //   }
+        // },
+        // {
+        //   title: '奖励数量',
+        //   key: 'num',
+        //   width: 80,
+        // },
+        // {
+        //   title: '收取运费',
+        //   key: 'isshipping',
+        //   width: 100,
+        //   render: (h, params) => {
+        //     return h('span', {}, params.row.isshipping == 0 ? '不收取' : '收取')
+        //   }
+        // },
+        // {
+        //   title: '运费',
+        //   key: 'shippingamout',
+        //   width: 100,
         // },
         {
           title: '开始时间',
           key: 'starttime',
-          minWidth: 140
         },
         {
           title: '结束时间',
           key: 'endtime',
-          minWidth: 140
         },
         {
           title: '状态',
           key: 'ison',
-          width: 110,
           render: (h, params) => {
             let text = params.row.ison == 1 ? '启用' : '关闭'
             let color = params.row.ison == 1 ? 'success' : 'warning'
@@ -220,7 +209,7 @@ export default {
         page: this.page
       }
       this.tableLoading = true
-      serverApi('/activity/inviteindex', d,
+      serverApi('/activity/inviteindexnew', d,
         response => {
           console.log(response)
           if (response.data.code === 0){
@@ -239,27 +228,28 @@ export default {
       )
     },
     onClickEdit (row) {
-      this.$Message.loading({
-        content: 'Loading...',
-        duration: 0
-      })
-      serverApi('/activity/inviteinfo', {id: row.id},
-        response => {
-          this.$Message.destroy()
-          if (response.data.code === 0) {
-            console.log(response)
-            this.editData = response.data.data
-            this.editModal = true
-          } else {
-            this.$Message.warning(response.data.msg)
-          }
-        },
-        error => {
-          this.$Message.destroy()
-          this.$Message.error(error.toString())
-          console.log(error)
-        }
-      )
+      this.$router.push({name: 'InvitePrizeEdit', params: {id: row.id}})
+      // this.$Message.loading({
+      //   content: 'Loading...',
+      //   duration: 0
+      // })
+      // serverApi('/activity/inviteinfonew', {id: row.id},
+      //   response => {
+      //     this.$Message.destroy()
+      //     if (response.data.code === 0) {
+      //       console.log(response)
+      //       this.editData = response.data.data
+      //       this.editModal = true
+      //     } else {
+      //       this.$Message.warning(response.data.msg)
+      //     }
+      //   },
+      //   error => {
+      //     this.$Message.destroy()
+      //     this.$Message.error(error.toString())
+      //     console.log(error)
+      //   }
+      // )
     },
     remove (row) {
       this.$Modal.confirm({
