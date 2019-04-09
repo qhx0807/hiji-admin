@@ -111,6 +111,9 @@ const CutDownPriceReport = r => require.ensure([], () => r(require('@/components
 const LuckDrawReport = r => require.ensure([], () => r(require('@/components/activity/LuckDrawReport.vue')))
 const OperateReport = r => require.ensure([], () => r(require('@/components/report-table/OperateReport.vue')))
 const OperateCityReport = r => require.ensure([], () => r(require('@/components/report-table/OperateCityReport.vue')))
+const OperateMerchantReport = r => require.ensure([], () => r(require('@/components/report-table/OperateMerchantReport.vue')))
+const OperateMerchantReportScan = r => require.ensure([], () => r(require('@/components/report-table/OperateMerchantReportScan.vue')))
+const OperateGoodsReport = r => require.ensure([], () => r(require('@/components/report-table/OperateGoodsReport.vue')))
 
 const routes = [
   {
@@ -660,6 +663,21 @@ const routes = [
         path: 'OperateCityReport',
         component: OperateCityReport,
         name: 'OperateCityReport'
+      },
+      {
+        path: 'OperateMerchantReport',
+        component: OperateMerchantReport,
+        name: 'OperateMerchantReport'
+      },
+      {
+        path: 'OperateMerchantReportScan',
+        component: OperateMerchantReportScan,
+        name: 'OperateMerchantReportScan'
+      },
+      {
+        path: 'OperateGoodsReport',
+        component: OperateGoodsReport,
+        name: 'OperateGoodsReport'
       }
     ]
   },

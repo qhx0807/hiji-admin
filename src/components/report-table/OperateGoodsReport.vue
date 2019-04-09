@@ -24,7 +24,11 @@
     </Card>
     <Card :bordered="false">
       <div class="table-box">
-        <Table height="600" border size="small" :loading="tableLoading" :columns="columns" :data="tableData"></Table>
+        <Table height="600" border size="small" :loading="tableLoading" :columns="columns" :data="tableData">
+          <!-- <template slot-scope="{ row, index }" slot="goodsname">
+            <router-link :to="{name: 'ShopGoods', params: {id: row.params.goodsidb}}">{{row.params.goodsnameb}}</router-link>
+          </template> -->
+        </Table>
       </div>
       <!-- <div style="float: right; padding-top:12px">
         <Page :total="count" show-total :current="page" @on-change="changePage" show-sizer></Page>
@@ -37,7 +41,7 @@
 import serverApi from '../../axios'
 import { downloadFile } from '../../utlis/tools.js'
 export default {
-  name: 'OperateReport',
+  name: 'OperateGoodsReport',
   data () {
     return {
       tableLoading: false,
@@ -47,206 +51,140 @@ export default {
       tableData: [],
       columns: [
         {
-          title: '品类',
-          key: 'typeb',
-          align: 'center',
-          width: 100
+          title: '商品ID',
+          key: 'goodsidb',
+          width: 80
         },
         {
-          title: '订单数量',
+          title: '商品名称',
+          key: 'goodsnameb',
+          minWidth: 200,
+          ellipsis: true,
+          tooltip: true,
+        },
+        {
+          title: '数量',
           align: 'center',
           children: [
             {
               title: '本期',
-              key: 'numberb',
+              key: 'goodsnumb',
               align: 'right',
-              width: 100
+              minWidth: 70
             },
             {
               title: '对比',
-              key: 'numberd',
+              key: 'goodsnumd',
               align: 'right',
-              width: 100
+              minWidth: 70
             },
           ]
         },
         {
-          title: '销售金额',
+          title: '定价',
           align: 'center',
           children: [
             {
               title: '本期',
-              key: 'totalb',
+              key: 'goodspriceb',
               align: 'right',
-              width: 100
+              minWidth: 100
             },
             {
-              title: '对比期',
-              key: 'totald',
+              title: '对比',
+              key: 'goodspriced',
               align: 'right',
-              width: 100
+              minWidth: 100
             },
           ]
         },
         {
-          title: '订单付款金额',
-          align: 'center',
-          children: [
-            {
-              title: '本期',
-              key: 'cashb',
-              align: 'right',
-              width: 100
-            },
-            {
-              title: '对比期',
-              key: 'cashd',
-              align: 'right',
-              width: 100
-            },
-          ]
-        },
-        {
-          title: '邮费付款金额',
-          align: 'center',
-          children: [
-            {
-              title: '本期',
-              key: 'shippingamoutb',
-              align: 'right',
-              width: 100
-            },
-            {
-              title: '对比期',
-              key: 'shippingamoutd',
-              align: 'right',
-              width: 100
-            },
-          ]
-        },
-        {
-          title: '平台优惠金额',
+          title: '平台优惠',
           align: 'center',
           children: [
             {
               title: '本期',
               key: 'couponb',
               align: 'right',
-              width: 100
+              minWidth: 100
             },
             {
               title: '对比期',
               key: 'coupond',
               align: 'right',
-              width: 100
+              minWidth: 100
             },
           ]
         },
         {
-          title: '商家优惠金额',
+          title: '商户优惠',
           align: 'center',
           children: [
             {
               title: '本期',
               key: 'merchantcouponb',
               align: 'right',
-              width: 100
+              minWidth: 100
             },
             {
               title: '对比期',
               key: 'merchantcoupond',
               align: 'right',
-              width: 100
+              minWidth: 100
             },
           ]
         },
         {
-          title: '商品结算金额',
+          title: '应收金额（汇总）',
+          align: 'center',
+          children: [
+            {
+              title: '本期',
+              key: 'priceb',
+              align: 'right',
+              minWidth: 100
+            },
+            {
+              title: '对比期',
+              key: 'priced',
+              align: 'right',
+              minWidth: 100
+            },
+          ]
+        },
+        {
+          title: '结算总金额（汇总）',
           align: 'center',
           children: [
             {
               title: '本期',
               key: 'settlementpriceb',
               align: 'right',
-              width: 100
+              minWidth: 100
             },
             {
               title: '对比期',
               key: 'settlementpriced',
               align: 'right',
-              width: 100
+              minWidth: 100
             },
           ]
         },
         {
-          title: '邮费结算金额',
-          align: 'center',
-          children: [
-            {
-              title: '本期',
-              key: 'settlementpostagepriceb',
-              align: 'right',
-              width: 100
-            },
-            {
-              title: '对比期',
-              key: 'settlementpostagepriced',
-              align: 'right',
-              width: 100
-            },
-          ]
-        },
-        {
-          title: '优惠总和',
-          align: 'center',
-          children: [
-            {
-              title: '本期',
-              key: 'discountb',
-              align: 'right',
-              width: 100
-            },
-            {
-              title: '对比期',
-              key: 'discountd',
-              align: 'right',
-              width: 100
-            },
-          ]
-        },
-        {
-          title: '扣点金额',
+          title: '扣点金额和（汇总）',
           align: 'center',
           children: [
             {
               title: '本期',
               key: 'pointspriceb',
               align: 'right',
-              width: 100
+              minWidth: 100
             },
             {
               title: '对比期',
               key: 'pointspriced',
               align: 'right',
-              width: 100
-            },
-          ]
-        },
-        {
-          title: '附加费',
-          align: 'center',
-          children: [
-            {
-              title: '本期',
-              key: 'feeb',
-              align: 'right',
-              width: 100
-            },
-            {
-              title: '对比期',
-              key: 'feed',
-              align: 'right',
-              width: 100
+              minWidth: 100
             },
           ]
         },
@@ -269,46 +207,11 @@ export default {
       this.tableLoading = true
       this.isloading = true
       this.searchObj.exports = ''
-      serverApi('/Reportform/orderreportform', this.searchObj,
+      serverApi('/Reportform/goodsreportform', this.searchObj,
         response => {
           console.log(response)
           if (response.data.code === 0) {
             this.tableData = response.data.data
-            let obj = {
-              "numberb":0,
-              "numberd":0,
-              "totalb":0,
-              "totald":0,
-              "cashb":0,
-              "cashd":0,
-              "shippingamoutb":0,
-              "shippingamoutd":0,
-              "couponb":0,
-              "coupond":0,
-              "merchantcouponb":0,
-              "merchantcoupond":0,
-              "settlementpriceb":0,
-              "settlementpriced":0,
-              "settlementpostagepriceb":0,
-              "settlementpostagepriced":0,
-              "discountb":0,
-              "discountd":0,
-              "pointspriceb":0,
-              "pointspriced":0,
-              "feeb":0,
-              "feed":0
-            }
-            response.data.data.forEach(item => {
-              Object.keys(obj).forEach(k => {
-                obj[k] += Number(item[k])
-              })
-            })
-            Object.keys(obj).forEach(k => {
-              obj[k] = obj[k].toFixed(2)
-            })
-            obj.typeb = '合计'
-            this.tableData.push(obj)
-            console.log(obj)
           } else {
             this.$Message.warning(response.data.msg)
           }
@@ -334,7 +237,7 @@ export default {
         content: '加载中...'
       })
       this.searchObj.exports = 'out'
-      serverApi('/Reportform/orderreportform', this.searchObj,
+      serverApi('/Reportform/goodsreportform', this.searchObj,
         response => {
           this.$Message.destroy()
           this.isloading = false
