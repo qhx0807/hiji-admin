@@ -1,9 +1,19 @@
 <template>
   <div>
+    <Card :bordered="false" class="mb10">
+      <Form :label-width="60">
+        <Row>
+          <Col span="24">
+            <FormItem label="查询" style="margin-bottom:0">
+              <Input placeholder="搜索..." v-model="searchkey" style="width:200px"></Input>
+              <Button type="primary" style="margin-left:12px" @click="onClickSearch">搜索</Button>
+              <Button type="primary" style="margin-left:12px" @click="onClickAdd">新增</Button>
+            </FormItem>
+          </Col>
+        </Row>
+      </Form>
+    </Card>
     <Card :bordered="false">
-      <div class="head">
-        <Button type="primary" @click="onClickAdd">新增</Button>
-      </div>
       <Row>
         <Col span="24">
           <div class="tableBox">
@@ -15,11 +25,18 @@
               :selection-type="false"
               :is-fold="isFold"
               :expand-type="false"
+              max-height="600"
+              border
               :columns="columns">
               <template slot="id" slot-scope="scope">
                 <div>
-                  <Button  icon="md-create" size="small" type="text" @click="onClickEdit(scope.row)">修改</Button>
-                  <Button  icon="ios-trash" size="small" type="text" @click="remove(scope.row.id)">删除</Button>
+                  <Button icon="md-create" size="small" type="text" @click="onClickEdit(scope.row)">修改</Button>
+                  <Button icon="ios-trash" size="small" type="text" @click="remove(scope.row.id)">删除</Button>
+                </div>
+              </template>
+              <template slot="isshow" slot-scope="scope">
+                <div>
+                  <Tag>{{scope.row.isshow == 1 ? '显示' : '不显示'}}</Tag>
                 </div>
               </template>
             </zk-table>
@@ -40,11 +57,17 @@
         <FormItem prop="departmentcode" label="部门编码">
           <Input  v-model="form.departmentcode" placeholder="请输入部门编码"></Input>
         </FormItem>
+        <FormItem label="是否显示">
+          <Select v-model="form.isshow" >
+            <Option value="1">显示</Option>
+            <Option value="0">不显示</Option>
+          </Select>
+        </FormItem>
         <!-- <FormItem prop="updid" label="父级部门">
           <Input  v-model="form.updid" placeholder="请输入父级id"></Input>
         </FormItem> -->
         <FormItem prop="updid" label="父级部门">
-          <Cascader change-on-select @on-change="onSelectDep" :data="casData"></Cascader>
+          <Cascader change-on-select filterable @on-change="onSelectDep" :data="casData"></Cascader>
         </FormItem>
       </Form>
       <div slot="footer">
@@ -64,12 +87,18 @@
         <FormItem prop="departmentcode" label="部门编码">
           <Input  v-model="editData.departmentcode" placeholder="请输入部门编码"></Input>
         </FormItem>
+        <FormItem label="是否显示">
+          <Select v-model="editData.isshow" >
+            <Option :value="1">显示</Option>
+            <Option :value="0">不显示</Option>
+          </Select>
+        </FormItem>
         <FormItem prop="updid" label="父级部门">
           <Input  v-model="editData.updid" placeholder="请输入父级id"></Input>
         </FormItem>
       </Form>
       <div slot="footer">
-        <Button    @click="editModal = false">取消</Button>
+        <Button @click="editModal = false">取消</Button>
         <Button type="primary" :loading="modal_loading" @click="edit">保存</Button>
       </div>
     </Modal>
@@ -83,6 +112,7 @@ export default {
   name: 'Department',
   data () {
     return {
+      searchkey: '',
       loading: false,
       addModal: false,
       editModal: false,
@@ -91,7 +121,8 @@ export default {
       form: {
         departmentname: '',
         departmentcode: '',
-        updid: '1'
+        updid: '1',
+        isshow: '1'
       },
       rules: {
         departmentname: [{ required: true, message: '名称不能为空', trigger: 'blur' }],
@@ -115,6 +146,13 @@ export default {
           width: '80px'
         },
         {
+          label: '是否显示',
+          prop: 'isshow',
+          width: '110px',
+          type: 'template',
+          template: 'isshow',
+        },
+        {
           label: '父级',
           prop: 'updid',
           width: '80px'
@@ -136,19 +174,36 @@ export default {
   },
   created () {
     this.getTableData()
+    this.getTableDataCas()
   },
   computed: {
   },
   methods: {
     getTableData () {
       this.$store.commit('pageLoading', true)
-      serverApi('/depar/index', '',
+      serverApi('/depar/index', {like: this.searchkey},
         response => {
           // console.log(response)
           if (response.data.code === 0){
             this.tableData = response.data.data
+          }else{
+            this.$Message.warning(response.data.msg)
+          }
+          this.$store.commit('pageLoading', false)
+        },
+        error => {
+          console.log(error)
+          this.$store.commit('pageLoading', false)
+        }
+      )
+    },
+    getTableDataCas () {
+      this.$store.commit('pageLoading', true)
+      serverApi('/depar/index', null,
+        response => {
+          // console.log(response)
+          if (response.data.code === 0){
             let cas = response.data.data
-
             let getCas = function (arr) {
               arr.forEach(item => {
                 item.label = item.departmentname,
@@ -244,6 +299,9 @@ export default {
       if (e && e.length) {
         this.form.updid = String(e[e.length-1])
       }
+    },
+    onClickSearch () {
+      this.getTableData()
     }
   }
 }
