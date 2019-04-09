@@ -53,14 +53,26 @@ export default {
         {
           title: '商品ID',
           key: 'goodsidb',
-          width: 80
+          width: 80,
+          fixed: 'left',
         },
         {
           title: '商品名称',
           key: 'goodsnameb',
-          minWidth: 200,
+          minWidth: 220,
           ellipsis: true,
           tooltip: true,
+          fixed: 'left',
+          render: (h, para) => {
+            return h('router-link', {
+              props: {
+                to: {
+                  name: 'ShopGoods',
+                  params: {id: para.row.goodsidb}
+                }
+              }
+            }, para.row.goodsnameb)
+          },
         },
         {
           title: '数量',
@@ -73,7 +85,7 @@ export default {
               minWidth: 70
             },
             {
-              title: '对比',
+              title: '对比期',
               key: 'goodsnumd',
               align: 'right',
               minWidth: 70
@@ -91,7 +103,7 @@ export default {
               minWidth: 100
             },
             {
-              title: '对比',
+              title: '对比期',
               key: 'goodspriced',
               align: 'right',
               minWidth: 100

@@ -50,6 +50,7 @@ export default {
           title: '品类',
           key: 'typeb',
           align: 'center',
+          fixed: 'left',
           width: 100
         },
         {
@@ -63,7 +64,7 @@ export default {
               width: 100
             },
             {
-              title: '对比',
+              title: '对比期',
               key: 'numberd',
               align: 'right',
               width: 100

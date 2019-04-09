@@ -59,7 +59,8 @@ export default {
           title: '城市',
           key: 'areaidb',
           align: 'center',
-          width: 100
+          width: 100,
+          fixed: 'left',
         },
         {
           title: '团购',

@@ -49,7 +49,8 @@ export default {
         {
           title: '商户',
           key: 'merchantnamed',
-          minWidth: 100
+          fixed: 'left',
+          minWidth: 130
         },
         {
           title: '交易笔数',
@@ -62,7 +63,7 @@ export default {
               minWidth: 100
             },
             {
-              title: '对比',
+              title: '对比期',
               key: 'ordernumd',
               align: 'right',
               minWidth: 100
