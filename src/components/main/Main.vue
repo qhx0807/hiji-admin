@@ -126,6 +126,9 @@ export default {
     this.getMenuList()
     this.activeName = this.$route.name
   },
+  mounted () {
+    this.getOrdertypeArr()
+  },
   methods: {
     toggleClick () {
       this.shrink = !this.shrink
@@ -205,6 +208,18 @@ export default {
         this.openedSubmenuArr = []
         this.activeName = ''
       }
+    },
+    getOrdertypeArr () {
+      serverApi('/order/ordertyope', null,
+        response => {
+          if (response.data.code === 0) {
+            this.$store.commit('updateOrderTypeArr', response.data.data)
+          }
+        },
+        error => {
+          console.log(error)
+        }
+      )
     }
   }
 }

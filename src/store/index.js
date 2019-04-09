@@ -118,6 +118,9 @@ const store = new Vuex.Store({
     },
     pushBreadArr (state, obj) {
       state.breadcrumbArr.push(obj)
+    },
+    updateOrderTypeArr (state, arr) {
+      state.orderTypeConst = arr
     }
   },
   actions: {},

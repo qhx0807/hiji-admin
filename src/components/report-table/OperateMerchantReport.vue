@@ -1,7 +1,7 @@
 <template>
   <div class="box">
     <Card :bordered="false" class="mb10">
-      <Form :label-width="60">
+      <Form :label-width="70">
         <Row>
           <Col span="5">
             <FormItem prop="typename" label="本期" style="margin-bottom:0">
@@ -13,7 +13,14 @@
               <DatePicker type="daterange" style="width: 100%" placeholder="选择日期范围" @on-change="e => {searchObj.upstarttime = e[0];searchObj.upendtime=e[1]}"></DatePicker>
             </FormItem>
           </Col>
-          <Col span="14">
+          <Col span="5">
+            <FormItem label="订单类型" style="margin-bottom:0">
+              <Select v-model="searchObj.type" clearable placeholder="订单类型" style="width:100%">
+                <Option v-for="(item, index) in orderTypeArr" :key="index" :value="item.value">{{item.label}}</Option>
+              </Select>
+            </FormItem>
+          </Col>
+          <Col span="9">
             <FormItem prop="typename" style="margin-bottom:0">
               <Button @click="getTableData" type="primary" :loading="isloading">查询</Button>
               <Button style="margin-left:10px" @click="onClickExport" :loading="isloading">导出</Button>
@@ -258,11 +265,17 @@ export default {
         upstarttime: '',
         upendtime: '',
         exports: '',
+        type: ''
       }
     }
   },
   created () {
     // this.getTableData()
+  },
+  computed: {
+    orderTypeArr () {
+      return this.$store.state.orderTypeConst
+    }
   },
   methods: {
     getTableData () {
