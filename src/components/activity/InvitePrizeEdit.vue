@@ -83,7 +83,7 @@
                   </Col>
                   <Col span="4">
                     <FormItem label="奖励类型" prop="invitetype">
-                      <Select v-model="item.type" placeholder="请选择">
+                      <Select v-model="item.type" transfer placeholder="请选择">
                         <Option v-for="(item, index) in inviteTypeArr" :key="index" :value="item.value">{{item.label}}</Option>
                       </Select>
                     </FormItem>
@@ -174,7 +174,7 @@
                   </Col>
                   <Col span="4">
                     <FormItem label="奖励类型" prop="invitetype">
-                      <Select v-model="item.type" placeholder="请选择">
+                      <Select v-model="item.type" transfer placeholder="请选择">
                         <Option v-for="(item, index) in inviteTypeArr" :key="index" :value="item.value">{{item.label}}</Option>
                       </Select>
                     </FormItem>
