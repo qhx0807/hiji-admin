@@ -125,7 +125,7 @@
       <div slot="footer">
         <Button @click="shModal = false">取消</Button>
         <Button type="default" @click="downLoadShData">下载数据</Button>
-        <Button type="error" :loading="refuseLoading" @click="onClickSH(2)">不通过</Button>
+        <Button type="error" :loading="refuseLoading" @click="onClickReject">驳回</Button>
         <Button type="primary" :loading="passLoading" @click="onClickSH(1)">审核通过</Button>
       </div>
     </Modal>
@@ -831,7 +831,34 @@ export default {
           this.exportLoading = false
         }
       )
-    }
+    },
+    onClickReject () {
+      this.refuseLoading = true
+      let d = {
+        id: this.shData.id,
+        reject: 1
+      }
+      serverApi('/finance/rejectapply', d,
+        response => {
+          console.log(response)
+          if (response.data.code === 0){
+            this.$Message.success(response.data.msg)
+            this.shModal = false
+            this.getTableData()
+          }else{
+            this.$Message.warning(response.data.msg)
+          }
+          this.passLoading = false
+          this.refuseLoading = false
+        },
+        error => {
+          console.log(error)
+          this.$Message.warning(error.toString())
+          this.refuseLoading = false
+          this.tableLoading = false
+        }
+      )
+    },
   }
 }
 </script>

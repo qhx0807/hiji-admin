@@ -43,6 +43,34 @@
       </div>
       <div style="clear:both"></div>
     </Card>
+
+    <Modal v-model="disModal" width="600">
+      <p slot="header" style="text-align:center">
+        <span>核销卡券</span>
+      </p>
+      <div>
+        <Form :label-width="80">
+          <FormItem label="卡券名称">
+            <p>{{cardData.cardname}}</p>
+          </FormItem>
+          <FormItem label="卡券编码">
+            <p>{{cardData.cardItemcode}}</p>
+          </FormItem>
+          <FormItem label="卡券来源">
+            <p>{{cardData.orderno}}</p>
+          </FormItem>
+          <FormItem label="核销商户">
+            <Select v-model="merchantid" filterable clearable>
+              <Option v-for="(item, index) in merchantData" :key="index" :value="item.id">{{item.merchantname}}</Option>
+            </Select>
+          </FormItem>
+        </Form>
+      </div>
+      <div slot="footer">
+        <Button @click="disModal = false">关闭</Button>
+        <Button type="primary" :loading="disloading" @click="onClickDistory">确认核销</Button>
+      </div>
+    </Modal>
   </div>
 </template>
 <script>
@@ -60,6 +88,7 @@ export default {
         page: 1,
         id: ''
       },
+      disModal: false,
       expLoading: false,
       recordsColumns: [
         {
@@ -185,13 +214,37 @@ export default {
               }, '作废卡券')
             }
           }
+        },
+        {
+          title: '核销',
+          key: 'id',
+          width: 90,
+          align: 'center',
+          fixed: 'right',
+          render: (h, params) => {
+            return h('Button', {
+              props: {
+                type: 'warning',
+                size: 'small'
+              },
+              on: {
+                click: () => {
+                  this.onCLickDistoryCardItem(params.row)
+                }
+              }
+            }, '核销卡券')
+          }
         }
       ],
       recordsData: [],
       recordsCount: 0,
       recpage: 1,
       recLoading: false,
-      voidResain: ''
+      voidResain: '',
+      cardData: {},
+      merchantData: [],
+      merchantid: '',
+      disloading: false
     }
   },
   created () {
@@ -316,6 +369,57 @@ export default {
           )
         }
       })
+    },
+    onCLickDistoryCardItem (row) {
+      console.log(row)
+      this.cardData = row
+      this.$Message.loading({
+        duration: 0,
+        content: '加载中...'
+      })
+      let d = {
+        cardmainid: row.cardmainid
+      }
+      serverApi('/card/carddestroyqueryin', d,
+        response => {
+          this.$Message.destroy()
+          console.log(response)
+          if (response.data.code === 0) {
+            this.merchantData = response.data.data
+            this.disModal = true
+          } else {
+            this.$Message.error(response.data.msg)
+          }
+        },
+        error => {
+          this.$Message.destroy()
+          this.$Message.error(error.toString())
+        }
+      )
+    },
+    onClickDistory () {
+      if(!this.merchantid) return false
+      this.disloading = true
+      let d = {
+        carditemcode: this.cardData.cardItemcode,
+        merchantid: this.merchantid
+      }
+      serverApi('/card/carddestroyhome', d,
+        response => {
+          console.log(response)
+          this.disloading = false
+          if (response.data.code === 0) {
+            this.disModal = false
+            this.$Message.success(response.data.msg)
+          } else {
+            this.$Message.error(response.data.msg)
+          }
+        },
+        error => {
+          this.disloading = false
+          this.$Message.error(error.toString())
+        }
+      )
     }
   }
 }

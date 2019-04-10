@@ -277,8 +277,23 @@ export default {
                 }
               }
             }, '打款')
+            let rej = h('a', {
+              on: {
+                click: () => {
+                  this.onClickReject(params.row)
+                }
+              },
+              style: {
+                marginLeft: '10px',
+                color: '#90'
+              }
+            }, '驳回')
             let ysh = h('span', { }, '已打款')
-            return params.row.ispayment == 0 ? sh : ysh
+            if (params.row.ispayment == 0) {
+              return h('div', [sh, rej])
+            } else {
+              return ysh
+            }
           }
         }
       ],
@@ -451,7 +466,33 @@ export default {
           )
         }
       })
-    }
+    },
+    onClickReject (row) {
+      this.refuseLoading = true
+      let d = {
+        id: row.id,
+        reject: 3
+      }
+      serverApi('/finance/rejectapply', d,
+        response => {
+          console.log(response)
+          if (response.data.code === 0){
+            this.$Message.success(response.data.msg)
+            this.getTableData()
+            this.$Notice.warning({
+              title: '已驳回',
+              desc: `申请已拒绝!`
+            })
+          }else{
+            this.$Message.warning(response.data.msg)
+          }
+        },
+        error => {
+          console.log(error)
+          this.$Message.warning(error.toString())
+        }
+      )
+    },
   }
 }
 </script>

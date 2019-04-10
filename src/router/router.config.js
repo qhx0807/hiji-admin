@@ -114,6 +114,7 @@ const OperateCityReport = r => require.ensure([], () => r(require('@/components/
 const OperateMerchantReport = r => require.ensure([], () => r(require('@/components/report-table/OperateMerchantReport.vue')))
 const OperateMerchantReportScan = r => require.ensure([], () => r(require('@/components/report-table/OperateMerchantReportScan.vue')))
 const OperateGoodsReport = r => require.ensure([], () => r(require('@/components/report-table/OperateGoodsReport.vue')))
+const FinanceReject = r => require.ensure([], () => r(require('@/components/report-table/FinanceReject.vue')))
 
 const routes = [
   {
@@ -678,6 +679,11 @@ const routes = [
         path: 'OperateGoodsReport',
         component: OperateGoodsReport,
         name: 'OperateGoodsReport'
+      },
+      {
+        path: 'FinanceReject',
+        component: FinanceReject,
+        name: 'FinanceReject'
       }
     ]
   },
