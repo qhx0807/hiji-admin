@@ -71,14 +71,7 @@ export default {
           tooltip: true,
           fixed: 'left',
           render: (h, para) => {
-            return h('router-link', {
-              props: {
-                to: {
-                  name: 'ShopGoods',
-                  params: {id: para.row.goodsidb}
-                }
-              }
-            }, para.row.goodsnameb)
+            return h('a', {}, para.row.goodsnameb)
           },
         },
         {

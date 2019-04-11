@@ -115,6 +115,9 @@ const OperateMerchantReport = r => require.ensure([], () => r(require('@/compone
 const OperateMerchantReportScan = r => require.ensure([], () => r(require('@/components/report-table/OperateMerchantReportScan.vue')))
 const OperateGoodsReport = r => require.ensure([], () => r(require('@/components/report-table/OperateGoodsReport.vue')))
 const FinanceReject = r => require.ensure([], () => r(require('@/components/report-table/FinanceReject.vue')))
+const AfterScancodePay = r => require.ensure([], () => r(require('@/components/activity/AfterScancodePay.vue')))
+const AfterScancodePayAdd = r => require.ensure([], () => r(require('@/components/activity/AfterScancodePayAdd.vue')))
+const AfterScancodePayEdit = r => require.ensure([], () => r(require('@/components/activity/AfterScancodePayEdit.vue')))
 
 const routes = [
   {
@@ -684,6 +687,21 @@ const routes = [
         path: 'FinanceReject',
         component: FinanceReject,
         name: 'FinanceReject'
+      },
+      {
+        path: 'AfterScancodePay',
+        component: AfterScancodePay,
+        name: 'AfterScancodePay'
+      },
+      {
+        path: 'AfterScancodePayAdd',
+        component: AfterScancodePayAdd,
+        name: 'AfterScancodePayAdd'
+      },
+      {
+        path: 'AfterScancodePay/:id',
+        component: AfterScancodePayEdit,
+        name: 'AfterScancodePayEdit'
       }
     ]
   },
