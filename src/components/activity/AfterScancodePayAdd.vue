@@ -44,6 +44,8 @@
                 <Option value="0">全部享受</Option>
                 <Option value="1">注册享受</Option>
                 <Option value="2">登录享受</Option>
+                <Option value="3">扫码支付</Option>
+                <Option value="4">停车缴费</Option>
               </Select>
             </FormItem>
           </Col>
@@ -56,12 +58,12 @@
             </FormItem>
           </Col>
           <Col span="6">
-            <FormItem label="最低费用" prop="cityid">
+            <FormItem label="最低费用">
               <InputNumber style="width:100%" v-model="addData.minfee"></InputNumber>
             </FormItem>
           </Col>
           <Col span="6">
-            <FormItem label="最高费用" prop="cityid">
+            <FormItem label="最高费用">
               <InputNumber style="width:100%" v-model="addData.maxfee"></InputNumber>
             </FormItem>
           </Col>

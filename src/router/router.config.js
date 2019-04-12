@@ -118,6 +118,8 @@ const FinanceReject = r => require.ensure([], () => r(require('@/components/repo
 const AfterScancodePay = r => require.ensure([], () => r(require('@/components/activity/AfterScancodePay.vue')))
 const AfterScancodePayAdd = r => require.ensure([], () => r(require('@/components/activity/AfterScancodePayAdd.vue')))
 const AfterScancodePayEdit = r => require.ensure([], () => r(require('@/components/activity/AfterScancodePayEdit.vue')))
+const UserAgreement = r => require.ensure([], () => r(require('@/components/settings/UserAgreement.vue')))
+const UserAgreementEdit = r => require.ensure([], () => r(require('@/components/settings/UserAgreementEdit.vue')))
 
 const routes = [
   {
@@ -702,6 +704,16 @@ const routes = [
         path: 'AfterScancodePay/:id',
         component: AfterScancodePayEdit,
         name: 'AfterScancodePayEdit'
+      },
+      {
+        path: 'UserAgreement',
+        component: UserAgreement,
+        name: 'UserAgreement'
+      },
+      {
+        path: 'UserAgreement/:id',
+        component: UserAgreementEdit,
+        name: 'UserAgreementEdit'
       }
     ]
   },

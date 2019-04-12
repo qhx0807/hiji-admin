@@ -257,6 +257,22 @@ export default {
           }
         },
         {
+          title: '领导审批',
+          key: 'isapprove',
+          width: 120,
+          render: (h, params) => {
+            let text = params.row.isapprove == 1 ? '已审核' : '未审核'
+            let color = params.row.isapprove == 1 ? 'success' : 'warning'
+            let el = h('Tag', {
+              props: {
+                type: 'dot',
+                color: color
+              }
+            }, text)
+            return el
+          }
+        },
+        {
           title: '打款状态',
           key: 'ispayment',
           width: 120,

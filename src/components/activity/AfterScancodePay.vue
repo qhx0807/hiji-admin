@@ -1,7 +1,8 @@
 <template>
   <div class="box">
     <Card :bordered="false" class="mb10">
-
+      <Input v-model="searchKey" placeholder="搜索..." style="width: 230px" />
+      <Button type="primary" icon="md-add" style="margin-left:12px" @click="onClickAdd">新增</Button>
     </Card>
     <Card :bordered="false">
       <div class="table-box">
@@ -21,6 +22,7 @@ export default {
   data () {
     return {
       tableLoading: false,
+      searchKey: '',
       count: 0,
       page: 1,
       pagesize: 10,
@@ -122,6 +124,9 @@ export default {
     },
     onClickEdit (row) {
       this.$router.push({name: 'AfterScancodePayEdit', params: {id: row.codepayid}})
+    },
+    onClickAdd () {
+      this.$router.push({name: 'AfterScancodePayAdd'})
     },
     onClickDel (row) {
       this.$Modal.confirm({
