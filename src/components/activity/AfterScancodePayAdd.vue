@@ -30,12 +30,12 @@
           </Col>
           <Col span="6">
             <FormItem label="开始时间" prop="starttime">
-              <DatePicker type="datetime" placeholder="选择时间" @on-change="e => addData.starttime = e" style="width:100%"></DatePicker>
+              <DatePicker type="date" placeholder="选择时间" @on-change="e => addData.starttime = e" style="width:100%"></DatePicker>
             </FormItem>
           </Col>
           <Col span="6">
             <FormItem label="结束时间" prop="endtime">
-              <DatePicker type="datetime" placeholder="选择时间" @on-change="e => addData.endtime = e" style="width:100%"></DatePicker>
+              <DatePicker type="date" placeholder="选择时间" @on-change="e => addData.endtime = e" style="width:100%"></DatePicker>
             </FormItem>
           </Col>
           <Col span="6">
@@ -51,39 +51,90 @@
           </Col>
           <Col span="6">
             <FormItem label="奖励类型" prop="ison">
-              <Select v-model="addData.codepaytype" placeholder="请选择">
-                <Option value="1">立减活动</Option>
+              <Select v-model="addData.codepaytype" placeholder="请选择" @on-change="onChangeType">
+                <Option value="1" v-if="addData.isentry == 3 || addData.isentry == 4">立减活动</Option>
                 <Option value="2">发送卡券</Option>
               </Select>
             </FormItem>
           </Col>
-          <Col span="6">
-            <FormItem label="最低费用">
-              <InputNumber style="width:100%" v-model="addData.minfee"></InputNumber>
-            </FormItem>
-          </Col>
-          <Col span="6">
-            <FormItem label="最高费用">
-              <InputNumber style="width:100%" v-model="addData.maxfee"></InputNumber>
-            </FormItem>
+        </Row>
+      </Form>
+      <Divider orientation="left">详细规则</Divider>
+      <Form :label-width="100">
+        <Row v-show="addData.codepaytype == 1">
+          <Col span="24" v-for="(item, index) in rulesArr" :key="index">
+            <Col span="4">
+              <FormItem label="支付金额最大值">
+                <InputNumber :max="9999999" :min="0" v-model="item.maxtotal"></InputNumber>
+              </FormItem>
+            </Col>
+            <Col span="4">
+              <FormItem label="支付金额最小值">
+                <InputNumber :max="9999999" :min="0" v-model="item.mintotal"></InputNumber>
+              </FormItem>
+            </Col>
+            <Col span="4">
+              <FormItem label="立减金额最大值">
+                <InputNumber :max="9999999" :min="0" v-model="item.max"></InputNumber>
+              </FormItem>
+            </Col>
+            <Col span="4">
+              <FormItem label="立减金额最小值">
+                <InputNumber :max="9999999" :min="0" v-model="item.min"></InputNumber>
+              </FormItem>
+            </Col>
+            <Col span="8">
+              <Button type="dashed" @click="onClickDel(index)">删除规则</Button>
+              <Button style="margin-left:12px" type="dashed" @click="onClickAddRule">添加规则</Button>
+            </Col>
           </Col>
         </Row>
-        <Divider orientation="left">详细规则</Divider>
-        <Row>
-          <Col span="6">
-            content
-          </Col>
-        </Row>
-        <Divider orientation="left">-</Divider>
-        <Row>
-          <Col span="24">
-            <FormItem>
-              <Button type="primary" :loading="isloading" @click="onClickSubmit">提交</Button>
-              <Button>返回</Button>
-            </FormItem>
+        <Row v-show="addData.codepaytype == 2">
+          <Col span="24" v-for="(item, index) in rulesArr" :key="index">
+            <Col span="5">
+              <FormItem label="选择卡券">
+                <Select
+                  filterable
+                  remote
+                  clearable
+                  label-in-value
+                  :loading="submitLoading"
+                  v-model="item.cardid"
+                  @on-change="e => onSelectCard(e, index)"
+                  :remote-method="onSearchCards"
+                  placeholder="选择卡卷">
+                  <Option v-for="(item, cardindex) in cardList" :disabled="item.ispromote == 1" :key="item.id" :value="item.id">{{item.cardname}}</Option>
+                </Select>
+              </FormItem>
+            </Col>
+            <Col span="5">
+              <FormItem label="卡券名称">
+                <Input v-model="item.cardname"></Input>
+              </FormItem>
+            </Col>
+            <Col span="5">
+              <FormItem label="赠送数量">
+                <InputNumber :max="9999999" :min="0" v-model="item.goodsnum"></InputNumber>
+              </FormItem>
+            </Col>
+            <Col span="9">
+              <Button type="dashed" @click="onClickDel(index)">删除规则</Button>
+              <Button style="margin-left:12px" type="dashed" @click="onClickAddRule">添加规则</Button>
+            </Col>
           </Col>
         </Row>
       </Form>
+      <Divider></Divider>
+      <Row>
+        <Col span="24">
+          <Form :label-width="100">
+            <FormItem>
+              <Button type="primary" :loading="isloading" @click="onClickSubmit">提交</Button>
+              <Button style="margin-left:12px" :to="{name: 'AfterScancodePay'}">返回</Button>
+            </FormItem>
+          </Form>
+        </Col>
+      </Row>
     </Card>
   </div>
 </template>
@@ -102,16 +153,30 @@ export default {
         codepayname: '',
         maxfee: 9999,
         minfee: 0,
-        codepaytype: '1',
+        codepaytype: '',
       },
       rules: [],
       areaData: [],
       cityid: [],
-      isloading: false
+      isloading: false,
+      submitLoading: false,
+      cardList: [],
+      rulesArr: [
+        {
+          mintotal: 0,
+          maxtotal: 0,
+          max: 0,
+          min: 0,
+          cardid: '',
+          goodsnum: 1,
+          cardname: ''
+        }
+      ]
     }
   },
   created () {
     this.getAreaData()
+    this.getCardList('')
   },
   methods: {
     getAreaData () {
@@ -131,20 +196,94 @@ export default {
         }
       )
     },
+    onClickAddRule () {
+      let obj = {
+        mintotal: 0,
+        maxtotal: 0,
+        max: 0,
+        min: 0,
+        cardid: '',
+        goodsnum: 1,
+        cardname: ''
+      }
+      this.rulesArr.push(obj)
+    },
+    onClickDel (index) {
+      if (index === 0) return false
+      this.rulesArr.splice(index, 1)
+    },
+    onChangeType () {
+      this.rulesArr = [
+        {
+          mintotal: 0,
+          maxtotal: 0,
+          max: 0,
+          min: 0,
+          cardid: '',
+          goodsnum: 1,
+          cardname: ''
+        }
+      ]
+    },
+    onSearchCards (e) {
+      this.getCardList(e)
+    },
+    getCardList (like) {
+      this.submitLoading = true
+      let d = {
+        pagesize: 20,
+        page: 1,
+        like: like
+      }
+      serverApi('/card/coupon', d,
+        response => {
+          if (response.data.code === 0){
+            this.cardList = response.data.data.result
+          }else{
+            this.$Message.warning(response.data.msg)
+          }
+          this.submitLoading = false
+        },
+        error => {
+          this.submitLoading = false
+          console.log(error)
+          this.$Message.error('连接失败！')
+        }
+      )
+    },
+    onSelectCard (e, index) {
+      this.rulesArr[index].cardname = e.label
+      this.rulesArr[index].cardid = e.value
+    },
     onClickSubmit () {
+      console.log(this.rulesArr)
       if (this.cityid.length === 0) {
         this.$Message.warning('请选择城市！')
         return false
       }
       this.isloading = true
       this.addData.city = this.cityid.join(',')
+      this.rulesArr.map(item => {
+        item.mintotal = 100 * item.mintotal
+        item.maxtotal = 100 * item.maxtotal
+        item.max = 100 * item.max
+        item.min = 100 * item.min
+      })
+      this.addData.content = JSON.stringify(this.rulesArr)
       serverApi('/paymentactive/activityedit', this.addData,
         response => {
           this.isloading = false
           if (response.data.code === 0) {
             this.$Message.success(response.data.msg)
+            this.$router.push({name: 'AfterScancodePay'})
           } else {
             this.$Message.warning(response.data.msg)
+            this.rulesArr.map(item => {
+              item.mintotal = item.mintotal / 100
+              item.maxtotal = item.maxtotal / 100
+              item.max = item.max / 100
+              item.min = item.min / 100
+            })
           }
         },
         error => {
@@ -153,7 +292,7 @@ export default {
           this.$Message.error(error.toString())
         }
       )
-    }
+    },
   }
 }
 </script>

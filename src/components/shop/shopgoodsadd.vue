@@ -215,8 +215,8 @@
       </p>
       <div class="preview">
         <div class="swiper">
-          <Carousel autoplay loop radius-dot arrow="never">
-            <CarouselItem v-for="(item, index) in picArr" :key="index">
+          <Carousel v-if="preModal" autoplay loop radius-dot arrow="never">
+            <CarouselItem v-for="(item, index) in picArr" :key="index" v-if="item">
               <div class="demo-carousel" >
                 <img :src="item" alt="">
               </div>

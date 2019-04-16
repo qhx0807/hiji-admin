@@ -58,14 +58,6 @@ export default {
           key: 'isentry',
         },
         {
-          title: '最高支付',
-          key: 'maxfee',
-        },
-        {
-          title: '最低支付',
-          key: 'minfee',
-        },
-        {
           title: '操作',
           key: 'codepayid',
           fixed: 'right',
