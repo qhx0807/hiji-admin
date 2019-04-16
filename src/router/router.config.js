@@ -651,7 +651,7 @@ const routes = [
         name: 'CollageBuyReport'
       },
       {
-        path: 'CutDownPriceReport',
+        path: 'CutDownPriceReport/:id',
         component: CutDownPriceReport,
         name: 'CutDownPriceReport'
       },

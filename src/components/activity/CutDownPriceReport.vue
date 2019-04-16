@@ -3,7 +3,7 @@
     <Card :bordered="false" class="mb10">
       <Form :label-width="80">
         <Row>
-          <Col span="5">
+          <!-- <Col span="5">
             <FormItem prop="typename" label="开始时间" style="margin-bottom:0">
               <DatePicker type="date" style="width: 100%" placeholder="选择日期" @on-change="e => searchObj.starttime = e"></DatePicker>
             </FormItem>
@@ -12,24 +12,18 @@
             <FormItem prop="typename" label="结束时间" style="margin-bottom:0">
               <DatePicker type="date" style="width: 100%" placeholder="选择日期" @on-change="e => searchObj.endtime = e"></DatePicker>
             </FormItem>
-          </Col>
+          </Col> -->
           <Col span="14">
-            <FormItem prop="typename" style="margin-bottom:0">
-              <Button @click="getTableData" type="primary" :loading="isloading">查询</Button>
+              <!-- <Button @click="getTableData" type="primary" :loading="isloading">查询</Button> -->
               <Button style="margin-left:10px" @click="onClickExport" :loading="isloading">导出</Button>
-            </FormItem>
           </Col>
         </Row>
       </Form>
     </Card>
     <Card :bordered="false">
       <div class="table-box">
-        <Table border size="small" :loading="tableLoading" :columns="columns" :data="tableData"></Table>
+        <Table border size="small" height="600" :loading="tableLoading" :columns="columns" :data="tableData"></Table>
       </div>
-      <div style="float: right; padding-top:12px">
-        <Page :total="count" show-total :current="page" @on-change="changePage" show-sizer></Page>
-      </div>
-      <div style="clear:both"></div>
     </Card>
   </div>
 </template>
@@ -47,33 +41,21 @@ export default {
       tableData: [],
       columns: [
         {
-          title: '商户名称',
-          key: 'merchantname',
-        },
-        {
-          title: '订单类型',
-          key: 'type',
-        },
-        {
           title: '商品',
           key: 'goodsname',
-          width: 200
+          width: 300
         },
         {
           title: '属性ID',
-          key: 'typeid',
+          key: 'goodstypeid',
         },
         {
           title: '市场价',
-          key: 'marketprice',
-        },
-        {
-          title: '定价',
           key: 'goodsprice',
         },
         {
           title: '实付金额',
-          key: 'cash_amount',
+          key: 'price',
         },
         {
           title: '优惠',
@@ -96,23 +78,11 @@ export default {
           key: 'bquantity',
         },
         {
-          title: '下单时间',
-          key: 'createtime',
-          width: 150
-        },
-        {
           title: '折扣率',
           key: 'discount',
         },
       ],
-      isloading: false,
-      searchObj: {
-        starttime: '',
-        endtime: '',
-        exports: '',
-        page: 1,
-        pagesize: 10
-      }
+      isloading: false
     }
   },
   created () {
@@ -122,13 +92,11 @@ export default {
     getTableData () {
       this.tableLoading = true
       this.isloading = true
-      this.searchObj.exports = ''
-      serverApi('/Activity/bargainreportform', this.searchObj,
+      serverApi('/Activity/bargainreportform', {id: this.$route.params.id},
         response => {
           console.log(response)
           if (response.data.code === 0) {
-            this.count = response.data.data.counts
-            this.tableData = response.data.data.result
+            this.tableData = response.data.data
           } else {
             this.$Message.warning(response.data.msg)
           }
@@ -153,8 +121,7 @@ export default {
         duration: 0,
         content: '加载中...'
       })
-      this.searchObj.exports = 'out'
-      serverApi('/Activity/bargainreportform', this.searchObj,
+      serverApi('/Activity/bargainreportform', {id: this.$route.params.id, exports: 'out'},
         response => {
           this.$Message.destroy()
           this.isloading = false

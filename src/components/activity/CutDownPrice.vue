@@ -193,7 +193,7 @@ export default {
       this.getTableData()
     },
     seeActivity (row) {
-
+      this.$router.push({name: 'CutDownPriceReport', params: {id: row.id}})
     },
     onClickEdit (row) {
       this.$router.push({name: 'CutDownPriceEdit', params: {id: row.id}})
