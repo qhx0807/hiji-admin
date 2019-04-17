@@ -13,9 +13,9 @@
               <DatePicker type="date" style="width: 100%" placeholder="选择日期" @on-change="e => searchObj.endtime = e"></DatePicker>
             </FormItem>
           </Col> -->
-          <Col span="14">
+          <Col span="24">
               <!-- <Button @click="getTableData" type="primary" :loading="isloading">查询</Button> -->
-              <Button style="margin-left:10px" @click="onClickExport" :loading="isloading">导出</Button>
+              <Button @click="onClickExport" :loading="isloading">导出</Button>
           </Col>
         </Row>
       </Form>
@@ -43,43 +43,52 @@ export default {
         {
           title: '商品',
           key: 'goodsname',
-          width: 300
+          minWidth: 300
         },
         {
           title: '属性ID',
           key: 'goodstypeid',
+          minWidth: 80
         },
         {
           title: '市场价',
           key: 'goodsprice',
+          minWidth: 100
         },
         {
           title: '实付金额',
           key: 'price',
+          minWidth: 100
         },
         {
           title: '优惠',
           key: 'reduceamount',
+          minWidth: 100
         },
         {
           title: '商品数量',
           key: 'goodsnum',
+          minWidth: 100
         },
         {
           title: '砍价人数',
           key: 'bnumber',
+          minWidth: 100
         },
         {
           title: '砍价次数',
           key: 'bfrequency',
+          minWidth: 100
         },
         {
           title: '注册人数',
           key: 'bquantity',
+          minWidth: 100
         },
         {
           title: '折扣率',
           key: 'discount',
+          minWidth: 100
         },
       ],
       isloading: false
