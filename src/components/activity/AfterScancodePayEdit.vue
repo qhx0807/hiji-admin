@@ -107,17 +107,27 @@
                 </Select>
               </FormItem>
             </Col>
-            <Col span="5">
+            <Col span="4">
               <FormItem label="卡券名称">
                 <Input v-model="item.cardname"></Input>
               </FormItem>
             </Col>
-            <Col span="5">
+            <Col span="3">
               <FormItem label="赠送数量">
                 <InputNumber :max="9999999" :min="0" v-model="item.goodsnum"></InputNumber>
               </FormItem>
             </Col>
-            <Col span="9">
+            <Col span="4">
+              <FormItem label="支付金额最大值">
+                <InputNumber :max="9999999" :min="0" v-model="item.maxtotal"></InputNumber>
+              </FormItem>
+            </Col>
+            <Col span="4">
+              <FormItem label="支付金额最小值">
+                <InputNumber :max="9999999" :min="0" v-model="item.mintotal"></InputNumber>
+              </FormItem>
+            </Col>
+            <Col span="4">
               <Button type="dashed" @click="onClickDel(index)">删除规则</Button>
               <Button style="margin-left:12px" type="dashed" @click="onClickAddRule">添加规则</Button>
             </Col>
