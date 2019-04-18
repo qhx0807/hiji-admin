@@ -15,26 +15,25 @@
       <div style="clear:both"></div>
     </Card>
 
-    <Modal v-model="addModal" width="750">
+    <Modal v-model="addModal" width="500">
       <p slot="header" style="text-align:center">
         <span>新增</span>
       </p>
       <Form :model="addData" ref="form" :rules="rules" :label-width="100">
         <Row>
-          <Col span="12">
-            <FormItem label="活动ID">
-              <Input v-model="addData.mainid"></Input>
-            </FormItem>
+          <Col span="22">
             <FormItem label="商品ID">
               <Input v-model="addData.goodsid"></Input>
             </FormItem>
           </Col>
-          <Col span="12">
-            <FormItem label="商家优惠" prop="merchantcoupon">
-              <InputNumber :max="99999" :min="0" v-model="addData.merchantcoupon" style="width: 220px"></InputNumber>
-            </FormItem>
+          <Col span="24">
             <FormItem label="平台优惠" prop="coupon">
-              <InputNumber :max="99999" :min="0" v-model="addData.coupon" style="width: 220px"></InputNumber>
+              <InputNumber :max="99999" :min="0" v-model="addData.coupon" style="width: 330px"></InputNumber>
+            </FormItem>
+          </Col>
+          <Col span="24">
+            <FormItem label="商家优惠" prop="merchantcoupon">
+              <InputNumber :max="99999" :min="0" v-model="addData.merchantcoupon" style="width: 330px"></InputNumber>
             </FormItem>
           </Col>
         </Row>
@@ -52,7 +51,7 @@
         <Row>
           <Col span="12">
             <FormItem label="活动ID">
-              <Input v-model="modifyData.mainid"></Input>
+              <Input v-model="modifyData.mainid" disabled></Input>
             </FormItem>
             <FormItem label="商品ID">
               <Input v-model="modifyData.goodsid"></Input>
@@ -90,15 +89,11 @@ export default {
       modifyModal: false,
       modal_loading: false,
       tableData: [],
-      typeList: [],
-      userLevel: [],
-      usersLevel: [],
-      userList: [],
-      userLists: [],
       time2: '',
       time1: '',
       addData: {},
       // editData: {},
+      ids: '',
       modifyData: {
         id:''
       },
@@ -211,10 +206,13 @@ export default {
       this.getTableData()
     },
     getTableData () {
+      this.ids = this.$route.params.id
+      console.log(this.ids)
       let d = {
         pagesize: this.pageSize,
         page: this.page,
         like: this.searchKey,
+        mainid: this.ids
         // smid: '',
         // status: ''
       }
@@ -250,9 +248,15 @@ export default {
       this.addModal = true
     },
     onSave () {
-      console.log(this.addData)
+      let d = {
+        mainid: this.ids,
+        goodsid: this.addData.goodsid,
+        merchantcoupon: this.addData.merchantcoupon,
+        coupon: this.addData.coupon,
+      }
+      console.log(d)
       this.modal_loading = true
-      serverApi('/activity/increasebuygoods', this.addData,
+      serverApi('/activity/increasebuygoods', d,
         response => {
           if (response.data.code === 0) {
             this.$Message.success(response.data.msg)

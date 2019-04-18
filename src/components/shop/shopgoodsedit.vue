@@ -540,6 +540,7 @@ export default {
       let content = this.$refs.ue.getUEContent()
       this.editData.goodsdetailed = content ? encodeURIComponent(content) : ''
       console.log(this.editData)
+      console.log(this.picArr)
       serverApi('/goods/goodsedit', this.editData,
         response => {
           console.log(response)
@@ -563,6 +564,7 @@ export default {
       let content = this.$refs.ue.getUEContent()
       this.preContent = content
       this.preModal = true
+      console.log(this.picArr)
     },
     onClickAddArr () {
       let arr = []

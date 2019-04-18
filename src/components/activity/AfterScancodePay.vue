@@ -58,6 +58,20 @@ export default {
           key: 'isentry',
         },
         {
+          title: '启用摇一摇',
+          key: 'isshake',
+          render: (h, params) => {
+            let text = params.row.isshake == 1 ? '启用' : '关闭'
+            let color = params.row.isshake == 1 ? 'success' : 'warning'
+            return h('Tag', {
+              props: {
+                type: 'dot',
+                color: color
+              }
+            }, text)
+          }
+        },
+        {
           title: '操作',
           key: 'codepayid',
           fixed: 'right',
@@ -100,6 +114,7 @@ export default {
       serverApi('/paymentactive/activitylist', d,
         response => {
           if (response.data.code === 0) {
+            console.log(response)
             this.count = response.data.data.counts
             this.tableData = response.data.data.result
           } else {

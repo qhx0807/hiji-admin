@@ -306,7 +306,7 @@ export default {
       console.log(row)
       this.editData = Object.assign({}, row)
       this.cardsAtt = row.cardmainid.split(',')
-      this.cardsAtt = this.cardsAtt.map(Number)
+      this.cardsAtt = this.cardsAtt.map( e => Number(e))
       console.log(this.cardsAtt)
       this.pidprice = row.goodsprice - row.coupon - row.merchantcoupon
       this.editModal = true

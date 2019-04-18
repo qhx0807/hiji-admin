@@ -120,6 +120,9 @@ const AfterScancodePayAdd = r => require.ensure([], () => r(require('@/component
 const AfterScancodePayEdit = r => require.ensure([], () => r(require('@/components/activity/AfterScancodePayEdit.vue')))
 const UserAgreement = r => require.ensure([], () => r(require('@/components/settings/UserAgreement.vue')))
 const UserAgreementEdit = r => require.ensure([], () => r(require('@/components/settings/UserAgreementEdit.vue')))
+const InvitePrizeReport = r => require.ensure([], () => r(require('@/components/activity/InvitePrizeReport.vue')))
+const MemberIntegral = r => require.ensure([], () => r(require('@/components/usermember/memberIntegral.vue')))
+const Buttons = r => require.ensure([], () => r(require('@/components/settings/Buttons.vue')))
 
 const routes = [
   {
@@ -714,6 +717,21 @@ const routes = [
         path: 'UserAgreement/:id',
         component: UserAgreementEdit,
         name: 'UserAgreementEdit'
+      },
+      {
+        path: 'InvitePrizeReport',
+        component: InvitePrizeReport,
+        name: 'InvitePrizeReport'
+      },
+      {
+        path: 'MemberIntegral',
+        component: MemberIntegral,
+        name: 'MemberIntegral'
+      },
+      {
+        path: 'Buttons',
+        component: Buttons,
+        name: 'Buttons'
       }
     ]
   },

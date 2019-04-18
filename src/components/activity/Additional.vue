@@ -21,32 +21,39 @@
       </p>
       <Form :model="addData" ref="form" :rules="rules" :label-width="120">
         <Row>
-          <Col span="24">
+          <Col span="8">
             <FormItem label="活动名称" prop="type">
-              <Input v-model="addData.activityname" placeholder="请输入活动名称" clearable style="width: 560px" />
+              <Input v-model="addData.activityname" placeholder="请输入活动名称" clearable />
+            </FormItem>
+          </Col>
+          <Col span="10">
+            <FormItem label="最大购买数" prop="type" v-if="addData.type===0 || !addData.type">
+              <Input v-model="addData.maxquantity" placeholder="请输入" clearable  />
+            </FormItem>
+            <FormItem label="最大购买数" prop="type" v-if="addData.type===1">
+              <Input v-model="addData.maxquantity" placeholder="请输入" disabled  />
             </FormItem>
           </Col>
           <Col span="8">
             <FormItem label="活动类型" prop="type">
-              <Select v-model="addData.type" >
+              <Select v-model="addData.type" @on-change="Tgoods">
                 <Option :value="0">加价购商品</Option>
                 <Option :value="1">加价购卡卷</Option>
               </Select>
             </FormItem>
-            <FormItem label="规则对象" >
-              <Select v-model="addData.buytype" v-if="addData.type===''">
-                <Option :value="0">请选择活动类型</Option>
-              </Select>
-              <Select v-model="addData.buytype" v-if="addData.type===0">
+            <FormItem label="规则对象">
+              <Select v-model="addData.buytype" @on-change="Bgoods" v-if="addData.type===0 || !addData.type" style="width: 180px">
                 <Option :value="0">以下商户</Option>
                 <Option :value="1">以下商品类型</Option>
                 <Option :value="2">以下商品</Option>
               </Select>
-              <Select v-model="addData.buytype" v-if="addData.type===1">
-                <Option :value="0">以下商户</Option>
-                <Option :value="1">以下商卡卷类型</Option>
+              <Select v-model="addData.buytype" @on-change="Bgoods" v-if="addData.type===1" style="width: 180px">
+                <!-- <Option :value="0">以下商户</Option> -->
                 <Option :value="2">以下卡卷</Option>
               </Select>
+              <Poptip word-wrap trigger="hover" width="200" content="请先选择活动类型" placement="right">
+                <Icon type="ios-help-circle" size="20" class="icon"/>
+              </Poptip>
             </FormItem>
           </Col>
           <Col span="8">
@@ -56,7 +63,6 @@
             <FormItem label="结束时间" prop="type">
               <DatePicker type="datetime" @on-change="onEndtime" style="width: 200px"></DatePicker>
             </FormItem>
-
           </Col>
           <Col span="8">
             <FormItem label="订单最小金额" prop="orderpaymin">
@@ -72,22 +78,30 @@
               <InputNumber :max="99999" :min="0" v-model="addData.orderpaymax" style="width: 150px"></InputNumber>
             </FormItem>
           </Col>
-          <!-- <Col span="24">
-            <FormItem label="选择优惠卷">
+          <Col span="22">
+            <FormItem :label="goodsname">
               <Select
                 filterable
                 remote
                 clearable
-                multiple
-                style="width:100%"
-                :loading="searchLoading"
-                v-model="cardsAtt"
+                :loading="modal_loading"
                 :remote-method="onSearchGoods"
-                placeholder="选择商品">
-                <Option v-for="(item, index) in cardsData" :disabled="item.ispromote == 1" :key="item.id" :value="item.id">{{item.cardname}}</Option>
+                multiple v-model="addData.buytypemsg"
+                placeholder="请选择">
+                <Option v-for="item in cardsData" :key="item.id" :value="item.id">{{item.name}}</Option>
               </Select>
+              <!-- <Select
+                v-if="addData.type===1"
+                filterable
+                remote
+                clearable
+                :remote-method="onSearchGoods"
+                multiple v-model="addData.type"
+                placeholder="选择卡卷">
+                <Option v-for="item in cardsData" :key="item.id" :value="item.id">{{item.name}}</Option>
+              </Select> -->
             </FormItem>
-          <Col/> -->
+          </Col>
         </Row>
       </Form>
       <div slot="footer">
@@ -95,30 +109,45 @@
         <Button type="primary" :loading="modal_loading" @click="onSave">发送</Button>
       </div>
     </Modal>
-    <Modal v-model="modifyModal" width="750">
+    <Modal v-model="modifyModal" width="1050">
       <p slot="header" style="text-align:center">
         <span>修改</span>
       </p>
       <Form :model="modifyData" ref="form" :rules="modifyRule" :label-width="100">
         <Row>
-          <Col span="24">
+          <Col span="11">
             <FormItem label="活动名称" prop="type">
-              <Input v-model="addData.activityname" placeholder="请输入活动名称" clearable style="width: 560px" />
+              <Input v-model="modifyData.activityname" placeholder="请输入活动名称" clearable />
             </FormItem>
           </Col>
-          <Col span="12">
+          <Col span="11">
+            <FormItem label="最大购买数" prop="type" v-if="modifyData.type===0 || !modifyData.type">
+              <Input v-model="modifyData.maxquantity" placeholder="请输入" clearable  />
+            </FormItem>
+            <FormItem label="最大购买数" prop="type" v-if="modifyData.type===1">
+              <Input v-model="modifyData.maxquantity" placeholder="请输入" disabled  />
+            </FormItem>
+          </Col>
+          <Col span="11">
             <FormItem label="活动类型" prop="type">
-              <Select v-model="modifyData.type" >
+              <Select v-model="modifyData.type" @on-change="Tgoods">
                 <Option :value="0">加价购商品</Option>
-                <!-- <Option :value="1">加价购卡卷</Option> -->
+                <Option :value="1">加价购卡卷</Option>
               </Select>
             </FormItem>
-            <FormItem label="规则对象" prop="type">
-              <Select v-model="modifyData.buytype" >
+            <FormItem label="规则对象">
+              <Select v-model="modifyData.buytype" @on-change="Bgoods" v-if="modifyData.type===0 || !modifyData.type" style="width: 330px">
                 <Option :value="0">以下商户</Option>
                 <Option :value="1">以下商品类型</Option>
                 <Option :value="2">以下商品</Option>
               </Select>
+              <Select v-model="modifyData.buytype" @on-change="Bgoods" v-if="modifyData.type===1" style="width: 280px">
+                <!-- <Option :value="0">以下商户</Option> -->
+                <Option :value="2">以下卡卷</Option>
+              </Select>
+              <Poptip word-wrap trigger="hover" width="200" content="请先选择活动类型" placement="right">
+                <Icon type="ios-help-circle" size="20" class="icon"/>
+              </Poptip>
             </FormItem>
             <FormItem label="订单最小金额" prop="type">
               <InputNumber :max="99999" :min="0" v-model="modifyData.orderpaymin" style="width: 170px"></InputNumber>
@@ -132,13 +161,37 @@
           </Col>
           <Col span="12">
             <FormItem label="开始时间" prop="type">
-              <DatePicker type="datetime" :value="time2" @on-change="onStarttime" style="width: 200px"></DatePicker>
+              <DatePicker type="datetime" :value="time2" @on-change="onStarttimeMod" style="width: 200px"></DatePicker>
             </FormItem>
             <FormItem label="结束时间" prop="type">
-              <DatePicker type="datetime" :value="time1" @on-change="onEndtime" style="width: 200px"></DatePicker>
+              <DatePicker type="datetime" :value="time1" @on-change="onEndtimeMod" style="width: 200px"></DatePicker>
             </FormItem>
             <FormItem label="订单最大金额" prop="type">
               <InputNumber :max="99999" :min="0" v-model="modifyData.orderpaymax" style="width: 200px"></InputNumber>
+            </FormItem>
+          </Col>
+          <Col span="22">
+            <FormItem :label="goodsname">
+              <Select
+                filterable
+                remote
+                clearable
+                :loading="modal_loading"
+                :remote-method="onSearchGoods"
+                multiple v-model="userLevels"
+                placeholder="请选择">
+                <Option v-for="item in cardsData" :key="item.id" :value="item.id">{{item.name}}</Option>
+              </Select>
+              <!-- <Select
+                v-if="addData.type===1"
+                filterable
+                remote
+                clearable
+                :remote-method="onSearchGoods"
+                multiple v-model="addData.type"
+                placeholder="选择卡卷">
+                <Option v-for="item in cardsData" :key="item.id" :value="item.id">{{item.name}}</Option>
+              </Select> -->
             </FormItem>
           </Col>
         </Row>
@@ -165,15 +218,23 @@ export default {
       modifyModal: false,
       modal_loading: false,
       tableData: [],
+      cardsData: [],
       typeList: [],
       userLevel: [],
-      usersLevel: [],
-      userList: [],
-      userLists: [],
+      userLevels: [],
       time2: '',
       time1: '',
+      starttimeMod: '',
+      endtimeMod: '',
       addData: {},
+      ids: '',
+      goodsid: '',
+      goodslike: '',
+      buytype: '',
+      type: '',
+      typename: '',
       // editData: {},
+      goodsname: '请选择',
       modifyData: {
         id:''
       },
@@ -205,8 +266,12 @@ export default {
           key: 'starttime',
         },
         {
-          title: '结束',
+          title: '结束时间',
           key: 'endtime',
+        },
+        {
+          title: '最大购买数',
+          key: 'maxquantity',
         },
         // {
         //   title: '是否有效',
@@ -233,10 +298,11 @@ export default {
         {
           title: '操作',
           key: 'id',
-          width: 120,
+          width: 200,
           render: (h, params) => {
             let modify = h('a', {
               style: {
+                color: '#f90',
                 marginRight: '10px'
               },
               on: {
@@ -245,19 +311,19 @@ export default {
                 }
               }
             }, '修改')
-            // let edit = h('a', {
-            //   style: {
-            //     marginRight: '10px'
-            //   },
-            //   on: {
-            //     click: () => {
-            //       this.onClickEdit(params.row)
-            //     }
-            //   }
-            // }, '回复Ta')
+            let edit = h('a', {
+              style: {
+                marginRight: '10px'
+              },
+              on: {
+                click: () => {
+                  this.onClickEdit(params.row)
+                }
+              }
+            }, '查看商品')
             let del = h('a', {
               style: {
-                color: '#f90',
+                color: '#f40',
                 marginRight: '10px'
               },
               on: {
@@ -267,7 +333,7 @@ export default {
               }
             }, '删除')
 
-            return h('div', [modify, del])
+            return h('div', [edit, modify, del])
           }
         },
       ]
@@ -323,9 +389,9 @@ export default {
       console.log(e)
     },
     onClickAdd () {
-      this.addData = {
-        typename: ''
-      }
+      // this.addData = {
+      //   type: ''
+      // }
       this.addModal = true
     },
     onSave () {
@@ -383,11 +449,55 @@ export default {
       this.modifyData = row
       this.time2 = row.starttime
       this.time1 = row.endtime
+      this.goodsid = row.id
+      this.typename = row.typename
+      if (row.buytype === 0) {
+        this.userLevels = row.buytypemsg.split(',')
+      } else {
+         this.userLevel = row.buytypemsg.split(',')
+         this.userLevels = this.userLevel.map( e => Number(e))
+      }
+
+      console.log(this.userLevel)
+      console.log(this.userLevels)
+      let d = {
+        type: row.type,
+        buytype: row.buytype,
+      }
+      this.modal_loading = true
+      serverApi('/activity/increasebuymsg', d,
+        response => {
+          console.log(response)
+          if (response.data.code === 0) {
+            this.cardsData = response.data.data
+          } else {
+            this.$Message.warning(response.data.msg)
+          }
+          this.modal_loading = false
+        },
+        error => {
+          this.modal_loading = false
+          this.$Message.error(error.toString())
+        }
+      )
     },
     modifySave () {
       this.modifyModal = false
       console.log(this.modifyData)
-      serverApi('/activity/increasebuy', this.modifyData,
+      let d = {
+        activityname: this.modifyData.activityname,
+        typename: this.typename,
+        maxquantity: this.modifyData.maxquantity,
+        type: this.modifyData.type,
+        buytype: this.modifyData.buytype,
+        orderpaymin: this.modifyData.orderpaymin,
+        orderpaymax: this.modifyData.orderpaymax,
+        buytypemsg: this.userLevels,
+        starttime: this.estarttimeMod,
+        endtime: this.endtimeMod,
+        id: this.goodsid
+      }
+      serverApi('/activity/increasebuy', d,
         response => {
           if (response.data.code === 0) {
             this.$Message.success(response.data.msg)
@@ -405,30 +515,11 @@ export default {
         }
       )
     },
-    // onSaveEdit () {
-    //   if (!this.editData.sevicemsg) {
-    //     this.$Message.warning('请输入内容！')
-    //     return false
-    //   }
-    //   this.modal_loading = true
-    //   serverApi('/service/servicetreate', this.editData,
-    //     response => {
-    //       if (response.data.code === 0) {
-    //         this.$Message.success(response.data.msg)
-    //         this.getTableData()
-    //       } else {
-    //         this.$Message.warning(response.data.msg)
-    //       }
-    //       this.editModal = false
-    //       this.modal_loading = false
-    //     },
-    //     error => {
-    //       this.modal_loading = false
-    //       this.editModal = false
-    //       this.$Message.error(error.toString())
-    //     }
-    //   )
-    // },
+    onClickEdit (row) {
+      console.log(row)
+       this.ids = row.id
+      this.$router.push({name: 'AdditionalGoods' , params: {id: this.ids}})
+    },
     onStarttime (e) {
       console.log(e)
       this.addData.starttime = e
@@ -436,6 +527,74 @@ export default {
     onEndtime (e) {
       console.log(e)
       this.addData.endtime = e
+    },
+    onStarttimeMod (e) {
+      console.log(e)
+
+      this.starttimeMod = e
+    },
+    onEndtimeMod (e) {
+      console.log(e)
+      this.endtimeMod = e
+    },
+    onSearchGoods (e) {
+      console.log(e)
+      this.onMerchants(e)
+    },
+    Tgoods (e) {
+      if (e===0){
+        this.goodsname = '选择商品'
+      } else {
+        this.goodsname = '选择卡卷'
+        this.addData.maxquantity = 1
+      }
+      console.log(e)
+      this.type = e
+    },
+    Bgoods (e) {
+      // alert('1')
+      console.log(e)
+      this.buytype = e
+      this.onMerchants()
+    },
+    onMerchants (e) {
+      if (!e) {
+        this.goodslike = ''
+      } else {
+        this.goodslike = e
+      }
+      let d = {
+        type: this.type,
+        buytype: this.buytype,
+        like: this.goodslike
+      }
+      // let d = {
+      //   type: 0,
+      //   buytype: 0,
+      //   like: ''
+      // }
+      this.modal_loading = true
+      serverApi('/activity/increasebuymsg', d,
+        response => {
+          console.log(response)
+          if (response.data.code === 0) {
+            this.cardsData = response.data.data
+          } else {
+            this.$Message.warning(response.data.msg)
+          }
+          this.modal_loading = false
+        },
+        error => {
+          this.modal_loading = false
+          this.$Message.error(error.toString())
+        }
+      )
+    },
+    watch: {
+      addData (newName, oldName) {
+        console.log(newName)
+        console.log(oldName)
+      }
     }
   }
 }

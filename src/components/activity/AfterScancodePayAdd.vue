@@ -57,6 +57,14 @@
               </Select>
             </FormItem>
           </Col>
+          <Col span="6">
+            <FormItem label="是否启用">
+              <i-switch v-model="addData.isshake" size="large">
+                <span slot="open">开</span>
+                <span slot="close">关</span>
+              </i-switch>
+            </FormItem>
+          </Col>
         </Row>
       </Form>
       <Divider orientation="left">详细规则</Divider>
@@ -164,6 +172,7 @@ export default {
         maxfee: 9999,
         minfee: 0,
         codepaytype: '',
+        isshake: false
       },
       rules: [],
       areaData: [],
