@@ -58,11 +58,26 @@
             </FormItem>
           </Col>
           <Col span="6">
-            <FormItem label="是否启用">
+            <FormItem label="最低金额" prop="cityid">
+              <Input v-model="addData.mintotal"></Input>
+            </FormItem>
+          </Col>
+          <Col span="6">
+            <FormItem label="摇一摇">
               <i-switch v-model="addData.isshake" size="large">
                 <span slot="open">开</span>
                 <span slot="close">关</span>
               </i-switch>
+            </FormItem>
+          </Col>
+        </Row>
+        <Row>
+          <Col span="6">
+            <FormItem label="发券规则">
+              <Select v-model="addData.isrepeat" placeholder="请选择" @on-change="onChangeType">
+                <Option :value="1">每次支付发券</Option>
+                <Option :value="0">活动期间内</Option>
+              </Select>
             </FormItem>
           </Col>
         </Row>
@@ -172,6 +187,7 @@ export default {
         maxfee: 9999,
         minfee: 0,
         codepaytype: '',
+        mintotal: 0
       },
       rules: [],
       areaData: [],
