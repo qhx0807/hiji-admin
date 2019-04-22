@@ -71,7 +71,8 @@
                 </span>
               </Input>
             </FormItem>
-            <FormItem label="适用价格区间" v-show="addData.typeid == 6">
+            <!-- v-show="addData.typeid == 6" -->
+            <FormItem label="适用价格区间" >
               <InputNumber :max="99999999999" :min="-1" v-model="addData.dybottom"></InputNumber>
               -
               <InputNumber :max="99999999999" :min="-1" v-model="addData.dytop"></InputNumber>

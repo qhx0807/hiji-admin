@@ -54,7 +54,8 @@
             <FormItem label="限制属性值">
               <InputNumber :max="999999" :min="1" v-model="editData.restrictsvalue"></InputNumber>
             </FormItem>
-            <FormItem label="适用价格区间" v-show="editData.typeid == 6">
+            <!-- v-show="editData.typeid == 6" -->
+            <FormItem label="适用价格区间" >
               <InputNumber :max="99999999999" :min="-1" v-model="editData.dybottom"></InputNumber>
               -
               <InputNumber :max="99999999999" :min="-1" v-model="editData.dytop"></InputNumber>
