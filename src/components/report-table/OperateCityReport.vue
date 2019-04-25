@@ -343,7 +343,7 @@ export default {
                 {
                   title: '对比期',
                   align: 'right',
-                  key: 'carcashb',
+                  key: 'carcashd',
                   width: 100
                 }
               ]
