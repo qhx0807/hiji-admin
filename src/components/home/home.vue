@@ -2,10 +2,11 @@
   <div class="home">
     <Row>
       <Col span="24">
-        <Button :loading="loading" @click="getTableData" type="info">测试接口-存储过程获取数据</Button>
-        &nbsp;
-        <code>POST: /api/find</code>
-        <Input type="textarea"  :rows="10" style="margin-top:12px" v-model="text"></Input>
+        <Input style="width:250px" v-model="pathurl"></Input>
+        <Button :loading="loading" style="margin-left:12px" @click="getTableData" type="primary">测试接口</Button>
+      </Col>
+      <Col span="24">
+        <Input type="textarea" :rows="10" style="margin-top:12px" v-model="text"></Input>
       </Col>
     </Row>
   </div>
@@ -17,15 +18,17 @@ export default {
   data () {
     return {
       text: '',
-      loading: false
+      loading: false,
+      pathurl: '/index/index'
     }
   },
   created () {},
   methods: {
     getTableData () {
       this.loading = true
-      serverApi('/api/find', '',
+      serverApi(this.pathurl, '',
         response => {
+          console.log(response)
           this.loading = false
           this.text = JSON.stringify(response.data)
         },
@@ -34,7 +37,7 @@ export default {
           console.log(error)
         }
       )
-    },
+    }
   }
 }
 </script>

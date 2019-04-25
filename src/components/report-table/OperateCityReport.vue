@@ -223,13 +223,13 @@ export default {
                 {
                   title: '本期',
                   align: 'right',
-                  key: 'tgamountb',
+                  key: 'smamountb',
                   width: 100
                 },
                 {
                   title: '对比期',
                   align: 'right',
-                  key: 'tgamountd',
+                  key: 'smamountd',
                   width: 100
                 }
               ]
@@ -241,13 +241,13 @@ export default {
                 {
                   title: '本期',
                   align: 'right',
-                  key: 'tgcashb',
+                  key: 'smcashb',
                   width: 100
                 },
                 {
                   title: '对比期',
                   align: 'right',
-                  key: 'tgcashd',
+                  key: 'smcashd',
                   width: 100
                 }
               ]

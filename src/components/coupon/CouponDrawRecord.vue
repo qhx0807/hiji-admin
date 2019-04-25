@@ -222,7 +222,7 @@ export default {
           align: 'center',
           fixed: 'right',
           render: (h, params) => {
-            return h('Button', {
+            let vt = h('Button', {
               props: {
                 type: 'warning',
                 size: 'small'
@@ -233,6 +233,11 @@ export default {
                 }
               }
             }, '核销卡券')
+            if (params.row.carditemstate == 1) {
+              return h('div', [vt])
+            } else {
+              return ''
+            }
           }
         }
       ],

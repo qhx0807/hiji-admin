@@ -37,6 +37,7 @@ const serverApi = (url, data, succFoo, errorFoo) => {
     method: 'post',
     url: apiUrl + url,
     data: Object.assign({ userid: userid }, data),
+    // withCredentials: true,
     transformRequest: [function (data) {
       let ret = ''
       for (let it in data) {
