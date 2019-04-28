@@ -125,7 +125,12 @@
       <div slot="footer">
         <Button @click="shModal = false">取消</Button>
         <Button type="default" @click="downLoadShData">下载数据</Button>
-        <Button type="error" :loading="refuseLoading" @click="onClickReject">驳回</Button>
+        <Poptip
+          confirm
+          title="确认驳回？"
+          @on-ok="onClickReject" >
+          <Button type="error" :loading="refuseLoading">驳回</Button>
+        </Poptip>
         <Button type="primary" :loading="passLoading" @click="onClickSH(1)">审核通过</Button>
       </div>
     </Modal>
@@ -333,8 +338,19 @@ export default {
                 color: '#ed4014'
               }
             }, '拒绝')
+            let reject = h('a', {
+              style: {
+                color: '#ed4014',
+                marginLeft: '10px'
+              },
+              on: {
+                click: () => {
+                  this.onClickRejectTab(params.row)
+                }
+              }
+            }, '驳回')
             if (params.row.isauditing == 0) {
-              return sh
+              return h('div', [sh, reject])
             } else if (params.row.isauditing == 1) {
               return ysh
             } else if (params.row.isauditing == 2) {
@@ -859,6 +875,34 @@ export default {
         }
       )
     },
+    onClickRejectTab (row) {
+      this.$Modal.confirm({
+        title: '提示',
+        loading: true,
+        content: '<p>确认驳回此条数据？</p><p>'+row.merchantname+'</p><p>'+row.applyno+'</p><p>提现金额 '+row.total+'</p>',
+        onOk: () => {
+          let d = {
+            id: row.id,
+            reject: 1
+          }
+          serverApi('/finance/rejectapply', d,
+            response => {
+              if (response.data.code === 0){
+                this.$Message.success(response.data.msg)
+                this.getTableData()
+              }else{
+                this.$Message.warning(response.data.msg)
+              }
+              this.$Modal.remove()
+            },
+            error => {
+              console.log(error)
+              this.$Message.warning(error.toString())
+            }
+          )
+        }
+      })
+    }
   }
 }
 </script>
