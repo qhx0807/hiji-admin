@@ -482,7 +482,8 @@ export default {
       ispayment: '',
       merchantid: '',
       merchantData: [],
-      selectTableItem: []
+      selectTableItem: [],
+      rejectmsg: ''
     }
   },
   created () {
@@ -879,11 +880,26 @@ export default {
       this.$Modal.confirm({
         title: '提示',
         loading: true,
-        content: '<p>确认驳回此条数据？</p><p>'+row.merchantname+'</p><p>'+row.applyno+'</p><p>提现金额 '+row.total+'</p>',
+        render: (h) => {
+          let p1 = h('p', null, row.merchantname)
+          let p2 = h('p', null, row.applyno)
+          let p3 = h('p', null, '提现金额'+row.applyno)
+          let msg = h('Input',{
+            props: {
+              value: this.rejectmsg,
+              autofocus: true,
+              placeholder: '请输入驳回理由...',
+              type: 'textarea',
+              rows: 4
+            }
+          })
+          return h('div', [p1, p2, p3, msg])
+        },
         onOk: () => {
           let d = {
             id: row.id,
-            reject: 1
+            reject: 1,
+            rejectmsg: this.rejectmsg
           }
           serverApi('/finance/rejectapply', d,
             response => {

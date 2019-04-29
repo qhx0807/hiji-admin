@@ -3,6 +3,7 @@
     <Card :bordered="false" class="mb10">
       <Input v-model="searchKey" placeholder="搜索..." style="width: 230px" />
       <Button type="primary" icon="md-add" style="margin-left:12px" @click="onClickAdd">新增</Button>
+      <Button type="primary" icon="md-add" style="margin-left:12px" @click="permissions">权限按钮</Button>
     </Card>
     <Card :bordered="false">
       <Table :loading="tableLoading" :columns="columns" height="560" :data="tableData"></Table>
@@ -197,6 +198,7 @@ export default {
   },
   created () {
     this.getTableData()
+    this.getTableData12()
   },
   computed: {
     inviteTypeArr () {
@@ -313,6 +315,49 @@ export default {
     changePage (e) {
       this.page = e
       this.getTableData()
+    },
+    permissions () {
+      let d = {
+        menuid: 55,
+        button: '新增',
+        explain: '邀请有礼包新增按钮'
+      }
+      serverApi('/rolebutton/edit', d,
+        response => {
+          if (response.data.code === 0) {
+            this.$Message.success(response.data.msg)
+          } else {
+            this.$Message.warning(response.data.msg)
+          }
+        },
+        error => {
+          this.$Message.error(error.toString())
+        }
+      )
+    },
+    getTableData12 () {
+      this.$store.commit('pageLoading', true)
+      let userid = sessionStorage.userid
+      serverApi('/menu/index', {userid, userid},
+        response => {
+          console.log(response)
+          if (response.data.code === 0){
+            getCas(cas)
+            cas.push({
+              label: '根目录菜单',
+              value: '1'
+            })
+            this.casData = cas
+          }else{
+            this.$Message.warning(response.data.msg)
+          }
+          this.$store.commit('pageLoading', false)
+        },
+        error => {
+          console.log(error)
+          this.$store.commit('pageLoading', false)
+        }
+      )
     }
   }
 }

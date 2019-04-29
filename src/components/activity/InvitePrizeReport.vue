@@ -24,10 +24,10 @@
     </Card>
     <Card :bordered="false">
       <div class="table-box">
-        <Table border size="small" :loading="tableLoading" :columns="columns" :data="tableData"></Table>
+        <Table height="500" border size="small" :loading="tableLoading" :columns="columns" :data="tableData"></Table>
       </div>
       <div style="float: right; padding-top:12px">
-        <Page :total="count" show-total :current="page" @on-change="changePage" show-sizer></Page>
+        <Page :total="count" show-total :current="page" @on-page-size-change="onChangeSize" @on-change="changePage" show-sizer></Page>
       </div>
       <div style="clear:both"></div>
     </Card>
@@ -49,50 +49,42 @@ export default {
         {
           title: '邀请人账户',
           key: 'phone',
-          width: 120,
-          minWidth: 120,
+          minWidth: 120
         },
         {
           title: '邀请注册人数',
           key: 'invitenum',
-          width: 120,
           minWidth: 120
         },
         {
           title: '邀请人获得奖励数量',
           key: 'invitegetnum',
-          width: 160,
           minWidth: 120
         },
         {
           title: '邀请人获得奖励名称',
           key: 'invitegetgoodsname',
-          width: 160,
-          minWidth: 120,
+          minWidth: 120
         },
         {
           title: '邀请人获得奖励ID',
           key: 'invitegetprizeid',
-          width: 160,
-          minWidth: 120,
+          minWidth: 120
         },
         {
           title: '注册用户获得奖励数量',
           key: 'invitedgetnum',
-          width: 200,
           minWidth: 120,
         },
         {
           title: '注册用户获得奖励名称',
           key: 'invitedgetgoodsname',
-          width: 200,
-          minWidth: 120,
+          minWidth: 120
         },
         {
           title: '注册用户获得奖励ID',
           key: 'invitedgetprizeid',
-          width: 200,
-          minWidth: 120,
+          minWidth: 120
         }
       ],
       isloading: false,
@@ -106,7 +98,7 @@ export default {
     }
   },
   created () {
-    // this.getTableData()
+    this.getTableData()
   },
   methods: {
     getTableData () {
@@ -135,6 +127,10 @@ export default {
     },
     changePage (e) {
       this.searchObj.page = e
+      this.getTableData()
+    },
+    onChangeSize (e) {
+      this.searchObj.pagesize = e
       this.getTableData()
     },
     onClickExport () {

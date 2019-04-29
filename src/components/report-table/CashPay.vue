@@ -267,7 +267,7 @@ export default {
           title: '审核',
           key: 'id',
           fixed: 'right',
-          width: 80,
+          width: 90,
           align: 'center',
           render: (h, params) => {
             let sh = h('a', {
@@ -284,8 +284,8 @@ export default {
                 }
               },
               style: {
-                marginLeft: '10px',
-                color: '#90'
+                marginLeft: '12px',
+                color: '#f90'
               }
             }, '驳回')
             let ysh = h('span', { }, '已打款')
@@ -301,7 +301,8 @@ export default {
       isauditing: '',
       isapprove: '',
       ispayment: '',
-      merchantid: ''
+      merchantid: '',
+      rejectmsg: ''
     }
   },
   created () {
@@ -467,32 +468,76 @@ export default {
         }
       })
     },
+    // onClickReject (row) {
+    //   this.refuseLoading = true
+    //   let d = {
+    //     id: row.id,
+    //     reject: 3
+    //   }
+    //   serverApi('/finance/rejectapply', d,
+    //     response => {
+    //       console.log(response)
+    //       if (response.data.code === 0){
+    //         this.$Message.success(response.data.msg)
+    //         this.getTableData()
+    //         this.$Notice.warning({
+    //           title: '已驳回',
+    //           desc: `申请已拒绝!`
+    //         })
+    //       }else{
+    //         this.$Message.warning(response.data.msg)
+    //       }
+    //     },
+    //     error => {
+    //       console.log(error)
+    //       this.$Message.warning(error.toString())
+    //     }
+    //   )
+    // },
     onClickReject (row) {
-      this.refuseLoading = true
-      let d = {
-        id: row.id,
-        reject: 3
-      }
-      serverApi('/finance/rejectapply', d,
-        response => {
-          console.log(response)
-          if (response.data.code === 0){
-            this.$Message.success(response.data.msg)
-            this.getTableData()
-            this.$Notice.warning({
-              title: '已驳回',
-              desc: `申请已拒绝!`
-            })
-          }else{
-            this.$Message.warning(response.data.msg)
-          }
+      this.$Modal.confirm({
+        title: '提示',
+        loading: true,
+        render: (h) => {
+          let p1 = h('p', null, row.merchantname)
+          let p2 = h('p', null, row.applyno)
+          let p3 = h('p', null, '提现金额'+row.applyno)
+          let msg = h('Input',{
+            props: {
+              value: this.rejectmsg,
+              autofocus: true,
+              placeholder: '请输入驳回理由...',
+              type: 'textarea',
+              rows: 4
+            }
+          })
+          return h('div', [p1, p2, p3, msg])
         },
-        error => {
-          console.log(error)
-          this.$Message.warning(error.toString())
+        // content: '<p>确认驳回此条数据？</p><p>'+row.merchantname+'</p><p>'+row.applyno+'</p><p>提现金额 '+row.total+'</p>',
+        onOk: () => {
+          let d = {
+            id: row.id,
+            reject: 3,
+            rejectmsg: this.rejectmsg
+          }
+          serverApi('/finance/rejectapply', d,
+            response => {
+              if (response.data.code === 0){
+                this.$Message.success(response.data.msg)
+                this.getTableData()
+              }else{
+                this.$Message.warning(response.data.msg)
+              }
+              this.$Modal.remove()
+            },
+            error => {
+              console.log(error)
+              this.$Message.warning(error.toString())
+            }
+          )
         }
-      )
-    },
+      })
+    }
   }
 }
 </script>

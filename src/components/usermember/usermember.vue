@@ -111,6 +111,16 @@ export default {
           width: 160
         },
         {
+          title: '最后登录时间',
+          key: 'lasttime',
+          width: 160
+        },
+        {
+          title: '最后登录IP',
+          key: 'lastip',
+          width: 160
+        },
+        {
           title: '状态',
           key: 'state',
           width: 80

@@ -21,6 +21,55 @@
         <Button type="default" @click="downLoadShData">下载数据</Button>
       </div>
     </Modal>
+    <Modal v-model="xgModify" width="500" :styles="{top: '50px'}"
+    @on-ok="downLoadxg()"
+    @on-cancel="cancel">
+      <p slot="header" style="text-align:center">
+        <span>修改数据</span>
+      </p>
+       <Form :model="modData" :label-width="120" ref="from" :rules="rules">
+        <FormItem label="平台优惠">
+          <Input v-model="modData.coupon" prefix="ios-contact" placeholder="Enter name" style="width: auto" />
+        </FormItem>
+        <FormItem label="商家优惠">
+          <Input v-model="modData.merchantcoupon" prefix="ios-contact" placeholder="Enter name" style="width: auto" />
+        </FormItem>
+        <FormItem label="扣点金额">
+          <Input v-model="modData.pointsprice" prefix="ios-contact" placeholder="Enter name" style="width: auto" />
+        </FormItem>
+        <div slot="footer">
+          <Button @click="xgModify = false">关闭</Button>
+          <Button type="default" @click="downLoadShData">提交</Button>
+        </div>
+      </Form>
+    </Modal>
+    <Modal v-model="bhModify" width="1000" :styles="{top: '50px'}"
+    @on-ok="downLoadbh()"
+    @on-cancel="cancel"
+    :loading="bhLoading">
+      <p slot="header" style="text-align:center">
+        <span>修改驳回数据</span>
+      </p>
+       <Form :model="bhData" v-for="(item,index) in bhData" :key="index" :label-width="120" ref="from" :rules="rules">
+        <Row>
+          <Col span="8">
+            <FormItem label="平台优惠">
+              <Input v-model="item.coupon" prefix="ios-contact" placeholder="Enter name" style="width: auto" />
+            </FormItem>
+          </Col>
+          <Col span="8">
+            <FormItem label="商家优惠">
+              <Input v-model="item.merchantcoupon" prefix="ios-contact" placeholder="Enter name" style="width: auto" />
+            </FormItem>
+            </Col>
+          <Col span="8">
+            <FormItem label="扣点金额">
+              <Input v-model="item.pointsprice" prefix="ios-contact" placeholder="Enter name" style="width: auto" />
+            </FormItem>
+           </Col>
+        </Row>
+      </Form>
+    </Modal>
   </div>
 </template>
 <script>
@@ -30,15 +79,30 @@ export default {
   data () {
     return {
       tableLoading: false,
+      bhLoading: false,
+      xgModify: false,
+      bhModify: false,
       page: 1,
       pagesize: 10,
       count: 0,
+      changetype: '',
       tableData: [],
+      modData: {},
+      bhData: [],
+      idx: '',
+      oldidx: '',
+      ordernox: '',
+      orderidx: '',
       columns: [
         {
           title: '#',
           key: 'id',
           width: 80
+        },
+        {
+          title: '原提现单ID',
+          key: 'oldid',
+          width: 100
         },
         {
           title: '商户',
@@ -90,8 +154,8 @@ export default {
           width: 130
         },
         {
-          title: '驳回时间',
-          key: 'rejecttime',
+          title: '驳回理由',
+          key: 'rejectmsg',
           width: 130
         },
         {
@@ -212,6 +276,26 @@ export default {
           key: 'createtime',
           width: 150,
         },
+        {
+          title: '操作',
+          key: 'id',
+          fixed: 'right',
+          width: 80,
+          align: 'center',
+          render: (h, params) => {
+            let xg = h('a', {
+              style: {
+                display:(this.changetype === 1)?'inline-block':'none'
+              },
+              on: {
+                click: () => {
+                  this.onClickModify(params.row)
+                }
+              }
+            }, '修改')
+            return xg
+          }
+        }
       ],
       shData: {},
       isloading: false,
@@ -255,6 +339,10 @@ export default {
       this.getTableData()
     },
     onClickReview (row) {
+      console.log(row)
+      this.changetype = row.changetype
+      this.idx = row.id
+      this.oldidx = row.oldid
       this.shData = row
       this.$Message.loading({
         content: '数据加载中...',
@@ -280,7 +368,96 @@ export default {
           this.$Message.warning(error.toString())
         }
       )
-
+    },
+    onClickModify (row) {
+      console.log(row)
+      this.modData = row
+      this.bhLoading = true
+      this.ordernox = row.orderno
+      this.orderidx = row.orderid
+      if (row.orderid == 0) {
+        this.xgModify = true
+      } else {
+        this.bhModify = true
+        serverApi('/finance/rejectlistinfo', {orderid: row.orderid},
+          response => {
+            console.log(response)
+            if (response.data.code === 0){
+              this.bhData = response.data.data
+              this.bhLoading = false
+            }else{
+              this.bhLoading = false
+              this.$Message.warning(response.data.msg)
+            }
+          },
+          error => {
+            console.log(error)
+            this.$Message.destroy()
+            this.$Message.warning(error.toString())
+          }
+        )
+      }
+    },
+    downLoadbh () {
+      this.bhLoading = true
+      let orderdata = []
+      for (var i = 0; i < this.bhData.length; i++){
+        this.bhData[i].orderid = this.orderidx
+      }
+      console.log(this.bhData)
+      orderdata = JSON.stringify(this.bhData)
+      serverApi('/finance/operationupdate', {
+        id: this.idx,
+        oldid: this.oldidx,
+        orderdata: orderdata
+      },
+        response => {
+          console.log(response)
+          if (response.data.code === 0){
+            this.$Message.success(response.data.msg)
+            this.bhLoading = false
+          }else{
+            this.bhLoading = false
+            this.$Message.warning(response.data.msg)
+          }
+        },
+        error => {
+          console.log(error)
+          this.bhLoading = false
+          this.$Message.destroy()
+          this.$Message.warning(error.toString())
+        }
+      )
+    },
+    downLoadxg () {
+      let arrXg = []
+      let arr = {
+        coupon: this.modData.coupon,
+        merchantcoupon: this.modData.merchantcoupon,
+        pointsprice: this.modData.pointsprice,
+        orderno: this.ordernox,
+        orderid: this.orderidx
+      }
+      arrXg.push(arr)
+      serverApi('/finance/operationupdate', {
+        id: this.idx,
+        oldid: this.oldidx,
+        orderdata: JSON.stringify(arrXg)
+      },
+        response => {
+          console.log(response)
+          if (response.data.code === 0){
+            this.$Message.success(response.data.msg)
+          }else{
+            this.$Message.warning(response.data.msg)
+          }
+        },
+        error => {
+          console.log(error)
+          this.$Message.destroy()
+          this.$Message.warning(error.toString())
+        }
+      )
     },
     downLoadShData () {
       if (this.orderData.length < 1) {

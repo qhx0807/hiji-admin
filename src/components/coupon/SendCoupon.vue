@@ -231,13 +231,19 @@ export default {
         this.successCount = response.data.countsuccess
         this.errCount = response.data.countdefault
         this.$Notice.success({
-          title: '导入成功',
+          title: '上传成功',
           desc: response.msg
         })
         this.loading2 = false
+      } else if (response.code === 2) {
+         this.$Notice.warning({
+          title: '发送用户订单失败',
+          duration:15,
+          desc: response.msg
+        })
       } else {
         this.$Notice.warning({
-          title: '导入订单物流失败',
+          title: '发送用户订单失败',
           desc: response.msg
         })
       }

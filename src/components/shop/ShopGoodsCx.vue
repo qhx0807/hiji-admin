@@ -98,7 +98,12 @@ export default {
       pageSize: 10,
       columns: [
         {
-          title: '#',
+          title: '促销ID',
+          key: 'pidid',
+          width: 60
+        },
+        {
+          title: '商品ID',
           key: 'goodsid',
           width: 60
         },
@@ -222,7 +227,8 @@ export default {
             let del = h('a', {
               style: {
                 color: '#f90',
-                marginRight: '10px'
+                marginRight: '10px',
+                // display:()?'inline-block':'none'
               },
               on: {
                 click: () => {
@@ -278,7 +284,7 @@ export default {
           console.log(response)
           if (response.data.code === 0){
             this.tableData = response.data.data.result
-            this.count = response.data.data.counts
+            this.count = response.data.data.count
           }else{
             this.$Message.warning(response.data.msg)
           }
