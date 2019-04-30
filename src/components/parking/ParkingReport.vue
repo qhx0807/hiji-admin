@@ -66,12 +66,12 @@
             </FormItem>
           </Col>
           <Col span="4">
-            <FormItem label="进场时间" style="margin-bottom:0" >
+            <FormItem label="支付开始时间" style="margin-bottom:0" >
               <DatePicker @on-change="selectStartDateTime" clearable type="datetime"></DatePicker>
             </FormItem>
           </Col>
           <Col span="4">
-            <FormItem label="出场时间" style="margin-bottom:0">
+            <FormItem label="支付结束时间" style="margin-bottom:0">
               <DatePicker @on-change="selectEndDateTime" clearable type="datetime"></DatePicker>
             </FormItem>
           </Col>
