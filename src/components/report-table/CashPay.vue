@@ -509,6 +509,11 @@ export default {
               placeholder: '请输入驳回理由...',
               type: 'textarea',
               rows: 4
+            },
+            on: {
+              input: (val) => {
+                this.rejectmsg = val
+              }
             }
           })
           return h('div', [p1, p2, p3, msg])

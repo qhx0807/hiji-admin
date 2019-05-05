@@ -458,7 +458,7 @@ export default {
         content: '加载中...'
       })
       this.searchObj.exports = 'out'
-      serverApi('/Reportform/orderreportform', this.searchObj,
+      serverApi('/Reportform/cityorderreportform', this.searchObj,
         response => {
           this.$Message.destroy()
           this.isloading = false
