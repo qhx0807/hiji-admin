@@ -122,6 +122,7 @@ const UserAgreement = r => require.ensure([], () => r(require('@/components/sett
 const UserAgreementEdit = r => require.ensure([], () => r(require('@/components/settings/UserAgreementEdit.vue')))
 const InvitePrizeReport = r => require.ensure([], () => r(require('@/components/activity/InvitePrizeReport.vue')))
 const MemberIntegral = r => require.ensure([], () => r(require('@/components/usermember/memberIntegral.vue')))
+const MemberRules = r => require.ensure([], () => r(require('@/components/usermember/MemberRules.vue')))
 const Buttons = r => require.ensure([], () => r(require('@/components/settings/Buttons.vue')))
 
 const routes = [
@@ -732,6 +733,11 @@ const routes = [
         path: 'Buttons',
         component: Buttons,
         name: 'Buttons'
+      },
+      {
+        path: 'MemberRules',
+        component: MemberRules,
+        name: 'MemberRules'
       }
     ]
   },

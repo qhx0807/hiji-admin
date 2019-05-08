@@ -26,6 +26,7 @@
 <script>
 import serverApi from '../../axios'
 import CountDown from 'vue2-countdown'
+import { downloadFile } from '../../utlis/tools.js'
 export default {
   name: 'CutDownPrice',
   components: {
@@ -130,7 +131,7 @@ export default {
           title: '操作',
           key: 'id',
           align: 'center',
-          width: 150,
+          width: 160,
           fixed: 'right',
           render: (h, params) => {
             let edit = h('a', {
@@ -154,8 +155,18 @@ export default {
                 }
               }
             }, '查看活动进度')
-
-            return h('div', [edit, info])
+            let exps = h('a', {
+              style: {
+                color: 'green',
+                marginRight: '10px'
+              },
+              on: {
+                click: () => {
+                  this.onClickUserExport(params.row)
+                }
+              }
+            }, '导出砍价人详情')
+            return h('div', [edit, info, exps])
           }
         }
       ]
@@ -197,6 +208,30 @@ export default {
     },
     onClickEdit (row) {
       this.$router.push({name: 'CutDownPriceEdit', params: {id: row.id}})
+    },
+    onClickUserExport (row) {
+      this.isloading = true
+      this.$Message.loading({
+        duration: 0,
+        content: '加载中...'
+      })
+      serverApi('/activity/activityreport2', {id: row.id},
+        response => {
+          this.$Message.destroy()
+          this.isloading = false
+          if (response.data.code === 0) {
+            downloadFile(response.data.data)
+          } else {
+            this.$Message.warning(response.data.msg)
+          }
+        },
+        error => {
+          this.isloading = false
+          this.$Message.destroy()
+          console.log(error)
+          this.$Message.warning('连接失败！')
+        }
+      )
     }
   }
 }

@@ -78,7 +78,8 @@
           <Col span="6">
             <FormItem style="margin-bottom:0">
               <Button :loading="tableLoading" @click="onClickFetchData" type="primary">查询</Button>
-              <Button style="margin-left:10px" :loading="expLoading" @click="onClickExport">导出</Button>
+              <Button style="margin-left:10px" :loading="expLoading" @click="onClickExport">导出xls</Button>
+              <Button style="margin-left:10px" :loading="expLoading" @click="onClickExport2">导出csv</Button>
             </FormItem>
           </Col>
         </Row>
@@ -270,7 +271,27 @@ export default {
     onClickExport () {
       this.expLoading = true
       let d = Object.assign({}, this.searchObj)
-      d.exports = 'out'
+      d.exports = 'outxls'
+      serverApi('/parking/online', d,
+        response => {
+          if (response.data.code === 0){
+            downloadFile(response.data.data)
+          }else{
+            this.$Message.warning(response.data.msg)
+          }
+          this.expLoading = false
+        },
+        error => {
+          console.log(error)
+          this.expLoading = false
+          this.$Message.error(error.toString())
+        }
+      )
+    },
+    onClickExport2 () {
+      this.expLoading = true
+      let d = Object.assign({}, this.searchObj)
+      d.exports = 'outcsv'
       serverApi('/parking/online', d,
         response => {
           if (response.data.code === 0){

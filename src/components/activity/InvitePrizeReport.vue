@@ -16,7 +16,8 @@
           <Col span="14">
             <FormItem prop="typename" style="margin-bottom:0">
               <Button @click="getTableData" type="primary" :loading="isloading">查询</Button>
-              <Button style="margin-left:10px" @click="onClickExport" :loading="isloading">导出</Button>
+              <Button style="margin-left:10px" @click="onClickExport" :loading="sisloading">导出</Button>
+              <Button style="margin-left:10px" @click="onClickUserExport" :loading="userloading">导出邀请人详情</Button>
             </FormItem>
           </Col>
         </Row>
@@ -41,6 +42,7 @@ export default {
   data () {
     return {
       tableLoading: false,
+      userloading: false,
       page: 1,
       pagesize: 10,
       count: 0,
@@ -88,6 +90,7 @@ export default {
         }
       ],
       isloading: false,
+      sisloading: false,
       searchObj: {
         starttime: '',
         endtime: '',
@@ -134,7 +137,7 @@ export default {
       this.getTableData()
     },
     onClickExport () {
-      this.isloading = true
+      this.sisloading = true
       this.$Message.loading({
         duration: 0,
         content: '加载中...'
@@ -144,7 +147,7 @@ export default {
       serverApi('/activity/invitereportform', this.searchObj,
         response => {
           this.$Message.destroy()
-          this.isloading = false
+          this.sisloading = false
           if (response.data.code === 0) {
             downloadFile(response.data.data)
           } else {
@@ -152,7 +155,33 @@ export default {
           }
         },
         error => {
-          this.isloading = false
+          this.sisloading = false
+          this.$Message.destroy()
+          console.log(error)
+          this.$Message.warning('连接失败！')
+        }
+      )
+    },
+    onClickUserExport () {
+      this.userloading = true
+      this.$Message.loading({
+        duration: 0,
+        content: '加载中...'
+      })
+      this.searchObj.exports = 'out'
+      console.log(this.searchObj)
+      serverApi('/activity/invitereport2', this.searchObj,
+        response => {
+          this.$Message.destroy()
+          this.userloading = false
+          if (response.data.code === 0) {
+            downloadFile(response.data.data)
+          } else {
+            this.$Message.warning(response.data.msg)
+          }
+        },
+        error => {
+          this.userloading = false
           this.$Message.destroy()
           console.log(error)
           this.$Message.warning('连接失败！')
