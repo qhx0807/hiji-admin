@@ -123,6 +123,7 @@ const UserAgreementEdit = r => require.ensure([], () => r(require('@/components/
 const InvitePrizeReport = r => require.ensure([], () => r(require('@/components/activity/InvitePrizeReport.vue')))
 const MemberIntegral = r => require.ensure([], () => r(require('@/components/usermember/memberIntegral.vue')))
 const MemberRules = r => require.ensure([], () => r(require('@/components/usermember/MemberRules.vue')))
+const UserInterface = r => require.ensure([], () => r(require('@/components/usermember/UserInterface.vue')))
 const Buttons = r => require.ensure([], () => r(require('@/components/settings/Buttons.vue')))
 
 const routes = [
@@ -738,6 +739,11 @@ const routes = [
         path: 'MemberRules',
         component: MemberRules,
         name: 'MemberRules'
+      },
+      {
+        path: 'UserInterface',
+        component: UserInterface,
+        name: 'UserInterface'
       }
     ]
   },
