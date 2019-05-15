@@ -46,7 +46,8 @@ export default {
           if (response.data.code === 0) {
             // 返回 userid, token
             // 垮域名设置sessionStroge
-            this.frameUrl = 'http://m.cqyyy.cn/redirect/index.html?userid=1&token=1'
+            let t = new Date().valueOf()
+            this.frameUrl = 'http://m.cqyyy.cn/redirect/index.html?userid=1&token=1&time=' + t
           } else {
             this.$Message.warning(response.data.msg)
           }
