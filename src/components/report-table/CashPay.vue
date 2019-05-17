@@ -126,6 +126,14 @@ export default {
           title: '申请单号',
           key: 'applyno',
           minWidth: 170,
+          render: (h, params) => {
+            let color = params.row.isreject == 0 ? '#515a6e' : 'red'
+            return h('span', {
+              style: {
+                color: color
+              }
+            }, params.row.applyno)
+          }
         },
         {
           title: '支付金额',
@@ -262,6 +270,11 @@ export default {
           title: '扣点',
           key: 'points',
           width: 100,
+        },
+        {
+          title: '驳回理由',
+          key: 'rejectmsg',
+          minWidth: 110,
         },
         {
           title: '审核',

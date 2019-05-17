@@ -39,15 +39,18 @@ export default {
         return false
       }
       this.loading = true
-      serverApi('/member/userinfo', {like: this.userphone},
+      serverApi('/member/memberlist', {like: this.userphone},
         response => {
-          console.log(response)
           this.loading = false
           if (response.data.code === 0) {
             // 返回 userid, token
             // 垮域名设置sessionStroge
-            let t = new Date().valueOf()
-            this.frameUrl = 'http://m.cqyyy.cn/redirect/index.html?userid=1&token=1&time=' + t
+            if (response.data.data.reuslt.length > 0) {
+              let t = new Date().valueOf()
+              this.frameUrl = 'http://m.cqyyy.cn/redirect/index.html?userid='+response.data.data.reuslt[0].userid+'&token='+response.data.data.token+'&time=' + t
+            } else {
+              this.$Message.warning('未查询到数据！')
+            }
           } else {
             this.$Message.warning(response.data.msg)
           }
@@ -68,9 +71,10 @@ export default {
     display: flex;
     flex-direction: row;
     .framebox{
-      width: 347px;
+      width: 356px;
       height: 666px;
       border: 1px solid #ddd;
+      flex-shrink: 0;
       // margin: 0 auto;
       iframe{
         height: 100%;
