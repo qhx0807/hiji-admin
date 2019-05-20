@@ -12,7 +12,7 @@
         <Table :columns="columns" :data="tableData"></Table>
       </div>
       <div style="float: right; padding-top:12px">
-        <Page :total="count" show-total :current="page" @on-change="changePage" show-sizer @on-page-size-change="onChangeSize"></Page>
+        <Page :total="count" show-total :current="page" @on-change="changePage" show-elevator show-sizer @on-page-size-change="onChangeSize"></Page>
       </div>
       <div style="clear:both"></div>
     </Card>

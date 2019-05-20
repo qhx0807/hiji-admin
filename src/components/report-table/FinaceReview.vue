@@ -125,12 +125,6 @@
       <div slot="footer">
         <Button @click="shModal = false">取消</Button>
         <Button type="default" @click="downLoadShData">下载数据</Button>
-        <Poptip
-          confirm
-          title="确认驳回？"
-          @on-ok="onClickReject" >
-          <Button type="error" :loading="refuseLoading">驳回</Button>
-        </Poptip>
         <Button type="primary" :loading="passLoading" @click="onClickSH(1)">审核通过</Button>
       </div>
     </Modal>
@@ -238,6 +232,16 @@ export default {
           align: 'right'
         },
         {
+          title: '扣点',
+          key: 'points',
+          minWidth: 110,
+        },
+        {
+          title: '驳回理由',
+          key: 'rejectmsg',
+          minWidth: 110,
+        },
+        {
           title: '领导审批',
           key: 'isapprove',
           width: 120,
@@ -316,16 +320,6 @@ export default {
             }, text)
             return el
           }
-        },
-        {
-          title: '扣点',
-          key: 'points',
-          minWidth: 110,
-        },
-        {
-          title: '驳回理由',
-          key: 'rejectmsg',
-          minWidth: 110,
         },
         {
           title: '审核',

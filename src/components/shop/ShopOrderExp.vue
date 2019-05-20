@@ -17,7 +17,7 @@
     <Card :bordered="false" style="margin-top:10px">
       <Table :columns="columns" size="small" :data="tableData"></Table>
       <div style="float: right; padding-top:12px">
-        <Page :total="count" show-total :current="page" @on-change="changePage" show-sizer @on-page-size-change="onChangeSize"></Page>
+        <Page :total="count" show-total :current="page" @on-change="changePage" show-sizer show-elevator @on-page-size-change="onChangeSize"></Page>
       </div>
       <div style="clear:both"></div>
     </Card>

@@ -1,24 +1,37 @@
 <template>
   <div class="box">
     <Card :bordered="false">
+      <Select v-model="status" clearable style="width:200px;margin-bottom: 20px;" @on-change="statusTab">
+        <Option v-for="item in cityList" :value="item.value" :key="item.value" >{{ item.label }}</Option>
+      </Select>
+      <Select v-model="merchantid" clearable filterable style="width:200px;margin-bottom: 20px;margin-left: 20px;" @on-change="userTab" @on-query-change="userList" placeholder="请选择商户名称">
+        <Option v-for="item in userData" :value="item.id" :key="item.id">{{ item.name }}</Option>
+      </Select>
+      <div class="timeBox">
+        <DatePicker type="datetime" style="width:200px;margin-bottom: 20px;"  @on-change="onStarttime" placeholder="选择开始时间"></DatePicker>
+      </div>
+      <div class="timeBox">
+        <DatePicker type="datetime" style="width:200px;margin-bottom: 20px;"  @on-change="onEndtime" placeholder="选择结束时间"></DatePicker>
+      </div>
       <div class="table-box">
         <Table border size="small" :loading="tableLoading" :columns="columns" :data="tableData"></Table>
       </div>
       <div style="float: right; padding-top:12px">
-        <Page :total="count" show-total :current="page" @on-change="changePage" show-sizer></Page>
+        <Page :total="count" show-sizer show-total :page-size-opts="pageSizeOpts" :page-size="15" :current.sync="page" @on-page-size-change="onChangeSize" @on-change="changePage"></Page>
       </div>
       <div style="clear:both"></div>
     </Card>
-    <Modal v-model="shModal" width="1000" :styles="{top: '50px'}">
+    <Modal v-model="shModal" width="1000" :fullscreen="true" :styles="{top: '50px'}">
       <p slot="header" style="text-align:center">
         <span>申请单号 {{shData.applyno}}</span>
       </p>
       <div>
-        <Table border ref="tableSh" highlight-row size="small" height="400" :columns="columnsSH" :data="orderData"></Table>
+        <Table border ref="tableSh" highlight-row size="small" height="600" :columns="columnsSH" :data="orderData"></Table>
       </div>
       <div slot="footer">
-        <Button @click="shModal = false">关闭</Button>
+        <Button @click="shModal = false" v-if="downModSH">关闭</Button>
         <Button type="default" @click="downLoadShData">下载数据</Button>
+        <Button type="success" @click="shModal = false" v-if="downMod">确认修改</Button>
       </div>
     </Modal>
     <Modal v-model="xgModify" width="500" :styles="{top: '50px'}"
@@ -82,17 +95,39 @@ export default {
       bhLoading: false,
       xgModify: false,
       bhModify: false,
+      downMod: false,
+      downModSH: true,
       page: 1,
-      pagesize: 10,
+      pagesize: 20,
       count: 0,
+      like: '',
       changetype: '',
+      starttime: '',
+      endtime: '',
       tableData: [],
       modData: {},
       bhData: [],
+      userData: [],
+      pageSizeOpts: [10, 15, 25, 50, 70, 100, 200],
+      status: 3,
       idx: '',
       oldidx: '',
       ordernox: '',
       orderidx: '',
+      statustype: '',
+      merchantid: '',
+      cityList: [{
+        value: 1,
+        label: '已处理'
+      },
+      {
+        value: 2,
+        label: '未处理'
+      },
+      {
+        value: 3,
+        label: '全部'
+      }],
       columns: [
         {
           title: '#',
@@ -107,6 +142,7 @@ export default {
         {
           title: '商户',
           key: 'merchantname',
+          width: 130
         },
         {
           title: '申请时间',
@@ -121,32 +157,38 @@ export default {
         {
           title: '总金额',
           key: 'total',
-          align: 'right'
+          align: 'right',
+          width: 100
         },
         {
           title: '实付金额',
           key: 'cash',
-          align: 'right'
+          align: 'right',
+          width: 100
         },
         {
           title: '平台优惠',
           key: 'coupon',
-          align: 'right'
+          align: 'right',
+          width: 100
         },
         {
           title: '补贴金额',
           key: 'subsidy',
-          align: 'right'
+          align: 'right',
+          width: 100
         },
         {
           title: '商户优惠',
           key: 'merchantcoupon',
-          align: 'right'
+          align: 'right',
+          width: 100
         },
         {
           title: '扣点金额',
           key: 'point',
-          align: 'right'
+          align: 'right',
+          width: 100
         },
         {
           title: '驳回时间',
@@ -157,6 +199,31 @@ export default {
           title: '驳回理由',
           key: 'rejectmsg',
           width: 130
+        },
+        {
+          title: '驳回人',
+          key: 'isreject',
+          width: 130
+        },
+        {
+          title: '状态',
+          key: 'status',
+          width: 80,
+          render: (h, params) => {
+            if (params.row.status === '已处理') {
+              return h('p',{
+                style: {
+                  color: '#00dd00',
+                }
+              }, params.row.status)
+            } else {
+              return h('p', {
+                style: {
+                  color: 'red',
+                }
+              }, params.row.status)
+            }
+          }
         },
         {
           title: '查看',
@@ -283,10 +350,9 @@ export default {
           width: 80,
           align: 'center',
           render: (h, params) => {
-            let xg = h('a', {
-              style: {
-                display:(this.changetype === 1)?'inline-block':'none'
-              },
+            if (this.changetype === 1) {
+              if (this.statustype === '未处理') {
+                let xg = h('a', {
               on: {
                 click: () => {
                   this.onClickModify(params.row)
@@ -294,6 +360,9 @@ export default {
               }
             }, '修改')
             return xg
+              }
+            }
+
           }
         }
       ],
@@ -305,6 +374,7 @@ export default {
   },
   created () {
     this.getTableData()
+    // this.getUserData()
   },
   methods: {
     getTableData () {
@@ -312,7 +382,11 @@ export default {
       this.isloading = true
       let d = {
         page: this.page,
-        pagesize: this.pagesize
+        pagesize: this.pagesize,
+        status: this.status,
+        merchantid: this.merchantid,
+        endtime : this.endtime,
+        starttime: this.starttime
       }
       serverApi('/finance/rejectlist', d,
         response => {
@@ -335,12 +409,24 @@ export default {
       )
     },
     changePage (e) {
-      this.page = e
+      console.log(e)
+      this.getTableData()
+    },
+    onChangeSize (e) {
+      this.pagesize = e
       this.getTableData()
     },
     onClickReview (row) {
       console.log(row)
       this.changetype = row.changetype
+      this.statustype = row.status
+      if (this.changetype ===1 && this.statustype==='未处理') {
+        this.downMod = true
+        this.downModSH = false
+      } else {
+        this.downMod = false
+        this.downModSH = true
+      }
       this.idx = row.id
       this.oldidx = row.oldid
       this.shData = row
@@ -470,9 +556,66 @@ export default {
       }
       this.$refs.tableSh.exportCsv(para)
     },
+    statusTab (e) {
+      console.log(e)
+      this.status = e
+      this.getTableData()
+    },
+    userTab (e) {
+      console.log(e)
+      this.merchantid = e
+      this.getTableData()
+    },
+    onStarttime (e) {
+      this.starttime = e
+      this.getTableData()
+    },
+    onEndtime (e) {
+      this.endtime = e
+      this.getTableData()
+    },
+    userList (e) {
+      console.log(e)
+      this.like = e
+      this.getUserData()
+    },
+    getUserData (page, size, key) {
+      let d = {
+        pagesize: 999,
+        page: this.page,
+        like: '',
+        userid: sessionStorage.userid
+      }
+      this.$store.commit('pageLoading', true)
+      serverApi('/Merchant/index', d,
+        response => {
+          console.log(response)
+          if (response.data.code === 0){
+            this.userData = response.data.data.result
+          }else{
+            this.$Message.warning(response.data.msg)
+          }
+          this.$store.commit('pageLoading', false)
+        },
+        error => {
+          console.log(error)
+          this.$store.commit('pageLoading', false)
+          this.$Message.error('连接失败！')
+        }
+      )
+    }
   }
 }
 </script>
 <style lang="less" scoped>
-
+  .timeBox {
+    display: inline-block;
+    // width: 100%;
+    margin-left:20px;
+    box-sizing: border-box;
+    vertical-align: middle;
+    color: #515a6e;
+    font-size: 14px;
+    line-height: normal;
+  }
 </style>
