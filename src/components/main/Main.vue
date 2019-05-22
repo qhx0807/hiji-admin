@@ -97,6 +97,7 @@ export default {
         'CouponItem',
         'ShopOrders',
         'FinaceTable',
+        'ShopGoods',
       ]
     }
   },
