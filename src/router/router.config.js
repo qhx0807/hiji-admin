@@ -125,6 +125,7 @@ const MemberIntegral = r => require.ensure([], () => r(require('@/components/use
 const MemberRules = r => require.ensure([], () => r(require('@/components/usermember/MemberRules.vue')))
 const UserInterface = r => require.ensure([], () => r(require('@/components/usermember/UserInterface.vue')))
 const Buttons = r => require.ensure([], () => r(require('@/components/settings/Buttons.vue')))
+const PropetyFeeDivice = r => require.ensure([], () => r(require('@/components/property/PropetyFeeDivice.vue')))
 
 const routes = [
   {
@@ -744,6 +745,11 @@ const routes = [
         path: 'UserInterface',
         component: UserInterface,
         name: 'UserInterface'
+      },
+      {
+        path: 'PropetyFeeDivice',
+        component: PropetyFeeDivice,
+        name: 'PropetyFeeDivice'
       }
     ]
   },
