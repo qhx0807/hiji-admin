@@ -46,6 +46,7 @@
                 <Option :value="2">登录享受</Option>
                 <Option :value="3">扫码支付</Option>
                 <Option :value="4">停车缴费</Option>
+                <Option :value="5">完善手机号</Option>
               </Select>
             </FormItem>
           </Col>
