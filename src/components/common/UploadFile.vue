@@ -60,5 +60,7 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-
+.upload--box{
+  display: inline-block;
+}
 </style>

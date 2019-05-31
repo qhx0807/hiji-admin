@@ -2,11 +2,17 @@
   <div class="box">
     <Card :bordered="false" class="mb10">
       <div class="tips">
-        <p style="font-size:14px;">
+        <span style="font-size:14px;">
           <img src="http://cdn.cqyyy.cn/PREVIEW.svg" alt="">
           首页Icon配置。图片，跳转action.
           <router-link :to="{name: 'IconAdd'}"><Icon size="14" type="md-add" />新建ICON项</router-link>
-        </p>
+        </span>
+
+        <div class="iconbg">
+          <Input v-model="iconbg" placeholder="邻水ICON背景图片地址" style="width: 200px"/>
+          <UploadFile @uploadSucc="uploadIconBg"></UploadFile>
+          <Button type="primary" @click="onCLickSaveLsbg">保存</Button>
+        </div>
       </div>
     </Card>
     <Card :bordered="false">
@@ -76,8 +82,12 @@
 <script>
 import serverApi from '../../axios'
 import { uploadApiUrl } from '../../config/'
+import UploadFile from '../common/UploadFile'
 export default {
   name: 'IconConfig',
+  components: {
+    UploadFile
+  },
   data () {
     return {
       tableLoading: false,
@@ -179,10 +189,12 @@ export default {
       ],
       editData: {},
       editModal: false,
+      iconbg: ''
     }
   },
   created () {
     this.getTableData()
+    this.getLsIconbg()
   },
   computed: {
     actionTypeArr () {
@@ -214,6 +226,20 @@ export default {
         error => {
           this.tableLoading = false
           console.log(error)
+          this.$Message.error(error.toString())
+        }
+      )
+    },
+    getLsIconbg () {
+      serverApi('/web/webqximgindex', null,
+        response => {
+          if (response.data.code === 0) {
+            this.iconbg = response.data.data.url
+          } else {
+            this.$Message.warning(response.data.msg)
+          }
+        },
+        error => {
           this.$Message.error(error.toString())
         }
       )
@@ -303,6 +329,26 @@ export default {
           )
         }
       })
+    },
+    onCLickSaveLsbg () {
+      let d = {
+        url: this.iconbg
+      }
+      serverApi('/web/webqximgedit', d,
+        response => {
+          if (response.data.code === 0) {
+            this.$Message.success(response.data.msg)
+          } else {
+            this.$Message.warning(response.data.msg)
+          }
+        },
+        error => {
+          this.$Message.error(error.toString())
+        }
+      )
+    },
+    uploadIconBg (path) {
+      this.iconbg = path
     }
   }
 }
@@ -341,6 +387,11 @@ export default {
       height: 50px;
       width: 50px;
     }
+  }
+  .iconbg{
+    display: inline-block;
+    padding-left: 30px;
+    width: 500px;
   }
 }
 </style>
