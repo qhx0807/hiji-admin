@@ -65,7 +65,7 @@
           </Col>
           <Col span="6">
             <FormItem label="摇一摇">
-              <i-switch v-model="addData.isshake" size="large">
+              <i-switch v-model="addData.isshake" size="large" :true-value="1" :false-value="0">
                 <span slot="open">开</span>
                 <span slot="close">关</span>
               </i-switch>
@@ -188,7 +188,7 @@ export default {
         maxfee: 9999,
         minfee: 0,
         codepaytype: '',
-        isshake: false,
+        isshake: 0,
         mintotal: 0,
         isrepeat: '0'
       },
