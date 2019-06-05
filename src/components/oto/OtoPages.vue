@@ -45,6 +45,18 @@
         <FormItem label="备注信息">
           <Input v-model="addData.name" placeholder="请输入"></Input>
         </FormItem>
+        <FormItem label="生命周期">
+          <Select v-model="addData.isusing">
+            <Option :value="0">永久有效</Option>
+            <Option :value="1">限时段</Option>
+          </Select>
+        </FormItem>
+        <FormItem label="开始时间" v-show="addData.isusing == 1">
+          <DatePicker type="datetime" style="width: 100%" :valye="addData.starttime" @on-change="e => addData.starttime = e"></DatePicker>
+        </FormItem>
+        <FormItem label="结束时间" v-show="addData.isusing == 1">
+          <DatePicker type="datetime" style="width: 100%" :value="addData.endtime" @on-change="e => addData.endtime = e"></DatePicker>
+        </FormItem>
       </Form>
       <div slot="footer">
         <Button @click="addModal = false">取消</Button>
@@ -80,11 +92,11 @@ export default {
           key: 'name',
         },
         {
-          title: '是否显示',
-          key: 'isshow',
+          title: '生命周期',
+          key: 'isusing',
           render: (h, params) => {
-            let text = params.row.isshow == 1 ? '显示' : '禁用'
-            let color = params.row.isshow == 1 ? 'success' : 'warning'
+            let text = params.row.isusing == 1 ? '限时段' : '永久有效'
+            let color = params.row.isusing == 1 ? 'warning' : 'success'
             return h('Tag', {
               props: {
                 type: 'dot',
@@ -94,8 +106,12 @@ export default {
           }
         },
         {
-          title: '创建时间',
-          key: 'createtime',
+          title: '开始时间',
+          key: 'starttime',
+        },
+        {
+          title: '结束时间',
+          key: 'endtime',
         },
         {
           title: '操作',
@@ -151,7 +167,10 @@ export default {
       addData: {
         title: '',
         name: '',
-        isshow: 1
+        isusing: 0,
+        content: '',
+        starttime: '',
+        endtime: ''
       },
     }
   },
@@ -185,7 +204,10 @@ export default {
       this.addData = {
         title: '',
         name: '',
-        isshow: 1
+        isusing: 0,
+        content: '',
+        starttime: '',
+        endtime: ''
       }
       this.addModal = true
     },
