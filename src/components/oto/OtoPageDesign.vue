@@ -5,6 +5,7 @@
       :groupedComponents="groupedComponents"
       :value="pageValue"
       @onAddComponent="onAddDesignComponent"
+      @onDeleteDesigner="onDeleteDesigner"
     >
     </DesignBase>
     <Button @click="getPageValue">获取数据</Button>
@@ -66,8 +67,8 @@ export default {
         }
       )
     },
-    onAddDesignComponent (val) {
-      this.pageValue.push(val)
+    onAddDesignComponent (val, index) {
+      this.pageValue.splice(index, 0, val)
     },
     getPageValue () {
       console.log(this.pageValue)
@@ -82,6 +83,9 @@ export default {
         })
       })
       return items
+    },
+    onDeleteDesigner (index) {
+      this.pageValue.splice(index, 1)
     }
   }
 }
