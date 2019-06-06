@@ -10,7 +10,7 @@
         </Poptip>
       </div>
       <div class="design-preview-controller-top">
-        <a class="design-preview-controller-btn-add" @click="onClickInsertComponents('top')">
+        <a class="design-preview-controller-btn-add" @click.stop.prevent="onClickInsertComponents($event, 'top')">
           <Icon type="ios-add" />
         </a>
         <div class="design-preview-controller-btn-marker">
@@ -20,7 +20,7 @@
         </div>
       </div>
       <div class="design-preview-controller-bottom">
-        <a class="design-preview-controller-btn-add" @click="onClickInsertComponents('bottom')">
+        <a class="design-preview-controller-btn-add" @click.stop.prevent="onClickInsertComponents($event, 'bottom')">
           <Icon type="ios-add" />
         </a>
         <div class="design-preview-controller-btn-marker">
@@ -53,8 +53,8 @@ export default {
     onSelectDesigner () {
       this.$emit('onSelectDesigner')
     },
-    onClickInsertComponents (position) {
-      this.$emit('onClickInsertComponents', position)
+    onClickInsertComponents (evt, position) {
+      this.$emit('onClickInsertComponents', evt, position)
     }
   }
 }

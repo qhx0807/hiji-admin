@@ -18,8 +18,8 @@
                 :value="element"
                 :designComponents="designComponents"
                 :isactive="index == activeIndex"
-                @onRemoveDesigner="onRemoveDesigner"
-                @onClickInsertComponents="onClickInsertComponents"
+                @onRemoveDesigner="onRemoveDesigner(index)"
+                @onClickInsertComponents="(evt, position) => onClickInsertComponents(evt, position, index)"
               >
               </renderPreview>
             </li>
@@ -37,12 +37,12 @@
         </div>
       </div>
 
-      <div class="design-preview-add fixed">
+      <div class="design-preview-add fixed" :style="{top: offsetTop+'px'}" v-show="addShow">
         <div class="design-preview-add-grouped" v-for="(item, index) in groupedComponents" :key="index">
           <p class="title">{{item.name}}</p>
           <div class="group-list" >
             <section class="group-list-item" v-for="(btn, id) in item.components">
-              <span @click="onClickAddBtn(btn)">{{btn.name}}</span>
+              <span @click="onClickInsertBtn(btn)">{{btn.name}}</span>
             </section>
           </div>
         </div>
@@ -71,6 +71,7 @@ export default {
   data () {
     return {
       drag: false,
+      addShow: false,
       designList: [],
       dragOptions: {
         animation: 200,
@@ -79,13 +80,14 @@ export default {
         ghostClass: "ghost",
         filter: ''
       },
-      activeIndex: -1
+      activeIndex: -1,
+      offsetTop: 0,
+      insertIndex: -1,
     }
   },
   computed: {
   },
   created () {
-    console.log(this.groupedComponents)
     this.designList = this.value
   },
   methods: {
@@ -94,16 +96,29 @@ export default {
         return item.designType === type.selector
       })
       this.activeIndex = this.value.length
-      this.$emit('onAddComponent', {type: type.selector, ...designer.defaultValue})
+      this.$emit('onAddComponent', {type: type.selector, ...designer.defaultValue}, this.value.length)
+      this.addShow = false
     },
     onSelectDesigner (index) {
+      this.addShow = false
       this.activeIndex = index
     },
-    onRemoveDesigner () {
-      console.log('del')
+    onRemoveDesigner (index) {
+      this.$emit('onDeleteDesigner', index)
     },
-    onClickInsertComponents () {
-      console.log('onClickInsertComponents')
+    onClickInsertComponents (event, position, index) {
+      this.offsetTop = event.clientY - 121
+      this.addShow = true
+      this.activeIndex = -1
+      this.insertIndex = position === 'top' ? index : index + 1
+    },
+    onClickInsertBtn (type) {
+      let designer = this.designComponents.find(item => {
+        return item.designType === type.selector
+      })
+      this.activeIndex = this.insertIndex
+      this.$emit('onAddComponent', {type: type.selector, ...designer.defaultValue}, this.insertIndex)
+      this.addShow = false
     }
   }
 }

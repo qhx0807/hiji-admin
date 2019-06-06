@@ -21,7 +21,7 @@ export default {
     background-color: #F8F8F8;
     border: 1px solid #e5e5e5;
     left: 340px;
-    padding: 15px;
+    padding: 15px 15px 0 15px;
     top: 0;
     border-radius: 5px;
     z-index: 5;
