@@ -24,6 +24,7 @@
     "vue-countup-v2": "^1.0.3",
     "vue-qart": "^2.1.1",
     "vue-router": "^3.0.1",
+    "vue-smooth-dnd": "^0.8.0",
     "vue-table-with-tree-grid": "^0.2.4",
     "vue2-countdown": "^1.0.8",
     "vuedraggable": "^2.21.0",
