@@ -129,6 +129,7 @@ export default {
   },
   mounted () {
     this.getOrdertypeArr()
+    this.getCityList()
   },
   methods: {
     toggleClick () {
@@ -220,6 +221,28 @@ export default {
         error => {
           console.log(error)
         }
+      )
+    },
+    getCityList () {
+      serverApi('/area/index', null,
+        response => {
+          if (response.data.code === 0) {
+            let arr = [
+              {
+                name: '全部',
+                value: 0
+              }
+            ]
+            response.data.data.forEach(item => {
+              arr.push({
+                name: item.areaname,
+                value: item.id
+              })
+            })
+            this.$store.commit('updateCityList', arr)
+          }
+        },
+        error => {}
       )
     }
   }
