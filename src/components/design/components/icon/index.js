@@ -9,50 +9,7 @@ const Icon = combine(IconPreview, IconEditor, designType, designDescription)
 Icon.defaultValue = {
   rownum: 5,
   bgimg: '',
-  items: [
-    {
-      imageurl: 'http://cdn.cqyyy.cn/hiji_201906071709171979.jpg',
-      linktype: 1,
-      linkurl: '1212',
-      city: 1,
-      name: '测试图标'
-    },
-    {
-      imageurl: 'http://cdn.cqyyy.cn/hiji_201906071709171979.jpg',
-      linktype: 1,
-      linkurl: '1212',
-      city: 1,
-      name: '测试图标'
-    },
-    {
-      imageurl: 'http://cdn.cqyyy.cn/hiji_201906071709171979.jpg',
-      linktype: 1,
-      linkurl: '1212',
-      city: 1,
-      name: '测试图标'
-    },
-    {
-      imageurl: 'http://cdn.cqyyy.cn/hiji_201906071709171979.jpg',
-      linktype: 1,
-      linkurl: '1212',
-      city: 1,
-      name: '测试图标'
-    },
-    {
-      imageurl: 'http://cdn.cqyyy.cn/hiji_201906071709171979.jpg',
-      linktype: 1,
-      linkurl: '1212',
-      city: 1,
-      name: '测试图标'
-    },
-    {
-      imageurl: 'http://cdn.cqyyy.cn/hiji_201906071709171979.jpg',
-      linktype: 1,
-      linkurl: '1212',
-      city: 1,
-      name: '测试图标'
-    }
-  ]
+  items: []
 }
 
 export default Icon

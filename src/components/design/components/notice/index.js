@@ -9,7 +9,8 @@ const Notice = combine(NoticePreview, NoticeEditor, designType, designDescriptio
 Notice.defaultValue = {
   color: '#ed6a0c',
   bgcolor: '#fffbe8',
-  content: '请填写内容，如果过长，将会在手机上滚动显示'
+  content: '请填写内容，如果过长，将会在手机上滚动显示',
+  city: [0]
 }
 
 export default Notice

@@ -12,6 +12,14 @@
         <ColorPicker alpha v-model="designValue.bgcolor" @on-active-change="e => designValue.bgcolor = e" recommend />
         <Button @click="designValue.bgcolor = '#fffbe8'" style="margin-left:10px">重置</Button>
       </FormItem>
+      <FormItem label="城市">
+        <!-- <RadioGroup v-model="value.city">
+          <Radio v-for="item in citylist" :key="item.value" :label="item.value">{{item.name}}</Radio>
+        </RadioGroup> -->
+        <CheckboxGroup v-model="value.city">
+          <Checkbox v-for="item in citylist" :key="item.value" :label="item.value">{{item.name}}</Checkbox>
+        </CheckboxGroup>
+      </FormItem>
     </Form>
   </DesignEditor>
 </template>
@@ -22,6 +30,11 @@ export default {
   mixins: [editorMixins],
   data () {
     return {}
+  },
+  computed: {
+    citylist () {
+      return this.$store.state.cityList
+    }
   },
   created () {},
   methods: {
