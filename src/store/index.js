@@ -55,6 +55,7 @@ const store = new Vuex.Store({
       {value: 8, label: '拼团商品(单个)'},
       {value: 0, label: '不跳转'}
     ],
+    cityList: [],
     couponUseRange: [
       {value: 6, label: '全部商品'},
       {value: 4, label: '全部团购'},
@@ -121,6 +122,9 @@ const store = new Vuex.Store({
     },
     updateOrderTypeArr (state, arr) {
       state.orderTypeConst = arr
+    },
+    updateCityList (state, arr) {
+      state.cityList = arr
     }
   },
   actions: {},
