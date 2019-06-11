@@ -2,7 +2,7 @@
   <div class="design">
     <div class="design-preview">
       <div class="design-preview-wrap" :style="{backgroundColor: value[0].bgcolor}">
-        <draggable
+        <!-- <draggable
           class="list-group"
           tag="ul"
           v-model="designList"
@@ -24,8 +24,25 @@
               </renderPreview>
             </li>
           </transition-group>
-        </draggable>
+        </draggable> -->
+
+        <Container @drop="onDropItem" drag-handle-selector=".design-preview-controller">
+          <Draggable v-for="(element, index) in designList" :key="element.type">
+            <section class="list-group-item">
+              <renderPreview
+                @onSelectDesigner="onSelectDesigner(index)"
+                :value="element"
+                :designComponents="designComponents"
+                :isactive="index == activeIndex"
+                @onRemoveDesigner="onRemoveDesigner(index)"
+                @onClickInsertComponents="(evt, position) => onClickInsertComponents(evt, position, index)"
+              >
+              </renderPreview>
+            </section>
+          </Draggable>
+        </Container>
       </div>
+
       <div class="design-preview-add">
         <div class="design-preview-add-grouped" v-for="(item, index) in groupedComponents" :key="index">
           <p class="title">{{item.name}}</p>
@@ -52,13 +69,15 @@
   </div>
 </template>
 <script>
-import draggable from 'vuedraggable'
 import renderPreview from './renderPreview'
+import { applyDrag } from '../../../utlis/dnd'
+import { Container, Draggable } from "vue-smooth-dnd"
 export default {
   name: 'DesignBase',
   components: {
-    draggable,
-    renderPreview
+    renderPreview,
+    Container,
+    Draggable
   },
   props: {
     value: {
@@ -95,6 +114,9 @@ export default {
       let designer = this.designComponents.find(item => {
         return item.designType === type.selector
       })
+      if (designer.defaultValue.items) {
+        designer.defaultValue.items = []
+      }
       this.activeIndex = this.value.length
       this.$emit('onAddComponent', {type: type.selector, ...designer.defaultValue}, this.value.length)
       this.addShow = false
@@ -116,9 +138,18 @@ export default {
       let designer = this.designComponents.find(item => {
         return item.designType === type.selector
       })
+      if (designer.defaultValue.items) {
+        designer.defaultValue.items = []
+      }
+      console.log(designer.defaultValue)
       this.activeIndex = this.insertIndex
       this.$emit('onAddComponent', {type: type.selector, ...designer.defaultValue}, this.insertIndex)
       this.addShow = false
+    },
+    onDropItem (dropResult) {
+      this.activeIndex = -1
+      this.designList = applyDrag(this.designList, dropResult)
+      this.$emit('input', this.designList)
     }
   }
 }
@@ -147,7 +178,7 @@ export default {
         .title{
           font-size: 12px;
           margin-bottom: 8px;
-          margin-top: 13px;
+          margin-top: 6px;
         }
         .group-list{
           display: flex;
@@ -221,18 +252,14 @@ export default {
     }
   }
 }
-.flip-list-move {
-  transition: transform 0.5s;
-}
-
-.ghost {
+.ghost{
   opacity: 0.5;
   background: #c8ebfb;
 }
 .list-group {
   min-height: 20px;
 }
-.list-group-item {
-  list-style: none;
+.smooth-dnd-container.vertical > .smooth-dnd-draggable-wrapper{
+  overflow: visible!important;
 }
 </style>

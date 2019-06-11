@@ -110,11 +110,11 @@ export default {
   }
   .design-preview-controller-top{
     .design-control-add;
-    top: 1px;
+    top: 0px;
   }
   .design-preview-controller-bottom{
     .design-control-add;
-    bottom: 0px;
+    bottom: -1px;
   }
   .design-preview-controller-btn-add{
     z-index: 9;

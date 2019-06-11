@@ -12,14 +12,10 @@
   </DesignEditor>
 </template>
 <script>
-import DesignEditor from '../../base/DesignEditor'
 import editorMixins from '../../mixins/editorMixins'
 export default {
   name: 'WhitespaceEditor',
   mixins: [editorMixins],
-  components: {
-    DesignEditor
-  },
   data () {
     return {}
   },
