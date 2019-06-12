@@ -1,11 +1,18 @@
 <template>
   <div class="design-editor">
+    <p class="design-editor-title">{{desc}}</p>
     <slot></slot>
   </div>
 </template>
 <script>
 export default {
   name: 'DesignEditor',
+  props: {
+    desc: {
+      type: String,
+      default: ''
+    }
+  },
   data () {
     return {}
   },
@@ -13,18 +20,25 @@ export default {
   methods: {}
 }
 </script>
-<style lang="less" scoped>
+<style lang="less">
   .design-editor{
     position: absolute;
     width: 420px;
     min-height: 28px;
-    background-color: #F8F8F8;
+    background-color: #fff;
     border: 1px solid #e5e5e5;
     left: 340px;
-    padding: 15px 15px 0 15px;
+    padding: 15px;
     top: 0;
     border-radius: 5px;
     z-index: 5;
+    &-title{
+      margin: 5px 10px 10px 10px;
+      color: #999;
+    }
+    .ivu-form-item{
+      margin-bottom: 4px;
+    }
     &::before{
       border: solid transparent;
       border-color: transparent #e5e5e5 transparent transparent;
