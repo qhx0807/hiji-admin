@@ -1,5 +1,5 @@
 <template>
-  <DesignEditor>
+  <DesignEditor :desc="desc">
     <Form :label-width="80">
       <FormItem label="公告" required style="margin-bottom:10px">
         <Input placeholder="请输入" v-model="designValue.content"></Input>

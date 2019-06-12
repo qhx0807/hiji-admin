@@ -1,5 +1,5 @@
 <template>
-  <DesignEditor>
+  <DesignEditor :desc="desc">
     <Form :label-width="80">
       <FormItem label="选择模板" style="margin-bottom:10px">
         <div class="select-templ-box">

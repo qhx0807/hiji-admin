@@ -1,5 +1,5 @@
 <template>
-  <DesignEditor>
+  <DesignEditor :desc="desc">
     <Form :label-width="65">
       <FormItem label="商品ID" style="margin-bottom: 12px">
         <Input v-model="designValue.ids" placeholder="商品id, 以逗号分隔">

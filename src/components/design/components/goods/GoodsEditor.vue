@@ -1,5 +1,5 @@
 <template>
-  <DesignEditor>
+  <DesignEditor :desc="desc">
     <Form :label-width="70">
       <FormItem label="商品ID" style="margin-bottom: 12px">
         <Input v-model="designValue.ids" placeholder="商品id, 以逗号分隔">
@@ -102,10 +102,10 @@ export default {
       }
       this.searchLoading = true
       let d = {
-        goodsids: this.designValue.ids,
+        ids: this.designValue.ids,
         type: 1
       }
-      serverApi('/web/areasonindex', d,
+      serverApi('/Homepage/waresearch', d,
         response => {
           console.log(response)
           this.searchLoading = false

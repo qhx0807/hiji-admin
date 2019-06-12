@@ -37,7 +37,8 @@ export default function combine (preview, editor, type, desc) {
 
       const e = h(editor, {
         props: {
-          value: this.value
+          value: this.value,
+          desc: desc
         }
       })
 

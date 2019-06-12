@@ -1,5 +1,5 @@
 <template>
-  <DesignEditor>
+  <DesignEditor :desc="desc">
     <Form :label-width="80">
       <FormItem label="页面名称" style="margin-bottom: 12px">
         <Input placeholder="页面名称..." v-model="designValue.title"></Input>

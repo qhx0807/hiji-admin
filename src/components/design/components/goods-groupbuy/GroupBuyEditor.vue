@@ -1,6 +1,6 @@
 <template>
   <DesignEditor :desc="desc">
-    <Form :label-width="65">
+    <Form :label-width="70">
       <FormItem label="商品ID" style="margin-bottom: 12px">
         <Input v-model="designValue.ids" placeholder="商品id, 以逗号分隔">
           <Button :loading="searchLoading" slot="append" @click="onClickQueryGoods">查询</Button>
@@ -11,7 +11,6 @@
           <Radio :label="1">大图模式</Radio>
           <Radio :label="2">一行两个</Radio>
           <Radio :label="3">一行三个</Radio>
-          <br>
           <Radio :label="4">详细列表</Radio>
           <Radio :label="5">一大两小</Radio>
           <Radio :label="6">横向滑动</Radio>
@@ -45,16 +44,20 @@
           <Radio :label="2">加粗体</Radio>
         </RadioGroup>
       </FormItem>
+      <!-- <FormItem label="对齐方式" style="margin-bottom:10px">
+        <RadioGroup v-model="designValue.textAlign">
+          <Radio label="left">左对齐</Radio>
+          <Radio label="center">居中对齐</Radio>
+        </RadioGroup>
+      </FormItem> -->
       <FormItem label="显示内容" style="margin-bottom:10px">
         <CheckboxGroup v-model="designValue.showContent">
           <Checkbox label="name">商品名称</Checkbox>
           <Checkbox label="desc">商品描述</Checkbox>
-          <Checkbox label="disprice">抢购价</Checkbox>
-          <Checkbox label="orprice">商品原价</Checkbox>
-          <Checkbox label="stock">剩余库存</Checkbox>
-          <Checkbox label="timer">倒计时</Checkbox>
-          <Checkbox label="progress">抢购进度条</Checkbox>
-          <Checkbox label="buynum">已抢人数</Checkbox>
+          <Checkbox label="ptprice">拼团价</Checkbox>
+          <Checkbox label="orprice">单买价</Checkbox>
+          <Checkbox label="timer">抢购倒计时</Checkbox>
+          <Checkbox label="buynum">已团人数</Checkbox>
           <Checkbox label="buybtn">购买按钮</Checkbox>
         </CheckboxGroup>
       </FormItem>
@@ -91,7 +94,7 @@
 import editorMixins from '../../mixins/editorMixins'
 import serverApi from '../../../../axios/index.js'
 export default {
-  name: 'CutdownEditor',
+  name: 'GoodsEditor',
   mixins: [editorMixins],
   data () {
     return {
@@ -127,4 +130,3 @@ export default {
 <style lang="less" scoped>
 
 </style>
-

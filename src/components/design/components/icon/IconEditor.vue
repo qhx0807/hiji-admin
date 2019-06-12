@@ -1,5 +1,5 @@
 <template>
-  <DesignEditor>
+  <DesignEditor :desc="desc">
     <Form :label-width="70">
       <FormItem label="一排数量">
         <InputNumber size="small" v-model="designValue.rownum" :min='4' :max='10'></InputNumber>

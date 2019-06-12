@@ -1,5 +1,5 @@
 <template>
-  <DesignEditor>
+  <DesignEditor :desc="desc">
     <Form :label-width="80">
       <FormItem label="颜色" style="margin-bottom:10px">
         <ColorPicker alpha v-model="designValue.color" @on-active-change="onSelectBgcolor" recommend />
