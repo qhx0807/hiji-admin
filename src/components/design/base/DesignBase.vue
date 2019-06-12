@@ -111,11 +111,19 @@ export default {
   },
   methods: {
     onClickAddBtn (type) {
+      if (type.selector === 'share') {
+        let index = this.designList.findIndex(item => item.type === 'share')
+        if (index > -1) {
+          this.$Message.warning('页面分享功能已存在!')
+          this.activeIndex = index
+          return false
+        }
+      }
       let designer = this.designComponents.find(item => {
         return item.designType === type.selector
       })
       if (designer.defaultValue.items) {
-        designer.defaultValue.items = []
+        designer.defaultValue.items = [].concat(designer.defaultValue.items)
       }
       this.activeIndex = this.value.length
       this.$emit('onAddComponent', {type: type.selector, ...designer.defaultValue}, this.value.length)
