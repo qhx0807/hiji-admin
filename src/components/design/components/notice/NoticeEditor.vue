@@ -12,10 +12,15 @@
         <ColorPicker alpha v-model="designValue.bgcolor" @on-active-change="e => designValue.bgcolor = e" recommend />
         <Button @click="designValue.bgcolor = '#fffbe8'" style="margin-left:10px">重置</Button>
       </FormItem>
+      <FormItem label="链接类型" style="margin-bottom:10px">
+        <Select v-model="designValue.linktype">
+          <Option v-for="item in linkTypeList" :key="item.value" :value="item.value">{{item.label}}</Option>
+        </Select>
+      </FormItem>
+      <FormItem label="链接地址" style="margin-bottom:10px">
+        <Input placeholder="请输入" v-model="designValue.linkurl"></Input>
+      </FormItem>
       <FormItem label="城市">
-        <!-- <RadioGroup v-model="value.city">
-          <Radio v-for="item in citylist" :key="item.value" :label="item.value">{{item.name}}</Radio>
-        </RadioGroup> -->
         <CheckboxGroup v-model="value.city">
           <Checkbox v-for="item in citylist" :key="item.value" :label="item.value">{{item.name}}</Checkbox>
         </CheckboxGroup>
@@ -34,6 +39,9 @@ export default {
   computed: {
     citylist () {
       return this.$store.state.cityList
+    },
+    linkTypeList () {
+      return this.$store.state.actionTypeArr
     }
   },
   created () {},

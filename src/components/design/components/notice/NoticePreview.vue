@@ -1,7 +1,7 @@
 <template>
   <div class="design-notice-preview" :style="{backgroundColor: value.bgcolor}">
     <slot></slot>
-    <Icon size="18" color="#ed6a0c" type="ios-notifications-outline" />
+    <Icon size="18" :color="value.color" type="ios-notifications-outline" />
     <p :style="{color: value.color}" class="design-notice-preview-content">{{value.content}}</p>
   </div>
 </template>
@@ -14,8 +14,6 @@ export default {
 </script>
 <style lang="less" scoped>
   .design-notice-preview{
-    background-color: #FFF8E9;
-    color: #666666;
     height: 40px;
     display: flex;
     align-items: center;

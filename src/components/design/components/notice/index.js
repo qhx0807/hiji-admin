@@ -10,7 +10,9 @@ Notice.defaultValue = {
   color: '#ed6a0c',
   bgcolor: '#fffbe8',
   content: '请填写内容，如果过长，将会在手机上滚动显示',
-  city: [0]
+  linktype: 0,
+  linkurl: '',
+  city: [1, 2, 3, 4, 5, 6, 7]
 }
 
 export default Notice
