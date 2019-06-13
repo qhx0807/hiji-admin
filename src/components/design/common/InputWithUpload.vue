@@ -65,8 +65,7 @@ export default {
             })
           }
         })
-        let url = response.data.url
-        this.$emit("uploadSuccess", url)
+        this.bgimgUrl = response.data.url
       } else {
         this.$Message.error('上传失败')
       }
