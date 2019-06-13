@@ -1,5 +1,5 @@
 <template>
-  <DesignEditor>
+  <DesignEditor :desc="desc">
     <Form :label-width="80">
       <FormItem label="选择模板" style="margin-bottom:10px">
         <div class="select-templ-box">
@@ -18,6 +18,11 @@
       <FormItem label="图片宽度(%)" style="margin-bottom:10px" v-show="designValue.template === 3">
         <Slider v-model="designValue.width" show-input input-size="small"></Slider>
       </FormItem>
+      <FormItem label="城市">
+        <CheckboxGroup v-model="value.city">
+          <Checkbox v-for="item in citylist" :key="item.value" :label="item.value">{{item.name}}</Checkbox>
+        </CheckboxGroup>
+      </FormItem>
     </Form>
     <div class="design-imagead-editor-items">
       <Container @drop="onDropItem">
@@ -32,11 +37,14 @@
               <FormItem label="链接地址">
                 <Input size="small" placeholder="请输入" v-model="item.linkurl"></Input>
               </FormItem>
-              <FormItem label="城市">
+              <FormItem label="是否展示">
+                <i-switch size="small" v-model="item.isshow" />
+              </FormItem>
+              <!-- <FormItem label="城市">
                 <Select size="small" v-model="item.city">
                   <Option v-for="item in citylist" :key="item.value" :value="item.value">{{item.name}}</Option>
                 </Select>
-              </FormItem>
+              </FormItem> -->
             </Form>
           </ImageItemEditor>
         </Draggable>
@@ -77,6 +85,11 @@ export default {
           name: '横向滑动',
           imgurl: 'http://cdn.cqyyy.cn/pic/20190610102947.png',
           value: 3
+        },
+        {
+          name: '撑满一行',
+          imgurl: 'http://cdn.cqyyy.cn/pic/20190612103022.png',
+          value: 4
         }
       ]
     }

@@ -17,6 +17,11 @@
         :src="item.imageurl" alt=""
         :style="{marginRight: value.spacing+'px', width: value.width+'%'}">
     </div>
+    <div class="design-imagead-preview-wrap4" v-show="value.template === 4" :style="{paddingLeft: value.padding+'px', paddingRight: value.padding+'px'}">
+      <img v-for="(item, index) in value.items"
+        :src="item.imageurl" alt=""
+        :style="{margin: value.spacing+'px'}">
+    </div>
   </div>
 </template>
 <script>
@@ -77,6 +82,16 @@ export default {
         &:last-child{
           margin-right: 0!important;
         }
+      }
+    }
+    &-wrap4{
+      width: 100%;
+      display: flex;
+      flex-wrap: nowrap;
+      flex-direction: row;
+      justify-content: flex-start;
+      img{
+        height: 50%;
       }
     }
   }
