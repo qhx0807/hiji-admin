@@ -8,7 +8,8 @@ const Config = combine(ConfigPreview, ConfigEditor, designType, designDescriptio
 
 Config.defaultValue = {
   title: '页面标题',
-  bgcolor: '#ffffff'
+  bgcolor: '#fff',
+  bgimg: ''
 }
 
 export default Config
