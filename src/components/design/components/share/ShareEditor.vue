@@ -11,7 +11,7 @@
         <Input v-model="designValue.link"></Input>
       </FormItem>
       <FormItem label="分享图标">
-        <InputWithUpload v-model="designValue.imgUrl" @uploadSuccess="uploadSuccess" />
+        <InputWithUpload v-model="designValue.imgUrl"/>
       </FormItem>
       <FormItem >
         <img height="100px" width="100px" :src="designValue.imgUrl" alt="">
@@ -35,9 +35,7 @@ export default {
     this.designValue.imgUrl = 'http://cdn.cqyyy.cn/hiji_201906121013233856.jpg'
   },
   methods: {
-    uploadSuccess (path) {
-      this.designValue.imgUrl = path
-    }
+
   }
 }
 </script>

@@ -1,31 +1,7 @@
 <template>
   <div class="design">
     <div class="design-preview">
-      <div class="design-preview-wrap" :style="{backgroundColor: value[0].bgcolor}">
-        <!-- <draggable
-          class="list-group"
-          tag="ul"
-          v-model="designList"
-          v-bind="dragOptions"
-          @start="drag = true"
-          @end="drag = false"
-          handle=".design-preview-controller"
-        >
-          <transition-group type="transition" name="flip-list">
-            <li class="list-group-item" v-for="(element, index) in designList" :key="element.type">
-              <renderPreview
-                @onSelectDesigner="onSelectDesigner(index)"
-                :value="element"
-                :designComponents="designComponents"
-                :isactive="index == activeIndex"
-                @onRemoveDesigner="onRemoveDesigner(index)"
-                @onClickInsertComponents="(evt, position) => onClickInsertComponents(evt, position, index)"
-              >
-              </renderPreview>
-            </li>
-          </transition-group>
-        </draggable> -->
-
+      <div class="design-preview-wrap" :style="{backgroundColor: configValue.bgcolor, backgroundImage:'url('+configValue.bgimg+')'}">
         <Container @drop="onDropItem" drag-handle-selector=".design-preview-controller">
           <Draggable v-for="(element, index) in designList" :key="element.type">
             <section class="list-group-item">
@@ -82,7 +58,7 @@ export default {
   props: {
     value: {
       type: Array,
-      default: []
+      default: () => []
     },
     groupedComponents: Array,
     designComponents: Array
@@ -104,10 +80,18 @@ export default {
       insertIndex: -1,
     }
   },
-  computed: {
+  watch: {
+    // value (n, o) {
+    //   console.log(n)
+    // }
   },
   created () {
     this.designList = this.value
+  },
+  computed: {
+    configValue () {
+      return this.value.find(item => item.type === 'config')
+    }
   },
   methods: {
     onClickAddBtn (type) {
@@ -149,7 +133,6 @@ export default {
       if (designer.defaultValue.items) {
         designer.defaultValue.items = []
       }
-      console.log(designer.defaultValue)
       this.activeIndex = this.insertIndex
       this.$emit('onAddComponent', {type: type.selector, ...designer.defaultValue}, this.insertIndex)
       this.addShow = false
@@ -174,6 +157,9 @@ export default {
     position: relative;
     &-wrap{
       min-height: 350px;
+      background-repeat: repeat-y;
+      background-size: 100%;
+      background-origin: border-box;
     }
     &-add{
       padding-bottom: 5px;

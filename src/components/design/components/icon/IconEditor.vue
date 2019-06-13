@@ -4,15 +4,10 @@
       <FormItem label="一排数量">
         <InputNumber size="small" v-model="designValue.rownum" :min='4' :max='10'></InputNumber>
       </FormItem>
-      <!-- <FormItem label="Icon名称">
-        <Input size="small" v-model="designValue.name"></Input>
-      </FormItem> -->
       <FormItem label="背景图片">
-        <!-- <Input size="small" v-model="designValue.bgimg"></Input> -->
-        <InputWithUpload size="small" v-model="designValue.bgimg" @uploadSuccess="onUploadBgimg"/>
+        <InputWithUpload size="small" v-model="designValue.bgimg"/>
       </FormItem>
     </Form>
-
     <div class="design-swiper-editor-items">
       <Container @drop="onDropItem">
         <Draggable v-for="(item, index) in designValue.items" :key="item.id">
@@ -30,9 +25,9 @@
                 <Input size="small" placeholder="请输入" v-model="item.linkurl"></Input>
               </FormItem>
               <FormItem label="城市">
-                <Select size="small" v-model="item.city">
-                  <Option v-for="item in citylist" :key="item.value" :value="item.value">{{item.name}}</Option>
-                </Select>
+                <CheckboxGroup v-model="item.city">
+                  <Checkbox v-for="item in citylist" :key="item.value" :label="item.value">{{item.name}}</Checkbox>
+                </CheckboxGroup>
               </FormItem>
             </Form>
           </ImageItemEditor>
@@ -67,6 +62,13 @@ export default {
     citylist () {
       return this.$store.state.cityList
     },
+    cityValues () {
+      let arr = []
+      this.citylist.forEach(item => {
+        arr.push(item.value)
+      })
+      return arr
+    },
     linkTypeList () {
       return this.$store.state.actionTypeArr
     }
@@ -75,9 +77,10 @@ export default {
     uploadImageCallback (url) {
       let item = {
         imageurl: url,
-        linktype: '',
+        linktype: 0,
         linkurl: '',
-        city: ''
+        name: '图片名称',
+        city: this.cityValues
       }
       this.designValue.items.push(item)
     },
@@ -89,9 +92,6 @@ export default {
     },
     onDropItem (dropResult) {
       this.designValue.items = applyDrag(this.designValue.items, dropResult)
-    },
-    onUploadBgimg (url) {
-      this.designValue.bgimg = url
     }
   }
 }

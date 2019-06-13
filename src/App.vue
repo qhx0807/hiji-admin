@@ -26,6 +26,12 @@ body {
   background: #f5f6f9;
   overflow: hidden;
 }
+.smooth-dnd-container.vertical > .smooth-dnd-draggable-wrapper{
+  overflow: visible!important;
+}
+.smooth-dnd-container{
+  min-height: 0!important;
+}
 #app {
   font-family: 'Helvetica Neue', Helvetica, 'PingFang SC', 'Hiragino Sans GB',
     'Microsoft YaHei', '微软雅黑', Arial, sans-serif;

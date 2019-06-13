@@ -1,5 +1,5 @@
 <template>
-  <DesignEditor>
+  <DesignEditor :desc="desc">
     <Form :label-width="80">
       <FormItem>
         <span slot="label">
@@ -25,10 +25,16 @@
               <FormItem label="链接地址">
                 <Input size="small" placeholder="请输入" v-model="item.linkurl"></Input>
               </FormItem>
+              <FormItem label="是否展示">
+                <i-switch size="small" v-model="item.isshow" />
+              </FormItem>
               <FormItem label="城市">
-                <Select size="small" v-model="item.city">
+                <!-- <Select size="small" v-model="item.city">
                   <Option v-for="item in citylist" :key="item.value" :value="item.value">{{item.name}}</Option>
-                </Select>
+                </Select> -->
+                <CheckboxGroup v-model="item.city">
+                  <Checkbox v-for="item in citylist" :key="item.value" :label="item.value">{{item.name}}</Checkbox>
+                </CheckboxGroup>
               </FormItem>
             </Form>
           </ImageItemEditor>
@@ -61,6 +67,13 @@ export default {
     citylist () {
       return this.$store.state.cityList
     },
+    cityValues () {
+      let arr = []
+      this.citylist.forEach(item => {
+        arr.push(item.value)
+      })
+      return arr
+    },
     linkTypeList () {
       return this.$store.state.actionTypeArr
     }
@@ -71,7 +84,8 @@ export default {
         imageurl: url,
         linktype: '',
         linkurl: '',
-        city: ''
+        city: [].concat(this.cityValues),
+        isshow: true
       }
       this.designValue.items.push(item)
     },

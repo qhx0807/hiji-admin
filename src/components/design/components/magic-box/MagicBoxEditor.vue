@@ -136,7 +136,8 @@ export default {
             imageurl: 'http://cdn.cqyyy.cn/pic/20190610151400.png',
             linktype: 0,
             linkurl: '',
-            city: 0
+            isshow: true,
+            city: this.cityValues
           })
         }
       } else {

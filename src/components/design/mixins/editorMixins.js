@@ -4,7 +4,8 @@ export default {
     DesignEditor
   },
   props: {
-    value: Object
+    value: Object,
+    desc: String
   },
   data () {
     return {
