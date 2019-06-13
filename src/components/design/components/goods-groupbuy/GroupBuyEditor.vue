@@ -44,12 +44,6 @@
           <Radio :label="2">加粗体</Radio>
         </RadioGroup>
       </FormItem>
-      <!-- <FormItem label="对齐方式" style="margin-bottom:10px">
-        <RadioGroup v-model="designValue.textAlign">
-          <Radio label="left">左对齐</Radio>
-          <Radio label="center">居中对齐</Radio>
-        </RadioGroup>
-      </FormItem> -->
       <FormItem label="显示内容" style="margin-bottom:10px">
         <CheckboxGroup v-model="designValue.showContent">
           <Checkbox label="name">商品名称</Checkbox>
@@ -59,6 +53,7 @@
           <Checkbox label="timer">抢购倒计时</Checkbox>
           <Checkbox label="buynum">已团人数</Checkbox>
           <Checkbox label="buybtn">购买按钮</Checkbox>
+          <Checkbox label="badge">角标</Checkbox>
         </CheckboxGroup>
       </FormItem>
       <FormItem v-show="designValue.showContent.indexOf('buybtn') > -1" label="购买按钮" style="margin-bottom:10px">
@@ -81,11 +76,15 @@
       </FormItem>
       <FormItem v-show="designValue.showContent.indexOf('badge') > -1" label="商品角标" style="margin-bottom:10px">
         <RadioGroup v-model="designValue.badgeStyle">
-          <Radio label="新品">新品</Radio>
-          <Radio label="热卖">热卖</Radio>
-          <Radio label="NEW">NEW</Radio>
-          <Radio label="HOT">HOT</Radio>
+          <Radio label="new-arrival">新品</Radio>
+          <Radio label="hot-sale">热卖</Radio>
+          <Radio label="new">NEW</Radio>
+          <Radio label="hot">HOT</Radio>
+          <Radio label="custom">自定义</Radio>
         </RadioGroup>
+      </FormItem>
+      <FormItem v-show="designValue.badgeStyle === 'custom'" style="margin-bottom:10px">
+        <InputWithUpload v-model="designValue.badgeImg" size="small" />
       </FormItem>
     </Form>
   </DesignEditor>
@@ -93,9 +92,13 @@
 <script>
 import editorMixins from '../../mixins/editorMixins'
 import serverApi from '../../../../axios/index.js'
+import InputWithUpload from '../../common/InputWithUpload.vue'
 export default {
   name: 'GoodsEditor',
   mixins: [editorMixins],
+  components: {
+    InputWithUpload
+  },
   data () {
     return {
       searchLoading: false
@@ -110,12 +113,20 @@ export default {
       }
       this.searchLoading = true
       let d = {
-        goodsids: this.designValue.ids,
-        type: 1
+        ids: this.designValue.ids,
+        type: 'groupbuy'
       }
-      serverApi('/web/areasonindex', d,
+      serverApi('/Homepage/waresearch', d,
         response => {
-          console.log(response)
+          if (response.data.code === 0) {
+            if (response.data.data.length > 0) {
+              this.designValue.items = response.data.data
+            } else {
+              this.$Message.warning('未查询到数据')
+            }
+          } else {
+            this.$Message.warning(response.data.msg)
+          }
           this.searchLoading = false
         },
         error => {
