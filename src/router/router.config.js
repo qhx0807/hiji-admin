@@ -126,8 +126,8 @@ const MemberRules = r => require.ensure([], () => r(require('@/components/userme
 const UserInterface = r => require.ensure([], () => r(require('@/components/usermember/UserInterface.vue')))
 const Buttons = r => require.ensure([], () => r(require('@/components/settings/Buttons.vue')))
 const PropetyFeeDivice = r => require.ensure([], () => r(require('@/components/property/PropetyFeeDivice.vue')))
-const OtoPages = r => require.ensure([], () => r(require('@/components/oto/OtoPages.vue')))
-const OtoPageDesign = r => require.ensure([], () => r(require('@/components/oto/OtoPageDesign.vue')))
+const Pages = r => require.ensure([], () => r(require('@/components/oto/Pages.vue')))
+const PageDesign = r => require.ensure([], () => r(require('@/components/oto/PageDesign.vue')))
 
 const routes = [
   {
@@ -754,14 +754,14 @@ const routes = [
         name: 'PropetyFeeDivice'
       },
       {
-        path: 'OtoPages',
-        component: OtoPages,
-        name: 'OtoPages'
+        path: 'Pages',
+        component: Pages,
+        name: 'Pages'
       },
       {
-        path: 'OtoPageDesign/:id',
-        component: OtoPageDesign,
-        name: 'OtoPageDesign'
+        path: 'PageDesign/:id',
+        component: PageDesign,
+        name: 'PageDesign'
       }
     ]
   },
