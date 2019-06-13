@@ -5,17 +5,30 @@
       <ul
         :class="{'templ6ul': value.listStyle === 6}"
         :style="{paddingLeft: value.padding+'px', paddingRight: value.padding+'px', marginLeft: -value.spacing/2 + 'px', marginRight: -value.spacing/2 + 'px'}">
-        <li v-for="(item, index) in value.goodsItem" :key="index" :class="'template'+value.listStyle">
+        <li v-for="(item, index) in value.items" :key="index" :class="'template'+value.listStyle">
           <a :style="{margin: value.spacing/2 + 'px'}"
             :class="[{'shadow': value.itemStyle === 2}, {'rect': value.itemStyle === 3}, {'trans': value.itemStyle === 4}]"
             >
             <div class="goods-layout-photo">
               <div class="goods-layout-photo-image-wrap" :style="{paddingTop: imgscale}">
-                <div class="goods-layout-photo-image-bg" :style="{backgroundImage: 'url('+item.goodsimg+')'}"></div>
+                <div class="goods-layout-photo-image-bg" :style="{backgroundImage: 'url('+item.img+')'}"></div>
               </div>
+
+              <div class="goods-badge" v-show="value.showContent.includes('badge')">
+                <div class="newgoods" v-show="value.badgeStyle === 'new-arrival'">新品</div>
+                <div class="hotgoods" v-show="value.badgeStyle === 'hot-sale'">热卖</div>
+                <div class="newgoods-o" v-show="value.badgeStyle === 'new'">NEW</div>
+                <div class="newgoods-o" v-show="value.badgeStyle === 'hot'">
+                  <img src="http://cdn.cqyyy.cn/pic/20190611142118.png" alt="">
+                </div>
+                <div class="custom" v-show="value.badgeStyle === 'custom'">
+                  <img :src="value.badgeImg" alt="">
+                </div>
+              </div>
+
               <div class="goods-layout-photo-tags" v-show="value.showContent.includes('timer')">
                 <div class="big">
-                  <div class="tag-title">助力砍价</div>
+                  <div class="tag-title">砍价</div>
                   <div class="tag-info">
                     <p>距结束仅剩</p>
                     <div class="timer">
@@ -35,9 +48,9 @@
               <div class="goods-layout-info-title">
                 <h3 :class="{'fontBold':value.textStyle === 2}" v-show="value.showContent.includes('name')">
                   <span class="title-tag">减30元</span>
-                  {{item.goodsname}}
+                  {{item.name}}
                 </h3>
-                <p v-show="value.showContent.includes('desc')">{{item.goodsdesc}}</p>
+                <p v-show="value.showContent.includes('desc')">{{item.desc}}</p>
               </div>
               <div class="goods-layout-info-progerss">
                 <div class="bar" v-show="value.showContent.includes('progress')">
@@ -59,9 +72,9 @@
               <div class="goods-layout-info-price">
                 <div class="price">
                   <span class="discount" v-show="value.showContent.includes('disprice')">
-                    <span class="symbol">￥</span><span class="number">59.99</span>
+                    <span class="symbol">￥</span><span class="number">{{item.disprice}}</span>
                   </span>
-                  <span class="orprice" v-show="value.showContent.includes('orprice')">￥79.99</span>
+                  <span class="orprice" v-show="value.showContent.includes('orprice')">￥{{item.orprice}}</span>
                 </div>
                 <div class="buybtn" v-show="value.showContent.includes('buybtn')">
                   <div class="buy-btn-type1" v-if="value.btnStyle === 1"><Icon type="ios-cart-outline" /></div>
@@ -219,6 +232,50 @@ export default {
                   color: #fff;
                   font-weight: 700;
                   background: transparent;
+                }
+              }
+            }
+            .goods-badge{
+              position: absolute;
+              left: 5px;
+              top: 5px;
+              color: #fff;
+              font-size: 13px;
+              .newgoods{
+                width: 40px;
+                background-color: #f44;
+                height: 20px;
+                border-top-right-radius: 10px;
+                border-bottom-right-radius: 10px;
+                padding-left: 6px;
+                line-height: 20px;
+              }
+              .newgoods-o{
+                width: 32px;
+                background-color: #f44;
+                height: 32px;
+                border-bottom-left-radius: 6px;
+                border-bottom-right-radius: 6px;
+                line-height: 32px;
+                font-size: 12px;
+                text-align: center;
+              }
+              .hotgoods{
+                background-color: #f44;
+                width: 20px;
+                height: 40px;
+                text-align: center;
+                border-radius: 2px;
+              }
+              .hotgoods-o{
+                img{
+                  height: 40px;
+                  width: 40px;
+                }
+              }
+              .custom{
+                img{
+                  max-width: 40px;
                 }
               }
             }
