@@ -1,5 +1,5 @@
 <template>
-  <DesignEditor>
+  <DesignEditor :desc="desc">
     <Form :label-width="80">
       <FormItem label="空白高度">
         <Slider v-model="designValue.height" show-tip="always"></Slider>

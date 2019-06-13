@@ -32,8 +32,8 @@
       </FormItem>
       <FormItem label="图片比例" style="margin-bottom:10px">
         <RadioGroup v-model="designValue.imgScale">
-          <Radio :label="1">3 : 2</Radio>
-          <Radio :label="2">1 : 1</Radio>
+          <Radio :label="1">1 : 1</Radio>
+          <Radio :label="2">3 : 2</Radio>
           <Radio :label="3">4 : 3</Radio>
           <Radio :label="4">16 : 9</Radio>
         </RadioGroup>
@@ -73,11 +73,15 @@
       </FormItem>
       <FormItem v-show="designValue.showContent.indexOf('badge') > -1" label="商品角标" style="margin-bottom:10px">
         <RadioGroup v-model="designValue.badgeStyle">
-          <Radio label="新品">新品</Radio>
-          <Radio label="热卖">热卖</Radio>
-          <Radio label="NEW">NEW</Radio>
-          <Radio label="HOT">HOT</Radio>
+          <Radio label="new-arrival">新品</Radio>
+          <Radio label="hot-sale">热卖</Radio>
+          <Radio label="new">NEW</Radio>
+          <Radio label="hot">HOT</Radio>
+          <Radio label="custom">自定义</Radio>
         </RadioGroup>
+      </FormItem>
+      <FormItem v-show="designValue.badgeStyle === 'custom'" style="margin-bottom:10px">
+        <InputWithUpload v-model="designValue.badgeImg" size="small" />
       </FormItem>
     </Form>
   </DesignEditor>
@@ -85,9 +89,13 @@
 <script>
 import editorMixins from '../../mixins/editorMixins'
 import serverApi from '../../../../axios/index.js'
+import InputWithUpload from '../../common/InputWithUpload.vue'
 export default {
   name: 'GoodsEditor',
   mixins: [editorMixins],
+  components: {
+    InputWithUpload
+  },
   data () {
     return {
       searchLoading: false
@@ -103,12 +111,20 @@ export default {
       this.searchLoading = true
       let d = {
         ids: this.designValue.ids,
-        type: 1
+        type: 'goods'
       }
       serverApi('/Homepage/waresearch', d,
         response => {
-          console.log(response)
           this.searchLoading = false
+          if (response.data.code === 0) {
+            if (response.data.data.length > 0) {
+              this.designValue.items = response.data.data
+            } else {
+              this.$Message.warning('未查询到数据')
+            }
+          } else {
+            this.$Message.warning(response.data.msg)
+          }
         },
         error => {
           this.$Message.error(error.toString())

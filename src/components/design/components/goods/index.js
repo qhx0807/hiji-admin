@@ -16,32 +16,41 @@ Goods.defaultValue = {
   textStyle: 1,
   showContent: ['name', 'desc', 'price', 'buybtn'],
   btnStyle: 1,
-  badgeStyle: '新品',
+  badgeStyle: 'new-arrival',
+  badgeImg: 'http://cdn.cqyyy.cn/pic/20190613140550.png',
   btnText: '马上抢',
-  goodsItem: [
+  items: [
     {
-      goodsname: '这里显示商品名称，最多显示2行',
-      goodsdesc: '这里显示商品描述，最多显示1行',
-      goodsimg: 'http://cdn.cqyyy.cn/pic/20190610172641.png',
-      goodsprice: '99'
+      name: '这里显示商品名称，最多显示2行',
+      desc: '这里显示商品描述，最多显示1行',
+      img: 'http://cdn.cqyyy.cn/pic/20190610172641.png',
+      disprice: '99',
+      orprice: '129',
+      id: '1'
     },
     {
-      goodsname: '这里显示商品名称，最多显示2行',
-      goodsdesc: '这里显示商品描述，最多显示1行',
-      goodsimg: 'http://cdn.cqyyy.cn/pic/20190610172641.png',
-      goodsprice: '99'
+      name: '这里显示商品名称，最多显示2行',
+      desc: '这里显示商品描述，最多显示1行',
+      img: 'http://cdn.cqyyy.cn/pic/20190610172641.png',
+      disprice: '99',
+      orprice: '129',
+      id: '1'
     },
     {
-      goodsname: '这里显示商品名称，最多显示2行',
-      goodsdesc: '这里显示商品描述，最多显示1行',
-      goodsimg: 'http://cdn.cqyyy.cn/pic/20190610172641.png',
-      goodsprice: '99'
+      name: '这里显示商品名称，最多显示2行',
+      desc: '这里显示商品描述，最多显示1行',
+      img: 'http://cdn.cqyyy.cn/pic/20190610172641.png',
+      disprice: '99',
+      orprice: '129',
+      id: '1'
     },
     {
-      goodsname: '这里显示商品名称，最多显示2行',
-      goodsdesc: '这里显示商品描述，最多显示1行',
-      goodsimg: 'http://cdn.cqyyy.cn/pic/20190610172641.png',
-      goodsprice: '99'
+      name: '这里显示商品名称，最多显示2行',
+      desc: '这里显示商品描述，最多显示1行',
+      img: 'http://cdn.cqyyy.cn/pic/20190610172641.png',
+      disprice: '99',
+      orprice: '129',
+      id: '1'
     }
   ]
 }

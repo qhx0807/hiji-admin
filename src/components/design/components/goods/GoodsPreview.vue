@@ -5,7 +5,7 @@
           :class="{'templ6ul': value.listStyle === 6}"
         >
         <li
-          v-for="(item, index) in value.goodsItem"
+          v-for="(item, index) in value.items"
           :key="index"
           :class="'templ'+value.listStyle">
           <a :style="{margin: value.spacing/2 + 'px'}"
@@ -13,26 +13,29 @@
             >
             <div class="goods-photo">
               <div class="goods-image-wrap" :style="{paddingTop: imgscale}">
-                <div class="goods-img" :style="{backgroundImage: 'url('+item.goodsimg+')'}"></div>
+                <div class="goods-img" :style="{backgroundImage: 'url('+item.img+')'}"></div>
               </div>
               <div class="goods-badge" v-show="value.showContent.includes('badge')">
-                <div class="newgoods" v-show="value.badgeStyle === '新品'">新品</div>
-                <div class="hotgoods" v-show="value.badgeStyle === '热卖'">热卖</div>
-                <div class="newgoods-o" v-show="value.badgeStyle === 'NEW'">NEW</div>
-                <div class="newgoods-o" v-show="value.badgeStyle === 'HOT'">
+                <div class="newgoods" v-show="value.badgeStyle === 'new-arrival'">新品</div>
+                <div class="hotgoods" v-show="value.badgeStyle === 'hot-sale'">热卖</div>
+                <div class="newgoods-o" v-show="value.badgeStyle === 'new'">NEW</div>
+                <div class="newgoods-o" v-show="value.badgeStyle === 'hot'">
                   <img src="http://cdn.cqyyy.cn/pic/20190611142118.png" alt="">
+                </div>
+                <div class="custom" v-show="value.badgeStyle === 'custom'">
+                  <img :src="value.badgeImg" alt="">
                 </div>
               </div>
             </div>
             <div class="goods-info">
               <div class="goods-info-title">
-                <h3 :class="{'fontBold':value.textStyle === 2}" v-show="value.showContent.includes('name')">{{item.goodsname}}</h3>
-                <p v-show="value.showContent.includes('desc')">{{item.goodsdesc}}</p>
+                <h3 :class="{'fontBold':value.textStyle === 2}" v-show="value.showContent.includes('name')">{{item.name}}</h3>
+                <p v-show="value.showContent.includes('desc')">{{item.desc}}</p>
               </div>
               <div class="goods-info-price">
                 <div class="price-info">
                   <span class="sale-price" v-show="value.showContent.includes('price')">
-                    <span class="price-tag">￥</span>99
+                    <span class="price-tag">￥</span>{{item.disprice}}
                   </span>
                 </div>
                 <div class="buy-btn-box" v-show="value.showContent.includes('buybtn')">
@@ -64,10 +67,10 @@ export default {
       let p = '100%'
       switch (this.value.imgScale) {
         case 1:
-          p = '66.667%'
+          p = '100%'
           break
         case 2:
-          p = '100%'
+          p = '66.667%'
           break
         case 3:
           p = '133.333%'
@@ -189,6 +192,11 @@ export default {
                   img{
                     height: 40px;
                     width: 40px;
+                  }
+                }
+                .custom{
+                  img{
+                    max-width: 40px;
                   }
                 }
               }
