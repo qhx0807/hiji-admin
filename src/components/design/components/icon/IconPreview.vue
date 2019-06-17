@@ -1,7 +1,7 @@
 <template>
-  <div class="design-icon-preview" :style="{}">
+  <div class="design-icon-preview">
     <div class="design-icon-preview-nodata" v-show="value.items.length === 0">点击编辑ICON</div>
-    <div class="icon-box" :style="{backgroundImage:'url('+value.bgimg+')'}">
+    <div class="icon-box" v-show="value.items.length > 0" :style="{backgroundImage:'url('+value.bgimg+')'}">
       <div class="item" :style="{width: iconItemWidth}" v-for="(item, index) in value.items" :key="index">
         <img :src="item.imageurl" alt="">
         <p>{{item.name}}</p>
@@ -26,11 +26,9 @@ export default {
   .design-icon-preview{
     position: relative;
     cursor: grab;
-    min-height: 80px;
+    box-sizing: border-box;
     &-nodata{
-      position: absolute;
-      top: 0;
-      bottom: 0;
+      min-height: 110px;
       width: 100%;
       background: #bdf;
       color: #fff;
@@ -40,6 +38,7 @@ export default {
       justify-content: center;
     }
     .icon-box{
+      box-sizing: border-box;
       margin-top: -1px;
       padding: 15px;
       padding-bottom: 2px;

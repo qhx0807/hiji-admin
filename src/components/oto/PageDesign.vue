@@ -153,8 +153,8 @@ export default {
       let arr = JSON.parse(JSON.stringify(this.pageValue))
       for (let i = 0; i < arr.length; i++) {
         let item = arr[i]
-        if (item.items) item.items = ''
         if (item.hasOwnProperty('ids')) {
+          item.items = ''
           if (item.ids.length === 0) {
             arr.splice(i, 1)
             this.$Message.warning('某个组件的商品id或卡券id为空，已删除')

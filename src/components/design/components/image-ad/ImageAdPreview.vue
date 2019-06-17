@@ -35,11 +35,8 @@ export default {
   .design-imagead-preview{
     position: relative;
     cursor: grab;
-    min-height: 110px;
     &-nodata{
-      position: absolute;
-      top: 0;
-      bottom: 0;
+      min-height: 120px;
       width: 100%;
       background: #bdf;
       color: #fff;

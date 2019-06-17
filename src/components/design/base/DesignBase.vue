@@ -95,6 +95,7 @@ export default {
   },
   methods: {
     onClickAddBtn (type) {
+      let PostImgArr = ['image-ad', 'magic-box', 'icon', 'swiper']
       if (type.selector === 'share') {
         let index = this.designList.findIndex(item => item.type === 'share')
         if (index > -1) {
@@ -106,7 +107,10 @@ export default {
       let designer = this.designComponents.find(item => {
         return item.designType === type.selector
       })
-      if (designer.defaultValue.items) {
+      if (PostImgArr.includes(designer.designType)) {
+        designer.defaultValue.items = []
+      }
+      if (designer.defaultValue.hasOwnProperty('items') && designer.defaultValue.hasOwnProperty('ids')) {
         designer.defaultValue.items = [].concat(designer.defaultValue.items)
       }
       this.activeIndex = this.value.length
