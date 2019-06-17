@@ -2,26 +2,11 @@
   <div class="design-imagead-preview">
     <div class="design-imagead-preview-nodata" v-show="value.items.length === 0">点击编辑图片广告</div>
     <slot></slot>
-    <div class="design-imagead-preview-wrap1" v-show="value.template === 1" :style="{paddingLeft: value.padding+'px', paddingRight: value.padding+'px'}">
-      <img v-for="(item, index) in value.items"
-        :src="item.imageurl" alt=""
-        :style="{marginBottom: value.spacing+'px'}">
-    </div>
-    <div class="design-imagead-preview-wrap2" v-show="value.template === 2" :style="{paddingLeft: value.padding+'px', paddingRight: value.padding+'px'}">
-      <img v-for="(item, index) in value.items"
-        :src="item.imageurl" alt=""
-        :style="{marginBottom: value.spacing+'px', marginRight: value.padding+'px'}">
-    </div>
-    <div class="design-imagead-preview-wrap3" v-show="value.template === 3" :style="{paddingLeft: value.padding+'px', paddingRight: value.padding+'px'}">
-      <img v-for="(item, index) in value.items"
-        :src="item.imageurl" alt=""
-        :style="{marginRight: value.spacing+'px', width: value.width+'%'}">
-    </div>
-    <div class="design-imagead-preview-wrap4" v-show="value.template === 4" :style="{paddingLeft: value.padding+'px', paddingRight: value.padding+'px'}">
-      <img v-for="(item, index) in value.items"
-        :src="item.imageurl" alt=""
-        :style="{margin: value.spacing+'px'}">
-    </div>
+    <ul :class="'template'+value.template" class="image-ad-wrap">
+      <li v-for="(item, index) in value.items" :key="index">
+        <img :src="item.imageurl" alt="">
+      </li>
+    </ul>
   </div>
 </template>
 <script>
@@ -45,50 +30,37 @@ export default {
       align-items: center;
       justify-content: center;
     }
-    &-wrap1{
-      display: flex;
-      flex-wrap: nowrap;
-      flex-direction: column;
+    .image-ad-wrap{
+      list-style: none;
+      padding: 0px;
+      overflow: hidden;
+      box-sizing: border-box;
+      li{
+        float: left;
+        width: 100%;
+      }
       img{
         width: 100%;
-        &:last-child{
-          margin-bottom: 0!important;
+      }
+      &.template1{
+        li{
+          width: 100%;
         }
       }
-    }
-    &-wrap2{
-      width: 100%;
-      display: flex;
-      flex-wrap: nowrap;
-      flex-direction: row;
-      overflow: hidden;
-      img{
-        width: 50%;
-        &:nth-child(odd){
-          margin-right: 0!important;
+      &.template2{
+        li{
+          width: 50%;
         }
       }
-    }
-    &-wrap3{
-      width: 100%;
-      display: flex;
-      flex-wrap: nowrap;
-      flex-direction: row;
-      overflow: hidden;
-      img{
-        &:last-child{
-          margin-right: 0!important;
-        }
+      &.template3{
+        display: flex;
+        flex-wrap: nowrap;
+        flex-direction: row;
       }
-    }
-    &-wrap4{
-      width: 100%;
-      display: flex;
-      flex-wrap: nowrap;
-      flex-direction: row;
-      justify-content: flex-start;
-      img{
-        height: 50%;
+      &.template4{
+        display: flex;
+        flex-wrap: nowrap;
+        flex-direction: row;
       }
     }
   }
