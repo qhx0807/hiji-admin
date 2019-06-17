@@ -1,6 +1,7 @@
 <template>
-  <div class="design-timelimit-discount" :style="{}">
+  <div class="design-timelimit-discount">
     <slot></slot>
+    <div class="nodata" v-show="value.items.length === 0">点击编辑限时抢购</div>
     <div class="design-timelimit-discount-preview">
       <ul
         :class="{'templ6ul': value.listStyle === 6}"
@@ -124,6 +125,16 @@ export default {
     background-color: #ffffff;
     position: relative;
     cursor: grab;
+    .nodata{
+      min-height: 120px;
+      width: 100%;
+      background: #bdf;
+      color: #fff;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
   }
   .design-timelimit-discount-preview{
     ul{

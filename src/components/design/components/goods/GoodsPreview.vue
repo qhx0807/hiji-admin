@@ -34,9 +34,10 @@
               </div>
               <div class="goods-info-price">
                 <div class="price-info">
-                  <span class="sale-price" v-show="value.showContent.includes('price')">
+                  <span class="sale-price" v-show="value.showContent.includes('disprice')">
                     <span class="price-tag">￥</span>{{item.disprice}}
                   </span>
+                  <span class="orprice" v-show="value.showContent.includes('orprice')">￥{{item.orprice}}</span>
                 </div>
                 <div class="buy-btn-box" v-show="value.showContent.includes('buybtn')">
                   <div class="price-buybtn-1" v-if="value.btnStyle === 1"><Icon type="ios-cart-outline" /></div>
@@ -263,6 +264,21 @@ export default {
                       font-size: 12px;
                       margin-right: 2px;
                     }
+                  }
+                  .orprice{
+                    height: 12px;
+                    line-height: 12px;
+                    font-size: 12px;
+                    color: #999;
+                    margin-top: 2px;
+                    font-weight: 400;
+                    text-decoration: line-through;
+                    word-break: break-all;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    display: -webkit-box;
+                    -webkit-line-clamp: 1;
+                    -webkit-box-orient: vertical;
                   }
                 }
                 .buy-btn-box{
