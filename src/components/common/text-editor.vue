@@ -1,6 +1,6 @@
 <template>
   <div class="ueditor">
-    <script id="editor" type="text/plain"></script>
+    <script :id="id" type="text/plain"></script>
   </div>
 </template>
 
@@ -23,16 +23,20 @@ export default {
       type: Object
     },
     id: {
-      type: String
+      type: String,
+      default: 'editor'
     }
   },
   created () {},
   mounted () {
-    this.editor = UE.getEditor('editor', this.config)
+    this.editor = UE.getEditor(this.id, this.config)
     this.bool = false
     this.editor.addListener("ready", () => {
       this.bool = true
       this.editor.setContent(this.defaultMsg)
+    })
+    this.editor.addListener('contentChange', () => {
+      this.$emit('ueContentChange')
     })
   },
   methods: {
