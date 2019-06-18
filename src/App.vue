@@ -26,6 +26,19 @@ body {
   background: #f5f6f9;
   overflow: hidden;
 }
+.richtext-wrap{
+  table{
+    width: 100%;
+    margin-bottom: 10px;
+    border-collapse: collapse;
+    display: table;
+    width: auto!important;
+    td,th{
+      padding: 5px 10px;
+      border: 1px solid #ddd;
+    }
+  }
+}
 .smooth-dnd-container.vertical > .smooth-dnd-draggable-wrapper{
   overflow: visible!important;
 }
