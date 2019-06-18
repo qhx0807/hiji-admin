@@ -59,7 +59,7 @@
               </div>
               <div class="goods-info-price">
                 <div class="price-info">
-                  <span class="sale-price" v-show="value.showContent.includes('ptprice')">
+                  <span class="sale-price" v-show="value.showContent.includes('disprice')">
                     <span class="price-tag">￥</span>{{item.disprice}}
                   </span>
                   <span class="price-tag-or" v-show="value.showContent.includes('orprice')">￥{{item.orprice}}</span>

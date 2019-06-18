@@ -48,7 +48,7 @@
         <CheckboxGroup v-model="designValue.showContent">
           <Checkbox label="name">商品名称</Checkbox>
           <Checkbox label="desc">商品描述</Checkbox>
-          <Checkbox label="ptprice">拼团价</Checkbox>
+          <Checkbox label="disprice">拼团价</Checkbox>
           <Checkbox label="orprice">单买价</Checkbox>
           <Checkbox label="timer">抢购倒计时</Checkbox>
           <Checkbox label="buynum">已团人数</Checkbox>

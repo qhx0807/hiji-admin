@@ -14,7 +14,7 @@ GroupBuy.defaultValue = {
   itemStyle: 1,
   imgScale: 1,
   textStyle: 1,
-  showContent: ['name', 'desc', 'ptprice', 'orprice', 'timer', 'buynum', 'buybtn'],
+  showContent: ['name', 'desc', 'disprice', 'orprice', 'timer', 'buynum', 'buybtn'],
   btnStyle: 1,
   btnText: '去开团',
   badgeStyle: 'new-arrival',
