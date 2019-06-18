@@ -52,7 +52,7 @@
           </Select>
         </FormItem>
         <FormItem label="开始时间" v-show="addData.isusing == 1">
-          <DatePicker type="datetime" style="width: 100%" :valye="addData.starttime" @on-change="e => addData.starttime = e"></DatePicker>
+          <DatePicker type="datetime" style="width: 100%" :value="addData.starttime" @on-change="e => addData.starttime = e"></DatePicker>
         </FormItem>
         <FormItem label="结束时间" v-show="addData.isusing == 1">
           <DatePicker type="datetime" style="width: 100%" :value="addData.endtime" @on-change="e => addData.endtime = e"></DatePicker>
