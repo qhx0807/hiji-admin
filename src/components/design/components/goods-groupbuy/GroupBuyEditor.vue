@@ -1,8 +1,8 @@
 <template>
   <DesignEditor :desc="desc">
     <Form :label-width="70">
-      <FormItem label="商品ID" style="margin-bottom: 12px">
-        <Input v-model="designValue.ids" placeholder="商品id, 以逗号分隔">
+      <FormItem label="活动ID" style="margin-bottom: 12px">
+        <Input v-model="designValue.ids" placeholder="活动id, 以逗号分隔">
           <Button :loading="searchLoading" slot="append" @click="onClickQueryGoods">查询</Button>
         </Input>
       </FormItem>

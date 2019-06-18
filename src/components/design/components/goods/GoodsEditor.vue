@@ -48,7 +48,8 @@
         <CheckboxGroup v-model="designValue.showContent">
           <Checkbox label="name">商品名称</Checkbox>
           <Checkbox label="desc">商品描述</Checkbox>
-          <Checkbox label="price">商品价格</Checkbox>
+          <Checkbox label="disprice">商品现价</Checkbox>
+          <Checkbox label="orprice">商品原价</Checkbox>
           <Checkbox label="buybtn">购买按钮</Checkbox>
           <Checkbox label="badge">商品角标</Checkbox>
         </CheckboxGroup>
