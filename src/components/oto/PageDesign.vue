@@ -10,7 +10,7 @@
     </DesignBase>
     <div class="preview">
       <div style="text-align:center" ref="qrcode"></div>
-      <p>扫码预览</p>
+      <p>扫码预览，<a @click.prevent="onClickCopy">复制链接</a></p>
     </div>
     <div class="bottom-bar">
       <Button @click="getPageValue" type="primary" :loading="submitLoading">保存页面</Button>
@@ -134,6 +134,14 @@ export default {
     },
     onAddDesignComponent (val, index) {
       this.pageValue.splice(index, 0, val)
+    },
+    onClickCopy () {
+      let text = 'http://m.cqyyy.cn/hiji-web/dist/index.html#/Preview/' + this.$route.params.id
+      this.$copyText(text).then((result) => {
+        this.$Message.success('复制成功！')
+      }, (err) => {
+        this.$Message.error('复制失败！')
+      })
     },
     getGroupDesigns (items) {
       items.map(item => {

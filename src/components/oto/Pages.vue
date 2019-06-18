@@ -84,7 +84,7 @@ export default {
           width: 80
         },
         {
-          title: '页面标题',
+          title: '页面名称',
           key: 'title',
         },
         {
@@ -117,7 +117,7 @@ export default {
           title: '操作',
           key: 'id',
           align: 'center',
-          width: 120,
+          width: 180,
           render: (h, params) => {
             const edit = h('a', {
               on: {
@@ -126,6 +126,16 @@ export default {
                 }
               }
             }, '修改')
+            const copy = h('a', {
+              on: {
+                click: () => {
+                  this.onClickCopy(params.row)
+                }
+              },
+              style: {
+                marginLeft: '12px'
+              }
+            }, '复制链接')
             const see = h('a', {
               on: {
                 click: () => {
@@ -145,10 +155,10 @@ export default {
               },
               style: {
                 marginLeft: '12px',
-                color: '#f90'
+                color: '#f60'
               }
             }, '删除')
-            return h('div',[edit, see, pri])
+            return h('div',[edit, see, copy, pri])
           }
         }
       ],
@@ -269,6 +279,14 @@ export default {
     onChangSize (e) {
       this.searchObj.pagesize = e
       this.getTableData()
+    },
+    onClickCopy (row) {
+      let text = 'http://m.cqyyy.cn/hiji-web/dist/index.html#/Preview/' + row.homeid
+      this.$copyText(text).then((result) => {
+        this.$Message.success('复制成功！')
+      }, (err) => {
+        this.$Message.error('复制失败！')
+      })
     }
   }
 }

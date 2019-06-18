@@ -27,6 +27,7 @@ body {
   overflow: hidden;
 }
 .richtext-wrap{
+  font-size: 14px;
   table{
     width: 100%;
     margin-bottom: 10px;
@@ -37,6 +38,9 @@ body {
       padding: 5px 10px;
       border: 1px solid #ddd;
     }
+  }
+  img{
+    max-width: 100%;
   }
 }
 .smooth-dnd-container.vertical > .smooth-dnd-draggable-wrapper{

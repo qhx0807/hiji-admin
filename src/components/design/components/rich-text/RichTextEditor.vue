@@ -25,6 +25,7 @@ export default {
       ueConfig: {
         initialFrameWidth: '100%',
         initialFrameHeight: 500,
+        zIndex: 99,
         toolbars: [['bold', 'italic',
           'underline','forecolor','fontborder', 'backcolor', 'fontsize', 'fontfamily',
           'justifyleft', 'justifyright','justifycenter', 'justifyjustify',
