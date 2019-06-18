@@ -47,6 +47,7 @@
       <FormItem label="显示内容" style="margin-bottom:10px">
         <CheckboxGroup v-model="designValue.showContent">
           <Checkbox label="name">卡券名称</Checkbox>
+          <Checkbox label="desc">卡券描述</Checkbox>
           <Checkbox label="address">地址</Checkbox>
           <Checkbox label="disprice">卡券价格</Checkbox>
           <Checkbox label="orprice">门市价</Checkbox>
@@ -56,7 +57,6 @@
           <Checkbox label="stock">剩余库存</Checkbox>
           <Checkbox label="buynum">已抢人数</Checkbox>
           <Checkbox label="timer">抢购倒计时</Checkbox>
-          <!-- <Checkbox label="desc">卡券描述</Checkbox> -->
           <Checkbox label="badge">角标</Checkbox>
         </CheckboxGroup>
       </FormItem>
@@ -122,12 +122,16 @@ export default {
       }
       serverApi('/Homepage/waresearch', d,
         response => {
-          if (response.data.data.length > 0) {
-            this.designValue.items = response.data.data
+          if (response.data.code === 0) {
+            if (response.data.data.length > 0) {
+              this.designValue.items = response.data.data
+            } else {
+              this.$Message.warning('未查询到数据')
+            }
           } else {
-            this.$Message.warning('未查询到数据')
+            this.$Message.warning(response.data.msg)
           }
-          this.designValue.items = arr
+          this.searchLoading = false
         },
         error => {
           this.$Message.error(error.toString())

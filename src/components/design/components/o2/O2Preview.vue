@@ -30,7 +30,8 @@
             <div class="goods-info">
               <div class="goods-info-title">
                 <h3 :class="{'fontBold':value.textStyle === 2}" v-show="value.showContent.includes('name')">{{item.name}}</h3>
-                <p class="addr"  v-show="value.showContent.includes('address')">地址：{{item.address}}</p>
+                <p class="addr" v-show="value.showContent.includes('address')">地址：{{item.address}}</p>
+                <p class="addr" v-show="value.showContent.includes('desc')">{{item.desc}}</p>
                 <p class="tags" v-show="value.showContent.includes('tags')">
                   <i>团</i>
                   <span v-for="(tag, i) in item.tags" :key="index">{{tag}}</span>
