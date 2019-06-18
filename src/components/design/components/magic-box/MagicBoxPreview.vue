@@ -2,42 +2,11 @@
   <div class="design-magicbox-preview" :style="{}">
     <div class="design-magicbox-preview-nodata" v-show="value.items.length === 0">点击编辑魔方</div>
     <slot></slot>
-    <div class="wrap"
-      v-if="[1, 2, 3, 4].includes(value.template)"
-      :class="[{'wrap1':value.template === 1},{'wrap1':value.template === 4},{'wrap2':value.template === 2},{'wrap3':value.template === 3}]">
-      <img v-for="(item, index) in value.items" :src="item.imageurl" :key="index" alt="">
-    </div>
-    <div class="wrap wrap5" v-if="value.template === 5">
-      <div class="left">
-        <img :src="value.items[0].imageurl" alt="">
-      </div>
-      <div class="right">
-        <div class="item">
-          <img :src="value.items[1].imageurl" alt="">
-        </div>
-        <div class="item">
-          <img :src="value.items[2].imageurl" alt="">
-        </div>
-      </div>
-    </div>
-    <div class="wrap wrap6" v-if="value.template === 6">
-      <div class="left">
-        <img :src="value.items[0].imageurl" alt="">
-      </div>
-      <div class="right">
-        <div class="top">
-          <img :src="value.items[1].imageurl" alt="">
-        </div>
-        <div class="bottom">
-          <div class="item">
-            <img :src="value.items[2].imageurl" alt="">
-          </div>
-          <div class="item">
-            <img :src="value.items[3].imageurl" alt="">
-          </div>
-        </div>
-      </div>
-    </div>
+    <ul :class="'template' + value.template" class="design-magicbox-preview-wrap">
+      <li v-for="(item, index) in value.items" :key="index" >
+        <img :src="item.imageurl" alt="">
+      </li>
+    </ul>
   </div>
 </template>
 <script>
@@ -61,72 +30,55 @@ export default {
       align-items: center;
       justify-content: center;
     }
-    .wrap{
-      font-size: 0;
-      width: 100%;
+    &-wrap{
+      list-style: none;
+      padding: 0px;
       overflow: hidden;
-      display: flex;
-      flex-direction: row;
-      justify-content: space-between;
-    }
-    .wrap1{
-      flex-wrap: wrap;
-      img{
+      box-sizing: border-box;
+      li{
+        float: left;
         width: 50%;
+        font-size: 0;
       }
-    }
-    .wrap2{
       img{
-        width: 33.3333%;
+        width: 100%;
       }
-    }
-    .wrap3{
-      img{
-        width: 25%;
-      }
-    }
-    .wrap5{
-      .left{
-        flex: 1;
-        img{
-          height: 100%;
+      &.template1{
+        li{
+          width: 50%;
         }
       }
-      .right{
-        flex: 1;
-        display: flex;
-        flex-direction: column;
-        .item{
-          flex: 1;
+      &.template2{
+        li{
+          width: 33.3333%;
         }
       }
-    }
-    .wrap6{
-      .left{
-        flex: 1;
-        img{
-          height: 100%;
+      &.template3{
+        li{
+          width: 25%;
         }
       }
-      .right{
-        .top{
-          flex: 1;
+      &.template4{
+        li{
+          width: 50%;
         }
-        .bottom{
-          flex: 1;
-          display: flex;
-          flex-direction: row;
-          .item{
-            flex: 1;
-            width: 80px;
-            img{
-              width: 100%;
-              height: 100%;
-            }
+      }
+      &.template5{
+        li{
+          width: 50%;
+        }
+      }
+      &.template6{
+        li{
+          width: 50%;
+          &:nth-child(3){
+            width: 25%;
+          }
+          &:nth-child(4){
+            width: 25%;
           }
         }
       }
-
     }
   }
 </style>

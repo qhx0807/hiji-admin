@@ -36,6 +36,7 @@ import Cutdown from '../design/components/goods-cutdown'
 import Share from '../design/components/share'
 import O2 from '../design/components/o2'
 import O2TimeLimitDiscount from '../design/components/o2-timelimit-dsicount'
+import RichText from '../design/components/rich-text'
 
 export default {
   name: 'PageDesign',
@@ -62,7 +63,7 @@ export default {
     const group = [
       {
         name: '基础',
-        components: [Swiper, Icon, ImageAd, MagicBox, Share]
+        components: [Swiper, Icon, ImageAd, MagicBox, Share, RichText]
       },
       {
         name: '商品组件',
