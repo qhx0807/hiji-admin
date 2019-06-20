@@ -104,10 +104,10 @@ export default {
           return false
         }
       }
-      if (type.selector === 'tabbar') {
-        let index = this.designList.findIndex(item => item.type === 'tabbar')
+      if (type.selector === 'landscape') {
+        let index = this.designList.findIndex(item => item.type === 'landscape')
         if (index > -1) {
-          this.$Message.warning('标签栏已存在!')
+          this.$Message.warning('压屏窗已存在!')
           this.activeIndex = index
           return false
         }
