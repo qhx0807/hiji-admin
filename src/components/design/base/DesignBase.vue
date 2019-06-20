@@ -104,6 +104,14 @@ export default {
           return false
         }
       }
+      if (type.selector === 'tabbar') {
+        let index = this.designList.findIndex(item => item.type === 'tabbar')
+        if (index > -1) {
+          this.$Message.warning('标签栏已存在!')
+          this.activeIndex = index
+          return false
+        }
+      }
       let designer = this.designComponents.find(item => {
         return item.designType === type.selector
       })
