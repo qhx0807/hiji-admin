@@ -25,7 +25,7 @@
                 <Input size="small" placeholder="请输入" v-model="item.linkurl"></Input>
               </FormItem>
               <FormItem label="城市">
-                <CheckboxGroup v-model="item.city">
+                <CheckboxGroup v-model="item.city" size="small">
                   <Checkbox v-for="item in citylist" :key="item.value" :label="item.value">{{item.name}}</Checkbox>
                 </CheckboxGroup>
               </FormItem>

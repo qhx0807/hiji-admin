@@ -44,7 +44,6 @@ export default {
       padding-bottom: 2px;
       display: flex;
       flex-direction: row;
-      background-color: #fff;
       flex-wrap: wrap;
       background-repeat: no-repeat;
       background-size: cover;

@@ -32,7 +32,7 @@
                 <!-- <Select size="small" v-model="item.city">
                   <Option v-for="item in citylist" :key="item.value" :value="item.value">{{item.name}}</Option>
                 </Select> -->
-                <CheckboxGroup v-model="item.city">
+                <CheckboxGroup v-model="item.city" size="small">
                   <Checkbox v-for="item in citylist" :key="item.value" :label="item.value">{{item.name}}</Checkbox>
                 </CheckboxGroup>
               </FormItem>

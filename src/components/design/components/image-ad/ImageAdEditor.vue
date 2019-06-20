@@ -19,7 +19,7 @@
         <Slider v-model="designValue.width" show-input input-size="small"></Slider>
       </FormItem>
       <FormItem label="城市">
-        <CheckboxGroup v-model="value.city">
+        <CheckboxGroup v-model="value.city" size="small">
           <Checkbox v-for="item in citylist" :key="item.value" :label="item.value">{{item.name}}</Checkbox>
         </CheckboxGroup>
       </FormItem>
