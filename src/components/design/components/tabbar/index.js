@@ -9,6 +9,7 @@ const Tabbar = combine(TabbarPreview, TabbarEditor, designType, designDescriptio
 Tabbar.defaultValue = {
   bgcolor: '#ffffff',
   bgimg: '',
+  fixed: true,
   items: []
 }
 

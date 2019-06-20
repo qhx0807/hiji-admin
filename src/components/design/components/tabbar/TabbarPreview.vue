@@ -2,7 +2,7 @@
   <div class="design-tabbar-preview">
     <div class="nodata" v-show="value.items.length === 0">点击编辑标签栏</div>
     <slot></slot>
-    <div class="tabbar-wrap" :style="wrapStyle">
+    <div class="tabbar-wrap" v-show="value.items.length > 0" :style="wrapStyle">
       <span v-for="(item, index) in value.items" :key="index">
         <img :src="item.imageurl" alt="">
       </span>

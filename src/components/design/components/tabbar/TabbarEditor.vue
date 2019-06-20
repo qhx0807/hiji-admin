@@ -1,9 +1,21 @@
 <template>
   <DesignEditor :desc="desc">
     <Form :label-width="80">
-      <FormItem label="背景颜色" style="margin-bottom:10px">
-        <ColorPicker alpha v-model="designValue.bgcolor" @on-active-change="e => designValue.bgcolor = e" recommend />
-      </FormItem>
+      <Row>
+        <Col span="12">
+          <FormItem label="背景颜色" style="margin-bottom:10px">
+            <ColorPicker alpha v-model="designValue.bgcolor" @on-active-change="e => designValue.bgcolor = e" recommend />
+          </FormItem>
+        </Col>
+        <Col span="12">
+          <FormItem label="底部固定" style="margin-bottom:10px">
+            <i-switch v-model="designValue.fixed">
+              <span slot="open">开</span>
+              <span slot="close">关</span>
+            </i-switch>
+          </FormItem>
+        </Col>
+      </Row>
       <FormItem label="背景图片" style="margin-bottom:10px">
         <InputWithUpload  v-model="designValue.bgimg"/>
       </FormItem>
