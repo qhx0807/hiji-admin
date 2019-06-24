@@ -128,6 +128,7 @@ const Buttons = r => require.ensure([], () => r(require('@/components/settings/B
 const PropetyFeeDivice = r => require.ensure([], () => r(require('@/components/property/PropetyFeeDivice.vue')))
 const Pages = r => require.ensure([], () => r(require('@/components/oto/Pages.vue')))
 const PageDesign = r => require.ensure([], () => r(require('@/components/oto/PageDesign.vue')))
+const MemberPower = r => require.ensure([], () => r(require('@/components/usermember/MemberPower.vue')))
 
 const routes = [
   {
@@ -762,6 +763,11 @@ const routes = [
         path: 'PageDesign/:id',
         component: PageDesign,
         name: 'PageDesign'
+      },
+      {
+        path: 'MemberPower',
+        component: MemberPower,
+        name: 'MemberPower'
       }
     ]
   },
