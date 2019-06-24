@@ -1,7 +1,7 @@
 <template>
   <div class="design-landscape-review" >
     <slot></slot>
-    <div class="nodata">
+    <div class="nodata" :style="{backgroundImage: 'url('+value.imgurl+')'}">
       <h6>点击编辑压屏窗</h6>
       <p>手机上会在打开页面时弹窗</p>
     </div>
@@ -27,6 +27,8 @@ export default {
       font-size: 14px;
       text-align: center;
       padding-top: 30px;
+      background-repeat: no-repeat;
+      background-size: contain;
       h6{
         font-size: 14px;
         font-weight: normal;

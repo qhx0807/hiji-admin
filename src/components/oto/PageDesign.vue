@@ -14,6 +14,12 @@
     </div>
     <div class="bottom-bar">
       <Button @click="getPageValue" type="primary" :loading="submitLoading">保存页面</Button>
+      <Poptip trigger="click" content="content">
+        <div slot="content">
+          <div style="text-align:center" ref="qrcode1"></div>
+        </div>
+        <Button style="margin-left: 10px">预览效果</Button>
+      </Poptip>
     </div>
   </div>
 </template>
@@ -86,14 +92,16 @@ export default {
   },
   mounted () {
     this.$nextTick(() => {
-      this.qrCodeInit = new QRCode(this.$refs.qrcode, {
+      let obj = {
         width: 150,
         height: 150,
         text: 'http://m.cqyyy.cn/hiji-web/dist/index.html#/Preview/' + this.$route.params.id,
         colorDark : "#555555",
         colorLight : "#ffffff",
         correctLevel : QRCode.CorrectLevel.H
-      })
+      }
+      this.qrCodeInit = new QRCode(this.$refs.qrcode, obj)
+      this.qrCodeInit = new QRCode(this.$refs.qrcode1, obj)
     })
   },
   methods: {
