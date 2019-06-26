@@ -9,7 +9,8 @@ const MagicBox = combine(MagicBoxPreview, MagicBoxEditor, designType, designDesc
 MagicBox.defaultValue = {
   template: 0,
   spacing: 0,
-  city: [0],
+  padding: 0,
+  city: [],
   items: []
 }
 

@@ -12,7 +12,9 @@
       <!-- <FormItem label="图片间隙" style="margin-bottom:10px">
         <Slider v-model="designValue.spacing" show-input input-size="small"></Slider>
       </FormItem> -->
-
+      <FormItem label="页面边距" style="margin-bottom:10px">
+        <Slider v-model="designValue.padding" show-input input-size="small"></Slider>
+      </FormItem>
       <FormItem label="城市">
         <CheckboxGroup v-model="value.city">
           <Checkbox v-for="item in citylist" :key="item.value" :label="item.value">{{item.name}}</Checkbox>

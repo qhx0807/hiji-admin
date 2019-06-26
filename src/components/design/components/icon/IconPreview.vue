@@ -47,6 +47,7 @@ export default {
       flex-wrap: wrap;
       background-repeat: no-repeat;
       background-size: cover;
+      background-color: #fff;
       .item{
         width: 20%;
         text-align: center;

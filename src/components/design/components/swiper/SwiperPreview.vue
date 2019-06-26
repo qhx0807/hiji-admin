@@ -2,7 +2,7 @@
   <div class="design-swiper-preview" :style="{}">
     <div class="design-swiper-preview-nodata" v-show="value.items.length === 0">点击编辑轮播广告</div>
     <Carousel loop autoplay radius-dot arrow="never" v-if="value.items.length > 0">
-      <CarouselItem v-for="(item, index) in value.items" :key="index">
+      <CarouselItem v-for="(item, index) in value.items" :key="index" >
           <div class="design-swiper-carousel" v-if="item.imageurl">
             <img :src="item.imageurl" alt="">
           </div>

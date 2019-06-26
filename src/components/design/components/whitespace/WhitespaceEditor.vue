@@ -2,7 +2,7 @@
   <DesignEditor :desc="desc">
     <Form :label-width="80">
       <FormItem label="空白高度">
-        <Slider v-model="designValue.height" show-tip="always"></Slider>
+        <Slider v-model="designValue.height" show-input input-size="small"></Slider>
       </FormItem>
       <FormItem label="背景颜色">
         <ColorPicker alpha v-model="designValue.bgcolor" @on-active-change="onSelectBgcolor" recommend />

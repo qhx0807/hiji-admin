@@ -2,8 +2,8 @@
   <div class="design-imagead-preview">
     <div class="design-imagead-preview-nodata" v-show="value.items.length === 0">点击编辑图片广告</div>
     <slot></slot>
-    <ul :class="'template'+value.template" class="image-ad-wrap">
-      <li v-for="(item, index) in value.items" :key="index">
+    <ul :class="'template'+value.template" class="image-ad-wrap" :style="wrapStyle">
+      <li v-for="(item, index) in value.items" :key="index" :style="{margin: value.spacing/2 + 'px'}" >
         <img :src="item.imageurl" alt="">
       </li>
     </ul>
@@ -13,7 +13,17 @@
 import previewMixins from '../../mixins/previewMixins'
 export default {
   name: 'ImageAdPreview',
-  mixins: [previewMixins]
+  mixins: [previewMixins],
+  computed: {
+    wrapStyle () {
+      return {
+        paddingLeft: this.value.padding + 'px',
+        paddingRight: this.value.padding + 'px',
+        marginLeft: -this.value.spacing / 2 + 'px',
+        marginRight: -this.value.spacing / 2 + 'px'
+      }
+    },
+  }
 }
 </script>
 <style lang="less" scoped>

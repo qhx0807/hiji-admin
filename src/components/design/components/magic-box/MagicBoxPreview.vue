@@ -1,8 +1,8 @@
 <template>
-  <div class="design-magicbox-preview" :style="{}">
+  <div class="design-magicbox-preview" >
     <div class="design-magicbox-preview-nodata" v-show="value.items.length === 0">点击编辑魔方</div>
     <slot></slot>
-    <ul :class="'template' + value.template" class="design-magicbox-preview-wrap">
+    <ul :class="'template' + value.template" class="design-magicbox-preview-wrap" :style="{paddingLeft: value.padding+'px', paddingRight: value.padding+'px'}">
       <li v-for="(item, index) in value.items" :key="index" >
         <img :src="item.imageurl" alt="">
       </li>
