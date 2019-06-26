@@ -63,6 +63,9 @@
                 <Option value="1">线下打款</Option>
               </Select>
             </FormItem>
+            <FormItem label="标签" prop="info">
+              <Input  v-model="merchantData.tags"></Input>
+            </FormItem>
           </Col>
           <Col span="12">
             <FormItem label="商户简介" prop="info">
@@ -129,7 +132,8 @@ export default {
         businesstime: '',
         photos: null,
         categroryid: '',
-        billtype: '0'
+        billtype: '0',
+        tags: ''
       },
       rules: {
         name: [{ required: true, message: '不能为空', trigger: 'blur' }],

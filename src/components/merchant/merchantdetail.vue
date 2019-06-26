@@ -63,6 +63,9 @@
                 <Option :value="1">线下打款</Option>
               </Select>
             </FormItem>
+            <FormItem label="标签" prop="billtype">
+              <Input v-model="merchantData.tags"></Input>
+            </FormItem>
           </Col>
           <Col span="12">
             <FormItem label="商户简介">
@@ -72,18 +75,21 @@
         </Row>
         <Row>
           <Col span="24">
+            <FormItem label="售卖区域">
+              <div class="addbtn">
+                <div class="area-span">
+                  <span v-for="(item, index) in selectArea" :key="index" @clcik="removeArea(index)">{{item.areainfo}}</span>
+                </div>
+                <a @click="onclickAddArea">+ 添加区域</a>
+              </div>
+            </FormItem>
+          </Col>
+        </Row>
+        <Row>
+          <Col span="24">
             <FormItem label="商户相册">
               <div class="shop-pics">
                 <ul>
-                  <!-- <li>
-                    <img src="http://cdn.cqyyy.cn/my-php-logo.png" alt="">
-                    <transition name="fade">
-                      <div class="cover">
-                        <Icon type="ios-eye-outline" @click.native="handleView"></Icon>
-                        <Icon type="ios-trash-outline" @click.native="handleRemove"></Icon>
-                      </div>
-                    </transition>
-                  </li> -->
                   <li v-for="(item, index) in photos" :key="index" @mouseover="onMouseOverLi(index)" @mouseout="onMouseOutLi">
                     <img :src="item" alt="">
                     <transition name="fade">
@@ -117,7 +123,66 @@
       </Row>
     </Card>
     <Modal title="查看图片" v-model="visibleImg">
-        <img :src="viewImgSrc" v-if="visibleImg" style="width: 100%">
+      <img :src="viewImgSrc" v-if="visibleImg" style="width: 100%">
+    </Modal>
+    <Modal v-model="addAreaShow" width="760">
+      <p slot="header">添加区域</p>
+      <div class="area-select">
+        <h3>{{province.label}} / {{city.label}} / {{area.label}} / {{street.label}}</h3>
+        <div class="select-wrap">
+          <div class="list">
+            <ul>
+              <li :class="{'active' : province.value === '0'}" @click="onSelectArea('province', null)">全部</li>
+              <li v-for="(item, index) in provinceData"
+                :class="{'active' : province.value === item.value}"
+                @click="onSelectArea('province', item, 'city')"
+                >
+                {{item.label}}
+                <Icon type="ios-arrow-forward" />
+              </li>
+            </ul>
+          </div>
+          <div class="list">
+            <ul>
+              <li :class="{'active' : city.value === '0'}" @click="onSelectArea('city', null)">全部</li>
+              <li v-for="(item, index) in cityData"
+                :class="{'active' : city.value === item.value}"
+                @click="onSelectArea('city', item, 'area')"
+                >
+                {{item.label}}
+                <Icon type="ios-arrow-forward" />
+              </li>
+            </ul>
+          </div>
+          <div class="list">
+            <ul>
+              <li :class="{'active' : area.value === '0'}" @click="onSelectArea('area', null)">全部</li>
+              <li v-for="(item, index) in areaData"
+                :class="{'active' : area.value === item.value}"
+                @click="onSelectArea('area', item, 'street')"
+                >
+                {{item.label}}
+                <Icon type="ios-arrow-forward" />
+              </li>
+            </ul>
+          </div>
+          <div class="list">
+            <ul>
+              <li :class="{'active' : street.value === '0'}" @click="onSelectArea('street', null)">全部</li>
+              <li v-for="(item, index) in streetData"
+                :class="{'active' : street.value === item.value}"
+                @click="onSelectArea('street', item, '')"
+                >
+                {{item.label}}
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div slot="footer">
+        <Button type="default" @click="deaddAreaShow = falsel">取消</Button>
+        <Button type="primary"  @click="onConfirmArea">确认</Button>
+      </div>
     </Modal>
   </div>
 </template>
@@ -138,7 +203,17 @@ export default {
       activeImgIndex: -1,
       viewImgSrc: '',
       visibleImg: false,
-      sortData: []
+      sortData: [],
+      addAreaShow: false,
+      province: {},
+      city: {},
+      area: {},
+      street: {},
+      provinceData: [],
+      cityData: [],
+      areaData: [],
+      streetData: [],
+      selectArea: []
     }
   },
   created () {
@@ -147,6 +222,7 @@ export default {
       this.getMerchangById(this.$route.params.id)
     }
     this.getSortData()
+    this.getAreaData()
   },
   mounted () {
     let height = document.body.offsetHeight - 380
@@ -162,15 +238,16 @@ export default {
         response => {
           // console.log(response)
           if (response.data.code == 0) {
-            this.merchantData = response.data.data[0]
-            this.photos = response.data.data[0].photos ? response.data.data[0].photos.split(",") : []
+            this.merchantData = response.data.data
+            this.photos = response.data.data.photos.length > 0 ? response.data.data.photos.split(",") : []
+            this.selectArea = response.data.data.salesaddressinfo.length > 0 ? JSON.parse(response.data.data.salesaddressinfo) : []
           } else {
             this.$Message.warning(response.data.msg)
           }
         },
         error => {
           console.log(error)
-          this.$Message.error('连接失败！')
+          this.$Message.error(error.toString())
         })
     },
     uploadPhotosBefore () {
@@ -200,6 +277,7 @@ export default {
     onEditMerchant () {
       this.modal_loading = true
       this.merchantData.photos = this.photos
+      this.merchantData.salesaddressinfo = JSON.stringify(this.selectArea)
       serverApi('/Merchant/edit', this.merchantData,
         response => {
           this.modal_loading = false
@@ -256,6 +334,84 @@ export default {
       }
       fun(arr)
       return arr1
+    },
+    getAreaData () {
+      serverApi('/area/addressnew', null,
+        response => {
+          if (response.data.code === 0) {
+            this.provinceData = response.data.data
+          }
+        },
+        error => {
+          console.log(error)
+        }
+      )
+    },
+    removeArea (index) {
+      this.selectArea.splice(1, index)
+    },
+    onclickAddArea () {
+      this.addAreaShow = true
+    },
+    onSelectArea (type, item, next) {
+      if (type === 'province') {
+        this.cityData = []
+        this.areaData = []
+        this.streetData = []
+        this.city = {}
+        this.area = {}
+        this.street = {}
+      }
+      if (type === 'city') {
+        this.areaData = []
+        this.streetData = []
+        this.area = {}
+        this.street = {}
+      }
+      if (type === 'area') {
+        this.streetData = []
+        this.street = {}
+      }
+
+      if (item === null) {
+        this[type] = {label: '全部', value: '0'}
+        return false
+      }
+      if (type === 'street') {
+        this.street = item
+        return false
+      }
+      this[type] = item
+      this.$Message.loading({
+        duration: 0,
+        content: 'loading...',
+      })
+      serverApi('/area/addressnew', { code: item.value },
+        response => {
+          this.$Message.destroy()
+          if (response.data.code === 0) {
+            this[next + 'Data'] = response.data.data
+          } else {
+            this.$Message.warning(response.data.msg)
+          }
+        },
+        error => {
+          this.$Message.destroy()
+          this.$Message.error('查询失败！')
+        }
+      )
+    },
+    onConfirmArea () {
+      console.log(this.province)
+      let obj = {
+        areainfo: `${this.province.label || ''} ${this.city.label || ''} ${this.area.label || ''} ${this.street.label || ''} `,
+        province: this.province.value || 0,
+        city: this.city.value || 0,
+        country: this.area.value || 0,
+        street: this.street.value || 0
+      }
+      this.selectArea.push(obj)
+      this.addAreaShow = false
     }
   }
 }
@@ -268,6 +424,63 @@ export default {
   img{
     height: 100%;
     width: 100%;
+  }
+}
+.area-select{
+  h3{
+    font-size: 14px;
+    color: #666;
+    font-style: italic;
+  }
+  .select-wrap{
+    display: flex;
+    flex-direction: row;
+    border: 1px solid #e5e5e5;
+    border-right: none;
+    .list{
+      display: flex;
+      height: 400px;
+      flex: 1;
+      border-right: 1px solid #e5e5e5;
+      overflow-x: auto;
+      padding: 8px 10px;
+      ul{
+        list-style: none;
+        padding: 0;
+        width: 100%;
+        li{
+          height: 30px;
+          text-align: left;
+          cursor: pointer;
+          line-height: 30px;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          width: 100%;
+          position: relative;
+          &:hover{
+            background-color: #f3f3f3;
+          }
+          &.active{
+            background-color: #f3f3f3;
+            color: #2d8cf0;
+          }
+          i{
+            position: absolute;
+            right: 10px;
+            top: 9px;
+          }
+        }
+      }
+    }
+  }
+}
+.area-span{
+  span{
+    display: inline-block;
+    background-color: #f3f3f3;
+    padding: 5px;
+    margin-right: 8px;
+    line-height: 1;
   }
 }
 .tips{

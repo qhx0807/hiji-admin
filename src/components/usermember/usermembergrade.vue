@@ -9,9 +9,9 @@
     </Card>
     <Card :bordered="false" style="margin-top:10px">
       <Table :columns="columns" :data="tableData"></Table>
-      <div style="float: right; padding-top:12px">
+      <!-- <div style="float: right; padding-top:12px">
         <Page :total="count" show-total :current="page" @on-change="changePage" show-sizer @on-page-size-change="onChangeSize"></Page>
-      </div>
+      </div> -->
       <div style="clear:both"></div>
     </Card>
 
@@ -161,8 +161,6 @@ export default {
     },
     getTableData () {
       let d = {
-        pagesize: this.pageSize,
-        page: this.page,
         like: this.searchKey
       }
       this.$store.commit('pageLoading', true)
@@ -170,8 +168,8 @@ export default {
         response => {
           // console.log(response)
           if (response.data.code === 0){
-            this.tableData = response.data.data.result
-            this.count = response.data.data.counts
+            this.tableData = response.data.data
+            // this.count = response.data.data.counts
           }else{
             this.$Message.warning(response.data.msg)
           }

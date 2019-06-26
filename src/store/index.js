@@ -53,6 +53,8 @@ const store = new Vuex.Store({
       {value: 6, label: '商户首页'},
       {value: 7, label: '领取卡券'},
       {value: 8, label: '拼团商品(单个)'},
+      {value: 9, label: '微页面'},
+      {value: 10, label: '扫一扫'},
       {value: 0, label: '不跳转'}
     ],
     cityList: [],

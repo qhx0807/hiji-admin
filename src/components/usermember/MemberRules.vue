@@ -51,6 +51,11 @@
             <Option v-for="(item, index) in integraltype" :key="index" :value="item.value">{{item.name}}</Option>
           </Select>
         </FormItem>
+        <FormItem label="配置类型" v-show="addData.type == 3">
+          <Select v-model="addData.parameterid" clearable placeholder="选择类型">
+            <Option v-for="(item, index) in printingtype" :key="index" :value="item.value">{{item.name}}</Option>
+          </Select>
+        </FormItem>
         <FormItem label="配置名称">
           <Input v-model="addData.parametername" placeholder="请输入"></Input>
         </FormItem>
@@ -177,6 +182,7 @@ export default {
       },
       growtype: [],
       integraltype: [],
+      printingtype: [],
       type: [],
     }
   },
@@ -210,9 +216,11 @@ export default {
     getRules () {
       serverApi('/Member/parameteridconfig', null,
         response => {
+          console.log(response)
           if (response.data.code === 0) {
             this.growtype = response.data.data.growtype
             this.integraltype = response.data.data.integraltype
+            this.printingtype = response.data.data.printingtype
             this.type = response.data.data.type
           } else {
             this.$Message.warning(response.data.msg)

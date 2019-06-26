@@ -15,12 +15,16 @@
           </Col>
           <Col span="4">
             <FormItem label="商品类型" style="margin-bottom: 0;">
-              <Input v-model="waretype" placeholder="请输入商品类型" clearable/>
+              <Select v-model="waretype" style="width:200px">
+                <Option v-for="item in waretypelist " :value="item.value" :key="item.value">{{ item.label }}</Option>
+              </Select>
             </FormItem>
           </Col>
           <Col span="4">
             <FormItem label="会员等级" style="margin-bottom: 0;">
-              <Input v-model="gradeid" placeholder="请输入会员等级" clearable/>
+              <Select v-model="gradeid" style="width:200px">
+                <Option v-for="item in userData " :value="item.id" :key="item.id">{{ item.gradename }}</Option>
+              </Select>
             </FormItem>
           </Col>
           <Col span="4">
@@ -48,27 +52,35 @@
         <Row>
           <Col span="24">
             <FormItem label="商品名称">
-              <Input v-model="addData.warename" placeholder="请输入商品名称" clearable style="width: 300px"/>
-            </FormItem>
-          </Col>
-          <Col span="24">
-            <FormItem label="商品/卡券/活动ID">
-              <Input v-model="addData.wareid" placeholder="商品ID/卡券ID/活动ID" clearable style="width: 300px"/>
+              <Input v-model="addData.warename" disabled placeholder="请输入商品名称" clearable style="width: 300px"/>
             </FormItem>
           </Col>
           <Col span="24">
             <FormItem label="商品类型">
-              <Input v-model="addData.waretype" placeholder="请输入商品类型" clearable style="width: 300px"/>
+              <Select v-model="addData.waretype" style="width:300px" @on-change="wareOnClick">
+                <Option v-for="item in waretypelist " :value="item.value" :key="item.value">{{ item.label }}</Option>
+              </Select>
+            </FormItem>
+          </Col>
+          <Col span="24">
+            <FormItem label="商品/卡券/活动ID">
+              <Select v-model="addData.wareid" style="width:300px"  @on-change="goodsOnClick" label-in-value :filterable="true" clearable ref="store">
+                <Option v-for="item in goodsData"  :value="item.id" :key="item.id" >{{ item.goodsname || item.cardname}}</Option>
+              </Select>
             </FormItem>
           </Col>
           <Col span="24">
             <FormItem label="会员等级">
-              <Input v-model="addData.gradeid" placeholder="请输入会员等级" clearable style="width: 300px"/>
+              <Select v-model="addData.gradeid" style="width:300px">
+                <Option v-for="item in userData " :value="item.id" :key="item.id">{{ item.gradename }}</Option>
+              </Select>
             </FormItem>
           </Col>
           <Col span="24">
             <FormItem label="购买类型">
-              <Input v-model="addData.buytype" placeholder="请输入购买类型" clearable style="width: 300px"/>
+              <Select v-model="addData.buytype" style="width:300px">
+                <Option v-for="item in buyData " :value="item.name" :key="item.name">{{ item.value }}</Option>
+              </Select>
             </FormItem>
           </Col>
         </Row>
@@ -93,11 +105,30 @@ export default {
       page: 1,
       pagesize: 10,
       tableData: [],
-      addData: {},
+      userData: [],
+      buyData: [],
+      goodsData: [],
+      addData: {
+        warename: '',
+        waretype: '',
+        wareid: '',
+        gradeid: '',
+        buytype: ''
+      },
       wareid: '',
       waretype: '',
       gradeid: '',
       warename: '',
+      waretypelist : [
+        {
+          value: 0,
+          label: '邮购商品'
+        },
+        {
+          value:  1,
+          label: '卡劵'
+        }
+      ],
       columns: [
         {
           title: '#',
@@ -155,6 +186,8 @@ export default {
   },
   created () {
     this.getTableData()
+    this.userTableData()
+    this.goodsTableData()
   },
   methods: {
     changePage (e) {
@@ -193,11 +226,104 @@ export default {
         }
       )
     },
+    userTableData () {
+      let d = {
+        like: ''
+      }
+      serverApi('/member/usergradelist', d,
+        response => {
+          if (response.data.code === 0) {
+            console.log(response)
+            this.userData = response.data.data
+          } else {
+            this.$Message.warning(response.data.msg)
+          }
+          this.tableLoading = false
+        },
+        error => {
+          console.log(error)
+          this.tableLoading = false
+          this.$Message.error(error.toString())
+        }
+      )
+    },
+    buyTableData () {
+      let d = {
+        like: ''
+      }
+      serverApi('/member/buytypelist', d,
+        response => {
+          if (response.data.code === 0) {
+            console.log(response)
+            this.buyData = response.data.data
+          } else {
+            this.$Message.warning(response.data.msg)
+          }
+          this.tableLoading = false
+        },
+        error => {
+          console.log(error)
+          this.tableLoading = false
+          this.$Message.error(error.toString())
+        }
+      )
+    },
+    goodsTableData () {
+      this.addData.warename === ''
+      this.addData.wareid === ''
+      let d = {
+        like: '',
+        page: 1,
+        pagesize: 10
+      }
+      serverApi('/goods/index', d,
+        response => {
+          if (response.data.code === 0) {
+            console.log(response)
+            this.goodsData = response.data.data.result
+          } else {
+            this.$Message.warning(response.data.msg)
+          }
+          this.tableLoading = false
+        },
+        error => {
+          console.log(error)
+          this.tableLoading = false
+          this.$Message.error(error.toString())
+        }
+      )
+    },
+    cardTableData () {
+      this.addData.warename === ''
+      this.addData.wareid === ''
+      let d = {
+        like: '',
+        page: 1,
+        pagesize: 10
+      }
+      serverApi('/card/coupon', d,
+        response => {
+          if (response.data.code === 0) {
+            console.log(response)
+            this.goodsData = response.data.data.result
+          } else {
+            this.$Message.warning(response.data.msg)
+          }
+          this.tableLoading = false
+        },
+        error => {
+          console.log(error)
+          this.tableLoading = false
+          this.$Message.error(error.toString())
+        }
+      )
+    },
     onClickEdit (row) {
       this.$router.push({name: 'AfterScancodePayEdit', params: {id: row.codepayid}})
     },
     onClickAdd () {
       this.addModal = true
+      this.buyTableData()
     },
     onClickDel (row) {
       this.$Modal.confirm({
@@ -240,6 +366,21 @@ export default {
           this.$Message.error(error.toString())
         }
       )
+    },
+    wareOnClick () {
+      this.addData.warename = ''
+      this.$refs.store.clearSingleSelect()
+      if (this.addData.waretype === 0 ) {
+        this.goodsTableData()
+      } else if (this.addData.waretype === 1) {
+        this.cardTableData()
+      }
+    },
+    goodsOnClick (e) {
+      console.log(e)
+      if (e) {
+        this.addData.warename = e.label
+      }
     }
   }
 }
