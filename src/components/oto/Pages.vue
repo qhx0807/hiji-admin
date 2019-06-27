@@ -108,10 +108,24 @@ export default {
         {
           title: '开始时间',
           key: 'starttime',
+          render: (h, params) => {
+            if (params.row.isusing === 1) {
+              return h('div', {}, params.row.starttime)
+            } else {
+              return h('div', {}, '--')
+            }
+          }
         },
         {
           title: '结束时间',
           key: 'endtime',
+          render: (h, params) => {
+            if (params.row.isusing === 1) {
+              return h('div', {}, params.row.endtime)
+            } else {
+              return h('div', {}, '--')
+            }
+          }
         },
         {
           title: '操作',
