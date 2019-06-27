@@ -19,7 +19,7 @@
         <Slider v-model="designValue.width" show-input input-size="small"></Slider>
       </FormItem>
       <FormItem label="城市">
-        <CheckboxGroup v-model="value.city" size="small">
+        <CheckboxGroup v-model="designValue.city" size="small">
           <Checkbox v-for="item in citylist" :key="item.value" :label="item.value">{{item.name}}</Checkbox>
         </CheckboxGroup>
       </FormItem>
@@ -94,10 +94,18 @@ export default {
       ]
     }
   },
-  created () {},
+  created () {
+  },
   computed: {
     citylist () {
       return this.$store.state.cityList
+    },
+    cityValues () {
+      let arr = []
+      this.citylist.forEach(item => {
+        arr.push(item.value)
+      })
+      return arr
     },
     linkTypeList () {
       return this.$store.state.actionTypeArr
@@ -112,7 +120,7 @@ export default {
         imageurl: url,
         linktype: 0,
         linkurl: '',
-        city: 0
+        isshow: true
       }
       this.designValue.items.push(item)
     },

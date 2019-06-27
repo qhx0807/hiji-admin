@@ -4,7 +4,7 @@
       <FormItem>
         <span slot="label">
           组件高度
-          <Tooltip placement="top" content="数字+单位，vw, wh, px">
+          <Tooltip placement="top" content="数字+单位，vw, vh, px">
             <Icon color="#bdf" size="16" type="ios-information-circle-outline" />
           </Tooltip>
         </span>

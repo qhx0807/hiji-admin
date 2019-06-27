@@ -11,6 +11,7 @@ ImageAd.defaultValue = {
   spacing: 0,
   width: 30,
   template: 1,
+  city: [1, 2, 3, 4, 5, 6, 7],
   items: [
     // {
     //   imageurl: 'http://cdn.cqyyy.cn/01_02_201906120957157391.jpg',

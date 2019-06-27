@@ -18,10 +18,10 @@
         </RadioGroup>
       </FormItem>
       <FormItem label="页面边距" style="margin-bottom:10px">
-        <Slider v-model="designValue.padding" :max="30"></Slider>
+        <Slider v-model="designValue.padding" :max="30" show-input input-size="small"></Slider>
       </FormItem>
       <FormItem label="图片间距" style="margin-bottom:10px">
-        <Slider v-model="designValue.spacing" :max="30"></Slider>
+        <Slider v-model="designValue.spacing" :max="30" show-input input-size="small"></Slider>
       </FormItem>
       <FormItem label="商品样式" style="margin-bottom:10px">
         <RadioGroup v-model="designValue.itemStyle">

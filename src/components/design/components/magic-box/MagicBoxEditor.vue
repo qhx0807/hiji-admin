@@ -128,10 +128,6 @@ export default {
   },
   methods: {
     onSelectTemplate (e) {
-      if (e.value === 7) {
-        this.$Message.info('暂未开放')
-        return false
-      }
       if (this.designValue.items.length < e.num) {
         while (this.designValue.items.length < e.num) {
           this.designValue.items.push({
