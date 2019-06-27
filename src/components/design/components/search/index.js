@@ -13,7 +13,7 @@ Search.defaultValue = {
   scan: true,
   placeholder: '搜索...',
   color: '#888888',
-  prefix: ''
+  prefix: true
 }
 
 export default Search

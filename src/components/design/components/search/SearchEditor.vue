@@ -25,8 +25,11 @@
           <span slot="close">关</span>
         </i-switch>
       </FormItem>
-      <FormItem label="前置文字" required style="margin-bottom:10px">
-        <Input placeholder="请输入" v-model="designValue.prefix"></Input>
+      <FormItem label="城市选择" required style="margin-bottom:10px">
+        <i-switch v-model="designValue.prefix">
+          <span slot="open">开</span>
+          <span slot="close">关</span>
+        </i-switch>
       </FormItem>
       <FormItem label="文字颜色" style="margin-bottom:10px">
         <ColorPicker alpha v-model="designValue.color" @on-active-change="e => designValue.color = e" recommend />

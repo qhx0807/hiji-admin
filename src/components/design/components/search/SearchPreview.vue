@@ -2,7 +2,7 @@
   <div class="design-search-preview" >
     <slot></slot>
     <div class="wrap" :style="{backgroundColor: value.bgcolor, backgroundImage: 'url('+value.bgimg+')'}">
-      <div class="prefix" v-show="value.prefix.length > 0" :style="{color: value.color}">{{value.prefix}}</div>
+      <div class="prefix" v-show="value.prefix" :style="{color: value.color}">邻水</div>
       <div class="search">
         <Icon type="ios-search-outline" />
         <input type="text" :placeholder="value.placeholder">
