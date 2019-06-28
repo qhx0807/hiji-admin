@@ -145,15 +145,13 @@ export default {
           title: '操作',
           key: 'id',
           align: 'center',
-          maxWidth: 220,
-          minWidth: 220,
+          width: 150,
           fixed: 'right',
           render: (h, params) => {
             let del = h('Button', {
               props: {
                 type: 'text',
                 size: 'small',
-                icon: 'ios-trash'
               },
               style: {
                 color: '#ed3f14'
@@ -168,7 +166,6 @@ export default {
                 props: {
                   type: 'text',
                   size: 'small',
-                  icon: 'md-create'
                 },
                 style: {
                   marginRight: '5px',
@@ -184,7 +181,6 @@ export default {
               props: {
                 type: 'text',
                 size: 'small',
-                icon: 'logo-yen'
               },
               on: {
                 click: () => {

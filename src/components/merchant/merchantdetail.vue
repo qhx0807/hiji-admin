@@ -78,7 +78,7 @@
             <FormItem label="售卖区域">
               <div class="addbtn">
                 <div class="area-span">
-                  <span v-for="(item, index) in selectArea" :key="index" @clcik="removeArea(index)">{{item.areainfo}}</span>
+                  <span v-for="(item, index) in selectArea" :key="index" @click="removeArea(index)">{{item.areainfo}}</span>
                 </div>
                 <a @click="onclickAddArea">+ 添加区域</a>
               </div>
@@ -240,7 +240,7 @@ export default {
           if (response.data.code == 0) {
             this.merchantData = response.data.data
             this.photos = response.data.data.photos.length > 0 ? response.data.data.photos.split(",") : []
-            this.selectArea = response.data.data.salesaddressinfo.length > 0 ? JSON.parse(response.data.data.salesaddressinfo) : []
+            this.selectArea = response.data.data.salesaddressinfo
           } else {
             this.$Message.warning(response.data.msg)
           }
@@ -282,8 +282,8 @@ export default {
         response => {
           this.modal_loading = false
           if (response.data.code === 0) {
-            this.$Message.info(response.data.msg)
-            this.$router.push({name: 'Merchant'})
+            this.$Message.success(response.data.msg)
+            // this.$router.push({name: 'Merchant'})
           } else {
             this.$Message.warning(response.data.msg)
           }
@@ -348,7 +348,7 @@ export default {
       )
     },
     removeArea (index) {
-      this.selectArea.splice(1, index)
+      this.selectArea.splice(index, 1)
     },
     onclickAddArea () {
       this.addAreaShow = true
@@ -402,7 +402,6 @@ export default {
       )
     },
     onConfirmArea () {
-      console.log(this.province)
       let obj = {
         areainfo: `${this.province.label || ''} ${this.city.label || ''} ${this.area.label || ''} ${this.street.label || ''} `,
         province: this.province.value || 0,
@@ -481,6 +480,7 @@ export default {
     padding: 5px;
     margin-right: 8px;
     line-height: 1;
+    cursor: pointer;
   }
 }
 .tips{

@@ -98,6 +98,7 @@ export default {
         'ShopOrders',
         'FinaceTable',
         'ShopGoods',
+        'Merchant'
       ]
     }
   },
