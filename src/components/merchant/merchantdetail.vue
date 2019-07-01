@@ -125,7 +125,7 @@
     <Modal title="查看图片" v-model="visibleImg">
       <img :src="viewImgSrc" v-if="visibleImg" style="width: 100%">
     </Modal>
-    <Modal v-model="addAreaShow" width="760">
+    <Modal v-model="addAreaShow" width="860">
       <p slot="header">添加区域</p>
       <div class="area-select">
         <h3>{{province.label}} / {{city.label}} / {{area.label}} / {{street.label}}</h3>
@@ -171,9 +171,24 @@
               <li :class="{'active' : street.value === '0'}" @click="onSelectArea('street', null)">全部</li>
               <li v-for="(item, index) in streetData"
                 :class="{'active' : street.value === item.value}"
-                @click="onSelectArea('street', item, '')"
+                @click="onSelectArea('street', item, 'qu')"
                 >
                 {{item.label}}
+                <Icon type="ios-arrow-forward" />
+              </li>
+            </ul>
+          </div>
+          <div class="list">
+            <ul>
+              <li :class="{'active' : qu.value === '0'}" @click="onSelectArea('qu', null)">全部</li>
+              <Input v-show="addqushow" size="small" placeholder="小区名称...enter" @on-enter="onAddqu" v-model="addqutext"></Input>
+              <div class="addqu" v-show="!addqushow && street.label" @click="addqushow = true">+添加</div>
+              <li v-for="(item, index) in quData"
+                :class="{'active' : qu.value === item.value}"
+                @click.prevent.stop="onSelectArea('qu', item, '')"
+                >
+                {{item.label}}
+                <Icon class="del-icon" @click.native.prevent.stop="onRemovequ(item)" type="ios-close-circle-outline" />
               </li>
             </ul>
           </div>
@@ -209,11 +224,15 @@ export default {
       city: {},
       area: {},
       street: {},
+      qu: {},
       provinceData: [],
       cityData: [],
       areaData: [],
       streetData: [],
-      selectArea: []
+      quData: [],
+      selectArea: [],
+      addqushow: false,
+      addqutext: ''
     }
   },
   created () {
@@ -222,7 +241,7 @@ export default {
       this.getMerchangById(this.$route.params.id)
     }
     this.getSortData()
-    this.getAreaData()
+    this.getAreaData(null)
   },
   mounted () {
     let height = document.body.offsetHeight - 380
@@ -335,11 +354,15 @@ export default {
       fun(arr)
       return arr1
     },
-    getAreaData () {
-      serverApi('/area/addressnew', null,
+    getAreaData (code, type) {
+      serverApi('/area/addressnew', {code: code},
         response => {
           if (response.data.code === 0) {
-            this.provinceData = response.data.data
+            if (type === 'qu') {
+              this.quData = response.data.data
+            } else {
+              this.provinceData = response.data.data
+            }
           }
         },
         error => {
@@ -358,6 +381,8 @@ export default {
         this.cityData = []
         this.areaData = []
         this.streetData = []
+        this.quData = []
+        this.qu = {}
         this.city = {}
         this.area = {}
         this.street = {}
@@ -365,12 +390,16 @@ export default {
       if (type === 'city') {
         this.areaData = []
         this.streetData = []
+        this.quData = []
+        this.qu = {}
         this.area = {}
         this.street = {}
       }
       if (type === 'area') {
         this.streetData = []
         this.street = {}
+        this.quData = []
+        this.qu = {}
       }
 
       if (item === null) {
@@ -378,7 +407,11 @@ export default {
         return false
       }
       if (type === 'street') {
-        this.street = item
+        this.qu = {}
+        this.quData = []
+      }
+      if (type === 'qu') {
+        this.qu = item
         return false
       }
       this[type] = item
@@ -403,14 +436,55 @@ export default {
     },
     onConfirmArea () {
       let obj = {
-        areainfo: `${this.province.label || ''} ${this.city.label || ''} ${this.area.label || ''} ${this.street.label || ''} `,
+        areainfo: `${this.province.label || ''} ${this.city.label || ''} ${this.area.label || ''} ${this.street.label || '' } ${this.qu.label || '' }`,
         province: this.province.value || 0,
         city: this.city.value || 0,
         country: this.area.value || 0,
-        street: this.street.value || 0
+        street: this.street.value || 0,
+        qu: this.qu.value || 0
       }
       this.selectArea.push(obj)
       this.addAreaShow = false
+    },
+    onAddqu () {
+      if (!this.addqutext) {
+        this.addqushow = false
+        return false
+      }
+      if (!this.street.value) return false
+      let d = {
+        label: this.addqutext,
+        areacode: this.street.value
+      }
+      serverApi('/area/addressnewedit', d,
+        response => {
+          if (response.data.code === 0) {
+            this.getAreaData(this.street.value, 'qu')
+            this.addqushow = false
+          } else {
+            this.$Message.warning(response.data.code)
+          }
+        },
+        error => {
+          this.$Message.error(error.toString())
+        }
+      )
+    },
+    onRemovequ (item) {
+      console.log(item)
+      serverApi('/area/addressnewdel', {id: item.id},
+        response => {
+          if (response.data.code === 0) {
+            this.addqushow = false
+            this.getAreaData(this.street.value, 'qu')
+          } else {
+            this.$Message.warning(response.data.code)
+          }
+        },
+        error => {
+          this.$Message.error(error.toString())
+        }
+      )
     }
   }
 }
@@ -458,6 +532,9 @@ export default {
           position: relative;
           &:hover{
             background-color: #f3f3f3;
+            .del-icon{
+              display: block;
+            }
           }
           &.active{
             background-color: #f3f3f3;
@@ -468,6 +545,28 @@ export default {
             right: 10px;
             top: 9px;
           }
+          .del-icon{
+            font-size: 18px;
+            top: 7px;
+            display: none;
+            &:hover{
+              color: red;
+            }
+          }
+        }
+      }
+      .addqu{
+        cursor: pointer;
+        height: 30px;
+        width: 100%;
+        border: 1px dashed #e5e5e5;
+        background-color: #f3f3f3;
+        text-align: center;
+        line-height: 30px;
+        &:hover{
+          background: #e8f7fd;
+          border-color: #bdf;
+          color: #38f;
         }
       }
     }
