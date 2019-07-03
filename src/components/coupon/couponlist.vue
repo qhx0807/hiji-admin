@@ -35,7 +35,7 @@ export default {
       isUse: '0',
       columns: [
         {
-          title: '编号',
+          title: '卡券编号',
           key: 'cardmainid',
           width: 90
         },
@@ -47,16 +47,21 @@ export default {
         {
           title: '用户',
           key: 'username',
-          minWidth: 120
+          width: 120
         },
         {
-          title: '发放时间',
+          title: '卡券活动开始时间',
           key: 'cardsendtime',
-          minWidth: 160
+          width: 140
         },
         {
           title: '领取时间',
           key: 'carddrawtime',
+          width: 140
+        },
+        {
+          title: '领取来源',
+          key: 'orderno',
           minWidth: 160
         },
         {

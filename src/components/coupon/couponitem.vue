@@ -95,7 +95,7 @@ export default {
       cardmainstate: '',
       columns: [
         {
-          title: '编号',
+          title: '卡券编号',
           key: 'id',
           width: 80
         },
@@ -588,7 +588,6 @@ export default {
     onChangeCard (row) {
       this.itemData = row
       this.modal12 = true
-
 
     },
     onCardmainstate (e) {
