@@ -69,6 +69,7 @@ export default {
     }
   },
   created () {
+    this.getGoodsGroup()
     const group = [
       {
         name: '基础',
@@ -204,6 +205,20 @@ export default {
         error => {
           console.log(error)
           this.submitLoading = false
+        }
+      )
+    },
+    getGoodsGroup () {
+      serverApi('/homepage/templatelist', null,
+        response => {
+          if (response.data.code === 0) {
+            this.$store.commit('updateDesignGoodsGroup', response.data.data)
+          } else {
+            this.$Message.warning(response.data.msg)
+          }
+        },
+        error => {
+          console.log(error)
         }
       )
     },

@@ -92,7 +92,8 @@ const store = new Vuex.Store({
       {value: 4, label: '团购券'},
       {value: 5, label: '抽奖'},
       {value: 6, label: '积分'},
-    ]
+    ],
+    designGoodsGroup: []
   },
   getters: {
     isLoading (state) {
@@ -127,6 +128,9 @@ const store = new Vuex.Store({
     },
     updateCityList (state, arr) {
       state.cityList = arr
+    },
+    updateDesignGoodsGroup (state, arr) {
+      state.designGoodsGroup = arr
     }
   },
   actions: {},

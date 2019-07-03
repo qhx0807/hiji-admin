@@ -8,6 +8,7 @@ const Goods = combine(GoodsPreview, GoodsEditor, designType, designDescription)
 
 Goods.defaultValue = {
   ids: '',
+  templateId: '',
   listStyle: 1,
   padding: 15,
   spacing: 10,

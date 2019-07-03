@@ -8,6 +8,7 @@ const Cutdown = combine(CutdownPreview, CutdownEditor, designType, designDescrip
 
 Cutdown.defaultValue = {
   ids: '',
+  templateId: '',
   listStyle: 1,
   padding: 15,
   spacing: 10,

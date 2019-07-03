@@ -8,6 +8,7 @@ const O2TimeLimitDiscount = combine(O2TimeLimitDiscountPreview, O2TimeLimitDisco
 
 O2TimeLimitDiscount.defaultValue = {
   ids: '',
+  templateId: '',
   listStyle: 1,
   padding: 15,
   spacing: 10,

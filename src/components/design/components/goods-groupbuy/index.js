@@ -8,6 +8,7 @@ const GroupBuy = combine(GroupBuyPreview, GroupBuyEditor, designType, designDesc
 
 GroupBuy.defaultValue = {
   ids: '',
+  templateId: '',
   listStyle: 1,
   padding: 15,
   spacing: 10,

@@ -9,6 +9,7 @@ const TimeLimitDiscount = combine(TimeLimitDiscountPreview, TimeLimitDiscountEdi
 TimeLimitDiscount.defaultValue = {
   ids: '',
   listStyle: 1,
+  templateId: '',
   padding: 15,
   spacing: 10,
   itemStyle: 1,

@@ -9,6 +9,7 @@ const O2 = combine(O2Preview, O2Editor, designType, designDescription)
 O2.defaultValue = {
   ids: '',
   listStyle: 1,
+  templateId: '',
   padding: 15,
   spacing: 10,
   itemStyle: 1,

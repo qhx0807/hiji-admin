@@ -1,10 +1,15 @@
 <template>
   <DesignEditor :desc="desc">
     <Form :label-width="70">
-      <FormItem label="活动ID" style="margin-bottom: 12px">
-        <Input v-model="designValue.ids" placeholder="活动id, 以逗号分隔">
+      <FormItem label="卡券ID" style="margin-bottom: 12px">
+        <Input v-model="designValue.ids" placeholder="卡券id, 以逗号分隔">
           <Button :loading="searchLoading" slot="append" @click="onClickQueryGoods">查询</Button>
         </Input>
+      </FormItem>
+      <FormItem label="卡券组" style="margin-bottom: 12px">
+        <Select v-model="designValue.templateId" filterable placeholder="选择商品组则上面卡券ID无效" @on-change="onSelectGoodsGroup">
+          <Option v-for="(item, index) in designGoodsGroup" :key="index" :value="item.id">{{item.name}}</Option>
+        </Select>
       </FormItem>
       <FormItem label="列表样式" style="margin-bottom: 10px">
         <RadioGroup v-model="designValue.listStyle">
@@ -108,6 +113,12 @@ export default {
       searchLoading: false
     }
   },
+  computed: {
+    designGoodsGroup () {
+      let group = this.$store.state.designGoodsGroup
+      return group.filter(item => item.type === 'o2-timelimit-discount')
+    }
+  },
   created () {},
   methods: {
     onClickQueryGoods () {
@@ -138,6 +149,28 @@ export default {
           this.searchLoading = false
         }
       )
+    },
+    onSelectGoodsGroup (e) {
+      if (e) {
+        this.$Message.loading({
+          duration: 0,
+          content: '查询中...'
+        })
+        serverApi('/homepage/templatewarelists',  {id: e},
+          response => {
+            this.$Message.destroy()
+            if (response.data.code === 0) {
+              this.designValue.items = response.data.data
+            } else {
+              this.$Message.warning(response.data.msg)
+            }
+          },
+          error => {
+            this.$Message.destroy()
+            this.$Message.error(error.toString())
+          }
+        )
+      }
     }
   }
 }

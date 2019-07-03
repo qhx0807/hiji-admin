@@ -129,6 +129,7 @@ const PropetyFeeDivice = r => require.ensure([], () => r(require('@/components/p
 const Pages = r => require.ensure([], () => r(require('@/components/oto/Pages.vue')))
 const PageDesign = r => require.ensure([], () => r(require('@/components/oto/PageDesign.vue')))
 const MemberPower = r => require.ensure([], () => r(require('@/components/usermember/MemberPower.vue')))
+const DesignGoodsGroup = r => require.ensure([], () => r(require('@/components/web/DesignGoodsGroup.vue')))
 
 const routes = [
   {
@@ -768,6 +769,11 @@ const routes = [
         path: 'MemberPower',
         component: MemberPower,
         name: 'MemberPower'
+      },
+      {
+        path: 'DesignGoodsGroup',
+        component: DesignGoodsGroup,
+        name: 'DesignGoodsGroup'
       }
     ]
   },
