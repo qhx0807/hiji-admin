@@ -15,7 +15,7 @@ Goods.defaultValue = {
   itemStyle: 1,
   imgScale: 1,
   textStyle: 1,
-  showContent: ['name', 'desc', 'price', 'buybtn'],
+  showContent: ['name', 'desc', 'disprice', 'orprice', 'buybtn'],
   btnStyle: 1,
   badgeStyle: 'new-arrival',
   badgeImg: 'http://cdn.cqyyy.cn/pic/20190613140550.png',

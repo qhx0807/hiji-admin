@@ -176,7 +176,7 @@ export default {
         let item = arr[i]
         if (item.hasOwnProperty('ids')) {
           item.items = ''
-          if (item.ids.length === 0) {
+          if (item.ids.length === 0 && !item.templateId) {
             arr.splice(i, 1)
             this.$Message.warning('某个组件的商品id或卡券id为空，已删除')
             // return false
