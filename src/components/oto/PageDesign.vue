@@ -57,7 +57,7 @@ export default {
       pageValue: [
         {
           type: 'config',
-          title: '测试页面',
+          title: '微页面标题',
           bgcolor: '#ffffff',
           bgimg: ''
         }
@@ -120,7 +120,7 @@ export default {
             // this.pageValue = response.data.data.content
             // console.log(this.pageValue)
             // this.pageValue[0] = response.data.data.content[0]
-            if (response.data.data.content.length > 0) {
+            if (response.data.data.content && response.data.data.content.length > 0) {
               response.data.data.content.forEach(item => {
                 if (item.type === 'config') {
                   this.pageValue.map(val => {
