@@ -195,7 +195,7 @@
         </div>
       </div>
       <div slot="footer">
-        <Button type="default" @click="deaddAreaShow = falsel">取消</Button>
+        <Button type="default" @click="deaddAreaShow = false">取消</Button>
         <Button type="primary"  @click="onConfirmArea">确认</Button>
       </div>
     </Modal>

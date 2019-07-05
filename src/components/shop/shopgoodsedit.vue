@@ -48,7 +48,7 @@
               </Select>
             </FormItem> -->
             <FormItem label="所属目录" prop="goodsname">
-              <Cascader change-on-select @on-change="onSelectDep" :data="goodsTypeData" v-model="editData.categoryid"></Cascader>
+              <Cascader change-on-select @on-change="onSelectDep" :data="goodsTypeData" v-model="categorys"></Cascader>
             </FormItem>
             <FormItem label="库存数量" prop="goodsname">
               <InputNumber :max="9999999" style="width:100%" :min="0" v-model="editData.goodsstock"></InputNumber>
@@ -328,6 +328,7 @@ export default {
         marketprice: null,
         intergral: null
       },
+      categorys: []
     }
   },
   created () {
@@ -383,9 +384,7 @@ export default {
               })
             }
             getCas(cas)
-            console.log(cas)
             this.goodsTypeData = cas
-            console.log(this.goodsTypeData)
           }else{
             this.$Message.warning(response.data.msg)
           }
@@ -454,10 +453,18 @@ export default {
       this.$store.commit('pageLoading', true)
       serverApi('/goods/goodsinfo', {id: id},
         response => {
-          console.log(response)
           this.$store.commit('pageLoading', false)
           if (response.data.code == 0) {
             this.editData = response.data.data
+            this.categorys = []
+            if (response.data.data.allcategroryid.length > 0) {
+              let arr = response.data.data.allcategroryid.split(',')
+              arr.forEach(item => {
+                if (item) {
+                  this.categorys.push(parseInt(item))
+                }
+              })
+            }
             let content = response.data.data.goodsdetailed
             let arr = response.data.data.imgdetailed ? response.data.data.imgdetailed.split(',') : []
             let arr1 = arr.concat(this.picArr)
