@@ -43,7 +43,7 @@
                                   <span class="main-user-name">{{ userName }}</span>
                                   <Icon type="md-arrow-dropdown" />
                                 </a>
-                                <DropdownMenu slot="list">
+                                <DropdownMenu slot="list" >
                                   <DropdownItem name="ownSpace">个人中心</DropdownItem>
                                   <DropdownItem name="loginout" divided>退出登录</DropdownItem>
                                 </DropdownMenu>
@@ -156,8 +156,16 @@ export default {
           title: '提示',
           content: '<p>确认退出当前登录账号？</p>',
           onOk: () => {
-            sessionStorage.clear()
-            this.$router.replace({name: 'Login'})
+            serverApi('/login/loginout', null,
+              response => {
+                sessionStorage.clear()
+                this.$router.replace({name: 'Login'})
+              },
+              error => {
+                sessionStorage.clear()
+                this.$router.replace({name: 'Login'})
+              }
+            )
           }
         })
       }

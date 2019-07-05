@@ -1,6 +1,9 @@
 import axios from 'axios'
 import { apiUrl } from '../config/index.js'
 
+axios.defaults.crossDomain = true
+axios.defaults.withCredentials = true
+
 // const host = 'http://' + window.location.host
 
 // let apiUrl = process.env.API_URL
@@ -37,7 +40,6 @@ const serverApi = (url, data, succFoo, errorFoo) => {
     method: 'post',
     url: apiUrl + url,
     data: Object.assign({ userid: userid }, data),
-    // withCredentials: true,
     transformRequest: [function (data) {
       let ret = ''
       for (let it in data) {

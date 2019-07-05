@@ -58,6 +58,7 @@ export default {
   created () {
     localStorage.setItem('locking', '0')
     sessionStorage.clear()
+    this.requestLogin()
   },
   methods: {
     handleSubmit () {
@@ -97,6 +98,21 @@ export default {
           )
         }
       })
+    },
+    requestLogin () {
+      serverApi('/login/islogin', null,
+        response => {
+          if (response.data.code === 0) {
+            window.sessionStorage.token = response.data.data.token
+            window.sessionStorage.username = response.data.data.username
+            window.sessionStorage.userid = response.data.data.userid
+            window.sessionStorage.roleid = response.data.data.roleid
+            window.sessionStorage.pass = this.form.password
+            this.$router.replace({name: response.data.data.dashboard})
+          }
+        },
+        error => {}
+      )
     }
   }
 }
