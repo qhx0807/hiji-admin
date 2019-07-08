@@ -5,6 +5,7 @@
       :on-error="uploadImgErr"
       :on-success="uploadImgSucc"
       :show-upload-list="false"
+      with-credentials
       accept="image/*">
       <Button icon="ios-cloud-upload-outline">上传图片</Button>
     </Upload>
@@ -23,7 +24,11 @@ export default {
   },
   data () {
     return {
-      uploadApiUrl: uploadApiUrl
+      uploadApiUrl: uploadApiUrl,
+      headers: {
+        crossDomain: true,
+        withCredentials: true
+      }
     }
   },
   created () {},

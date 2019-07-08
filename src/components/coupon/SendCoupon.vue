@@ -83,6 +83,7 @@
             :format="['xlsx','xls','csv']"
             :on-success="onUploadTableSuccess"
             :on-error="onUploadTableErr"
+            with-credentials
             :action="uploadCardUserUrl">
             <div style="padding: 20px 0">
               <Icon type="ios-cloud-upload" size="52" style="color: #3399ff"></Icon>
@@ -122,7 +123,8 @@ export default {
       status: '',
       name: '',
       userid: '',
-      cardid: ''
+      cardid: '',
+      headers: {}
     }
   },
   created () {
