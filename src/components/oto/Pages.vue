@@ -131,7 +131,7 @@ export default {
           title: '操作',
           key: 'id',
           align: 'center',
-          width: 180,
+          width: 250,
           render: (h, params) => {
             const edit = h('a', {
               on: {
@@ -161,6 +161,17 @@ export default {
                 color: '#2d8cf0'
               }
             }, '编辑')
+            const copyContent = h('a', {
+              on: {
+                click: () => {
+                  this.onClickCopyContent(params.row)
+                }
+              },
+              style: {
+                marginLeft: '12px',
+                color: '#2d8cf0'
+              }
+            }, '复制页面')
             const pri = h('a', {
               on: {
                 click: () => {
@@ -172,7 +183,7 @@ export default {
                 color: '#f60'
               }
             }, '删除')
-            return h('div',[edit, see, copy, pri])
+            return h('div',[edit, see, copy, copyContent, pri])
           }
         }
       ],
@@ -295,12 +306,85 @@ export default {
       this.getTableData()
     },
     onClickCopy (row) {
-      let text = 'http://m.cqyyy.cn/hiji-web/dist/index.html#/Preview/' + row.homeid
+      let text = 'http://m.cqyyy.cn/hiji-web/dist/index.html#/Page/' + row.homeid
       this.$copyText(text).then((result) => {
         this.$Message.success('复制成功！')
       }, (err) => {
         this.$Message.error('复制失败！')
       })
+    },
+    onClickCopyContent (row) {
+      this.$Modal.confirm({
+        title: '提示',
+        content: '将复制此页面内容到一个新页面？',
+        loading: true,
+        onOk: () => {
+          this.$Message.loading({
+            duration: 0,
+            content: '加载中...'
+          })
+          let addrow = Object.assign({}, row)
+          delete addrow.homeid
+          addrow.title = addrow.title + '__复制'
+          let d = {
+            homeid: row.homeid
+          }
+          serverApi('/Homepage/webhomeinfo', d,
+            response => {
+              this.$Message.destroy()
+              if (response.data.code === 0) {
+                let copydata = JSON.stringify(response.data.data.content)
+                this.copyNewPage(addrow, copydata)
+              } else {
+                this.$Message.warning(response.data.msg)
+              }
+            },
+            error => {
+              this.$Message.destroy()
+              this.$Message.error(error.toString())
+            }
+          )
+        }
+      })
+    },
+    copyNewPage (addrow, copydata) {
+      serverApi('/Homepage/webhomeedit', addrow,
+        response => {
+          if (response.data.code === 0) {
+            this.copyPageContent(copydata, response.data.data.homeid)
+          } else {
+            this.$Message.warning(response.data.msg)
+          }
+        },
+        error => {
+          this.$Message.error(error.toString())
+        }
+      )
+    },
+    copyPageContent (content, id) {
+      let d = {
+        homeid: id,
+        content: content
+      }
+      serverApi('/Homepage/webhomecontentedit', d,
+        response => {
+          this.$Modal.remove()
+          this.$Message.destroy()
+          if (response.data.code === 0) {
+            this.$Notice.success({
+              title: '复制成功',
+              desc: '页面复制成功！页面id: ' + id
+            })
+            this.$router.push({name: 'PageDesign', params: {id: id}})
+          } else {
+            this.$Message.warning(response.data.msg)
+          }
+        },
+        error => {
+          this.$Modal.remove()
+          this.$Message.destroy()
+        }
+      )
     }
   }
 }
