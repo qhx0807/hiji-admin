@@ -95,6 +95,9 @@ export default {
     onImageEditorItemUpload (url, index) {
       this.designValue.items[index].imageurl = url
     },
+    onDropItem (dropResult) {
+      this.designValue.items = applyDrag(this.designValue.items, dropResult)
+    }
   }
 }
 </script>

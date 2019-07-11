@@ -130,6 +130,8 @@ const Pages = r => require.ensure([], () => r(require('@/components/oto/Pages.vu
 const PageDesign = r => require.ensure([], () => r(require('@/components/oto/PageDesign.vue')))
 const MemberPower = r => require.ensure([], () => r(require('@/components/usermember/MemberPower.vue')))
 const DesignGoodsGroup = r => require.ensure([], () => r(require('@/components/web/DesignGoodsGroup.vue')))
+const MerchantTags = r => require.ensure([], () => r(require('@/components/merchant/MerchantTags.vue')))
+const MarketSort = r => require.ensure([], () => r(require('@/components/merchant/MarketSort.vue')))
 
 const routes = [
   {
@@ -774,6 +776,16 @@ const routes = [
         path: 'DesignGoodsGroup',
         component: DesignGoodsGroup,
         name: 'DesignGoodsGroup'
+      },
+      {
+        path: 'MerchantTags',
+        component: MerchantTags,
+        name: 'MerchantTags'
+      },
+      {
+        path: 'MarketSort',
+        component: MarketSort,
+        name: 'MarketSort'
       }
     ]
   },

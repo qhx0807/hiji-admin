@@ -63,14 +63,23 @@
                 <Option :value="1">线下打款</Option>
               </Select>
             </FormItem>
-            <FormItem label="标签" prop="billtype">
-              <Input v-model="merchantData.tags"></Input>
+            <FormItem label="标签">
+              <Select v-model="tags" multiple>
+                <Option v-for="item in tagsData" :value="item.id" :key="item.id">{{ item.tagname }}</Option>
+              </Select>
             </FormItem>
           </Col>
           <Col span="12">
             <FormItem label="商户简介">
               <Input type="textarea" :autosize="{minRows: 3, maxRows: 4}" v-model="merchantData.info"></Input>
             </FormItem>
+            <Row>
+              <Col span="12">
+                <FormItem label="超市到家" >
+                  <Cascader :data="marketTypeData" v-model="marketType" ></Cascader>
+                </FormItem>
+              </Col>
+            </Row>
           </Col>
         </Row>
         <Row>
@@ -232,7 +241,11 @@ export default {
       quData: [],
       selectArea: [],
       addqushow: false,
-      addqutext: ''
+      addqutext: '',
+      tagsData:[],
+      marketTypeData: [],
+      marketType: [],
+      tags: []
     }
   },
   created () {
@@ -241,7 +254,9 @@ export default {
       this.getMerchangById(this.$route.params.id)
     }
     this.getSortData()
+    this.getTagsData()
     this.getAreaData(null)
+    this.getMarketSort()
   },
   mounted () {
     let height = document.body.offsetHeight - 380
@@ -255,11 +270,22 @@ export default {
     getMerchangById (id) {
       serverApi('/Merchant/getbyid', {id: id},
         response => {
-          // console.log(response)
+          console.log(response)
           if (response.data.code == 0) {
             this.merchantData = response.data.data
             this.photos = response.data.data.photos.length > 0 ? response.data.data.photos.split(",") : []
             this.selectArea = response.data.data.salesaddressinfo
+            this.tags = response.data.data.tags.split(',').map(e => parseInt(e))
+            this.marketType = []
+            if (response.data.data.allsupermarketid && response.data.data.allsupermarketid.length > 0) {
+              let arr = response.data.data.allsupermarketid.split(',')
+              arr.forEach(item => {
+                if (item) {
+                  this.marketType.push(parseInt(item))
+                }
+              })
+            }
+            console.log(this.marketType)
           } else {
             this.$Message.warning(response.data.msg)
           }
@@ -297,6 +323,8 @@ export default {
       this.modal_loading = true
       this.merchantData.photos = this.photos
       this.merchantData.salesaddressinfo = JSON.stringify(this.selectArea)
+      this.merchantData.supermarketid = this.marketType.length > 0 ? this.marketType[this.marketType.length - 1] : ''
+      this.merchantData.tags = this.tags.join(',')
       serverApi('/Merchant/edit', this.merchantData,
         response => {
           this.modal_loading = false
@@ -483,6 +511,46 @@ export default {
         },
         error => {
           this.$Message.error(error.toString())
+        }
+      )
+    },
+    getTagsData(){
+      serverApi('/Orgmerchanttag/index', null,
+        response => {
+          if(response.data.code === 0) {
+            this.tagsData = response.data.data
+          }else{
+            this.$Message.warning(response.data.msg)
+          }
+        },
+        error => {
+          console.log(error)
+        }
+      )
+    },
+    getMarketSort () {
+      serverApi('/supermarket/cateindex', null,
+        response => {
+          if (response.data.code === 0) {
+            let cas = response.data.data
+            let getCas = function (cas) {
+              cas.forEach(item => {
+                item.label = item.name,
+                item.value = item.id
+                item.children = item.child
+                if (item.child.length > 0) {
+                  getCas(item.child)
+                }
+              })
+            }
+            getCas(cas)
+            this.marketTypeData = cas
+          } else {
+            this.$Message.warning(response.data.msg)
+          }
+        },
+        error => {
+          console.log(error)
         }
       )
     }
