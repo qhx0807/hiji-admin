@@ -45,7 +45,7 @@
             <div class="goods-layout-info">
               <div class="goods-layout-info-title">
                 <h3 :class="{'fontBold':value.textStyle === 2}" v-show="value.showContent.includes('name')">
-                  <span class="title-tag">减30元</span>
+                  <span v-show="value.showContent.includes('gap')" class="preview-gap" >减30元</span>
                   {{item.name}}
                 </h3>
                 <p class="addr"  v-show="value.showContent.includes('address')">地址：{{item.address}}</p>

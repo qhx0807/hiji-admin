@@ -59,6 +59,7 @@
           <Checkbox label="tags">卡券标签</Checkbox>
           <Checkbox label="buybtn">购买按钮</Checkbox>
           <Checkbox label="badge">角标</Checkbox>
+          <Checkbox label="gap">减x元</Checkbox>
         </CheckboxGroup>
       </FormItem>
       <FormItem v-show="designValue.showContent.indexOf('buybtn') > -1" label="购买按钮" style="margin-bottom:10px">

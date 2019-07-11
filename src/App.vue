@@ -72,6 +72,17 @@ body {
   margin-bottom: 25px;
   margin-top: 6px;
 }
+.preview-gap{
+  display: inline-block;
+  height: 16px;
+  padding: 0 6px;
+  line-height: 16px;
+  color: #f44;
+  font-size: 12px;
+  border-radius: 8px;
+  background-color: #ffdfdf;
+  font-weight: 400;
+}
 .preview-box{
   img{
     width: 100%;

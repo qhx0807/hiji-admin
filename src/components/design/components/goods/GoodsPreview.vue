@@ -29,7 +29,10 @@
             </div>
             <div class="goods-info">
               <div class="goods-info-title">
-                <h3 :class="{'fontBold':value.textStyle === 2}" v-show="value.showContent.includes('name')">{{item.name}}</h3>
+                <h3 :class="{'fontBold':value.textStyle === 2}" v-show="value.showContent.includes('name')">
+                  <span v-show="value.showContent.includes('gap')" class="preview-gap">减10元</span>
+                  {{item.name}}
+                </h3>
                 <p v-show="value.showContent.includes('desc')">{{item.desc}}</p>
               </div>
               <div class="goods-info-price">
