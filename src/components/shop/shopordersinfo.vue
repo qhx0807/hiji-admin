@@ -43,9 +43,9 @@
             <FormItem label="收货地址：">{{addressStr}}</FormItem>
             <!-- <FormItem label="所属城市：">{{orderData.city}}</FormItem> -->
           </Col>
-          <!-- <Col span="8">
-            <FormItem label="常用快递：">菜鸟仓储</FormItem>
-          </Col> -->
+          <Col span="8">
+            <FormItem label="买家留言：">{{orderData.orderremarks}}</FormItem>
+          </Col>
         </Row>
       </Form>
       <hr class="divider">

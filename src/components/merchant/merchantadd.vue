@@ -63,14 +63,23 @@
                 <Option value="1">线下打款</Option>
               </Select>
             </FormItem>
-            <FormItem label="标签" prop="info">
-              <Input  v-model="merchantData.tags"></Input>
+            <FormItem label="标签">
+              <Select v-model="tags" multiple>
+                <Option v-for="item in tagsData" :value="item.id" :key="item.id">{{ item.tagname }}</Option>
+              </Select>
             </FormItem>
           </Col>
           <Col span="12">
             <FormItem label="商户简介" prop="info">
               <Input type="textarea" :autosize="{minRows: 3, maxRows: 4}" v-model="merchantData.info"></Input>
             </FormItem>
+            <Row>
+              <Col span="12">
+                <FormItem label="超市到家" >
+                  <Cascader change-on-select :data="marketTypeData" v-model="marketType" ></Cascader>
+                </FormItem>
+              </Col>
+            </Row>
           </Col>
         </Row>
         <Row>
@@ -133,7 +142,8 @@ export default {
         photos: null,
         categroryid: '',
         billtype: '0',
-        tags: ''
+        tags: '',
+        supermarketid: ''
       },
       rules: {
         name: [{ required: true, message: '不能为空', trigger: 'blur' }],
@@ -153,11 +163,17 @@ export default {
       activeImgIndex: -1,
       viewImgSrc: '',
       visibleImg: false,
-      sortData: []
+      sortData: [],
+      marketTypeData: [],
+      marketType: [],
+      tagsData: [],
+      tags: []
     }
   },
   created () {
     this.getSortData()
+    this.getTagsData()
+    this.getMarketSort()
   },
   computed: { },
   methods: {
@@ -194,6 +210,8 @@ export default {
             return false
           }
           this.modal_loading = true
+          this.merchantData.supermarketid = this.marketType.length > 0 ? this.marketType[this.marketType.length - 1] : ''
+          this.merchantData.tags = this.tags.join(',')
           serverApi('/Merchant/add', this.merchantData,
             response => {
               this.modal_loading = false
@@ -252,6 +270,46 @@ export default {
       }
       fun(arr)
       return arr1
+    },
+    getTagsData(){
+      serverApi('/Orgmerchanttag/index', null,
+        response => {
+          if(response.data.code === 0) {
+            this.tagsData = response.data.data
+          }else{
+            this.$Message.warning(response.data.msg)
+          }
+        },
+        error => {
+          console.log(error)
+        }
+      )
+    },
+    getMarketSort () {
+      serverApi('/supermarket/cateindex', null,
+        response => {
+          if (response.data.code === 0) {
+            let cas = response.data.data
+            let getCas = function (cas) {
+              cas.forEach(item => {
+                item.label = item.name,
+                item.value = item.id
+                item.children = item.child
+                if (item.child.length > 0) {
+                  getCas(item.child)
+                }
+              })
+            }
+            getCas(cas)
+            this.marketTypeData = cas
+          } else {
+            this.$Message.warning(response.data.msg)
+          }
+        },
+        error => {
+          console.log(error)
+        }
+      )
     }
   }
 }

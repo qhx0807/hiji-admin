@@ -76,7 +76,7 @@
             <Row>
               <Col span="12">
                 <FormItem label="超市到家" >
-                  <Cascader :data="marketTypeData" v-model="marketType" ></Cascader>
+                  <Cascader change-on-select :data="marketTypeData" v-model="marketType" ></Cascader>
                 </FormItem>
               </Col>
             </Row>
