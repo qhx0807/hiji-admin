@@ -131,7 +131,7 @@ export default {
           title: '操作',
           key: 'id',
           align: 'center',
-          width: 160,
+          width: 260,
           fixed: 'right',
           render: (h, params) => {
             let edit = h('a', {
@@ -166,7 +166,17 @@ export default {
                 }
               }
             }, '导出砍价人详情')
-            return h('div', [edit, info, exps])
+            let del = h('a', {
+              style: {
+                color: '#f60'
+              },
+              on: {
+                click: () => {
+                  this.onClickRemoveItem(params.row)
+                }
+              }
+            }, '删除')
+            return h('div', [edit, info, exps, del])
           }
         }
       ]
@@ -232,6 +242,29 @@ export default {
           this.$Message.warning('连接失败！')
         }
       )
+    },
+    onClickRemoveItem (row) {
+      this.$Modal.confirm({
+        title: '提示',
+        content: '<p>确认删除此活动记录？</p>',
+        loading: true,
+        onOk: () => {
+          serverApi('/activity/activitydel', {id: row.id},
+            response => {
+              this.$Modal.remove()
+              if (response.data.code == 0) {
+                this.getTableData()
+              }
+              this.$Message.info(response.data.msg)
+            },
+            error => {
+              this.$Modal.remove()
+              console.log(error)
+              this.$Message.error('链接失败！')
+            }
+          )
+        }
+      })
     }
   }
 }
