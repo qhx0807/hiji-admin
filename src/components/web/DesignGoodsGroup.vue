@@ -201,6 +201,7 @@ export default {
         content: '查询中...'
       })
       this.spinShow = true
+      this.tempGoods = []
       serverApi('/homepage/templatewarelists',  {id: item.id},
         response => {
           this.$Message.destroy()

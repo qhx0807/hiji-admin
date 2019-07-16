@@ -46,6 +46,7 @@ import RichText from '../design/components/rich-text'
 import Tabbar from '../design/components/tabbar'
 import Landscape from '../design/components/landscape'
 import Search from '../design/components/search'
+import O2Merchant from '../design/components/o2-merchant'
 
 export default {
   name: 'PageDesign',
@@ -81,7 +82,7 @@ export default {
       },
       {
         name: 'O2组件',
-        components: [O2, O2TimeLimitDiscount]
+        components: [O2, O2TimeLimitDiscount, O2Merchant]
       },
       {
         name: '其他',
