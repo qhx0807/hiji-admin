@@ -90,9 +90,20 @@
                 <DropdownItem name="xlsx" divided>下载Excel</DropdownItem>
             </DropdownMenu>
           </Dropdown>
+          <!-- <Dropdown style="margin-left: 8px">
+            <Button type="error">
+                批量操作
+                <Icon type="ios-arrow-down"></Icon>
+            </Button>
+            <DropdownMenu slot="list">
+                <DropdownItem name="review" divided>批量审核</DropdownItem>
+                <DropdownItem name="reject" divided>批量驳回</DropdownItem>
+            </DropdownMenu>
+          </Dropdown> -->
           <!-- <Button type="primary" :loading="exportLoading" style="margin-left:8px" @click="exportTable" icon="md-arrow-down">导出数据</Button> -->
           <!-- <Button type="primary" :loading="exportLoading" style="margin-left:8px" @click="exportTableDetail" icon="ios-cloud-download-outline">导出详细数据</Button> -->
           <Button type="error"  :loading="passLoading" style="margin-left:8px" @click="onClickNotAllow" icon="ios-information-circle-outline">批量审核</Button>
+          <Button type="warning"  :loading="passLoading" style="margin-left:8px" @click="onClickMutReject" icon="ios-information-circle-outline">批量驳回</Button>
         </Col>
       </Row>
     </Card>
@@ -928,6 +939,50 @@ export default {
               this.$Message.warning(error.toString())
             }
           )
+        }
+      })
+    },
+    onClickMutReject () {
+      if (this.selectTableItem.length === 0) {
+        this.$Message.warning('请勾选要操作的数据！')
+        return false
+      }
+      this.passLoading = true
+      this.$Modal.confirm({
+        title: '提示',
+        content: '选中的申请将会被驳回！',
+        onOk: () => {
+          let arr = []
+          this.selectTableItem.forEach(item => {
+            arr.push(item.id)
+          })
+          let d = {
+            id: arr.toString(),
+            reject: 1
+          }
+          serverApi('/Finance/rejectapply', d,
+            response => {
+              console.log(response)
+              if (response.data.code === 0){
+                this.$Message.success(response.data.msg)
+                this.getTableData()
+              }else{
+                this.$Message.warning(response.data.msg)
+              }
+              this.passLoading = false
+              this.refuseLoading = false
+            },
+            error => {
+              this.passLoading = false
+              console.log(error)
+              this.$Message.warning(error.toString())
+              this.refuseLoading = false
+              this.tableLoading = false
+            }
+          )
+        },
+        onCancel: () => {
+          this.passLoading = false
         }
       })
     }

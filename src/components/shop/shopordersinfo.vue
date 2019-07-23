@@ -46,6 +46,9 @@
           <Col span="8">
             <FormItem label="买家留言：">{{orderData.orderremarks}}</FormItem>
           </Col>
+          <Col span="16" v-if="idcard">
+            <FormItem label="身份证号码：">{{idcard}}</FormItem>
+          </Col>
         </Row>
       </Form>
       <hr class="divider">
@@ -145,7 +148,8 @@ export default {
   data () {
     return {
       orderData: {},
-      goodsList: []
+      goodsList: [],
+      idcard: ''
     }
   },
   created () {
@@ -169,7 +173,8 @@ export default {
     addressStr () {
       if (this.orderData.address && this.orderData.address.indexOf('name') > -1) {
         let obj = JSON.parse(this.orderData.address)
-        return `${obj.name} ${obj.tel} ${obj.address} `
+        this.idcard = obj.memberidcard
+        return `${obj.name} ${obj.tel} ${obj.address}`
       } else {
         return this.orderData.address
       }

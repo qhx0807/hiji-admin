@@ -41,9 +41,14 @@ export default {
       tableLoading: false,
       columns: [
         {
-          title: '#',
+          title: '活动id',
           key: 'id',
           width: 60
+        },
+        {
+          title: '商品id',
+          key: 'goodsid',
+          width: 80
         },
         {
           title: '商品',

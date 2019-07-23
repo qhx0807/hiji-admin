@@ -189,6 +189,11 @@ export default {
           tooltip: true
         },
         {
+          title: '核销次数',
+          key: 'num',
+          minWidth: 80,
+        },
+        {
           title: '作废时间',
           key: 'dstime',
           width: 140,

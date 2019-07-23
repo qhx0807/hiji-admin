@@ -1,7 +1,7 @@
 <template>
   <div class="box">
     <img :src="qrimgurl" :style="codeStyle" alt="">
-    <p class="tip">{{message}}</p>
+    <p class="tip">{{message}} ({{goodsid}})</p>
     <Icon class="icon" type="ios-settings-outline" @click.native="drawer = true"/>
     <div class="btns" v-show="errorShow">
       <Alert type="error">连接服务器失败，点击下面按钮或刷新页面 !</Alert>
@@ -17,6 +17,13 @@
         </FormItem>
         <FormItem label="二维码宽度">
           <Slider v-model="qrwidth" :min="0" :max="1000" show-input input-size="small"></Slider>
+        </FormItem>
+        <FormItem label="商品ID">
+          <Input placeholder="活动商品id" v-model="newSetId">
+             <div slot="append">
+               <Button @click="onClickSetId">设置</Button>
+             </div>
+          </Input>
         </FormItem>
     </Form>
     </Drawer>
@@ -35,11 +42,14 @@ export default {
       qrheight: 400,
       qrwidth: 400,
       noimg: 'http://cdn.cqyyy.cn/pic/20190610172641.png',
-      errorShow: false
+      errorShow: false,
+      goodsid: '',
+      newSetId: ''
     }
   },
   created () {
     this.webScoketConnect()
+    this.goodsid = this.$route.query.merchantcode
   },
   computed: {
     codeStyle () {
@@ -116,6 +126,13 @@ export default {
         })
         this.onerrorHandler()
       }
+    },
+    onClickSetId () {
+      if (!this.goodsid) {
+        return false
+      }
+      let url = 'http://admin.cqyyy.cn/#/RandomQrcode?merchantcode=' + this.newSetId
+      window.open(url)
     }
   }
 }
@@ -152,6 +169,9 @@ export default {
     &:hover{
       opacity: 1;
     }
+  }
+  .settings{
+    cursor: pointer;
   }
 }
 </style>

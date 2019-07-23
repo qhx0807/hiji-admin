@@ -273,9 +273,9 @@ export default {
           console.log(response)
           if (response.data.code == 0) {
             this.merchantData = response.data.data
-            this.photos = response.data.data.photos.length > 0 ? response.data.data.photos.split(",") : []
+            this.photos = response.data.data.photos ? response.data.data.photos.split(",") : []
             this.selectArea = response.data.data.salesaddressinfo
-            this.tags = response.data.data.tags.split(',').map(e => parseInt(e))
+            this.tags = response.data.data.tags ? response.data.data.tags.split(',').map(e => parseInt(e)) : []
             this.marketType = []
             if (response.data.data.allsupermarketid && response.data.data.allsupermarketid.length > 0) {
               let arr = response.data.data.allsupermarketid.split(',')
