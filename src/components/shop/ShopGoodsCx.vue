@@ -199,7 +199,7 @@ export default {
           width: 120,
           render: (h, params) => {
             const pidprice = params.row.goodsprice - params.row.coupon - params.row.merchantcoupon
-            return h('div', {}, pidprice)
+            return h('div', {}, pidprice.toFixed(2))
           }
         },
         // {

@@ -39,15 +39,15 @@ export default {
         return false
       }
       this.loading = true
-      serverApi('/member/memberlist', {like: this.userphone},
+      serverApi('/member/userlist12', {like: this.userphone},
         response => {
           this.loading = false
           if (response.data.code === 0) {
             // 返回 userid, token
             // 垮域名设置sessionStroge
-            if (response.data.data.reuslt.length > 0) {
+            if (response.data.data.userid) {
               let t = new Date().valueOf()
-              this.frameUrl = 'http://m.cqyyy.cn/redirect/index.html?userid='+response.data.data.reuslt[0].userid+'&token='+response.data.data.token+'&time=' + t
+              this.frameUrl = 'http://m.cqyyy.cn/redirect/index.html?userid='+response.data.data.userid+'&token='+response.data.data.token+'&time=' + t
             } else {
               this.$Message.warning('未查询到数据！')
             }
