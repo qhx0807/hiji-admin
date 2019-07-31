@@ -524,7 +524,7 @@ export default {
       }
     },
     qrcode (id, code, areaid) {
-      let qrData = 'http://m.cqhiji.com/H5/payment.html?deviceid=' + id + '&city=' + areaid
+      let qrData = 'http://m.cqyyy.cn/H5/payment.html?deviceid=' + id + '&city=' + areaid
       // this.qrUrl = this.qrPreFix + encodeURIComponent(qrData)
       this.qrCodeInit.makeCode(qrData)
       this.qrcodeVal = qrData

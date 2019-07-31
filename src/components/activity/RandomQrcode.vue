@@ -101,7 +101,7 @@ export default {
         duration: 0
       })
 
-      this.ws = new WebSocket('ws://47.107.39.205:1008')
+      this.ws = new WebSocket('ws://47.107.39.205:10086')
 
       this.ws.onopen = () => {
         this.$Message.destroy()
