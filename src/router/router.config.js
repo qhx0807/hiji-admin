@@ -133,6 +133,7 @@ const DesignGoodsGroup = r => require.ensure([], () => r(require('@/components/w
 const MerchantTags = r => require.ensure([], () => r(require('@/components/merchant/MerchantTags.vue')))
 const MarketSort = r => require.ensure([], () => r(require('@/components/merchant/MarketSort.vue')))
 const RandomQrcode = r => require.ensure([], () => r(require('@/components/activity/RandomQrcode.vue')))
+const DesignImageBase = r => require.ensure([], () => r(require('@/components/web/DesignImageBase.vue')))
 
 const routes = [
   {
@@ -792,6 +793,11 @@ const routes = [
         path: 'MarketSort',
         component: MarketSort,
         name: 'MarketSort'
+      },
+      {
+        path: 'DesignImageBase',
+        component: DesignImageBase,
+        name: 'DesignImageBase'
       }
     ]
   },

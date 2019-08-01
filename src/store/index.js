@@ -45,17 +45,17 @@ const store = new Vuex.Store({
       ]
     },
     actionTypeArr: [
-      {value: 1, label: '商品详情'},
-      {value: 2, label: '卡券详情'},
-      {value: 3, label: '内部路由'},
-      {value: 4, label: '外部链接'},
-      {value: 5, label: '模板页'},
-      {value: 6, label: '商户首页'},
-      {value: 7, label: '领取卡券'},
-      {value: 8, label: '拼团商品(单个)'},
-      {value: 9, label: '微页面'},
-      {value: 10, label: '扫一扫'},
-      {value: 0, label: '不跳转'}
+      { value: 1, label: '商品详情' },
+      { value: 2, label: '卡券详情' },
+      { value: 9, label: '微页面' },
+      // {value: 5, label: '模板页'},
+      { value: 6, label: '商户首页' },
+      { value: 7, label: '领取卡券' },
+      { value: 8, label: '拼团商品(单个)' },
+      { value: 10, label: '扫一扫' },
+      { value: 0, label: '不跳转' },
+      { value: 3, label: '内部路由' },
+      { value: 4, label: '外部链接' },
     ],
     cityList: [],
     couponUseRange: [
