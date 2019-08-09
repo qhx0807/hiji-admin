@@ -134,6 +134,9 @@ const MerchantTags = r => require.ensure([], () => r(require('@/components/merch
 const MarketSort = r => require.ensure([], () => r(require('@/components/merchant/MarketSort.vue')))
 const RandomQrcode = r => require.ensure([], () => r(require('@/components/activity/RandomQrcode.vue')))
 const DesignImageBase = r => require.ensure([], () => r(require('@/components/web/DesignImageBase.vue')))
+const PostageTemp = r => require.ensure([], () => r(require('@/components/merchant/PostageTemp.vue')))
+const PostageTempAdd = r => require.ensure([], () => r(require('@/components/merchant/PostageTempAdd.vue')))
+const PostageTempEdit = r => require.ensure([], () => r(require('@/components/merchant/PostageTempEdit.vue')))
 
 const routes = [
   {
@@ -798,6 +801,21 @@ const routes = [
         path: 'DesignImageBase',
         component: DesignImageBase,
         name: 'DesignImageBase'
+      },
+      {
+        path: 'PostageTemp',
+        component: PostageTemp,
+        name: 'PostageTemp'
+      },
+      {
+        path: 'PostageTempAdd',
+        component: PostageTempAdd,
+        name: 'PostageTempAdd'
+      },
+      {
+        path: 'PostageTemp/:id',
+        component: PostageTempEdit,
+        name: 'PostageTempEdit'
       }
     ]
   },

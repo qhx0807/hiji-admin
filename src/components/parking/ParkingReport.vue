@@ -5,9 +5,10 @@
         <Row :gutter="10">
           <Col span="4">
             <FormItem label="建筑名称">
-              <Select v-model="searchObj.city">
+              <!-- <Select v-model="searchObj.city">
                 <Option v-for="(item, index) in buildingsList" :key="index" :value="item.value">{{item.label}}</Option>
-              </Select>
+              </Select> -->
+              <Cascader :data="buildingsList" @on-change="onSelectParkingCity" clearable></Cascader>
             </FormItem>
           </Col>
           <Col span="4">
@@ -152,6 +153,7 @@ export default {
   },
   created () {
     this.getBUildings()
+    this.getFiltersParams()
   },
   computed: {
     dateOptions () {
@@ -187,13 +189,13 @@ export default {
           console.log(response)
           if (response.data.code === 0){
             this.buildingsList = response.data.data
-            if (this.buildingsList.length > 0) {
-              this.searchObj.city = this.buildingsList[0].value
-              this.getTableData()
-              this.getFiltersParams()
-            } else {
-              this.$Message.warning('无权限访问！')
-            }
+            // if (this.buildingsList.length > 0) {
+            //   this.searchObj.city = this.buildingsList[0].value
+            //   this.getTableData()
+            //   this.getFiltersParams()
+            // } else {
+            //   this.$Message.warning('无权限访问！')
+            // }
           }else{
             this.$Message.warning(response.data.msg)
           }
@@ -307,6 +309,13 @@ export default {
           this.$Message.error(error.toString())
         }
       )
+    },
+    onSelectParkingCity (e) {
+      if (e.length > 0) {
+        this.searchObj.city = e[e.length - 1]
+      } else {
+        this.searchObj.city = ''
+      }
     }
   }
 }
