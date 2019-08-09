@@ -83,6 +83,26 @@
           </Col>
         </Row>
         <Row>
+          <Col span="6">
+            <FormItem label="包邮金额" >
+              <Input v-model="merchantData.mprice"></Input>
+            </FormItem>
+          </Col>
+          <Col span="6">
+            <FormItem label="包邮件数" >
+              <Input v-model="merchantData.mnum"></Input>
+            </FormItem>
+          </Col>
+          <Col span="6">
+            <FormItem label="是否包邮" >
+              <i-switch size="large" v-model="merchantData.isdefault" :true-value="1" :false-value="0">
+                <span slot="open">是</span>
+                <span slot="close">否</span>
+              </i-switch>
+            </FormItem>
+          </Col>
+        </Row>
+        <Row>
           <Col span="24">
             <FormItem label="售卖区域">
               <div class="addbtn">
