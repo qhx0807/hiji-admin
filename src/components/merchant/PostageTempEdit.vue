@@ -19,8 +19,8 @@
             </FormItem>
           </Col>
           <Col span="6">
-            <FormItem label="选择商户">
-              <Select v-model="addData.merchantcode" filterable clearable>
+            <FormItem label="选择商户" >
+              <Select v-model="addData.merchantcode" filterable clearable disabled>
                 <Option v-for="item in merchantData" :value="item.merchantcode" :key="item.id">{{ item.name }}</Option>
               </Select>
             </FormItem>
@@ -31,21 +31,16 @@
             </FormItem>
           </Col>
         </Row>
-        <Row>
+        <Row v-show="addData.typeid !== 1">
           <Col span="6">
             <FormItem label="首件数量">
               <Input v-model="addData.snum"></Input>
             </FormItem>
-            <FormItem label="固定邮费价">
-              <Input v-model="addData.price"></Input>
-            </FormItem>
+
           </Col>
           <Col span="6">
             <FormItem label="首件价格">
               <Input v-model="addData.sprice"></Input>
-            </FormItem>
-            <FormItem label="满件数量">
-              <Input v-model="addData.mnum"></Input>
             </FormItem>
           </Col>
           <Col span="6">
@@ -56,6 +51,16 @@
           <Col span="6">
             <FormItem label="续件价格">
               <Input v-model="addData.xprice"></Input>
+            </FormItem>
+          </Col>
+        </Row>
+        <Row>
+          <Col span="6">
+            <FormItem label="固定邮费价" v-show="addData.typeid === 1">
+              <Input v-model="addData.price"></Input>
+            </FormItem>
+            <FormItem label="满件数量" v-show="addData.typeid !== 1">
+              <Input v-model="addData.mnum"></Input>
             </FormItem>
           </Col>
         </Row>

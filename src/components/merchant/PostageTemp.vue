@@ -26,7 +26,7 @@ export default {
       loading: false,
       columns: [
         {
-          title: '编号',
+          title: '#',
           key: 'id',
           width: 80
         },
@@ -40,8 +40,8 @@ export default {
           key: 'merchantcode'
         },
         {
-          title: '邮费属性id',
-          key: 'typeid'
+          title: '邮费属性',
+          key: 'transport_type_name'
         },
         {
           title: '省级地址',
@@ -64,8 +64,12 @@ export default {
           key: 'xprice'
         },
         {
-          title: '满件数量',
+          title: '满件包邮数量',
           key: 'mnum'
+        },
+        {
+          title: '固定邮费',
+          key: 'price'
         },
         {
           title: '操作',

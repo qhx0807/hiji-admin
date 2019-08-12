@@ -39,6 +39,11 @@
             <FormItem label="扣点" required>
               <InputNumber :max="100" :step="1" :min="0" v-model="addData.points"></InputNumber> &nbsp;%（0~100）
             </FormItem>
+            <FormItem label="运费模板" required>
+              <Select v-model="addData.transportid" >
+                <Option v-for="item in transArr" :value="item.id" :key="item.id">{{ item.title }}</Option>
+              </Select>
+            </FormItem>
           </Col>
           <Col span="6">
             <FormItem label="所属商户" prop="goodsname">
@@ -54,6 +59,9 @@
             </FormItem>
             <FormItem label="商户优惠" required>
               <InputNumber :max="999999999" style="width:100%" :min="0" v-model="addData.merchantcoupon"></InputNumber>
+            </FormItem>
+            <FormItem label="计量单位数量" required>
+              <InputNumber :max="99999999" style="width:100%" :min="0" v-model="addData.transportnum"></InputNumber>
             </FormItem>
           </Col>
           <Col span="6">
@@ -311,6 +319,8 @@ export default {
         coupon: 0,
         intergraluse: 0,
         intergral: 0,
+        transportid: '',
+        transportnum: 1
       },
       goodsTypesArr: [],
       picArr: ['', '', '', '', '', ''],
@@ -318,12 +328,14 @@ export default {
       headerImgIndex: -1,
       sortData: [],
       propsData: [],
-      propsArr: []
+      propsArr: [],
+      transArr: []
     }
   },
   created () {
     this.getMerchantData()
     this.getGoodsType()
+    this.getTransArr()
     // this.getSortData()
   },
   methods: {
@@ -338,6 +350,26 @@ export default {
           // console.log(response)
           if (response.data.code === 0){
             this.merchantData = response.data.data.result
+          }else{
+            this.$Message.warning(response.data.msg)
+          }
+          this.$store.commit('pageLoading', false)
+        },
+        error => {
+          console.log(error)
+          this.$store.commit('pageLoading', false)
+        }
+      )
+    },
+    getTransArr () {
+      let d = {
+        pagesize: 99999,
+        page: 1
+      }
+      serverApi('/transport/transportList', d,
+        response => {
+          if (response.data.code === 0){
+            this.transArr = response.data.data.result
           }else{
             this.$Message.warning(response.data.msg)
           }

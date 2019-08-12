@@ -87,7 +87,11 @@
             <FormItem label="扣点" required>
               <InputNumber :max="100" :step="1" :min="0" v-model="editData.points"></InputNumber> &nbsp;%（0~100）
             </FormItem>
-
+            <FormItem label="运费模板" required>
+              <Select v-model="editData.transportid" >
+                <Option v-for="item in transArr" :value="item.id" :key="item.id">{{ item.title }}</Option>
+              </Select>
+            </FormItem>
           </Col>
           <Col span="6">
             <FormItem label="自定义编码">
@@ -107,6 +111,9 @@
             </FormItem>
             <FormItem label="所需积分" v-show="editData.intergraluse==1">
               <InputNumber :max="999999999" style="width:100%" :min="0" v-model="editData.intergral"></InputNumber>
+            </FormItem>
+            <FormItem label="计量单位数量" required>
+              <InputNumber :max="99999999" style="width:100%" :min="0" v-model="editData.transportnum"></InputNumber>
             </FormItem>
           </Col>
         </Row>
@@ -328,12 +335,14 @@ export default {
         marketprice: null,
         intergral: null
       },
-      categorys: []
+      categorys: [],
+      transArr: []
     }
   },
   created () {
     this.getMerchantData()
     this.getGoodsType()
+    this.getTransArr()
     // this.getSortData()
   },
   mounted () {
@@ -355,6 +364,26 @@ export default {
           if (response.data.code === 0){
             this.merchantData = response.data.data.result
 
+          }else{
+            this.$Message.warning(response.data.msg)
+          }
+          this.$store.commit('pageLoading', false)
+        },
+        error => {
+          console.log(error)
+          this.$store.commit('pageLoading', false)
+        }
+      )
+    },
+    getTransArr () {
+      let d = {
+        pagesize: 99999,
+        page: 1
+      }
+      serverApi('/transport/transportList', d,
+        response => {
+          if (response.data.code === 0){
+            this.transArr = response.data.data.result
           }else{
             this.$Message.warning(response.data.msg)
           }

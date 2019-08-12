@@ -8,7 +8,7 @@
         <Row>
           <Col span="6">
             <FormItem label="模板名称">
-              <Input v-model="addData.title"></Input>
+              <Input placeholder="请输入" v-model="addData.title"></Input>
             </FormItem>
           </Col>
           <Col span="6">
@@ -31,22 +31,17 @@
             </FormItem>
           </Col>
         </Row>
-        <Row>
+        <Row v-show="addData.typeid !== 1">
           <Col span="6">
-            <FormItem label="首件数量">
+            <FormItem label="首件数量" >
               <Input v-model="addData.snum"></Input>
-            </FormItem>
-            <FormItem label="固定邮费价">
-              <Input v-model="addData.price"></Input>
             </FormItem>
           </Col>
           <Col span="6">
             <FormItem label="首件价格">
               <Input v-model="addData.sprice"></Input>
             </FormItem>
-            <FormItem label="满件数量">
-              <Input v-model="addData.mnum"></Input>
-            </FormItem>
+
           </Col>
           <Col span="6">
             <FormItem label="续件数量">
@@ -56,6 +51,16 @@
           <Col span="6">
             <FormItem label="续件价格">
               <Input v-model="addData.xprice"></Input>
+            </FormItem>
+          </Col>
+        </Row>
+        <Row>
+          <Col span="6">
+            <FormItem label="固定邮费价" v-show="addData.typeid === 1">
+              <Input v-model="addData.price"></Input>
+            </FormItem>
+            <FormItem label="满件数量" v-show="addData.typeid !== 1">
+              <Input v-model="addData.mnum"></Input>
             </FormItem>
           </Col>
         </Row>
@@ -94,7 +99,7 @@ export default {
       addAreaShow: false,
       loading: false,
       addData: {
-        typeid: '',
+        typeid: 1,
         title: '',
         merchantcode: '',
         provincecode: '',
