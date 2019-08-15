@@ -33,7 +33,7 @@
         </Row>
         <Row v-show="addData.typeid !== 1">
           <Col span="6">
-            <FormItem label="首件数量" >
+            <FormItem label="首件数量/重量/体积" >
               <Input v-model="addData.snum"></Input>
             </FormItem>
           </Col>
@@ -44,7 +44,7 @@
 
           </Col>
           <Col span="6">
-            <FormItem label="续件数量">
+            <FormItem label="续件数量/重量/体积">
               <Input v-model="addData.xnum"></Input>
             </FormItem>
           </Col>
@@ -59,7 +59,7 @@
             <FormItem label="固定邮费价" v-show="addData.typeid === 1">
               <Input v-model="addData.price"></Input>
             </FormItem>
-            <FormItem label="满件数量" v-show="addData.typeid !== 1">
+            <FormItem label="满件数量/重量/体积" v-show="addData.typeid !== 1">
               <Input v-model="addData.mnum"></Input>
             </FormItem>
           </Col>

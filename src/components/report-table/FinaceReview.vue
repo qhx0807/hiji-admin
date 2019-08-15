@@ -796,7 +796,8 @@ export default {
             ids: arr.toString(),
             auditing: '1',
             starttime: this.starttime,
-            endtime: this.endtime
+            endtime: this.endtime,
+            merchantid: this.merchantid
           }
           serverApi('/Finance/auditor', d,
             response => {

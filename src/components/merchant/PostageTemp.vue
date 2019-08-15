@@ -48,7 +48,7 @@ export default {
           key: 'provincename'
         },
         {
-          title: '首件数量',
+          title: '首件数量/重量/体积',
           key: 'snum'
         },
         {
@@ -56,7 +56,7 @@ export default {
           key: 'sprice'
         },
         {
-          title: '续件数量',
+          title: '续件数量/重量/体积',
           key: 'xnum'
         },
         {
@@ -64,7 +64,7 @@ export default {
           key: 'xprice'
         },
         {
-          title: '满件包邮数量',
+          title: '满件包邮数量/重量/体积',
           key: 'mnum'
         },
         {
