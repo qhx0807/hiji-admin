@@ -11,11 +11,14 @@
               <Input v-model="addData.title"></Input>
             </FormItem>
           </Col>
-          <Col span="6">
-            <FormItem label="模板类型">
-              <Select v-model="addData.typeid">
-                <Option v-for="item in typeArr" :key="item.value" :value="item.value">{{item.name}}</Option>
-              </Select>
+          <Col span="24">
+            <FormItem label="计价方式：">
+              <RadioGroup v-model="addData.typeid">
+                <Radio :label="1">固定邮费</Radio>
+                <Radio :label="2">按重量</Radio>
+                <Radio :label="3">按件数</Radio>
+                <Radio :label="4">按体积</Radio>
+              </RadioGroup>
             </FormItem>
           </Col>
           <Col span="6">
@@ -31,26 +34,63 @@
             </FormItem>
           </Col>
         </Row>
-        <Row v-show="addData.typeid !== 1">
-          <Col span="6">
-            <FormItem label="首件数量/重量/体积">
-              <Input v-model="addData.snum"></Input>
-            </FormItem>
-
-          </Col>
-          <Col span="6">
-            <FormItem label="首件价格">
-              <Input v-model="addData.sprice"></Input>
-            </FormItem>
-          </Col>
-          <Col span="6">
-            <FormItem label="续件数量/重量/体积">
-              <Input v-model="addData.xnum"></Input>
+        <Row>
+          <Col span="24" v-show="addData.typeid === 2">
+            <FormItem label="运费设置：">
+              <div style="width: 1000px;height: 50px;">
+                <span style="float: left;line-height:50px;margin: 0 5px;">默认运费</span> <Input v-model="addData.snum" style="float: left;width: 80px;line-height:50px;"></Input>
+                <span style="float: left;line-height:50px;margin: 0 5px;">克内</span><Input v-model="addData.sprice" style="float: left;width: 80px;line-height:50px;"></Input><span style="float: left;line-height:50px;margin: 0 5px;">元，</span>
+              </div>
+              <div style="width: 1000px;height: 50px;">
+                <span style="float: left;line-height:50px;margin: 0 5px;">超过<span>{{this.addData.snum}}克</span>基础运费</span><Input v-model="addData.jcprice" style="float: left;width: 80px;line-height:50px;"></Input><span style="float: left;line-height:50px;margin: 0 5px;">元，</span>
+                <span style="float: left;line-height:50px;margin: 0 5px;">每增加</span><Input v-model="addData.xnum" style="float: left;width: 80px;line-height:50px;"></Input><span style="float: left;line-height:50px;margin: 0 5px;">克，</span>
+                <span style="float: left;line-height:50px;margin: 0 5px;">增加运费</span><Input v-model="addData.xprice" style="float: left;width: 80px;line-height:50px;"></Input><span style="float: left;line-height:50px;margin: 0 5px;">元，</span>
+              </div>
             </FormItem>
           </Col>
-          <Col span="6">
-            <FormItem label="续件价格">
-              <Input v-model="addData.xprice"></Input>
+          <Col span="24">
+            <FormItem label="特殊包邮条件：" v-show="addData.typeid === 2">
+              <span style="float: left;line-height:50px;margin: 0 5px;">满/克</span><Input v-model="addData.mnum" style="float: left;width: 80px;line-height:50px;"></Input><span style="float: left;line-height:50px;margin: 0 5px;">包邮</span>
+            </FormItem>
+          </Col>
+        </Row>
+        <Row>
+          <Col span="24" v-show="addData.typeid === 3">
+            <FormItem label="运费设置：">
+              <div style="width: 1000px;height: 50px;">
+                <span style="float: left;line-height:50px;margin: 0 5px;">默认运费</span> <Input v-model="addData.snum" style="float: left;width: 80px;line-height:50px;"></Input>
+                <span style="float: left;line-height:50px;margin: 0 5px;">件内</span><Input v-model="addData.sprice" style="float: left;width: 80px;line-height:50px;"></Input><span style="float: left;line-height:50px;margin: 0 5px;">元，</span>
+              </div>
+              <div style="width: 1000px;height: 50px;">
+                <span style="float: left;line-height:50px;margin: 0 5px;">超过<span>{{this.addData.snum}}件</span>基础运费</span><Input v-model="addData.jcprice" style="float: left;width: 80px;line-height:50px;"></Input><span style="float: left;line-height:50px;margin: 0 5px;">元，</span>
+                <span style="float: left;line-height:50px;margin: 0 5px;">每增加</span><Input v-model="addData.xnum" style="float: left;width: 80px;line-height:50px;"></Input><span style="float: left;line-height:50px;margin: 0 5px;">件，</span>
+                <span style="float: left;line-height:50px;margin: 0 5px;">增加运费</span><Input v-model="addData.xprice" style="float: left;width: 80px;line-height:50px;"></Input><span style="float: left;line-height:50px;margin: 0 5px;">元，</span>
+              </div>
+            </FormItem>
+          </Col>
+          <Col span="24">
+            <FormItem label="特殊包邮条件：" v-show="addData.typeid === 3">
+              <span style="float: left;line-height:50px;margin: 0 5px;">满/件</span><Input v-model="addData.mnum" style="float: left;width: 80px;line-height:50px;"></Input><span style="float: left;line-height:50px;margin: 0 5px;">包邮</span>
+            </FormItem>
+          </Col>
+        </Row>
+        <Row>
+          <Col span="24" v-show="addData.typeid === 4">
+            <FormItem label="运费设置：">
+              <div style="width: 1000px;height: 50px;">
+                <span style="float: left;line-height:50px;margin: 0 5px;">默认运费</span> <Input v-model="addData.snum" style="float: left;width: 80px;line-height:50px;"></Input>
+                <span style="float: left;line-height:50px;margin: 0 5px;">m<sup>3</sup>内</span><Input v-model="addData.sprice" style="float: left;width: 80px;line-height:50px;"></Input><span style="float: left;line-height:50px;margin: 0 5px;">元，</span>
+              </div>
+              <div style="width: 1000px;height: 50px;">
+                <span style="float: left;line-height:50px;margin: 0 5px;">超过<span>{{this.addData.snum}}m<sup>3</sup></span>基础运费</span><Input v-model="addData.jcprice" style="float: left;width: 80px;line-height:50px;"></Input><span style="float: left;line-height:50px;margin: 0 5px;">元，</span>
+                <span style="float: left;line-height:50px;margin: 0 5px;">每增加</span><Input v-model="addData.xnum" style="float: left;width: 80px;line-height:50px;"></Input><span style="float: left;line-height:50px;margin: 0 5px;">m<sup>3</sup>，</span>
+                <span style="float: left;line-height:50px;margin: 0 5px;">增加运费</span><Input v-model="addData.xprice" style="float: left;width: 80px;line-height:50px;"></Input><span style="float: left;line-height:50px;margin: 0 5px;">元，</span>
+              </div>
+            </FormItem>
+          </Col>
+          <Col span="24">
+            <FormItem label="特殊包邮条件：" v-show="addData.typeid === 4">
+              <span style="float: left;line-height:50px;margin: 0 5px;">满/m<sup>3</sup></span><Input v-model="addData.mnum" style="float: left;width: 80px;line-height:50px;"></Input><span style="float: left;line-height:50px;margin: 0 5px;">包邮</span>
             </FormItem>
           </Col>
         </Row>
@@ -59,12 +99,16 @@
             <FormItem label="固定邮费价" v-show="addData.typeid === 1">
               <Input v-model="addData.price"></Input>
             </FormItem>
-            <FormItem label="满件数量/重量/体积" v-show="addData.typeid !== 1">
-              <Input v-model="addData.mnum"></Input>
-            </FormItem>
           </Col>
         </Row>
         <Row>
+          <Col span="6">
+            <FormItem >
+              <div>
+                <p style="font-sizi: 16px">单位说明：按重量/克，按体积/立方米</p>
+              </div>
+            </FormItem>
+          </Col>
           <Col span="6">
             <FormItem >
               <Button type="primary" @click="onSubmit" :loading="loading">保 存</Button>
@@ -104,6 +148,7 @@ export default {
         merchantcode: '',
         provincecode: '',
         snum: 0,
+        jcprice: 0,
         provincename: '',
         sprice: 0,
         xnum: 0,
@@ -111,24 +156,6 @@ export default {
         price: 0,
         mnum: ''
       },
-      typeArr: [
-        {
-          name: '固定邮费',
-          value: 1
-        },
-        {
-          name: '按重量',
-          value: 2
-        },
-        {
-          name: '按件数',
-          value: 3
-        },
-        {
-          name: '按体积',
-          value: 4
-        },
-      ],
       merchantData: [],
       previenceData: [],
       selectedArr: [],
@@ -214,13 +241,47 @@ export default {
       }
     },
     onSubmit () {
+      let provincenameArr = []
+      let arr = this.previenceData.filter(item => this.selectedArr.includes(item.value))
+      arr.forEach(item => {
+        provincenameArr.push(item.label)
+      })
+      let provincename = provincenameArr.join(',')
+
       if (!this.addData.title || !this.addData.typeid) {
         this.$Message.warning('请输入信息')
         return false
       }
+      let d = {}
       this.loading = true
       this.addData.provincecode = this.selectedArr.join(',')
-      serverApi('/transport/transportAdd', this.addData,
+      if(this.addData.typeid === 1){
+          d  = {
+          id: this.$route.params.id,
+          typeid: this.addData.typeid,
+          title: this.addData.title,
+          merchantcode: this.addData.merchantcode,
+          provincecode: this.addData.provincecode,
+          price: this.addData.price,
+          provincename: provincename
+        }
+      } else {
+          d  = {
+          id: this.$route.params.id,
+          typeid: this.addData.typeid,
+          title: this.addData.title,
+          merchantcode: this.addData.merchantcode,
+          provincecode: this.addData.provincecode,
+          snum: this.addData.snum,
+          sprice: this.addData.sprice,
+          jcprice: this.addData.jcprice,
+          xnum: this.addData.xnum,
+          xprice: this.addData.xprice,
+          mnum: this.addData.mnum,
+          provincename: provincename
+        }
+      }
+      serverApi('/transport/transportAdd', d,
         response => {
           this.loading = false
           if (response.data.code === 0) {

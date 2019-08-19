@@ -37,39 +37,55 @@ export default {
         },
         {
           title: '商家设备号',
-          key: 'merchantcode'
+          key: 'merchantcode',
+          minWidth: 80
         },
         {
           title: '邮费属性',
-          key: 'transport_type_name'
+          key: 'transport_type_name',
+          minWidth: 80
         },
         {
           title: '省级地址',
-          key: 'provincename'
+          key: 'provincename',
+          ellipsis: true,
+          tooltip: true,
+          minWidth: 220
         },
         {
           title: '首件数量/重量/体积',
-          key: 'snum'
+          key: 'snum',
+          minWidth: 80
         },
         {
           title: '首件价格',
-          key: 'sprice'
+          key: 'sprice',
+          minWidth: 80
         },
         {
           title: '续件数量/重量/体积',
-          key: 'xnum'
+          key: 'xnum',
+          minWidth: 80
+        },
+        {
+          title: '基础邮费',
+          key: 'jcprice',
+          minWidth: 80
         },
         {
           title: '续件价格',
-          key: 'xprice'
+          key: 'xprice',
+          minWidth: 80
         },
         {
           title: '满件包邮数量/重量/体积',
-          key: 'mnum'
+          key: 'mnum',
+          minWidth: 80
         },
         {
           title: '固定邮费',
-          key: 'price'
+          key: 'price',
+          minWidth: 80
         },
         {
           title: '操作',
@@ -149,9 +165,13 @@ export default {
     },
     changePage (e) {
       this.page = e
+      this.getTableData()
+
     },
     onChangeSize (e) {
       this.pagesize = e
+      this.getTableData()
+
     },
     onClickEdit (id) {
       this.$router.push({name: 'PostageTempEdit', params: {id: id}})

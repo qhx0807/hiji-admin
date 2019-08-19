@@ -30,7 +30,8 @@
       </div>
       <div slot="footer">
         <Button @click="shModal = false" v-if="downModSH">关闭</Button>
-        <Button type="default" @click="downLoadShData">下载数据</Button>
+        <Button type="error" @click="dismissFinancial">驳回财务</Button>
+        <Button type="info" @click="downLoadShData">下载数据</Button>
         <Button type="success" @click="shModal = false" v-if="downMod">确认修改</Button>
       </div>
     </Modal>
@@ -104,6 +105,7 @@ export default {
       changetype: '',
       starttime: '',
       endtime: '',
+      financialid: '',
       tableData: [],
       modData: {},
       bhData: [],
@@ -420,6 +422,7 @@ export default {
       console.log(row)
       this.changetype = row.changetype
       this.statustype = row.status
+      this.financialid = row.id
       if (this.changetype ===1 && this.statustype==='未处理') {
         this.downMod = true
         this.downModSH = false
@@ -601,6 +604,28 @@ export default {
           console.log(error)
           this.$store.commit('pageLoading', false)
           this.$Message.error('连接失败！')
+        }
+      )
+    },
+    dismissFinancial () {
+      let d = {
+        id: this.financialid
+      }
+      this.$store.commit('pageLoading', true)
+      serverApi('/finance/operationupdate', d,
+        response => {
+          console.log(response)
+          if (response.data.code === 0){
+            this.$Message.success(response.data.msg)
+          }else{
+            this.$Message.warning(response.data.msg)
+          }
+          this.$store.error('pageLoading', false)
+        },
+        error => {
+          console.log(error)
+          this.$store.commit('pageLoading', false)
+          this.$Message.error(error.toString())
         }
       )
     }
