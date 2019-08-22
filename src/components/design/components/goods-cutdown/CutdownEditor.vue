@@ -7,7 +7,7 @@
         </Input>
       </FormItem>
       <FormItem label="商品组" style="margin-bottom: 12px">
-        <Select v-model="designValue.templateId" filterable placeholder="选择商品组则上面活动ID无效" @on-change="onSelectGoodsGroup">
+        <Select v-model="designValue.templateId" filterable clearable placeholder="选择商品组则上面活动ID无效" @on-change="onSelectGoodsGroup">
           <Option v-for="(item, index) in designGoodsGroup" :key="index" :value="item.id">{{item.name}}</Option>
         </Select>
       </FormItem>
@@ -170,6 +170,8 @@ export default {
             this.$Message.error(error.toString())
           }
         )
+      } else {
+        this.designValue.templateId = ''
       }
     }
   }
