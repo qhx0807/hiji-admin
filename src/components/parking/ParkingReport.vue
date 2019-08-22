@@ -21,6 +21,7 @@
               <Select v-model="searchObj.paymentstatus" clearable>
                 <Option value="0">未支付</Option>
                 <Option value="1">已支付</Option>
+                <Option value="2">待支付</Option>
               </Select>
             </FormItem>
           </Col>

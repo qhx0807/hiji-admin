@@ -620,7 +620,7 @@ export default {
           }else{
             this.$Message.warning(response.data.msg)
           }
-          this.$store.error('pageLoading', false)
+          this.$store.commit('pageLoading', false)
         },
         error => {
           console.log(error)

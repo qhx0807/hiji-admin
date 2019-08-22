@@ -136,6 +136,16 @@ export default {
           }
         },
         {
+          title: '申请方式',
+          key: 'userid',
+          width: 100,
+          render: (h, params) => {
+            if (params.row.userid === 1) {
+              return '系统自动申请'
+            }
+          }
+        },
+        {
           title: '支付金额',
           key: 'cash',
           width: 110,
